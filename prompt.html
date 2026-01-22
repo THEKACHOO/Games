@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plot Prompt Spinner Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #fef2ff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        header {
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #1e3a8a;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #7c3aed;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        
+        @media (min-width: 768px) {
+            .game-area {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+        }
+        
+        .spinner-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.1s ease-out;
+            overflow: hidden;
+            background: white;
+        }
+        
+        @media (min-width: 768px) {
+            .spinner {
+                width: 320px;
+                height: 320px;
+            }
+        }
+        
+        .spinner::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fbbf24;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .spinner-section {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: bottom right;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+        }
+        
+        .spinner-section-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(45deg);
+            font-weight: 600;
+            color: #1e293b;
+            padding-left: 20px;
+            padding-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ef4444;
+            z-index: 5;
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+        }
+        
+        .spin-btn {
+            margin-top: 40px;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .spin-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.5);
+        }
+        
+        .spin-btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .spin-btn:disabled {
+            background: linear-gradient(to right, #9ca3af, #a78bfa);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 5px 15px rgba(156, 163, 175, 0.4);
+        }
+        
+        .result-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .result-label {
+            color: #7c3aed;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .result-word {
+            font-size: 3.5rem;
+            color: #1e3a8a;
+            font-weight: 800;
+            text-align: center;
+            transition: all 0.5s ease;
+            text-shadow: 2px 2px 0px rgba(59, 130, 246, 0.1);
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            max-width: 600px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .instructions h3 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+        
+        .instructions p {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        
+        /* Floating animation elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            z-index: 1;
+        }
+        
+        .floating-element-1 {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #93c5fd, #c4b5fd);
+            top: 10%;
+            left: 5%;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .floating-element-2 {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #fbbf24, #f87171);
+            bottom: 15%;
+            right: 8%;
+            animation: float 18s infinite ease-in-out reverse;
+        }
+        
+        .floating-element-3 {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #34d399, #60a5fa);
+            top: 60%;
+            left: 10%;
+            animation: float 12s infinite ease-in-out;
+        }
+        
+        .floating-element-4 {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #8b5cf6, #f472b6);
+            bottom: 30%;
+            left: 80%;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+        
+        /* Pulsing animation for spinner when spinning */
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+            }
+        }
+        
+        .spinning {
+            animation: pulse 0.5s infinite alternate;
+        }
+        
+        /* Animation for result */
+        @keyframes resultAppear {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .result-appear {
+            animation: resultAppear 0.8s ease-out forwards;
+        }
+        
+        /* Edit keywords button */
+        .edit-btn {
+            background: transparent;
+            color: #7c3aed;
+            border: 2px solid #c4b5fd;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-btn:hover {
+            background: #f5f3ff;
+            transform: translateY(-3px);
+        }
+        
+        .keywords-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .keywords-panel h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        .keywords-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .keyword-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .save-keywords-btn {
+            background: linear-gradient(to right, #10b981, #3b82f6);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        /* Spinner colors */
+        .spinner-section:nth-child(odd) .spinner-section-content {
+            background-color: rgba(191, 219, 254, 0.7);
+        }
+        
+        .spinner-section:nth-child(even) .spinner-section-content {
+            background-color: rgba(233, 213, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background elements -->
+    <div class="floating-element floating-element-1"></div>
+    <div class="floating-element floating-element-2"></div>
+    <div class="floating-element floating-element-3"></div>
+    <div class="floating-element floating-element-4"></div>
+    
+    <div class="container">
+        <header>
+            <h1>Plot Prompt Spinner</h1>
+            <p class="subtitle">Putar spinner untuk mendapatkan kata kunci inspirasi untuk menulis plot cerita Anda. Tantang kreativitas dengan 20 kata yang berbeda!</p>
+        </header>
+        
+        <div class="game-area">
+            <div class="spinner-container">
+                <div class="pointer"></div>
+                <div class="spinner" id="spinner">
+                    <!-- Spinner sections will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="result-container">
+                <div class="result-box">
+                    <div class="result-label">Kata Kunci Anda:</div>
+                    <div class="result-word" id="result-word">-</div>
+                    <p style="margin-top: 20px; color: #6b7280; text-align: center; font-style: italic;">Klik tombol spin untuk memulai</p>
+                </div>
+                
+                <button class="spin-btn" id="spin-btn">
+                    <i class="fas fa-redo-alt"></i> PUTAR SPINNER
+                </button>
+                
+                <button class="edit-btn" id="edit-btn">
+                    <i class="fas fa-edit"></i> Edit Kata Kunci
+                </button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Cara Bermain:</h3>
+            <p>1. Klik tombol "PUTAR SPINNER" untuk memutar spinner dan mendapatkan kata kunci acak.<br>
+               2. Gunakan kata kunci yang muncul sebagai prompt untuk menulis plot cerita.<br>
+               3. Anda bisa mengedit kata kunci sesuai keinginan dengan tombol "Edit Kata Kunci".<br>
+               4. Tantang diri Anda untuk menulis cerita berdasarkan kata kunci yang muncul!</p>
+        </div>
+        
+        <div class="keywords-panel" id="keywords-panel">
+            <h3>Edit 20 Kata Kunci</h3>
+            <div class="keywords-grid" id="keywords-grid">
+                <!-- Keyword inputs will be generated by JavaScript -->
+            </div>
+            <button class="save-keywords-btn" id="save-keywords-btn">Simpan Kata Kunci</button>
+        </div>
+    </div>
+
+    <script>
+        // Default keywords
+        let keywords = [
+            "Misteri", "Cinta", "Petualangan", "DuniaLain", "Waktu", 
+            "Rahasia", "Pengorbanan", "Pengkhianatan", "Kebebasan", "Keluarga",
+            "Perjalanan", "Pertemanan", "Kehilangan", "Penemuan", "Perubahan",
+            "Konflik", "Pertumbuhan", "Identitas", "Harapan", "Kesempatan"
+        ];
+        
+        // DOM Elements
+        const spinner = document.getElementById('spinner');
+        const spinBtn = document.getElementById('spin-btn');
+        const resultWord = document.getElementById('result-word');
+        const editBtn = document.getElementById('edit-btn');
+        const keywordsPanel = document.getElementById('keywords-panel');
+        const keywordsGrid = document.getElementById('keywords-grid');
+        const saveKeywordsBtn = document.getElementById('save-keywords-btn');
+        
+        // Variables for spinner control
+        let isSpinning = false;
+        let currentRotation = 0;
+        let selectedKeywordIndex = 0;
+        
+        // Initialize spinner with keywords
+        function initSpinner() {
+            spinner.innerHTML = '';
+            
+            // Create 20 sections for spinner
+            const anglePerSection = 360 / keywords.length;
+            
+            for (let i = 0; i < keywords.length; i++) {
+                const section = document.createElement('div');
+                section.className = 'spinner-section';
+                section.style.transform = `rotate(${i * anglePerSection}deg)`;
+                
+                const content = document.createElement('div');
+                content.className = 'spinner-section-content';
+                content.textContent = keywords[i];
+                
+                section.appendChild(content);
+                spinner.appendChild(section);
+            }
+            
+            // Initialize keywords editor
+            initKeywordsEditor();
+        }
+        
+        // Initialize keywords editor
+        function initKeywordsEditor() {
+            keywordsGrid.innerHTML = '';
+            
+            for (let i = 0; i < keywords.length; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'keyword-input';
+                input.value = keywords[i];
+                input.maxLength = 15;
+                input.dataset.index = i;
+                keywordsGrid.appendChild(input);
+            }
+        }
+        
+        // Spin the spinner
+        function spin() {
+            if (isSpinning) return;
+            
+            isSpinning = true;
+            spinBtn.disabled = true;
+            spinner.classList.add('spinning');
+            resultWord.textContent = "-";
+            resultWord.classList.remove('result-appear');
+            
+            // Randomly select a keyword index
+            selectedKeywordIndex = Math.floor(Math.random() * keywords.length);
+            
+            // Calculate rotation (multiple full rotations plus final position)
+            const fullRotations = 5;
+            const finalAngle = (selectedKeywordIndex * (360 / keywords.length));
+            const totalRotation = 360 * fullRotations + (360 - (currentRotation % 360)) + (360 - finalAngle);
+            
+            // Apply spinning animation
+            currentRotation += totalRotation;
+            spinner.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
+            spinner.style.transform = `rotate(${currentRotation}deg)`;
+            
+            // Show result after spinning
+            setTimeout(() => {
+                spinner.classList.remove('spinning');
+                resultWord.textContent = keywords[selectedKeywordIndex];
+                resultWord.classList.add('result-appear');
+                isSpinning = false;
+                spinBtn.disabled = false;
+            }, 4000);
+            
+            // Show intermediate result halfway through spin
+            setTimeout(() => {
+                spinner.style.transition = 'transform 1.5s cubic-bezier(0.1, 0.4, 0.2, 1)';
+            }, 2500);
+        }
+        
+        // Show/hide keywords editor
+        function toggleKeywordsEditor() {
+            if (keywordsPanel.style.display === 'block') {
+                keywordsPanel.style.display = 'none';
+                editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit Kata Kunci';
+            } else {
+                keywordsPanel.style.display = 'block';
+                editBtn.innerHTML = '<i class="fas fa-times"></i> Tutup Editor';
+                
+                // Populate inputs with current keywords
+                const inputs = keywordsGrid.querySelectorAll('input');
+                inputs.forEach((input, index) => {
+                    input.value = keywords[index];
+                });
+            }
+        }
+        
+        // Save edited keywords
+        function saveKeywords() {
+            const inputs = keywordsGrid.querySelectorAll('input');
+            let newKeywords = [];
+            let hasEmpty = false;
+            
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                if (value === '') {
+                    hasEmpty = true;
+                    input.style.borderColor = '#ef4444';
+                } else {
+                    input.style.borderColor = '#d1d5db';
+                    newKeywords.push(value);
+                }
+            });
+            
+            if (hasEmpty) {
+                alert('Semua kata kunci harus diisi!');
+                return;
+            }
+            
+            keywords = newKeywords;
+            initSpinner();
+            toggleKeywordsEditor();
+            
+            // Show confirmation
+            resultWord.textContent = "Tersimpan!";
+            resultWord.classList.add('result-appear');
+            setTimeout(() => {
+                resultWord.textContent = "-";
+                resultWord.classList.remove('result-appear');
+            }, 1500);
+        }
+        
+        // Event listeners
+        spinBtn.addEventListener('click', spin);
+        editBtn.addEventListener('click', toggleKeywordsEditor);
+        saveKeywordsBtn.addEventListener('click', saveKeywords);
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initSpinner();
+            
+            // Add click animation to result box
+            const resultBox = document.querySelector('.result-box');
+            resultBox.addEventListener('click', () => {
+                if (resultWord.textContent !== '-' && !isSpinning) {
+                    resultBox.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        resultBox.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            });
+        });
+        
+        // Add keyboard shortcut (Space to spin)
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !isSpinning) {
+                e.preventDefault();
+                spin();
+            }
+        });
+    </script>
+</body>
+</html>
