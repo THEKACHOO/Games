@@ -14,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #f0f9ff 0%, #fef2ff 100%);
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -36,15 +36,15 @@
         }
         
         h1 {
-            color: #1e3a8a;
+            color: #8b0000;
             font-size: 2.8rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 2px 2px 4px rgba(139, 0, 0, 0.1);
             letter-spacing: 1px;
         }
         
         .subtitle {
-            color: #7c3aed;
+            color: #a52a2a;
             font-size: 1.2rem;
             max-width: 600px;
             margin: 0 auto 20px;
@@ -80,10 +80,11 @@
             height: 280px;
             border-radius: 50%;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.2);
             transition: transform 0.1s ease-out;
             overflow: hidden;
             background: white;
+            border: 8px solid #8b0000;
         }
         
         @media (min-width: 768px) {
@@ -96,15 +97,16 @@
         .spinner::before {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #fbbf24;
+            width: 24px;
+            height: 24px;
+            background: #8b0000;
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border: 3px solid white;
         }
         
         .spinner-section {
@@ -127,30 +129,43 @@
             align-items: center;
             justify-content: center;
             transform: rotate(45deg);
-            font-weight: 600;
-            color: #1e293b;
+            font-weight: 700;
+            color: white;
             padding-left: 20px;
             padding-bottom: 20px;
             font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .pointer {
             position: absolute;
-            top: -20px;
+            top: -35px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #ef4444;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #8b0000;
             z-index: 5;
-            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+        }
+        
+        .pointer::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #8b0000;
+            border-radius: 50%;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         .spin-btn {
             margin-top: 40px;
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            background: linear-gradient(to right, #8b0000, #b22222);
             color: white;
             border: none;
             padding: 16px 40px;
@@ -158,14 +173,16 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
             font-weight: 600;
             letter-spacing: 1px;
+            border: 2px solid white;
         }
         
         .spin-btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 12px 25px rgba(139, 0, 0, 0.5);
+            background: linear-gradient(to right, #b22222, #8b0000);
         }
         
         .spin-btn:active {
@@ -173,7 +190,7 @@
         }
         
         .spin-btn:disabled {
-            background: linear-gradient(to right, #9ca3af, #a78bfa);
+            background: linear-gradient(to right, #cccccc, #999999);
             cursor: not-allowed;
             transform: none;
             box-shadow: 0 5px 15px rgba(156, 163, 175, 0.4);
@@ -191,7 +208,7 @@
             background: white;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(139, 0, 0, 0.15);
             width: 100%;
             max-width: 400px;
             min-height: 250px;
@@ -201,11 +218,21 @@
             align-items: center;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid #8b0000;
+        }
+        
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #8b0000, #b22222, #8b0000);
         }
         
         .result-label {
-            color: #7c3aed;
+            color: #8b0000;
             font-size: 1.2rem;
             margin-bottom: 15px;
             font-weight: 600;
@@ -213,29 +240,30 @@
         
         .result-word {
             font-size: 3.5rem;
-            color: #1e3a8a;
+            color: #8b0000;
             font-weight: 800;
             text-align: center;
             transition: all 0.5s ease;
-            text-shadow: 2px 2px 0px rgba(59, 130, 246, 0.1);
+            text-shadow: 2px 2px 0px rgba(139, 0, 0, 0.1);
         }
         
         .instructions {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             padding: 20px;
             margin-top: 30px;
             max-width: 600px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.1);
+            border: 1px solid #ffcccc;
         }
         
         .instructions h3 {
-            color: #1e3a8a;
+            color: #8b0000;
             margin-bottom: 10px;
         }
         
         .instructions p {
-            color: #4b5563;
+            color: #5a0000;
             line-height: 1.6;
         }
         
@@ -250,7 +278,7 @@
         .floating-element-1 {
             width: 80px;
             height: 80px;
-            background: linear-gradient(45deg, #93c5fd, #c4b5fd);
+            background: linear-gradient(45deg, #ffcccc, #ff9999);
             top: 10%;
             left: 5%;
             animation: float 15s infinite ease-in-out;
@@ -259,7 +287,7 @@
         .floating-element-2 {
             width: 120px;
             height: 120px;
-            background: linear-gradient(45deg, #fbbf24, #f87171);
+            background: linear-gradient(45deg, #990000, #cc6666);
             bottom: 15%;
             right: 8%;
             animation: float 18s infinite ease-in-out reverse;
@@ -268,7 +296,7 @@
         .floating-element-3 {
             width: 60px;
             height: 60px;
-            background: linear-gradient(45deg, #34d399, #60a5fa);
+            background: linear-gradient(45deg, #ff6666, #ff3333);
             top: 60%;
             left: 10%;
             animation: float 12s infinite ease-in-out;
@@ -277,7 +305,7 @@
         .floating-element-4 {
             width: 100px;
             height: 100px;
-            background: linear-gradient(45deg, #8b5cf6, #f472b6);
+            background: linear-gradient(45deg, #b22222, #ff6666);
             bottom: 30%;
             left: 80%;
             animation: float 20s infinite ease-in-out;
@@ -295,10 +323,10 @@
         /* Pulsing animation for spinner when spinning */
         @keyframes pulse {
             0%, 100% {
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 10px 30px rgba(139, 0, 0, 0.2);
             }
             50% {
-                box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+                box-shadow: 0 10px 40px rgba(139, 0, 0, 0.6);
             }
         }
         
@@ -324,9 +352,9 @@
         
         /* Edit keywords button */
         .edit-btn {
-            background: transparent;
-            color: #7c3aed;
-            border: 2px solid #c4b5fd;
+            background: white;
+            color: #8b0000;
+            border: 2px solid #8b0000;
             padding: 10px 20px;
             border-radius: 50px;
             cursor: pointer;
@@ -336,7 +364,8 @@
         }
         
         .edit-btn:hover {
-            background: #f5f3ff;
+            background: #8b0000;
+            color: white;
             transform: translateY(-3px);
         }
         
@@ -347,12 +376,13 @@
             margin-top: 30px;
             width: 100%;
             max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.15);
             display: none;
+            border: 2px solid #8b0000;
         }
         
         .keywords-panel h3 {
-            color: #1e3a8a;
+            color: #8b0000;
             margin-bottom: 15px;
         }
         
@@ -365,14 +395,21 @@
         
         .keyword-input {
             padding: 8px 12px;
-            border: 1px solid #d1d5db;
+            border: 2px solid #8b0000;
             border-radius: 8px;
             text-align: center;
             font-weight: 500;
+            background: white;
+            color: #8b0000;
+        }
+        
+        .keyword-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.2);
         }
         
         .save-keywords-btn {
-            background: linear-gradient(to right, #10b981, #3b82f6);
+            background: linear-gradient(to right, #8b0000, #b22222);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -380,15 +417,29 @@
             cursor: pointer;
             font-weight: 600;
             margin-top: 10px;
+            border: 2px solid white;
         }
         
-        /* Spinner colors */
+        .save-keywords-btn:hover {
+            background: linear-gradient(to right, #b22222, #8b0000);
+        }
+        
+        /* Spinner colors - dark red and white theme */
         .spinner-section:nth-child(odd) .spinner-section-content {
-            background-color: rgba(191, 219, 254, 0.7);
+            background-color: rgba(139, 0, 0, 0.85);
         }
         
         .spinner-section:nth-child(even) .spinner-section-content {
-            background-color: rgba(233, 213, 255, 0.7);
+            background-color: rgba(178, 34, 34, 0.85);
+        }
+        
+        /* Spinner sections color variations */
+        .spinner-section:nth-child(3n) .spinner-section-content {
+            background-color: rgba(165, 42, 42, 0.85);
+        }
+        
+        .spinner-section:nth-child(5n) .spinner-section-content {
+            background-color: rgba(205, 92, 92, 0.85);
         }
     </style>
 </head>
@@ -417,7 +468,7 @@
                 <div class="result-box">
                     <div class="result-label">Kata Kunci Anda:</div>
                     <div class="result-word" id="result-word">-</div>
-                    <p style="margin-top: 20px; color: #6b7280; text-align: center; font-style: italic;">Klik tombol spin untuk memulai</p>
+                    <p style="margin-top: 20px; color: #8b0000; text-align: center; font-style: italic;">Klik tombol spin untuk memulai</p>
                 </div>
                 
                 <button class="spin-btn" id="spin-btn">
@@ -523,14 +574,21 @@
             selectedKeywordIndex = Math.floor(Math.random() * keywords.length);
             
             // Calculate rotation (multiple full rotations plus final position)
+            // Adjusting the calculation to ensure it stops at the pointer
             const fullRotations = 5;
-            const finalAngle = (selectedKeywordIndex * (360 / keywords.length));
-            const totalRotation = 360 * fullRotations + (360 - (currentRotation % 360)) + (360 - finalAngle);
+            const anglePerSection = 360 / keywords.length;
+            
+            // Calculate the target position (pointer is at top, so we need to offset)
+            // The pointer is at 0 degrees (top), so we need to rotate the selected section to the pointer
+            const targetAngle = 360 - (selectedKeywordIndex * anglePerSection);
+            
+            // Adjust for current rotation and add full rotations
+            const totalRotation = currentRotation + (360 * fullRotations) + targetAngle;
             
             // Apply spinning animation
-            currentRotation += totalRotation;
+            currentRotation = totalRotation % 360;
             spinner.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
-            spinner.style.transform = `rotate(${currentRotation}deg)`;
+            spinner.style.transform = `rotate(${totalRotation}deg)`;
             
             // Show result after spinning
             setTimeout(() => {
@@ -574,9 +632,9 @@
                 const value = input.value.trim();
                 if (value === '') {
                     hasEmpty = true;
-                    input.style.borderColor = '#ef4444';
+                    input.style.borderColor = '#ff0000';
                 } else {
-                    input.style.borderColor = '#d1d5db';
+                    input.style.borderColor = '#8b0000';
                     newKeywords.push(value);
                 }
             });
