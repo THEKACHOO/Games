@@ -190,7 +190,7 @@
             transform: rotate(180deg);
         }
 
-        /* PROMPT CONTAINERS */
+        /* PROMPT CONTAINERS - DIPERBARUI */
         .prompts-container {
             width: 100%;
             max-width: 550px;
@@ -236,12 +236,33 @@
             box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
         }
 
+        /* STYLE BARU UNTUK GENRE DAN AUTHOR */
+        .prompt-genre-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+        }
+
         .prompt-genre {
             color: var(--primary);
             font-size: 2.2rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
+            line-height: 1.1;
+            margin-bottom: 5px;
+        }
+
+        .prompt-author {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 600;
+            font-style: italic;
+            padding: 5px 12px;
+            background: rgba(139, 0, 0, 0.1);
+            border-radius: 20px;
+            display: inline-block;
         }
 
         .prompt-content {
@@ -252,6 +273,7 @@
             background: var(--light);
             border-radius: 15px;
             border-left: 6px solid var(--primary);
+            position: relative;
         }
 
         /* INSTRUCTION */
@@ -364,8 +386,14 @@
                 font-size: 1.8rem;
             }
             
+            .prompt-author {
+                font-size: 0.9rem;
+                padding: 4px 10px;
+            }
+            
             .prompt-content {
                 font-size: 1.1rem;
+                padding: 20px;
             }
             
             .spin-btn {
@@ -381,6 +409,18 @@
             
             .prompt-box {
                 padding: 25px;
+            }
+            
+            .prompt-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .prompt-genre-container {
+                align-items: flex-start;
+                text-align: left;
+                width: 100%;
             }
         }
     </style>
@@ -428,106 +468,131 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
-        // DATA PROMPT UNTUK SETIAP ANGKA (1-25) - 3 GENRE SAJA
+        // DATA PROMPT UNTUK SETIAP ANGKA (1-25) - DIPERBARUI DENGAN STRUKTUR BARU
         const prompts = {
             1: {
-                genre: "ROMANCE COMEDY by Prompt Ideas",
+                genre: "ROMANCE COMEDY",
+                author: "by Prompt Ideas",
                 prompt: "Ingatan macam apa ini? Semalam, orang yang paling menyebalkan, kau anggap dia sangat membencimu, menyatakan cinta dalam kondisi mabuk? Lebih-lebih, kalian berciuman beberapa kali di malam Valentine!"
             },
             2: {
-                genre: "DARK ROMANCE by Prompt Ideas",
+                genre: "DARK ROMANCE",
+                author: "by Prompt Ideas",
                 prompt: "Kau memiliki sahabat yang selalu melindungimu dari orang-orang jahat. Belakangan kau baru sadar bahwa mereka menghilang. 'Aku tidak membunuh mereka,' bisiknya, 'aku hanya menyingkirkan sampah!'"
             },
             3: {
-                genre: "ROMANCE by Prompt Ideas",
+                genre: "ROMANCE",
+                author: "by Prompt Ideas",
                 prompt: "Kau melihat-lihat buku tahunan SMA. Tiba-tiba terbesit sebuah ide untuk menghubungi mantan crushmu dulu dimalam Valentine. Sialnya, nomor itu masih aktif!"
             },
             4: {
-                genre: "ROMANCE COMEDY by Prompt Ideas",
-                prompt: "Kamu lagi bermain True or Dare, sebagai pemberani kami memilih Dare. Kamu dengan berani berkata, ‘Aku bakal ngajak kencan orang pertama yang masuk dari pintu itu!’ Tiba-tiba, orang yang paling menyebalkan menunjukkan batang hidungnya di sana. Sialnya, dia setuju untuk berkencan denganmu."
+                genre: "ROMANCE COMEDY",
+                author: "by Prompt Ideas",
+                prompt: "Kamu lagi bermain True or Dare, sebagai pemberani kami memilih Dare. Kamu dengan berani berkata, 'Aku bakal ngajak kencan orang pertama yang masuk dari pintu itu!' Tiba-tiba, orang yang paling menyebalkan menunjukkan batang hidungnya di sana. Sialnya, dia setuju untuk berkencan denganmu."
             },
             5: {
-                genre: "DARK ROMANCE by Prompt Ideas",
-                prompt: "Dia selalu tahu kemana kamu pergi. Saat kamu menemukan sebuah alat GPS di dalam tasmu, dia hanya tersenyum sambil mengunci pintu. ‘Aku begini buat jagain kamu.’"
+                genre: "DARK ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "Dia selalu tahu kemana kamu pergi. Saat kamu menemukan sebuah alat GPS di dalam tasmu, dia hanya tersenyum sambil mengunci pintu. 'Aku begini buat jagain kamu.'"
             },
             6: {
-                genre: "ROMANCE by Prompt Ideas",
-                prompt: "Hujan lebat, kau memutuskan untuk menginap di rumah sahabatmu. Kamu memakai bajunya yang kebesaran sebagai piyama. Dia melihatmu, terdiam lama dan berkata, ‘Kenapa kamu bisa seimut ini, sih?’"
+                genre: "ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "Hujan lebat, kau memutuskan untuk menginap di rumah sahabatmu. Kamu memakai bajunya yang kebesaran sebagai piyama. Dia melihatmu, terdiam lama dan berkata, 'Kenapa kamu bisa seimut ini, sih?'"
             },
             7: {
-                genre: "ROMANCE COMEDY by Kachoo",
-                prompt: "Sudah banyak sekali teman-temanmu menjodohkanmu dengan sahabat dekatmu, kamu memang ada rasa dengannya, namun kamu tahu pasti kalau sahabatmu sering membicarakan tentang seseorang yang ia sukai. Lalu, di malam Valentine kamu memintanya untuk menyatakan cinta dengan orang yang ia sukai. Katanya, ‘Kamu gatau ya kalau orang yang aku maksud, itu kamu.’"
+                genre: "ROMANCE COMEDY",
+                author: "by Kachoo",
+                prompt: "Sudah banyak sekali teman-temanmu menjodohkanmu dengan sahabat dekatmu, kamu memang ada rasa dengannya, namun kamu tahu pasti kalau sahabatmu sering membicarakan tentang seseorang yang ia sukai. Lalu, di malam Valentine kamu memintanya untuk menyatakan cinta dengan orang yang ia sukai. Katanya, 'Kamu gatau ya kalau orang yang aku maksud, itu kamu.'"
             },
             8: {
-                genre: "DARK ROMANCE by Prompt Ideas",
-                prompt: "Setiap kali kamu mencoba mengakhiri hubungan, dia akan menyakiti dirinya sendiri di depanmu. ‘Ini semua karena kamu. Kalau kamu mau putus, aku akan mengulangi kisah gelap Valentine dengan melompat dari atas gedung!’"
+                genre: "DARK ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "Setiap kali kamu mencoba mengakhiri hubungan, dia akan menyakiti dirinya sendiri di depanmu. 'Ini semua karena kamu. Kalau kamu mau putus, aku akan mengulangi kisah gelap Valentine dengan melompat dari atas gedung!'"
             },
             9: {
-                genre: "ROMANCE by Prompt Ideas",
-                prompt: "Hujan lebat, kau memutuskan untuk menginap di rumah sahabatmu. Kamu memakai bajunya yang kebesaran sebagai piyama. Dia melihatmu, terdiam lama dan berkata, ‘Kenapa kamu bisa seimut ini, sih?’"
+                genre: "ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "Hujan lebat, kau memutuskan untuk menginap di rumah sahabatmu. Kamu memakai bajunya yang kebesaran sebagai piyama. Dia melihatmu, terdiam lama dan berkata, 'Kenapa kamu bisa seimut ini, sih?'"
             },
             10: {
-                genre: "ROMANCE COMEDY by Prompt Ideas",
+                genre: "ROMANCE COMEDY",
+                author: "by Prompt Ideas",
                 prompt: "Kamu pura-pura punya pacar demi menghindari mantan di pesta, lalu menarik orang asing untuk jadi pacar pura-pura. Ternyata dia terlalu pandai berbohong sampai kamu kagum sendiri."
             },
             11: {
-                genre: "DARK ROMANCE by Prompt Ideas",
-                prompt: "Dia membuatmu percaya bahwa semua teman-temanmu membencimu, sampai mereka meninggalkanmu. ‘Hanya aku yang tulus,’ ujarnya berulang kali sampai kau pun percaya."
+                genre: "DARK ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "Dia membuatmu percaya bahwa semua teman-temanmu membencimu, sampai mereka meninggalkanmu. 'Hanya aku yang tulus,' ujarnya berulang kali sampai kau pun percaya."
             },
             12: {
-                genre: "ROMANCE by Prompt Ideas",
-                prompt: "Kau kesal karena sahabatmu tidak menanggapi serius saat kau bercerita. Padahal kau baru saja putus cinta. ‘Jadi pacarku aja, gimana?’ katanya tiba-tiba."
+                genre: "ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "Kau kesal karena sahabatmu tidak menanggapi serius saat kau bercerita. Padahal kau baru saja putus cinta. 'Jadi pacarku aja, gimana?' katanya tiba-tiba."
             },
             13: {
-                genre: "ROMANCE COMEDY by Prompt Ideas",
+                genre: "ROMANCE COMEDY",
+                author: "by Prompt Ideas",
                 prompt: "Kamu sedang mencoba diet, tapi kekasihmu sengaja memakan makanan favoritmu di depanmu dengan ekspresi sangat nikmat. Saat kamu hampir menyerah, dia malah menyuapimu sepotong kecil sambil tertawa."
             },
             14: {
-                genre: "DARK ROMANCE by Prompt Ideas",
-                prompt: "Dia diam-diam menyabotase setiap hubunganmu, membuat semua pria menjauhimu karena takut. Saat kamu menangis kesepian, dia datang memelukmu. ‘Cuma aku yang nggak akan pernah ninggalin kamu.’"
+                genre: "DARK ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "Dia diam-diam menyabotase setiap hubunganmu, membuat semua pria menjauhimu karena takut. Saat kamu menangis kesepian, dia datang memelukmu. 'Cuma aku yang nggak akan pernah ninggalin kamu.'"
             },
             15: {
-                genre: "ROMANCE by Prompt Ideas",
-                prompt: "‘Untuk kali ini aja, mau pura-pura berkencan?’ Ia menatap matamu selagi kau terdiam. Bukan karena terkejut, tapi karena degup jantungmu yang berdetak lebih kencang sekarang."
+                genre: "ROMANCE",
+                author: "by Prompt Ideas",
+                prompt: "'Untuk kali ini aja, mau pura-pura berkencan?' Ia menatap matamu selagi kau terdiam. Bukan karena terkejut, tapi karena degup jantungmu yang berdetak lebih kencang sekarang."
             },
             16: {
-                genre: "ROMANCE COMEDY by Prompt Ideas",
-                prompt: "‘Entah kenapa aku ingin menciummu,’ ujar temanmu, kau kira dia sedang bercanda. Katamu, ‘Cium aja kalau berani.’ Lalu, satu kecupan mendarat di pipimu. ‘Sial! Kenapa kau menciumku?’ Kamu terkejut dan hampir menamparnya. Tetapi, dia ternyata menatapmu dengan serius, ‘Katanya, kalau berciuman di hari Valentine, bisa berjodoh loh! Tertarik memastikan kebenarannya?’"
+                genre: "ROMANCE COMEDY",
+                author: "by Prompt Ideas",
+                prompt: "'Entah kenapa aku ingin menciummu,' ujar temanmu, kau kira dia sedang bercanda. Katamu, 'Cium aja kalau berani.' Lalu, satu kecupan mendarat di pipimu. 'Sial! Kenapa kau menciummu?' Kamu terkejut dan hampir menamparnya. Tetapi, dia ternyata menatapmu dengan serius, 'Katanya, kalau berciuman di hari Valentine, bisa berjodoh loh! Tertarik memastikan kebenarannya?'"
             },
             17: {
-                genre: "DARK ROMANCE by Kachoo",
+                genre: "DARK ROMANCE",
+                author: "by Kachoo",
                 prompt: "Kamu kenal dia dari aplikasi kencan online, namun yang datang penampilannya jauh berbeda. Dia tampan, tetapi berbeda sekali dari yang kamu tahu. Lalu, dia menggunakan cincin di jari manisnya. Katanya, 'Oh... Iya, aku memang sudah menikah, memangnya ada yang salah ya dari itu?'"
             },
             18: {
-                genre: "ROMANCE by Prompt Ideas",
+                genre: "ROMANCE",
+                author: "by Prompt Ideas",
                 prompt: "Komplek / kantormu mengadakan pekan olahraga. Hari itu pertandingan sepak bola sedang berlangsung. Nahasnya bola terlempar kencang dan mengenaimu hingga kau tidak sadarkan diri. Saat bangun, crushmu ada di sebelahmu, menunggumu."
             },
             19: {
-                genre: "ROMANCE COMEDY by Kachoo",
+                genre: "ROMANCE COMEDY",
+                author: "by Kachoo",
                 prompt: "Kamu dipeluk seseorang yang tak kamu kenal, kamu ingin melepaskan diri tetapi orang yang memelukmu terlihat menangis tersedu-sedu. 'Akhirnya ketemu kamu lagi, maafin aku waktu itu aku ke toilet terlalu lama pas kencan! Pencernaanku BURUK BANGET!' lalu saat ia menatapmu, 'Eh... maaf salah orang!'"
             },
             20: {
-                genre: "DARK ROMANCE by Kachoo",
+                genre: "DARK ROMANCE",
+                author: "by Kachoo",
                 prompt: "Di malam Valentine, kekasihmu berjanji akan memberitahu satu rahasianya padamu. 'Aku yang membunuh temanmu.' Katanya."
             },
             21: {
-                genre: "ROMANCE by Kachoo",
+                genre: "ROMANCE",
+                author: "by Kachoo",
                 prompt: "Restu orang tua kalian menjadi penghalang, tapi dia ingin mengusahakanmu. Dia datang ke rumahmu dengan begitu banyak hadiah, 'Ini buat ayahmu, ini buat ibuku, ini buat saudaramu, ini buat kakekmu, nenekmu, dan untuk peliharaanmu. Lalu ini untukmu!' Katanya membagikan hadiah itu."
             },
             22: {
-                genre: "ROMANCE COMEDY by Kachoo",
+                genre: "ROMANCE COMEDY",
+                author: "by Kachoo",
                 prompt: "Kamu bertemu idolamu di tempat makan dan dia mengenalimu, 'Kamu yang waktu itu teriaknya paling nyaring kan?' oh, dia hanya ingat bagian itu."
             },
             23: {
-                genre: "DARK ROMANCE by Kachoo",
+                genre: "DARK ROMANCE",
+                author: "by Kachoo",
                 prompt: "Singkat saja, hubunganmu TOXIC. Aturlah cara untuk keluar dari hubunganmu dengan dia. 'Memangnya ada yang sukai kamu lebih baik dari aku?' katanya menantangmu."
             },
             24: {
-                genre: "ROMANCE by Kachoo",
+                genre: "ROMANCE",
+                author: "by Kachoo",
                 prompt: "Tanpa sengaja, ponselmu tertukar dengan seseorang di bandara. Untunglah dia berada di pesawat yang sama denganmu, 'Ponselnya tertukar, padahal seharusnya nomor kita saja yang tertukar.' katanya."
             },
             25: {
-                genre: "ROMANCE COMEDY by Kachoo",
+                genre: "ROMANCE COMEDY",
+                author: "by Kachoo",
                 prompt: "Kamu menulis novel berdasarkan ceritamu dengan mantan pacarmu. Tapi mantanmu membaca novel itu dan mengajukan gugatan, 'kalau gamau digugat, balikan aja sama aku.' akal-akalan GEN Z."
             }
         };
@@ -582,7 +647,7 @@
             console.log('Spinner diinisialisasi dengan', totalNumbers, 'angka');
         }
         
-        // BUAT PROMPT CONTAINERS
+        // BUAT PROMPT CONTAINERS - DIPERBARUI DENGAN STRUKTUR BARU
         function createPromptContainers() {
             promptsContainer.innerHTML = '';
             
@@ -597,7 +662,10 @@
                 promptBox.innerHTML = `
                     <div class="prompt-header">
                         <div class="prompt-number">${i}</div>
-                        <div class="prompt-genre">${data.genre}</div>
+                        <div class="prompt-genre-container">
+                            <div class="prompt-genre">${data.genre}</div>
+                            <div class="prompt-author">${data.author}</div>
+                        </div>
                     </div>
                     <div class="prompt-content">${data.prompt}</div>
                 `;
