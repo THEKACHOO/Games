@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KISS-CHO Valentine Gift Box</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>KISS-CHO · Valentine Box</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -12,1024 +12,483 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #0f0000 0%, #250505 50%, #0f0000 100%);
+            background: #ffffff; /* PUTIH BERSIH */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 30px 20px;
-            color: #ffeaea;
-            overflow-x: hidden;
-            line-height: 1.6;
-            position: relative;
+            padding: 20px 16px;
             font-family: 'Poppins', sans-serif;
+            color: #330000;
+            line-height: 1.5;
+            position: relative;
         }
-        
-        /* Background Glow Effects */
+
+        /* aksen dark red halus */
         body::before {
             content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255, 40, 40, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 80, 80, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(255, 60, 60, 0.12) 0%, transparent 50%);
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 40%, rgba(150, 0, 0, 0.02) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 70%, rgba(120, 0, 0, 0.02) 0%, transparent 40%);
             pointer-events: none;
             z-index: 0;
         }
-        
+
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 700px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             position: relative;
-            z-index: 1;
+            z-index: 5;
         }
-        
-        .header {
-            margin-bottom: 40px;
-            width: 100%;
-        }
-        
-        .logo {
+
+        /* header simpel: hanya KISS-CHO dan open text */
+        .main-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             font-weight: 800;
-            color: #ffffff; /* WHITE COLOR */
-            margin-bottom: 10px;
+            color: #8b1a1a;        /* dark red utama */
             letter-spacing: 2px;
+            line-height: 1.1;
             text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            text-shadow: 0 4px 10px rgba(140, 20, 20, 0.15);
         }
-        
-        .mystery-box-title {
+
+        .sub-line {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #ffffff; /* WHITE COLOR */
-            margin-bottom: 15px;
-            letter-spacing: 3px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        .mystery-box-title:after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 180px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #ff4a4a, transparent);
-        }
-        
-        .value-tag {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(45deg, #9a0000, #cc0000);
-            color: #ffeaea;
-            padding: 15px 40px;
-            border-radius: 8px;
-            display: inline-block;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 15px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #a13d3d;         /* dark red lebih lembut */
+            margin-bottom: 20px;
             letter-spacing: 1px;
-            border: 2px solid rgba(255, 74, 74, 0.5);
-            box-shadow: 0 0 25px rgba(204, 0, 0, 0.4);
-            text-transform: uppercase;
+            background: rgba(160, 40, 40, 0.05);
+            padding: 10px 24px;
+            border-radius: 60px;
+            display: inline-block;
+            backdrop-filter: blur(2px);
+            border: 1.5px solid rgba(150, 30, 30, 0.25);
+            box-shadow: 0 6px 14px rgba(100, 0, 0, 0.08);
         }
-        
-        /* Mystery Box Container */
-        .box-container {
-            margin: 50px 0;
+
+        /* BOX UTAMA —— animasi lebih hidup */
+        .box-wrapper {
+            margin: 35px 0 25px;
             position: relative;
-            width: 360px;
-            height: 360px;
-            perspective: 1200px;
+            width: min(400px, 80vw);
+            height: min(400px, 80vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
+
         .box-glow {
             position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            background: radial-gradient(circle at center, rgba(255, 74, 74, 0.4) 0%, transparent 70%);
-            border-radius: 20px;
-            z-index: -1;
-            animation: pulse-glow 3s infinite alternate;
+            inset: -15px;
+            background: radial-gradient(circle at center, rgba(170, 30, 30, 0.25) 0%, transparent 75%);
+            border-radius: 30px;
+            filter: blur(8px);
             opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+            pointer-events: none;
         }
-        
+
+        .box-glow.active {
+            opacity: 1;
+        }
+
         .mystery-box {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
             cursor: pointer;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            transition: filter 0.2s;
         }
-        
+
+        /* sisi tertutup */
         .box-closed {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #450000, #250000);
-            border-radius: 15px;
+            background: linear-gradient(145deg, #621212, #3a0a0a);  /* dark red gradien */
+            border-radius: 28px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             backface-visibility: hidden;
-            transform-origin: center;
             box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                0 0 0 3px rgba(90, 0, 0, 0.8);
-            border: 3px solid rgba(255, 74, 74, 0.3);
-            overflow: hidden;
+                0 22px 40px rgba(90, 0, 0, 0.4),
+                inset 0 -3px 0 rgba(255, 255, 255, 0.1),
+                0 0 0 4px rgba(170, 50, 50, 0.3);
+            border: 2px solid #a53f3f;
+            transform-origin: center;
+            transition: transform 0.1s;
         }
-        
-        .box-closed:before {
+
+        .box-closed::after {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, #ff0000, #ff4a4a, #ff0000);
+            inset: 10px;
+            border-radius: 20px;
+            border: 2px dashed #b65454;
+            opacity: 0.3;
         }
-        
-        .box-pattern {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0.1;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(255, 74, 74, 0.8) 3px, transparent 3px),
-                radial-gradient(circle at 75% 75%, rgba(255, 120, 120, 0.8) 3px, transparent 3px);
-            background-size: 60px 60px;
+
+        .box-closed .big-heart {
+            font-size: 8rem;
+            color: #ffd0d0;
+            filter: drop-shadow(0 8px 12px #4f0000);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 #610000;
         }
-        
-        .box-label {
+
+        .box-closed .open-prompt {
             font-family: 'Montserrat', sans-serif;
-            background: rgba(0, 0, 0, 0.6);
-            color: #ff4a4a;
-            padding: 25px 50px;
-            font-size: 7rem;
-            font-weight: 800;
-            letter-spacing: 5px;
-            position: relative;
-            z-index: 2;
-            border: 3px solid rgba(255, 74, 74, 0.5);
-            border-radius: 12px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 40px rgba(255, 74, 74, 0.4);
-            text-shadow: 0 0 15px rgba(255, 74, 74, 0.8);
+            font-weight: 700;
+            background: rgba(40, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            color: #ffe1e1;
+            border: 2px solid #b74b4b;
+            box-shadow: 0 0 20px #b33b3b;
         }
-        
+
+        /* sisi terbuka */
         .box-open {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #350000, #150000);
-            border-radius: 15px;
+            background: linear-gradient(145deg, #fceaea, #f5d6d6);
+            border-radius: 28px;
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             backface-visibility: hidden;
             transform: rotateY(180deg);
+            box-shadow: 0 22px 40px rgba(90, 20, 20, 0.3), inset 0 0 0 3px #c24949;
+            border: 2px solid #b74848;
             overflow: hidden;
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.7),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                0 0 0 3px rgba(90, 0, 0, 0.8);
-            border: 3px solid rgba(255, 74, 74, 0.4);
         }
-        
-        .box-open:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, #ff0000, #ff4a4a, #ff0000);
-        }
-        
+
         .gift-content {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
             width: 100%;
             height: 100%;
-            position: relative;
-            z-index: 2;
+            padding: 16px;
             opacity: 0;
-            transition: opacity 1s ease 0.5s;
+            transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        
+
+        .gift-content.show {
+            opacity: 1;
+        }
+
+        /* foto hadiah —— ukuran flexible, maks 80% biar tidak mentok */
         .gift-photo {
-            max-width: 95%;
-            max-height: 85%;
+            max-width: 85%;
+            max-height: 75%;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-            border: 3px solid rgba(255, 74, 74, 0.4);
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
+            border-radius: 18px;
+            background: rgba(200, 120, 120, 0.1);
+            padding: 12px;
+            border: 3px solid #a53f3f;
+            box-shadow: 0 18px 28px rgba(100, 0, 0, 0.3);
         }
-        
+
+        /* nama hadiah (HAPPY VALENTINE!) tetap dark red */
         .gift-name {
             font-family: 'Montserrat', sans-serif;
             font-size: 1.8rem;
             font-weight: 700;
-            color: #ffeaea;
+            color: #7a2020;
             margin-top: 20px;
             letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 74, 74, 0.5);
+            background: rgba(180, 70, 70, 0.1);
+            padding: 10px 30px;
+            border-radius: 40px;
+            border: 1px solid #be5a5a;
         }
-        
-        /* Animation Classes */
-        .shake-fast {
-            animation: shakeFast 0.3s ease infinite;
-        }
-        
-        .open {
-            animation: openBox 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        
-        .show-content {
-            opacity: 1 !important;
-        }
-        
-        @keyframes shakeFast {
-            0%, 100% { transform: translateX(0) rotate(0deg); }
-            10% { transform: translateX(-12px) rotate(-2deg); }
-            20% { transform: translateX(12px) rotate(2deg); }
-            30% { transform: translateX(-10px) rotate(-1.5deg); }
-            40% { transform: translateX(10px) rotate(1.5deg); }
-            50% { transform: translateX(-8px) rotate(-1deg); }
-            60% { transform: translateX(8px) rotate(1deg); }
-            70% { transform: translateX(-6px) rotate(-0.5deg); }
-            80% { transform: translateX(6px) rotate(0.5deg); }
-            90% { transform: translateX(-3px) rotate(-0.2deg); }
-        }
-        
-        @keyframes openBox {
-            0% { transform: rotateY(0deg); }
-            70% { transform: rotateY(180deg); }
-            100% { transform: rotateY(180deg); }
-        }
-        
-        @keyframes pulse-glow {
-            0% { opacity: 0.3; transform: scale(1); }
-            100% { opacity: 0.6; transform: scale(1.05); }
-        }
-        
-        /* Light Particles */
-        .light-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 5;
-            box-shadow: 0 0 15px white, 0 0 30px white;
-            animation: particle-explode 1.5s ease-out forwards;
-        }
-        
-        @keyframes particle-explode {
-            0% {
-                transform: translate(0, 0) scale(0.5);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--tx), var(--ty)) scale(0);
-                opacity: 0;
-            }
-        }
-        
-        /* Valentine Text */
-        .valentine-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ff6b6b;
-            margin: 40px 0;
-            letter-spacing: 2px;
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .valentine-text:before, .valentine-text:after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #ff4a4a, transparent);
-        }
-        
-        .valentine-text:before {
-            left: calc(50% - 140px);
-        }
-        
-        .valentine-text:after {
-            right: calc(50% - 140px);
-        }
-        
-        /* Gift Items Display */
-        .gift-items {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            margin: 40px 0 30px;
-            width: 100%;
-            max-width: 1000px;
-        }
-        
-        .gift-item {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(145deg, #350000, #1a0000);
-            border-radius: 10px;
-            padding: 20px 15px;
-            width: 150px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid rgba(255, 74, 74, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .gift-item:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #ff4a4a, #ff6b6b);
-        }
-        
-        .item-icon {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ff4a4a;
-            font-size: 2.5rem;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 50%;
-            border: 2px solid rgba(255, 74, 74, 0.4);
-        }
-        
-        .item-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ffeaea;
-            margin-bottom: 10px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .item-chance {
+
+        /* footer minimal */
+        .footer-note {
+            margin-top: 55px;
             font-size: 1rem;
-            font-weight: 500;
-            color: #ff9e9e;
-            letter-spacing: 0.5px;
-        }
-        
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            padding: 30px 20px;
-            text-align: center;
-            color: #ff9e9e;
+            color: #a55b5b;
+            border-top: 2px solid #dc9e9e;
+            padding-top: 25px;
             width: 100%;
-            border-top: 1px solid rgba(255, 74, 74, 0.3);
-            position: relative;
+            text-align: center;
+            font-weight: 500;
         }
-        
-        footer:before {
-            content: "";
-            position: absolute;
-            top: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ff4a4a, transparent);
-        }
-        
-        .made-by {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .social-link {
-            font-family: 'Poppins', sans-serif;
-            color: #ff6b6b;
+
+        .footer-note a {
+            color: #941f1f;
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
-            font-size: 1rem;
-            position: relative;
-            padding-bottom: 3px;
+            font-weight: 600;
+            margin: 0 12px;
         }
-        
-        .social-link:after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #ff4a4a, #ff6b6b);
-            transition: width 0.3s ease;
+
+        .footer-note a:hover {
+            text-decoration: underline;
         }
-        
-        .social-link:hover {
-            color: #ffeaea;
+
+        /* animasi khusus */
+        @keyframes shake-pulse {
+            0% { transform: translateX(0) rotate(0deg); }
+            15% { transform: translateX(-14px) rotate(-2.5deg); }
+            30% { transform: translateX(14px) rotate(2.5deg); }
+            45% { transform: translateX(-10px) rotate(-1.8deg); }
+            60% { transform: translateX(10px) rotate(1.8deg); }
+            75% { transform: translateX(-5px) rotate(-1deg); }
+            90% { transform: translateX(5px) rotate(1deg); }
+            100% { transform: translateX(0) rotate(0); }
         }
-        
-        .social-link:hover:after {
-            width: 100%;
+
+        .shake-strong {
+            animation: shake-pulse 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
-        
-        .disclaimer {
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 400;
-            margin-top: 25px;
-            color: #ff9e9e;
-            letter-spacing: 0.5px;
+
+        @keyframes flipOpen {
+            0% { transform: rotateY(0deg); }
+            40% { transform: rotateY(180deg) scale(1.05); }
+            70% { transform: rotateY(180deg) scale(1.02); }
+            100% { transform: rotateY(180deg) scale(1); }
         }
-        
-        /* Instructions */
-        .instructions {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(145deg, #350000, #1a0000);
-            padding: 25px 30px;
-            border-radius: 10px;
-            margin-bottom: 40px;
-            max-width: 700px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(255, 74, 74, 0.3);
-            text-align: left;
-            position: relative;
+
+        .box-open-animation {
+            animation: flipOpen 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        
-        .instructions:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #ff4a4a, #ff6b6b);
-        }
-        
-        .instructions h3 {
-            font-family: 'Montserrat', sans-serif;
-            color: #ffeaea;
-            margin-bottom: 15px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            font-size: 1.4rem;
-        }
-        
-        .instructions p {
-            color: #ffb8b8;
-            font-weight: 500;
-            line-height: 1.7;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 2.8rem;
-            }
-            
-            .mystery-box-title {
-                font-size: 2.2rem;
-                letter-spacing: 2px;
-            }
-            
-            .box-container {
-                width: 300px;
-                height: 300px;
-            }
-            
-            .box-label {
-                font-size: 5.5rem;
-                padding: 20px 40px;
-            }
-            
-            .gift-items {
-                gap: 20px;
-            }
-            
-            .gift-item {
-                width: 130px;
-                padding: 15px 10px;
-            }
-            
-            .valentine-text {
-                font-size: 1.8rem;
-            }
-            
-            .value-tag {
-                font-size: 1.3rem;
-                padding: 12px 30px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 2.2rem;
-            }
-            
-            .mystery-box-title {
-                font-size: 1.8rem;
-            }
-            
-            .valentine-text {
-                font-size: 1.5rem;
-            }
-            
-            .box-container {
-                width: 280px;
-                height: 280px;
-            }
-            
-            .box-label {
-                font-size: 5rem;
-                padding: 15px 30px;
-            }
-            
-            .gift-items {
-                gap: 15px;
-            }
-            
-            .gift-item {
-                width: 120px;
-                padding: 12px 8px;
-            }
-            
-            .item-name {
-                font-size: 1rem;
-            }
-            
-            .value-tag {
-                font-size: 1.1rem;
-                padding: 10px 25px;
-            }
-        }
-        
-        /* Sparkle Effect */
-        .sparkle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: white;
+
+        /* partikel ledakan */
+        .particle {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: #b33131;
             border-radius: 50%;
             pointer-events: none;
-            z-index: 2;
-            box-shadow: 0 0 15px white;
-            animation: sparkle-fall 3s linear forwards;
+            z-index: 999;
+            box-shadow: 0 0 18px #ff7b7b;
+            filter: blur(1px);
         }
-        
-        @keyframes sparkle-fall {
-            0% {
-                transform: translateY(-100px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
+
+        @keyframes particle-fly {
+            0% { opacity: 1; transform: scale(1) translate(0, 0); }
+            100% { opacity: 0; transform: scale(0) translate(var(--dx), var(--dy)); }
+        }
+
+        /* responsive ekstra */
+        @media (max-width: 500px) {
+            .main-title { font-size: 3rem; }
+            .sub-line { font-size: 1.3rem; padding: 8px 18px; }
+            .box-closed .big-heart { font-size: 6rem; }
+            .box-closed .open-prompt { font-size: 1.3rem; padding: 8px 18px; }
+            .gift-name { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 380px) {
+            .main-title { font-size: 2.5rem; }
+            .sub-line { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">KISS-CHO</div>
-            <h1 class="mystery-box-title">VALENTINE GIFT-BOX</h1>
-            <div class="value-tag">OPEN THE GIFT FROM KACHOO!</div>
-        </div>
-        
-        <div class="instructions">
-            <h3>HOW TO PLAY:</h3>
-            <p>Click the mystery box to open it and reveal your special Valentine gift!</p>
-        </div>
-        
-        <div class="box-container">
-            <div class="box-glow" id="boxGlow"></div>
-            <div class="mystery-box">
-                <div class="box-closed" id="closedBox">
-                    <div class="box-pattern"></div>
-                    <div class="box-label">?</div>
-                </div>
-                <div class="box-open" id="openBox">
-                    <div class="gift-content" id="giftContent">
-                        <!-- Foto hadiah akan dimasukkan di sini oleh JavaScript -->
-                    </div>
+<div class="container">
+    <!-- Hanya judul KISS-CHO dan ajakan buka, tanpa "Valentine Gift-Box" berulang -->
+    <div class="main-title">KISS-CHO</div>
+    <div class="sub-line">open your valentine gift</div>
+
+    <!-- Kotak utama -->
+    <div class="box-wrapper" id="boxWrapper">
+        <div class="box-glow" id="glowEffect"></div>
+        <div class="mystery-box" id="mysteryBox">
+            <div class="box-closed" id="closedSide">
+                <i class="fas fa-heart big-heart"></i>
+                <span class="open-prompt">OPEN ME</span>
+            </div>
+            <div class="box-open" id="openSide">
+                <div class="gift-content" id="giftContent">
+                    <!-- akan diisi oleh JS (foto + nama) -->
                 </div>
             </div>
         </div>
-        
-        <div class="valentine-text">YOUR SPECIAL VALENTINE GIFT</div>
-        
-        <div class="gift-items">
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <div class="item-name">Gift 1</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="item-name">Gift 2</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-gem"></i>
-                </div>
-                <div class="item-name">Gift 3</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <div class="item-name">Gift 4</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-moon"></i>
-                </div>
-                <div class="item-name">Gift 5</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-sun"></i>
-                </div>
-                <div class="item-name">Gift 6</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-cloud"></i>
-                </div>
-                <div class="item-name">Gift 7</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-feather-alt"></i>
-                </div>
-                <div class="item-name">Gift 8</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-dove"></i>
-                </div>
-                <div class="item-name">Gift 9</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-            <div class="gift-item">
-                <div class="item-icon">
-                    <i class="fas fa-fire"></i>
-                </div>
-                <div class="item-name">Gift 10</div>
-                <div class="item-chance">10% Chance</div>
-            </div>
-        </div>
-        
-        <footer>
-            <div class="made-by">KISS-CHO by The Kachoo!</div>
-            <div class="social-links">
-                <a href="https://twitter.com/thekachoo" target="_blank" class="social-link">@thekachoo</a>
-                <a href="mailto:ohkachoo@gmail.com" class="social-link">ohkachoo@gmail.com</a>
-            </div>
-            <div class="disclaimer">Happy Valentine, you'll always be loved!</div>
-        </footer>
     </div>
 
-    <script>
-        // 10 Hadiah dengan foto PNG
+    <!-- footer sederhana -->
+    <div class="footer-note">
+        <span>💘 KISS-CHO by The Kachoo!  </span>
+        <a href="#">@thekachoo</a> • <a href="#">ohkachoo@gmail.com</a>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Daftar 10 hadiah (foto PNG) — nama file menyesuaikan
         const gifts = [
-            {
-                id: 1,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO1.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 2,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO2.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 3,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO3.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 4,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO4.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 5,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO5.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 6,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO6.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 7,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO7.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 8,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO8.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 9,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO9.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            },
-            {
-                id: 10,
-                name: "HAPPY VALENTINE!",
-                photo: "KISSCHO10.png", // Ganti dengan nama file foto Anda
-                probability: 10
-            }
+            { id: 1, name: 'HAPPY VALENTINE!', photo: 'KISSCHO1.png' },
+            { id: 2, name: 'HAPPY VALENTINE!', photo: 'KISSCHO2.png' },
+            { id: 3, name: 'HAPPY VALENTINE!', photo: 'KISSCHO3.png' },
+            { id: 4, name: 'HAPPY VALENTINE!', photo: 'KISSCHO4.png' },
+            { id: 5, name: 'HAPPY VALENTINE!', photo: 'KISSCHO5.png' },
+            { id: 6, name: 'HAPPY VALENTINE!', photo: 'KISSCHO6.png' },
+            { id: 7, name: 'HAPPY VALENTINE!', photo: 'KISSCHO7.png' },
+            { id: 8, name: 'HAPPY VALENTINE!', photo: 'KISSCHO8.png' },
+            { id: 9, name: 'HAPPY VALENTINE!', photo: 'KISSCHO9.png' },
+            { id: 10, name: 'HAPPY VALENTINE!', photo: 'KISSCHO10.png' }
         ];
 
-        let boxOpened = false;
-        
-        // Get DOM elements
-        const closedBox = document.getElementById('closedBox');
-        const openBox = document.getElementById('openBox');
+        // elemen DOM
+        const closed = document.getElementById('closedSide');
+        const openDiv = document.getElementById('openSide');
         const giftContent = document.getElementById('giftContent');
-        const mysteryBox = document.querySelector('.mystery-box');
-        const boxGlow = document.getElementById('boxGlow');
-        
-        // Create sparkle effect
-        function createSparkle(x, y) {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            sparkle.style.left = x + 'px';
-            sparkle.style.top = y + 'px';
-            
-            // Random size
-            const size = Math.random() * 6 + 4;
-            sparkle.style.width = size + 'px';
-            sparkle.style.height = size + 'px';
-            
-            // Random animation duration
-            sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            
-            document.body.appendChild(sparkle);
-            
-            // Remove sparkle after animation
-            setTimeout(() => {
-                if (sparkle.parentNode) {
-                    sparkle.remove();
-                }
-            }, 3000);
-        }
-        
-        // Create light particles explosion
-        function createLightParticles(count, centerX, centerY) {
+        const mysteryBox = document.getElementById('mysteryBox');
+        const glow = document.getElementById('glowEffect');
+        const wrapper = document.getElementById('boxWrapper');
+
+        let isOpened = false;
+
+        // fungsi partikel ledakan (lebih meriah)
+        function explodeParticles(x, y, count = 28) {
             for (let i = 0; i < count; i++) {
                 const particle = document.createElement('div');
-                particle.className = 'light-particle';
-                
-                // Random position around center
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 150 + 50;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
-                
-                particle.style.setProperty('--tx', tx + 'px');
-                particle.style.setProperty('--ty', ty + 'px');
-                
-                particle.style.left = centerX + 'px';
-                particle.style.top = centerY + 'px';
-                
-                // Random size
-                const size = Math.random() * 8 + 4;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                
-                // Random delay
-                particle.style.animationDelay = (Math.random() * 0.5) + 's';
-                
+                particle.className = 'particle';
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = 80 + Math.random() * 160;
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+                particle.style.setProperty('--dx', dx + 'px');
+                particle.style.setProperty('--dy', dy + 'px');
+                particle.style.left = (x - 6) + 'px';
+                particle.style.top = (y - 6) + 'px';
+                particle.style.background = `hsl(${10 + Math.random() * 20}, 80%, 45%)`; // merah gelap variasi
+                particle.style.width = (8 + Math.random() * 12) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animation = `particle-fly 1.4s ease-out forwards`;
                 document.body.appendChild(particle);
-                
-                // Remove particle after animation
-                setTimeout(() => {
-                    if (particle.parentNode) {
-                        particle.remove();
-                    }
-                }, 2000);
+                setTimeout(() => { if (particle.parentNode) particle.remove(); }, 1500);
             }
         }
-        
-        // Add glow effect on hover
-        closedBox.addEventListener('mouseover', function() {
-            if (!boxOpened) {
-                boxGlow.style.opacity = '1';
-                // Create sparkles around the box
-                for (let i = 0; i < 3; i++) {
-                    const boxRect = this.getBoundingClientRect();
-                    const x = boxRect.left + Math.random() * boxRect.width;
-                    const y = boxRect.top + Math.random() * boxRect.height;
-                    setTimeout(() => createSparkle(x, y), i * 100);
-                }
-            }
+
+        // kilau kotak saat hover (glow)
+        closed.addEventListener('mouseenter', () => {
+            if (!isOpened) glow.classList.add('active');
         });
-        
-        closedBox.addEventListener('mouseout', function() {
-            if (!boxOpened) {
-                boxGlow.style.opacity = '0';
-            }
+        closed.addEventListener('mouseleave', () => {
+            if (!isOpened) glow.classList.remove('active');
         });
-        
-        // Open box on click (only once)
-        closedBox.addEventListener('click', function() {
-            if (boxOpened) return;
-            openMysteryBox();
-        });
-        
-        // Function to open the mystery box
-        function openMysteryBox() {
-            if (boxOpened) return;
-            
-            boxOpened = true;
-            
-            // Disable hover effects
-            boxGlow.style.opacity = '0';
-            
-            // Start fast shaking animation
-            closedBox.classList.add('shake-fast');
-            
-            // Create initial sparkles
-            for (let i = 0; i < 15; i++) {
-                const boxRect = closedBox.getBoundingClientRect();
-                const x = boxRect.left + Math.random() * boxRect.width;
-                const y = boxRect.top + Math.random() * boxRect.height;
-                setTimeout(() => createSparkle(x, y), i * 50);
+
+        // fungsi buka kotak
+        function openBox() {
+            if (isOpened) return;
+            isOpened = true;
+            glow.classList.remove('active');
+
+            // 1. getar cepat
+            closed.classList.add('shake-strong');
+
+            // 2. partikel kecil selama getar
+            const rect = closed.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    if (!isOpened) return; // safety
+                    const randX = centerX - 40 + Math.random() * 80;
+                    const randY = centerY - 40 + Math.random() * 80;
+                    explodeParticles(randX, randY, 6);
+                }, i * 70);
             }
-            
-            // After shaking, open the box
+
+            // 3. setelah getar, flip box
             setTimeout(() => {
-                closedBox.classList.remove('shake-fast');
-                mysteryBox.classList.add('open');
-                
-                // Show the open box
-                openBox.style.display = 'flex';
-                
-                // Create light particles explosion
-                const boxRect = closedBox.getBoundingClientRect();
-                const centerX = boxRect.left + boxRect.width / 2;
-                const centerY = boxRect.top + boxRect.height / 2;
-                
-                // Delay particle explosion for dramatic effect
+                closed.classList.remove('shake-strong');
+                mysteryBox.classList.add('box-open-animation');
+
+                // tampilkan sisi open
+                openDiv.style.display = 'flex';
+
+                // 4. ledakan partikel besar di tengah
                 setTimeout(() => {
-                    createLightParticles(30, centerX, centerY);
-                    
-                    // Show gift content after particles
+                    const boxRect = closed.getBoundingClientRect();
+                    const midX = boxRect.left + boxRect.width / 2;
+                    const midY = boxRect.top + boxRect.height / 2;
+                    explodeParticles(midX, midY, 36);
+
+                    // pilih hadiah acak
+                    const randomIndex = Math.floor(Math.random() * gifts.length);
+                    const selected = gifts[randomIndex];
+
+                    // siapkan konten (foto dan nama)
+                    // ukuran foto dikontrol CSS (max 85% x 75%)
+                    // Nama selalu HAPPY VALENTINE! sesuai array
+                    giftContent.innerHTML = `
+                        <img src="${selected.photo}" alt="gift" class="gift-photo" onerror="this.src='https://via.placeholder.com/300x300/8b1a1a/ffffff?text=❤️'">
+                        <div class="gift-name">${selected.name}</div>
+                    `;
+
+                    // munculkan konten dengan fade
                     setTimeout(() => {
-                        // Select a random gift
-                        const selectedGift = selectRandomGift();
-                        
-                        // Display the selected gift
-                        displayGift(selectedGift);
-                        
-                        // Fade in content
+                        giftContent.classList.add('show');
+                    }, 150);
+
+                    // partikel tambahan setelah foto muncul
+                    for (let i = 0; i < 3; i++) {
                         setTimeout(() => {
-                            giftContent.classList.add('show-content');
-                        }, 300);
-                        
-                        // Create final sparkles
-                        for (let i = 0; i < 10; i++) {
-                            setTimeout(() => {
-                                const openRect = openBox.getBoundingClientRect();
-                                const x = openRect.left + Math.random() * openRect.width;
-                                const y = openRect.top + Math.random() * openRect.height;
-                                createSparkle(x, y);
-                            }, i * 200);
-                        }
-                    }, 800); // Delay sebelum foto muncul
-                }, 500); // Delay sebelum particles
-            }, 1500); // Durasi shaking
+                            const newRect = openDiv.getBoundingClientRect();
+                            const x = newRect.left + Math.random() * newRect.width;
+                            const y = newRect.top + Math.random() * newRect.height;
+                            explodeParticles(x, y, 12);
+                        }, 400 + i * 180);
+                    }
+                }, 500); // setengah detik setelah flip mulai
+            }, 800); // getar selama 800ms
         }
-        
-        // Function to select a random gift based on probabilities
-        function selectRandomGift() {
-            // Calculate total probability
-            const totalProbability = gifts.reduce((sum, gift) => sum + gift.probability, 0);
-            
-            // Generate a random number between 0 and totalProbability
-            let random = Math.random() * totalProbability;
-            
-            // Find the gift based on probability ranges
-            let selectedGift = gifts[0];
-            let cumulativeProbability = 0;
-            
-            for (const gift of gifts) {
-                cumulativeProbability += gift.probability;
-                if (random <= cumulativeProbability) {
-                    selectedGift = gift;
-                    break;
-                }
+
+        // event click
+        closed.addEventListener('click', openBox);
+
+        // tambahan: sedikit kilau random awal
+        setInterval(() => {
+            if (!isOpened && Math.random() > 0.7) {
+                glow.classList.add('active');
+                setTimeout(() => { if (!isOpened) glow.classList.remove('active'); }, 400);
             }
-            
-            return selectedGift;
-        }
-        
-        // Function to display the selected gift
-        function displayGift(gift) {
-            giftContent.innerHTML = `
-                <img src="${gift.photo}" alt="${gift.name}" class="gift-photo">
-                <div class="gift-name">${gift.name}</div>
-            `;
-        }
-        
-        // Initialize sparkles on load
-        window.addEventListener('load', () => {
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const x = Math.random() * window.innerWidth;
-                    const y = Math.random() * window.innerHeight;
-                    createSparkle(x, y);
-                }, i * 300);
-            }
+        }, 2000);
+
+        // pesan: ukuran foto yang ditampilkan kurang lebih 280-320px (dalam kotak 400px)
+        // tapi dengan max-width:85% dan max-height:75% membuatnya proporsional.
+        // Untuk desktop ukuran kotak 400x400 -> foto sekitar 320x240 aman.
+        // Untuk mobile 300x300 -> foto sekitar 240x180.
+        // developer bisa ganti file PNG sesuai nama. kalau error pakai placeholder.
+
+        // jika gambar tidak ada, fallback ke placeholder
+        window.addEventListener('load', function() {
+            // preload tips (tidak wajib)
         });
-        
-        // Prevent right-click
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-    </script>
+    })();
+</script>
+
+<!-- catatan: ukuran foto kurang lebih mengikuti dimensi box, 
+     maksimal 85% lebar dan 75% tinggi box, sehingga aman dan tidak keluar -->
 </body>
 </html>
