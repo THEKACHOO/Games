@@ -3,286 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>CHORONA</title>
+    <title>CHORONA · masker wajah</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background: #fff7f2;  /* putih dengan sentuhan pink peach */
+            background: #faf3f0;  /* warm soft background */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
         }
 
         .card {
             max-width: 1000px;
             width: 100%;
-            background-color: white;
-            border-radius: 48px 48px 36px 36px;
-            box-shadow: 0 25px 45px -16px #f4a48e, 0 8px 20px #ffe2d6;
+            background: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 30px 50px -20px rgba(180, 100, 80, 0.25), 0 8px 20px rgba(250, 210, 200, 0.3);
             overflow: hidden;
-            border: 2px solid #ffe2d4;
         }
 
         .panel {
-            padding: 2.2rem 2.5rem;
+            padding: 2.5rem 3rem;
         }
 
-        @media (max-width: 550px) {
-            .panel { padding: 1.8rem 1rem; }
+        @media (max-width: 600px) {
+            .panel { padding: 2rem 1.5rem; }
         }
 
-        /* header khusus dalam panel start */
-        .brand-header {
+        /* TYPOGRAPHY clean */
+        h1, h2, h3, p {
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        /* ----- START SCREEN ----- */
+        #startScreen {
             text-align: center;
-            margin-bottom: 0.8rem;
         }
-        .brand-header h2 {
+
+        .brand-main {
             font-size: 2rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, #c55d4a, #b14764);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 1px;
-        }
-        .brand-header h2 span {
-            background: #ffded3;
-            padding: 0 8px;
-            -webkit-text-fill-color: #963f33;
-            font-weight: 700;
+            font-weight: 500;
+            color: #b97a6a;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
         }
 
-        /* start screen */
+        .brand-main span {
+            font-weight: 300;
+            color: #cb8e7c;
+        }
+
         #startScreen h1 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            color: #b14242;
-            text-align: center;
-            margin: 0.8rem 0 1.8rem;
-            text-shadow: 0 3px 6px #ffd9cc;
+            font-size: 2.6rem;
+            font-weight: 500;
+            color: #42271f;
+            line-height: 1.2;
+            margin: 2rem 0 1.8rem;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
-            margin-bottom: 2rem;
+            align-items: flex-start;
+            gap: 0.6rem;
+            width: 100%;
+            max-width: 420px;
+            margin: 2rem auto 1.2rem;
         }
+
         .input-group label {
-            font-weight: 600;
-            color: #a14332;
-            font-size: 1.1rem;
-            padding-left: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #a56351;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: 0.75rem;
         }
+
         .input-group input {
-            padding: 1rem 1.5rem;
+            width: 100%;
+            padding: 1.2rem 1.5rem;
             font-size: 1.2rem;
-            border: 2px solid #ffd5c5;
-            border-radius: 60px;
-            background: white;
+            background: #fefaf8;
+            border: 1.5px solid #edd9d0;
+            border-radius: 32px;
             outline: none;
             transition: 0.2s;
-            color: #3d1d13;
+            color: #2f1d16;
         }
+
         .input-group input:focus {
-            border-color: #ff9575;
-            box-shadow: 0 0 0 4px #ffe2d6;
+            border-color: #dbaa96;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px #fee8df;
         }
 
-        .btn-start, .btn-option, .btn-restart {
-            background: #ffb698;  /* peach cerah */
+        .btn-start, .btn-next, .btn-restart {
+            background: #d4a392;
             border: none;
-            color: #421e10;
-            font-weight: 700;
-            font-size: 1.5rem;
-            padding: 1rem 2.2rem;
-            border-radius: 80px;
-            box-shadow: 0 7px 0 #aa4f38, 0 10px 22px #fec7b2;
+            color: white;
+            font-weight: 500;
+            font-size: 1.2rem;
+            padding: 1rem 2.8rem;
+            border-radius: 40px;
             cursor: pointer;
-            transition: 0.08s linear;
+            transition: background 0.15s, box-shadow 0.15s;
             width: fit-content;
-            margin: 1.5rem auto 0;
+            margin: 2rem auto 0;
             display: block;
-            border: 2px solid #ffc6b0;
-        }
-        .btn-start:active, .btn-option:active, .btn-restart:active {
-            transform: translateY(5px);
-            box-shadow: 0 2px 0 #aa4f38, 0 8px 18px #febaa2;
-        }
-        .btn-start:disabled {
-            opacity: 0.5;
-            transform: translateY(0);
-            box-shadow: 0 5px 0 #aa4f38;
-            pointer-events: none;
+            border: 1px solid #eac5b8;
+            box-shadow: 0 4px 10px #efc8bb;
         }
 
-        /* kuis */
-        .header-quiz {
+        .btn-start:hover, .btn-next:hover, .btn-restart:hover {
+            background: #c28672;
+            box-shadow: 0 6px 14px #e5b9aa;
+        }
+
+        /* ----- QUIZ SCREEN ----- */
+        .quiz-header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
             justify-content: space-between;
             margin-bottom: 2rem;
-        }
-        .nama-badge {
-            background: #fff1e7;
-            padding: 0.6rem 1.8rem;
-            border-radius: 40px;
-            font-size: 1.2rem;
-            color: #9f3c24;
-            font-weight: 600;
-            border: 2px solid #ffb8a0;
-        }
-        .progress {
-            background: #ffd5c2;
-            padding: 0.6rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 700;
-            color: #692f1d;
+            flex-wrap: wrap;
+            gap: 16px 8px;
         }
 
-        .question-box h2 {
+        .user-badge {
+            background: #f3e3dc;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 450;
+            color: #5e3c30;
+            border: 1px solid #eac7bb;
+        }
+
+        .step-indicator {
+            color: #ad7665;
+            font-weight: 450;
+            font-size: 1.1rem;
+            background: #fcf1ec;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            border: 1px solid #eed3c8;
+        }
+
+        .question-text {
             font-size: 1.9rem;
-            font-weight: 600;
-            color: #602614;
-            margin-bottom: 1.8rem;
+            font-weight: 430;
+            color: #341f18;
             line-height: 1.3;
+            margin-bottom: 2.5rem;
         }
 
         .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            margin: 2rem 0 1.2rem;
+            gap: 1.1rem;
+            margin: 2.2rem 0 1.2rem;
         }
+
         .option-btn {
             background: white;
-            border: 3px solid #fed9cb;
-            border-radius: 100px;
-            padding: 1rem 2rem;
+            border: 1.8px solid #edd2c7;
+            border-radius: 60px;
+            padding: 1rem 2rem 1rem 1rem;
             font-size: 1.3rem;
-            font-weight: 500;
-            text-align: left;
+            font-weight: 400;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
             cursor: pointer;
-            transition: 0.1s;
-            color: #2b130c;
-            box-shadow: 0 4px 0 #ecc2b2;
+            transition: border 0.15s, background 0.1s;
+            color: #311f19;
+            box-shadow: 0 2px 4px #f8e2d9;
         }
+
         .option-btn:hover {
-            background: #fff2ea;
-            border-color: #ffa384;
+            border-color: #cfa48d;
+            background: #fff8f4;
         }
+
         .option-btn.selected {
-            background: #ffd5c2;
-            border-color: #fa7a53;
-            box-shadow: 0 4px 0 #b14424;
-            transform: translateY(2px);
+            border-color: #b87b64;
+            background: #fff0e8;
+            border-width: 2px;
         }
-        .option-letter {
-            background: #ffaa8e;
-            color: #3d1b0e;
-            border-radius: 60px;
-            width: 44px;
-            height: 44px;
+
+        .opt-letter {
+            background: #ffffff;
+            border: 1.5px solid #dbb3a2;
+            color: #7f5140;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
+            font-weight: 500;
             font-size: 1.5rem;
         }
 
-        /* result */
-        .result-container {
+        .option-btn.selected .opt-letter {
+            background: #dbb3a2;
+            color: white;
+            border-color: #b87b64;
+        }
+
+        /* tombol next hanya huruf, tanpa ikon */
+        .btn-next {
+            margin-top: 1.2rem;
+            background: #dbb3a2;
+            box-shadow: 0 4px 12px #ecc7ba;
+        }
+
+        /* ----- RESULT SCREEN ----- */
+        .result-holder {
             text-align: center;
         }
-        .result-name {
-            font-size: 1.8rem;
-            color: #a84328;
-            margin-bottom: 1rem;
-            font-weight: 500;
+
+        .result-greeting {
+            font-size: 1.7rem;
+            font-weight: 380;
+            color: #7f5543;
+            margin-bottom: 1.2rem;
         }
-        .result-img {
+
+        .result-greeting strong {
+            font-weight: 520;
+            color: #572f20;
+        }
+
+        .result-image {
             width: 100%;
             max-width: 800px;
             height: auto;
             aspect-ratio: 800 / 700;
-            background: #fbddd0;
-            border-radius: 40px;
-            margin: 1rem auto 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 5px solid #ffad8f;
-            box-shadow: 0 20px 30px -8px #ffb49a;
+            background: #ecd9d0;
+            border-radius: 32px;
+            margin: 1.8rem auto 2.2rem;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            color: #512618;
-            font-weight: 600;
-            font-size: 1.6rem;
-            text-shadow: 2px 2px 0 white;
+            border: 2px solid #f2d7cb;
+            box-shadow: 0 25px 35px -16px #d9b5a5;
         }
-        /* gambar masing-masing result via background style */
-        .result-img.cherry-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fec8cd%22/><circle cx=%22400%22 cy=%22350%22 r=%22120%22 fill=%22%23d63e3e%22/><circle cx=%22320%22 cy=%22300%22 r=%2250%22 fill=%22%23b32b2b%22/><circle cx=%22480%22 cy=%22400%22 r=%2250%22 fill=%22%23b32b2b%22/><text x=%22400%22 y=%22370%22 font-size=%2248%22 fill=%22%23fff0e6%22 text-anchor=%22middle%22 dy=%22.3em%22>🍒 CHERRY</text></svg>'); }
-        .result-img.avocado-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23e1f0d3%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%22130%22 ry=%22100%22 fill=%22%235c9c4b%22/><circle cx=%22360%22 cy=%22330%22 r=%2228%22 fill=%22%23b56f3b%22/><text x=%22400%22 y=%22390%22 font-size=%2248%22 fill=%22%233d2b12%22 text-anchor=%22middle%22>🥑 AVOCADO</text></svg>'); }
-        .result-img.milk-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23f9f2e7%22/><path d=%22M350 250 L450 250 L480 400 L320 400 Z%22 fill=%22%23ffffff%22 stroke=%22%23c0a28a%22 stroke-width=%2212%22/><text x=%22400%22 y=%22480%22 font-size=%2248%22 fill=%22%2390745c%22 text-anchor=%22middle%22>🥛 MILK</text></svg>'); }
-        .result-img.greentea-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23d5e8d5%22/><path d=%22M320 300 L480 300 L500 440 L300 440 Z%22 fill=%22%2399bb77%22/><circle cx=%22400%22 cy=%22300%22 r=%2225%22 fill=%22%236d8c5c%22/><text x=%22400%22 y=%22500%22 font-size=%2246%22 fill=%22%23355e2b%22 text-anchor=%22middle%22>🍃 GREEN TEA</text></svg>'); }
-        .result-img.coffee-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23ead8c5%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%22100%22 ry=%2260%22 fill=%22%234e3121%22/><circle cx=%22350%22 cy=%22320%22 r=%2212%22 fill=%22%23d9b48b%22/><text x=%22400%22 y=%22420%22 font-size=%2248%22 fill=%22%23412e1f%22 text-anchor=%22middle%22>☕ COFFEE</text></svg>'); }
-        .result-img.lemon-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fff3cb%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%2290%22 ry=%2260%22 fill=%22%23f5e73d%22/><circle cx=%22350%22 cy=%22330%22 r=%2210%22 fill=%22%234d4d2c%22/><text x=%22400%22 y=%22420%22 font-size=%2248%22 fill=%22%23777733%22 text-anchor=%22middle%22>🍋 LEMON</text></svg>'); }
-        .result-img.aloe-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23cef0d3%22/><path d=%22M400 200 L470 300 L400 500 L330 300 Z%22 fill=%22%233d9c6b%22/><text x=%22400%22 y=%22560%22 font-size=%2246%22 fill=%22%231e573a%22 text-anchor=%22middle%22>🌿 ALOE VERA</text></svg>'); }
 
-        .result-description {
-            background: #fff6ef;
-            border-radius: 48px;
-            padding: 2rem 2.2rem;
+        /* 7 gambar berbeda (soft tone, tanpa emoji) */
+        .cherry-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fce4e0%22/><circle cx=%22400%22 cy=%22330%22 r=%22130%22 fill=%22%23d6574a%22 opacity=%22.9%22/><circle cx=%22320%22 cy=%22280%22 r=%2255%22 fill=%22%23b03d33%22/><circle cx=%22470%22 cy=%22380%22 r=%2255%22 fill=%22%23b03d33%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%23fff3ee%22 text-anchor=%22middle%22 font-weight=%22300%22>cherry</text></svg>'); }
+        .avocado-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23e2efda%22/><ellipse cx=%22400%22 cy=%22360%22 rx=%22130%22 ry=%22100%22 fill=%22%235f8b4b%22/><circle cx=%22350%22 cy=%22340%22 r=%2228%22 fill=%22%23945f3a%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%233d3d21%22 text-anchor=%22middle%22>avocado</text></svg>'); }
+        .milk-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23f5efe8%22/><path d=%22M340 260 L460 260 L490 420 L310 420 Z%22 fill=%22%23faf9f7%22 stroke=%22%23cfb6a4%22 stroke-width=%2214%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%2380695b%22 text-anchor=%22middle%22>milk</text></svg>'); }
+        .greentea-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23deedd3%22/><path d=%22M310 290 L490 290 L510 450 L290 450 Z%22 fill=%22%238daa6b%22/><circle cx=%22400%22 cy=%22300%22 r=%2225%22 fill=%22%235a7942%22/><text x=%22400%22 y=%22520%22 font-size=%2248%22 fill=%22%23334d24%22 text-anchor=%22middle%22>green tea</text></svg>'); }
+        .coffee-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23eadbcb%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%22100%22 ry=%2255%22 fill=%22%235e3f2c%22/><circle cx=%22360%22 cy=%22330%22 r=%2212%22 fill=%22%23be9b81%22/><text x=%22400%22 y=%22440%22 font-size=%2248%22 fill=%22%233f2d1f%22 text-anchor=%22middle%22>coffee</text></svg>'); }
+        .lemon-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fff4cf%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%22100%22 ry=%2260%22 fill=%22%23ebd75a%22/><circle cx=%22360%22 cy=%22330%22 r=%2210%22 fill=%22%237c7a37%22/><text x=%22400%22 y=%22440%22 font-size=%2248%22 fill=%22%23655f2b%22 text-anchor=%22middle%22>lemon</text></svg>'); }
+        .aloe-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23ccebda%22/><path d=%22M400 200 L480 300 L400 540 L320 300 Z%22 fill=%22%233a8c63%22/><text x=%22400%22 y=%22580%22 font-size=%2248%22 fill=%22%2327593f%22 text-anchor=%22middle%22>aloe vera</text></svg>'); }
+
+        .result-description-box {
+            background: #fbf4f0;
+            border-radius: 32px;
+            padding: 2.2rem 2.5rem;
             text-align: left;
-            border: 3px solid #ffbca8;
-            box-shadow: inset 0 1px 6px #ffd6c0;
+            border: 1px solid #f0d9cf;
+            box-shadow: inset 0 2px 6px #fff2ea;
         }
-        .result-description h3 {
-            color: #a13b22;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
+
+        .result-description-box h3 {
+            font-size: 2.4rem;
+            font-weight: 420;
+            color: #6f3d2b;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.02em;
         }
-        .result-description p {
+
+        .result-description-box p {
             font-size: 1.3rem;
-            color: #40261d;
-            margin-bottom: 0.5rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            color: #3b271f;
+            font-weight: 350;
             white-space: pre-line;
         }
 
         .footer-note {
-            margin-top: 2.5rem;
-            font-size: 1rem;
-            color: #b27a68;
-            text-align: center;
-            border-top: 2px dashed #fecab8;
+            margin-top: 2.8rem;
             padding-top: 1.5rem;
+            text-align: center;
+            border-top: 1px solid #f0d7cd;
+            font-size: 0.9rem;
+            color: #ac8a7a;
             display: flex;
             flex-direction: column;
             gap: 0.2rem;
         }
-        .footer-note .brand-small {
-            font-weight: 700;
-            font-size: 1.2rem;
-            background: linear-gradient(145deg, #c44f4f, #b26195);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+        .footer-note .mini-brand {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #c48d78;
+            letter-spacing: 0.3px;
         }
+
+        .footer-note .roleplay {
+            font-style: italic;
+            font-weight: 300;
+            color: #a98272;
+        }
+
         .hidden { display: none !important; }
     </style>
 </head>
@@ -290,94 +325,112 @@
 <div class="card" id="appCard">
     <!-- START SCREEN -->
     <div id="startScreen" class="panel">
-        <div class="brand-header">
-            <h2><span>KACHOO</span> X <span>AYU MERONA</span></h2>
-        </div>
-        <h1>Pilihan masker wajah <br>yang cocok untukmu!</h1>
+        <div class="brand-main">CHORONA</div>
+        <h1>Pilihan masker wajah<br>yang cocok untukmu</h1>
         <div class="input-group">
-            <label for="namaPanjang">Nama Panjang</label>
-            <input type="text" id="namaPanjang" placeholder="cth: Raisya Kirana" autocomplete="off">
+            <label for="namaPanjang">Nama panjang</label>
+            <input type="text" id="namaPanjang" placeholder="misal: Alexandria" autocomplete="off">
         </div>
-        <button class="btn-start" id="btnStart">Start ✨</button>
-        <div class="footer-note" style="border: none; margin-top: 2.2rem;">
-            <div class="brand-small">✨ fitur mini games The Kachoo ✨</div>
-            <div style="font-style: italic; color: #a56f5e;">For Roleplay Purpose Only.</div>
+        <button class="btn-start" id="btnStart">Mulai</button>
+        <div class="footer-note" style="border: none; margin-top: 3.2rem;">
+            <div class="mini-brand">Kachoo x Ayu Merona — mini games The Kachoo</div>
+            <div class="roleplay">For Roleplay Purpose Only.</div>
         </div>
     </div>
 
     <!-- QUIZ SCREEN -->
     <div id="quizScreen" class="panel hidden">
-        <div class="header-quiz">
-            <div class="nama-badge" id="quizNamaDisplay"></div>
-            <div class="progress" id="progressText">1 / 7</div>
+        <div class="quiz-header">
+            <div class="user-badge" id="quizUserName"></div>
+            <div class="step-indicator" id="stepDisplay">1 / 7</div>
         </div>
-        <div class="question-box">
-            <h2 id="questionText"></h2>
-        </div>
-        <div class="options-grid" id="optionsContainer"></div>
-        <button class="btn-option hidden" id="nextBtn">Lanjut</button>
+        <div class="question-text" id="questionDisplay"></div>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="btn-next hidden" id="nextQuestionBtn">Lanjut</button>
     </div>
 
     <!-- RESULT SCREEN -->
     <div id="resultScreen" class="panel hidden">
-        <div class="result-container">
-            <div class="result-name" id="resultNameDisplay"></div>
-            <!-- gambar akan diatur class sesuai hasil -->
-            <div class="result-img" id="resultImage"></div>
-            <div class="result-description" id="resultDescription"></div>
-            <button class="btn-restart" id="restartBtn">Ulang test ↻</button>
+        <div class="result-holder">
+            <div class="result-greeting" id="resultGreeting"></div>
+            <div class="result-image" id="resultImage"></div>
+            <div class="result-description-box" id="resultDesc"></div>
+            <button class="btn-restart" id="restartQuizBtn">Ulang test</button>
         </div>
         <div class="footer-note">
-            <div class="brand-small">KACHOO X AYU MERONA — mini games The Kachoo</div>
-            <div>For Roleplay Purpose Only.</div>
+            <div class="mini-brand">Kachoo x Ayu Merona — mini games The Kachoo</div>
+            <div class="roleplay">For Roleplay Purpose Only.</div>
         </div>
     </div>
 </div>
 
 <script>
-    (function(){
+    (function() {
+        // Data pertanyaan (teks tanpa huruf A, B, C, D di dalam kalimat)
         const questions = [
-            { text: "1. Perawatan kulitmu ingin fokus pada?", mapping: { A: ['avocado','aloe'], B: ['cherry','milk','lemon'], C: ['greentea'], D: ['coffee'] } },
-            { text: "2. Saat punya waktu luang di rumah, kamu lebih suka?", mapping: { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] } },
-            { text: "3. Kalau kamu lagi me-time di malam hari, kamu biasanya?", mapping: { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] } },
-            { text: "4. Jika kamu harus memilih warna lipstik yang paling kamu suka, kamu pilih?", mapping: { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] } },
-            { text: "5. Saat ingin tampil cantik untuk acara, kamu lebih fokus pada?", mapping: { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] } },
-            { text: "6. Jika harus memilih gaya makeup, kamu lebih suka?", mapping: { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] } },
-            { text: "7. Saat memilih parfum, kamu lebih suka aroma?", mapping: { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['greentea','aloe'], D: ['coffee'] } }
+            "Perawatan kulitmu ingin fokus pada?",
+            "Saat punya waktu luang di rumah, kamu lebih suka?",
+            "Kalau kamu lagi me-time di malam hari, kamu biasanya?",
+            "Jika kamu harus memilih warna lipstik yang paling kamu suka, kamu pilih?",
+            "Saat ingin tampil cantik untuk acara, kamu lebih fokus pada?",
+            "Jika harus memilih gaya makeup, kamu lebih suka?",
+            "Saat memilih parfum, kamu lebih suka aroma?"
+        ];
+
+        // Opsi untuk tiap pertanyaan (teks saja, tanpa huruf)
+        const optionTexts = [
+            ["Melembabkan kulit", "Mencerahkan", "Menenangkan kulit", "Mengangkat sel kulit mati"],
+            ["Berkumpul atau chatting dengan teman", "Masak atau menikmati makanan enak", "Menonton film atau membaca buku", "Istirahat dan menenangkan diri"],
+            ["Pakai masker sambil nonton film", "Skincare-an sambil dengar musik", "Langsung tidur tanpa ribet", "Scroll HP sambil pakai masker"],
+            ["Merah cerah atau warna bold", "Nude atau warna natural", "Pink lembut atau warna soft", "Peach atau warna segar"],
+            ["Makeup yang stand out", "Tampilan natural dan rapi", "Tampilan lembut dan elegan", "Tampilan fresh dan ringan"],
+            ["Glam dan terlihat mencolok", "Natural look yang sederhana", "Soft dan elegan", "Fresh dan ringan"],
+            ["Manis dan fruity", "Lembut dan creamy", "Fresh dan clean", "Natural dan menenangkan"]
+        ];
+
+        // Mapping per opsi: index 0=A,1=B,2=C,3=D -> daftar bahan (string)
+        const mappingPerQuestion = [
+            { A: ['avocado','aloe'], B: ['cherry','milk','lemon'], C: ['greentea'], D: ['coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] },
+            { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] },
+            { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['greentea','aloe'], D: ['coffee'] }
         ];
 
         const resultLibrary = {
-            cherry: { title: 'Cherry', desc: 'Cocok banget untukmu yang ceria dan penuh energi.\nKamu mudah tertawa, suka bercanda, dan sering membuat suasana jadi lebih hidup. Dimanapun kamu berada, biasanya orang lain ikut merasa lebih semangat.\nIni cocok untukmu karena kamu orang yang percaya diri, suka mencoba hal baru, dan tau kalau kamulah spotlightnya!.', imgClass: 'cherry-bg' },
-            avocado: { title: 'Avocado', desc: 'Cocok banget untukmu yang santai dan hangat.\nKamu tidak suka hidup yang terlalu ribet dan lebih menikmati hal-hal sederhana. Tipe yang suka suasana tenang, makan enak, dan menghabiskan waktu dengan orang terdekat.\nKehadiranmu yang membuat orang lain merasa nyaman, seperti sedang bersama teman yang bisa dipercaya.', imgClass: 'avocado-bg' },
-            milk: { title: 'Milk', desc: 'Cocok banget untukmu yang lembut dan tenang.\nKamu biasanya tidak banyak bicara, tapi sikapnya ramah dan tulus. Orang lain sering merasa nyaman berada di dekatmu karena auranya terasa damai.\nIni cocok untukmu sebagai orang yang sabar, sederhana, dan tidak suka mencari masalah.', imgClass: 'milk-bg' },
-            greentea: { title: 'Green Tea', desc: 'Cocok banget untukmu yang kalem dan suka ketenangan. Kamu lebih suka suasana santai daripada keramaian. Tipe yang sering berpikir dalam, suka belajar hal baru, dan menikmati waktu sendiri.\nMasker ini terlihat sederhana tapi manfaatnya sangat banyak, sesuai denganmu yang punya cara pandang yang dewasa dan bijak.', imgClass: 'greentea-bg' },
-            coffee: { title: 'Coffee', desc: 'Cocok banget untukmu yang serius dan penuh semangat dalam bekerja. Kamu fokus pada tujuan dan biasanya punya banyak rencana untuk masa depan. Walau kadang terlihat pendiam atau sedikit misterius, sebenarnya kamu hanya sedang memikirkan banyak hal.\nTipe yang pekerja keras dan tidak mudah menyerah.', imgClass: 'coffee-bg' },
-            lemon: { title: 'Lemon', desc: 'Cocok banget untukmu yang super fresh dan penuh energi. Kamu jujur, spontan, dan sering berbicara apa adanya. Kadang kata-katamu terasa sedikit tajam, tapi sebenarnya kamu hanya ingin berkata jujur.\nKehadiranmu sering membawa suasana baru yang lebih hidup dan tidak membosankan seperti aroma masker ini.', imgClass: 'lemon-bg' },
-            aloe: { title: 'Aloe Vera', desc: 'Cocok banget untukmu yang sabar dan menenangkan. Kamu suka membantu orang lain dan biasanya menjadi tempat bercerita bagi teman-temanmu, tipe yang selalu ada saat orang lain butuh.\nAroma masker ini terasa damai, sabar, dan menenangkan, seperti kamu.', imgClass: 'aloe-bg' }
+            cherry: { title: 'Cherry', desc: 'Cocok banget untukmu yang ceria dan penuh energi.\nKamu mudah tertawa, suka bercanda, dan sering membuat suasana jadi lebih hidup. Dimanapun kamu berada, biasanya orang lain ikut merasa lebih semangat.\nIni cocok untukmu karena kamu orang yang percaya diri, suka mencoba hal baru, dan tidak takut jadi pusat perhatian.', img: 'cherry-bg' },
+            avocado: { title: 'Avocado', desc: 'Cocok banget untukmu yang santai dan hangat.\nKamu tidak suka hidup yang terlalu ribet dan lebih menikmati hal-hal sederhana. Tipe yang suka suasana tenang, makan enak, dan menghabiskan waktu dengan orang terdekat.\nKehadiranmu membuat orang lain merasa nyaman, seperti sedang bersama teman yang bisa dipercaya.', img: 'avocado-bg' },
+            milk: { title: 'Milk', desc: 'Cocok banget untukmu yang lembut dan tenang.\nKamu biasanya tidak banyak bicara, tapi sikapnya ramah dan tulus. Orang lain sering merasa nyaman berada di dekatmu karena auranya terasa damai.\nIni cocok untukmu sebagai orang yang sabar, sederhana, dan tidak suka mencari masalah.', img: 'milk-bg' },
+            greentea: { title: 'Green Tea', desc: 'Cocok banget untukmu yang kalem dan suka ketenangan. Kamu lebih suka suasana santai daripada keramaian. Tipe yang sering berpikir dalam, suka belajar hal baru, dan menikmati waktu sendiri.\nMasker ini terlihat sederhana tapi manfaatnya banyak, sesuai denganmu yang punya cara pandang dewasa dan bijak.', img: 'greentea-bg' },
+            coffee: { title: 'Coffee', desc: 'Cocok banget untukmu yang serius dan penuh semangat dalam bekerja. Kamu fokus pada tujuan dan biasanya punya banyak rencana untuk masa depan. Walau kadang terlihat pendiam atau sedikit misterius, sebenarnya kamu hanya sedang memikirkan banyak hal.\nTipe yang pekerja keras dan tidak mudah menyerah.', img: 'coffee-bg' },
+            lemon: { title: 'Lemon', desc: 'Cocok banget untukmu yang super fresh dan penuh energi. Kamu jujur, spontan, dan sering berbicara apa adanya. Kadang kata-katamu terasa sedikit tajam, tapi sebenarnya kamu hanya ingin berkata jujur.\nKehadiranmu sering membawa suasana baru yang lebih hidup dan tidak membosankan.', img: 'lemon-bg' },
+            aloe: { title: 'Aloe Vera', desc: 'Cocok banget untukmu yang sabar dan menenangkan. Kamu suka membantu orang lain dan biasanya menjadi tempat bercerita bagi teman-temanmu, tipe yang selalu ada saat orang lain butuh.\nAuranya damai, sabar, dan menenangkan, seperti kamu.', img: 'aloe-bg' }
         };
 
-        // state
-        let currentStep = 0;
-        let userAnswers = [];
+        // State
+        let currentStep = 0;              // 0..6
+        let userAnswers = [];              // array of index 0/1/2/3
         let userName = '';
 
-        // DOM
+        // Elemen DOM
         const startScreen = document.getElementById('startScreen');
         const quizScreen = document.getElementById('quizScreen');
         const resultScreen = document.getElementById('resultScreen');
         const namaInput = document.getElementById('namaPanjang');
         const btnStart = document.getElementById('btnStart');
-        const quizNamaSpan = document.getElementById('quizNamaDisplay');
-        const questionH2 = document.getElementById('questionText');
-        const optionsDiv = document.getElementById('optionsContainer');
-        const nextBtn = document.getElementById('nextBtn');
-        const progressSpan = document.getElementById('progressText');
-        const restartBtn = document.getElementById('restartBtn');
-        const resultNameSpan = document.getElementById('resultNameDisplay');
-        const resultDescDiv = document.getElementById('resultDescription');
-        const resultImgDiv = document.getElementById('resultImage');
+        const quizUserName = document.getElementById('quizUserName');
+        const stepDisplay = document.getElementById('stepDisplay');
+        const questionDisplay = document.getElementById('questionDisplay');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const nextBtn = document.getElementById('nextQuestionBtn');
+        const restartBtn = document.getElementById('restartQuizBtn');
+        const resultGreeting = document.getElementById('resultGreeting');
+        const resultImage = document.getElementById('resultImage');
+        const resultDesc = document.getElementById('resultDesc');
 
-        function goToStart() {
+        function resetToStart() {
             startScreen.classList.remove('hidden');
             quizScreen.classList.add('hidden');
             resultScreen.classList.add('hidden');
@@ -389,54 +442,50 @@
 
         function startQuiz() {
             const name = namaInput.value.trim();
-            if (!name) { alert('Isi nama panjang dulu yaa'); return; }
+            if (!name) { alert('Silakan isi nama panjang'); return; }
             userName = name;
             userAnswers = [];
             currentStep = 0;
-            quizNamaSpan.innerText = `🌸 ${userName}`;
+            quizUserName.innerText = userName;
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
             resultScreen.classList.add('hidden');
             renderQuestion(0);
         }
 
-        function renderQuestion(index) {
-            const q = questions[index];
-            questionH2.innerText = q.text;
-            progressSpan.innerText = `${index+1} / 7`;
+        function renderQuestion(step) {
+            questionDisplay.innerText = questions[step];
+            stepDisplay.innerText = `${step+1} / 7`;
 
-            const letters = ['A','B','C','D'];
-            let htmlStr = '';
-            for (let i=0; i<4; i++) {
-                const letter = letters[i];
-                let optionText = '';
-                if (index === 0) optionText = ['A. Melembabkan kulit', 'B. Mencerahkan', 'C. Menenangkan kulit', 'D. Mengangkat sel kulit mati'][i];
-                else if (index === 1) optionText = ['A. Berkumpul/chat teman', 'B. Masak / makanan enak', 'C. Nonton / baca buku', 'D. Istirahat tenang'][i];
-                else if (index === 2) optionText = ['A. Masker sambil nonton', 'B. Skincare-an dengar musik', 'C. Tidur tanpa ribet', 'D. Scroll HP sambil masker'][i];
-                else if (index === 3) optionText = ['A. Merah cerah / bold', 'B. Nude / natural', 'C. Pink lembut / soft', 'D. Peach / segar'][i];
-                else if (index === 4) optionText = ['A. Makeup stand out', 'B. Tampilan natural rapi', 'C. Lembut & elegan', 'D. Fresh & ringan'][i];
-                else if (index === 5) optionText = ['A. Glam mencolok', 'B. Natural sederhana', 'C. Soft elegan', 'D. Fresh ringan'][i];
-                else if (index === 6) optionText = ['A. Manis fruity', 'B. Lembut creamy', 'C. Fresh clean', 'D. Natural menenangkan'][i];
-
-                const selectedClass = (userAnswers[index] === i) ? 'selected' : '';
-                htmlStr += `<div class="option-btn ${selectedClass}" data-opt-index="${i}"><span class="option-letter">${letter}</span><span>${optionText}</span></div>`;
+            const letters = ['A', 'B', 'C', 'D'];
+            let html = '';
+            for (let i = 0; i < 4; i++) {
+                const selectedClass = (userAnswers[step] === i) ? 'selected' : '';
+                html += `
+                    <div class="option-btn ${selectedClass}" data-opt-index="${i}">
+                        <span class="opt-letter">${letters[i]}</span>
+                        <span>${optionTexts[step][i]}</span>
+                    </div>
+                `;
             }
-            optionsDiv.innerHTML = htmlStr;
+            optionsGrid.innerHTML = html;
 
+            // Event listeners untuk option
             document.querySelectorAll('.option-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    const optIdx = parseInt(this.dataset.optIndex);
+                btn.addEventListener('click', function (e) {
+                    const idx = parseInt(this.dataset.optIndex);
                     document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                     this.classList.add('selected');
-                    userAnswers[currentStep] = optIdx;
+                    userAnswers[currentStep] = idx;
                     nextBtn.classList.remove('hidden');
                 });
             });
 
-            if (userAnswers[index] !== undefined) {
-                const saved = userAnswers[index];
+            // Jika sudah ada jawaban, munculkan next dan tandai
+            if (userAnswers[step] !== undefined) {
+                const savedIdx = userAnswers[step];
                 document.querySelectorAll('.option-btn').forEach(btn => {
-                    if (parseInt(btn.dataset.optIndex) === saved) btn.classList.add('selected');
+                    if (parseInt(btn.dataset.optIndex) === savedIdx) btn.classList.add('selected');
                 });
                 nextBtn.classList.remove('hidden');
             } else {
@@ -444,50 +493,67 @@
             }
         }
 
-        function handleNext() {
-            if (userAnswers[currentStep] === undefined) { alert('Pilih satu opsi dulu ☺️'); return; }
-            if (currentStep === 6) computeAndShowResult();
-            else { currentStep++; renderQuestion(currentStep); }
+        function goToNext() {
+            if (userAnswers[currentStep] === undefined) {
+                alert('Pilih salah satu opsi');
+                return;
+            }
+            if (currentStep === 6) {
+                computeResult();
+            } else {
+                currentStep++;
+                renderQuestion(currentStep);
+            }
         }
 
-        function computeAndShowResult() {
-            let candidateList = [];
-            for (let i=0; i<userAnswers.length; i++) {
-                const ansIdx = userAnswers[i];
-                const letter = String.fromCharCode(65 + ansIdx);
-                const mapping = questions[i].mapping[letter];
-                if (mapping) candidateList.push(...mapping);
+        function computeResult() {
+            // kumpulkan semua bahan dari setiap jawaban
+            let candidates = [];
+            for (let i = 0; i < userAnswers.length; i++) {
+                const ansIdx = userAnswers[i]; // 0,1,2,3
+                const letter = String.fromCharCode(65 + ansIdx); // A,B,C,D
+                const mapping = mappingPerQuestion[i][letter];
+                if (mapping) candidates.push(...mapping);
             }
 
+            // frekuensi
             const freq = {};
-            candidateList.forEach(item => { let key = item.toLowerCase().replace(/\s/g,''); freq[key] = (freq[key]||0)+1; });
+            candidates.forEach(item => { let key = item.toLowerCase().replace(/\s/g,''); freq[key] = (freq[key]||0)+1; });
 
+            // cari max
             let finalKey = 'cherry';
-            let maxVal = 0;
-            const keys = ['cherry','avocado','milk','greentea','coffee','lemon','aloe'];
-            for (let k of keys) { if ((freq[k]||0) > maxVal) { maxVal = freq[k]; finalKey = k; } }
+            let maxCount = 0;
+            const allKeys = ['cherry','avocado','milk','greentea','coffee','lemon','aloe'];
+            for (let k of allKeys) {
+                if ((freq[k]||0) > maxCount) {
+                    maxCount = freq[k];
+                    finalKey = k;
+                }
+            }
 
-            const result = resultLibrary[finalKey] || resultLibrary.cherry;
+            const result = resultLibrary[finalKey];
 
             // tampilkan result
             quizScreen.classList.add('hidden');
             resultScreen.classList.remove('hidden');
-            resultNameSpan.innerText = `${userName}, kamu adalah...`;
 
-            // set gambar sesuai class
-            resultImgDiv.className = `result-img ${result.imgClass}`;
+            resultGreeting.innerHTML = `<strong>${userName}</strong>, masker yang cocok untukmu adalah...`;
+
+            // set gambar
+            resultImage.className = `result-image ${result.img}`;
+
             // deskripsi
-            resultDescDiv.innerHTML = `<h3>${result.title}</h3><p>${result.desc.replace(/\n/g,'<br>')}</p>`;
+            resultDesc.innerHTML = `<h3>${result.title}</h3><p>${result.desc.replace(/\n/g,'<br>')}</p>`;
         }
 
-        // event listeners
+        // Event listeners
         btnStart.addEventListener('click', startQuiz);
-        nextBtn.addEventListener('click', handleNext);
-        restartBtn.addEventListener('click', goToStart);
+        nextBtn.addEventListener('click', goToNext);
+        restartBtn.addEventListener('click', resetToStart);
         namaInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') btnStart.click(); });
 
-        goToStart(); // init start
+        resetToStart(); // inisialisasi
     })();
 </script>
 </body>
-</html>
+    </html>
