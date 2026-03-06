@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>CHORONA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, sans-serif;
+        }
+
+        body {
+            background: #fff7f2;  /* putih dengan sentuhan pink peach */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 1000px;
+            width: 100%;
+            background-color: white;
+            border-radius: 48px 48px 36px 36px;
+            box-shadow: 0 25px 45px -16px #f4a48e, 0 8px 20px #ffe2d6;
+            overflow: hidden;
+            border: 2px solid #ffe2d4;
+        }
+
+        .panel {
+            padding: 2.2rem 2.5rem;
+        }
+
+        @media (max-width: 550px) {
+            .panel { padding: 1.8rem 1rem; }
+        }
+
+        /* header khusus dalam panel start */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 0.8rem;
+        }
+        .brand-header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #c55d4a, #b14764);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+        .brand-header h2 span {
+            background: #ffded3;
+            padding: 0 8px;
+            -webkit-text-fill-color: #963f33;
+            font-weight: 700;
+        }
+
+        /* start screen */
+        #startScreen h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #b14242;
+            text-align: center;
+            margin: 0.8rem 0 1.8rem;
+            text-shadow: 0 3px 6px #ffd9cc;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 2rem;
+        }
+        .input-group label {
+            font-weight: 600;
+            color: #a14332;
+            font-size: 1.1rem;
+            padding-left: 0.5rem;
+        }
+        .input-group input {
+            padding: 1rem 1.5rem;
+            font-size: 1.2rem;
+            border: 2px solid #ffd5c5;
+            border-radius: 60px;
+            background: white;
+            outline: none;
+            transition: 0.2s;
+            color: #3d1d13;
+        }
+        .input-group input:focus {
+            border-color: #ff9575;
+            box-shadow: 0 0 0 4px #ffe2d6;
+        }
+
+        .btn-start, .btn-option, .btn-restart {
+            background: #ffb698;  /* peach cerah */
+            border: none;
+            color: #421e10;
+            font-weight: 700;
+            font-size: 1.5rem;
+            padding: 1rem 2.2rem;
+            border-radius: 80px;
+            box-shadow: 0 7px 0 #aa4f38, 0 10px 22px #fec7b2;
+            cursor: pointer;
+            transition: 0.08s linear;
+            width: fit-content;
+            margin: 1.5rem auto 0;
+            display: block;
+            border: 2px solid #ffc6b0;
+        }
+        .btn-start:active, .btn-option:active, .btn-restart:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #aa4f38, 0 8px 18px #febaa2;
+        }
+        .btn-start:disabled {
+            opacity: 0.5;
+            transform: translateY(0);
+            box-shadow: 0 5px 0 #aa4f38;
+            pointer-events: none;
+        }
+
+        /* kuis */
+        .header-quiz {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .nama-badge {
+            background: #fff1e7;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            color: #9f3c24;
+            font-weight: 600;
+            border: 2px solid #ffb8a0;
+        }
+        .progress {
+            background: #ffd5c2;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 700;
+            color: #692f1d;
+        }
+
+        .question-box h2 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #602614;
+            margin-bottom: 1.8rem;
+            line-height: 1.3;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0 1.2rem;
+        }
+        .option-btn {
+            background: white;
+            border: 3px solid #fed9cb;
+            border-radius: 100px;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-weight: 500;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #2b130c;
+            box-shadow: 0 4px 0 #ecc2b2;
+        }
+        .option-btn:hover {
+            background: #fff2ea;
+            border-color: #ffa384;
+        }
+        .option-btn.selected {
+            background: #ffd5c2;
+            border-color: #fa7a53;
+            box-shadow: 0 4px 0 #b14424;
+            transform: translateY(2px);
+        }
+        .option-letter {
+            background: #ffaa8e;
+            color: #3d1b0e;
+            border-radius: 60px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        /* result */
+        .result-container {
+            text-align: center;
+        }
+        .result-name {
+            font-size: 1.8rem;
+            color: #a84328;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .result-img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            aspect-ratio: 800 / 700;
+            background: #fbddd0;
+            border-radius: 40px;
+            margin: 1rem auto 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid #ffad8f;
+            box-shadow: 0 20px 30px -8px #ffb49a;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #512618;
+            font-weight: 600;
+            font-size: 1.6rem;
+            text-shadow: 2px 2px 0 white;
+        }
+        /* gambar masing-masing result via background style */
+        .result-img.cherry-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fec8cd%22/><circle cx=%22400%22 cy=%22350%22 r=%22120%22 fill=%22%23d63e3e%22/><circle cx=%22320%22 cy=%22300%22 r=%2250%22 fill=%22%23b32b2b%22/><circle cx=%22480%22 cy=%22400%22 r=%2250%22 fill=%22%23b32b2b%22/><text x=%22400%22 y=%22370%22 font-size=%2248%22 fill=%22%23fff0e6%22 text-anchor=%22middle%22 dy=%22.3em%22>🍒 CHERRY</text></svg>'); }
+        .result-img.avocado-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23e1f0d3%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%22130%22 ry=%22100%22 fill=%22%235c9c4b%22/><circle cx=%22360%22 cy=%22330%22 r=%2228%22 fill=%22%23b56f3b%22/><text x=%22400%22 y=%22390%22 font-size=%2248%22 fill=%22%233d2b12%22 text-anchor=%22middle%22>🥑 AVOCADO</text></svg>'); }
+        .result-img.milk-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23f9f2e7%22/><path d=%22M350 250 L450 250 L480 400 L320 400 Z%22 fill=%22%23ffffff%22 stroke=%22%23c0a28a%22 stroke-width=%2212%22/><text x=%22400%22 y=%22480%22 font-size=%2248%22 fill=%22%2390745c%22 text-anchor=%22middle%22>🥛 MILK</text></svg>'); }
+        .result-img.greentea-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23d5e8d5%22/><path d=%22M320 300 L480 300 L500 440 L300 440 Z%22 fill=%22%2399bb77%22/><circle cx=%22400%22 cy=%22300%22 r=%2225%22 fill=%22%236d8c5c%22/><text x=%22400%22 y=%22500%22 font-size=%2246%22 fill=%22%23355e2b%22 text-anchor=%22middle%22>🍃 GREEN TEA</text></svg>'); }
+        .result-img.coffee-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23ead8c5%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%22100%22 ry=%2260%22 fill=%22%234e3121%22/><circle cx=%22350%22 cy=%22320%22 r=%2212%22 fill=%22%23d9b48b%22/><text x=%22400%22 y=%22420%22 font-size=%2248%22 fill=%22%23412e1f%22 text-anchor=%22middle%22>☕ COFFEE</text></svg>'); }
+        .result-img.lemon-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fff3cb%22/><ellipse cx=%22400%22 cy=%22350%22 rx=%2290%22 ry=%2260%22 fill=%22%23f5e73d%22/><circle cx=%22350%22 cy=%22330%22 r=%2210%22 fill=%22%234d4d2c%22/><text x=%22400%22 y=%22420%22 font-size=%2248%22 fill=%22%23777733%22 text-anchor=%22middle%22>🍋 LEMON</text></svg>'); }
+        .result-img.aloe-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23cef0d3%22/><path d=%22M400 200 L470 300 L400 500 L330 300 Z%22 fill=%22%233d9c6b%22/><text x=%22400%22 y=%22560%22 font-size=%2246%22 fill=%22%231e573a%22 text-anchor=%22middle%22>🌿 ALOE VERA</text></svg>'); }
+
+        .result-description {
+            background: #fff6ef;
+            border-radius: 48px;
+            padding: 2rem 2.2rem;
+            text-align: left;
+            border: 3px solid #ffbca8;
+            box-shadow: inset 0 1px 6px #ffd6c0;
+        }
+        .result-description h3 {
+            color: #a13b22;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .result-description p {
+            font-size: 1.3rem;
+            color: #40261d;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            font-size: 1rem;
+            color: #b27a68;
+            text-align: center;
+            border-top: 2px dashed #fecab8;
+            padding-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .footer-note .brand-small {
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: linear-gradient(145deg, #c44f4f, #b26195);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+<div class="card" id="appCard">
+    <!-- START SCREEN -->
+    <div id="startScreen" class="panel">
+        <div class="brand-header">
+            <h2><span>KACHOO</span> X <span>AYU MERONA</span></h2>
+        </div>
+        <h1>Pilihan masker wajah <br>yang cocok untukmu!</h1>
+        <div class="input-group">
+            <label for="namaPanjang">Nama Panjang</label>
+            <input type="text" id="namaPanjang" placeholder="cth: Raisya Kirana" autocomplete="off">
+        </div>
+        <button class="btn-start" id="btnStart">Start ✨</button>
+        <div class="footer-note" style="border: none; margin-top: 2.2rem;">
+            <div class="brand-small">✨ fitur mini games The Kachoo ✨</div>
+            <div style="font-style: italic; color: #a56f5e;">For Roleplay Purpose Only.</div>
+        </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="panel hidden">
+        <div class="header-quiz">
+            <div class="nama-badge" id="quizNamaDisplay"></div>
+            <div class="progress" id="progressText">1 / 7</div>
+        </div>
+        <div class="question-box">
+            <h2 id="questionText"></h2>
+        </div>
+        <div class="options-grid" id="optionsContainer"></div>
+        <button class="btn-option hidden" id="nextBtn">Lanjut</button>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="resultScreen" class="panel hidden">
+        <div class="result-container">
+            <div class="result-name" id="resultNameDisplay"></div>
+            <!-- gambar akan diatur class sesuai hasil -->
+            <div class="result-img" id="resultImage"></div>
+            <div class="result-description" id="resultDescription"></div>
+            <button class="btn-restart" id="restartBtn">Ulang test ↻</button>
+        </div>
+        <div class="footer-note">
+            <div class="brand-small">KACHOO X AYU MERONA — mini games The Kachoo</div>
+            <div>For Roleplay Purpose Only.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        const questions = [
+            { text: "1. Perawatan kulitmu ingin fokus pada?", mapping: { A: ['avocado','aloe'], B: ['cherry','milk','lemon'], C: ['greentea'], D: ['coffee'] } },
+            { text: "2. Saat punya waktu luang di rumah, kamu lebih suka?", mapping: { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] } },
+            { text: "3. Kalau kamu lagi me-time di malam hari, kamu biasanya?", mapping: { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] } },
+            { text: "4. Jika kamu harus memilih warna lipstik yang paling kamu suka, kamu pilih?", mapping: { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] } },
+            { text: "5. Saat ingin tampil cantik untuk acara, kamu lebih fokus pada?", mapping: { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] } },
+            { text: "6. Jika harus memilih gaya makeup, kamu lebih suka?", mapping: { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] } },
+            { text: "7. Saat memilih parfum, kamu lebih suka aroma?", mapping: { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['greentea','aloe'], D: ['coffee'] } }
+        ];
+
+        const resultLibrary = {
+            cherry: { title: 'Cherry', desc: 'Cocok banget untukmu yang ceria dan penuh energi.\nKamu mudah tertawa, suka bercanda, dan sering membuat suasana jadi lebih hidup. Dimanapun kamu berada, biasanya orang lain ikut merasa lebih semangat.\nIni cocok untukmu karena kamu orang yang percaya diri, suka mencoba hal baru, dan tau kalau kamulah spotlightnya!.', imgClass: 'cherry-bg' },
+            avocado: { title: 'Avocado', desc: 'Cocok banget untukmu yang santai dan hangat.\nKamu tidak suka hidup yang terlalu ribet dan lebih menikmati hal-hal sederhana. Tipe yang suka suasana tenang, makan enak, dan menghabiskan waktu dengan orang terdekat.\nKehadiranmu yang membuat orang lain merasa nyaman, seperti sedang bersama teman yang bisa dipercaya.', imgClass: 'avocado-bg' },
+            milk: { title: 'Milk', desc: 'Cocok banget untukmu yang lembut dan tenang.\nKamu biasanya tidak banyak bicara, tapi sikapnya ramah dan tulus. Orang lain sering merasa nyaman berada di dekatmu karena auranya terasa damai.\nIni cocok untukmu sebagai orang yang sabar, sederhana, dan tidak suka mencari masalah.', imgClass: 'milk-bg' },
+            greentea: { title: 'Green Tea', desc: 'Cocok banget untukmu yang kalem dan suka ketenangan. Kamu lebih suka suasana santai daripada keramaian. Tipe yang sering berpikir dalam, suka belajar hal baru, dan menikmati waktu sendiri.\nMasker ini terlihat sederhana tapi manfaatnya sangat banyak, sesuai denganmu yang punya cara pandang yang dewasa dan bijak.', imgClass: 'greentea-bg' },
+            coffee: { title: 'Coffee', desc: 'Cocok banget untukmu yang serius dan penuh semangat dalam bekerja. Kamu fokus pada tujuan dan biasanya punya banyak rencana untuk masa depan. Walau kadang terlihat pendiam atau sedikit misterius, sebenarnya kamu hanya sedang memikirkan banyak hal.\nTipe yang pekerja keras dan tidak mudah menyerah.', imgClass: 'coffee-bg' },
+            lemon: { title: 'Lemon', desc: 'Cocok banget untukmu yang super fresh dan penuh energi. Kamu jujur, spontan, dan sering berbicara apa adanya. Kadang kata-katamu terasa sedikit tajam, tapi sebenarnya kamu hanya ingin berkata jujur.\nKehadiranmu sering membawa suasana baru yang lebih hidup dan tidak membosankan seperti aroma masker ini.', imgClass: 'lemon-bg' },
+            aloe: { title: 'Aloe Vera', desc: 'Cocok banget untukmu yang sabar dan menenangkan. Kamu suka membantu orang lain dan biasanya menjadi tempat bercerita bagi teman-temanmu, tipe yang selalu ada saat orang lain butuh.\nAroma masker ini terasa damai, sabar, dan menenangkan, seperti kamu.', imgClass: 'aloe-bg' }
+        };
+
+        // state
+        let currentStep = 0;
+        let userAnswers = [];
+        let userName = '';
+
+        // DOM
+        const startScreen = document.getElementById('startScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const namaInput = document.getElementById('namaPanjang');
+        const btnStart = document.getElementById('btnStart');
+        const quizNamaSpan = document.getElementById('quizNamaDisplay');
+        const questionH2 = document.getElementById('questionText');
+        const optionsDiv = document.getElementById('optionsContainer');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressSpan = document.getElementById('progressText');
+        const restartBtn = document.getElementById('restartBtn');
+        const resultNameSpan = document.getElementById('resultNameDisplay');
+        const resultDescDiv = document.getElementById('resultDescription');
+        const resultImgDiv = document.getElementById('resultImage');
+
+        function goToStart() {
+            startScreen.classList.remove('hidden');
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            currentStep = 0;
+            userAnswers = [];
+            userName = '';
+            namaInput.value = '';
+        }
+
+        function startQuiz() {
+            const name = namaInput.value.trim();
+            if (!name) { alert('Isi nama panjang dulu yaa'); return; }
+            userName = name;
+            userAnswers = [];
+            currentStep = 0;
+            quizNamaSpan.innerText = `🌸 ${userName}`;
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+            renderQuestion(0);
+        }
+
+        function renderQuestion(index) {
+            const q = questions[index];
+            questionH2.innerText = q.text;
+            progressSpan.innerText = `${index+1} / 7`;
+
+            const letters = ['A','B','C','D'];
+            let htmlStr = '';
+            for (let i=0; i<4; i++) {
+                const letter = letters[i];
+                let optionText = '';
+                if (index === 0) optionText = ['A. Melembabkan kulit', 'B. Mencerahkan', 'C. Menenangkan kulit', 'D. Mengangkat sel kulit mati'][i];
+                else if (index === 1) optionText = ['A. Berkumpul/chat teman', 'B. Masak / makanan enak', 'C. Nonton / baca buku', 'D. Istirahat tenang'][i];
+                else if (index === 2) optionText = ['A. Masker sambil nonton', 'B. Skincare-an dengar musik', 'C. Tidur tanpa ribet', 'D. Scroll HP sambil masker'][i];
+                else if (index === 3) optionText = ['A. Merah cerah / bold', 'B. Nude / natural', 'C. Pink lembut / soft', 'D. Peach / segar'][i];
+                else if (index === 4) optionText = ['A. Makeup stand out', 'B. Tampilan natural rapi', 'C. Lembut & elegan', 'D. Fresh & ringan'][i];
+                else if (index === 5) optionText = ['A. Glam mencolok', 'B. Natural sederhana', 'C. Soft elegan', 'D. Fresh ringan'][i];
+                else if (index === 6) optionText = ['A. Manis fruity', 'B. Lembut creamy', 'C. Fresh clean', 'D. Natural menenangkan'][i];
+
+                const selectedClass = (userAnswers[index] === i) ? 'selected' : '';
+                htmlStr += `<div class="option-btn ${selectedClass}" data-opt-index="${i}"><span class="option-letter">${letter}</span><span>${optionText}</span></div>`;
+            }
+            optionsDiv.innerHTML = htmlStr;
+
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const optIdx = parseInt(this.dataset.optIndex);
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    userAnswers[currentStep] = optIdx;
+                    nextBtn.classList.remove('hidden');
+                });
+            });
+
+            if (userAnswers[index] !== undefined) {
+                const saved = userAnswers[index];
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (parseInt(btn.dataset.optIndex) === saved) btn.classList.add('selected');
+                });
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        function handleNext() {
+            if (userAnswers[currentStep] === undefined) { alert('Pilih satu opsi dulu ☺️'); return; }
+            if (currentStep === 6) computeAndShowResult();
+            else { currentStep++; renderQuestion(currentStep); }
+        }
+
+        function computeAndShowResult() {
+            let candidateList = [];
+            for (let i=0; i<userAnswers.length; i++) {
+                const ansIdx = userAnswers[i];
+                const letter = String.fromCharCode(65 + ansIdx);
+                const mapping = questions[i].mapping[letter];
+                if (mapping) candidateList.push(...mapping);
+            }
+
+            const freq = {};
+            candidateList.forEach(item => { let key = item.toLowerCase().replace(/\s/g,''); freq[key] = (freq[key]||0)+1; });
+
+            let finalKey = 'cherry';
+            let maxVal = 0;
+            const keys = ['cherry','avocado','milk','greentea','coffee','lemon','aloe'];
+            for (let k of keys) { if ((freq[k]||0) > maxVal) { maxVal = freq[k]; finalKey = k; } }
+
+            const result = resultLibrary[finalKey] || resultLibrary.cherry;
+
+            // tampilkan result
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            resultNameSpan.innerText = `${userName}, kamu adalah...`;
+
+            // set gambar sesuai class
+            resultImgDiv.className = `result-img ${result.imgClass}`;
+            // deskripsi
+            resultDescDiv.innerHTML = `<h3>${result.title}</h3><p>${result.desc.replace(/\n/g,'<br>')}</p>`;
+        }
+
+        // event listeners
+        btnStart.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', handleNext);
+        restartBtn.addEventListener('click', goToStart);
+        namaInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') btnStart.click(); });
+
+        goToStart(); // init start
+    })();
+</script>
+</body>
+</html>
