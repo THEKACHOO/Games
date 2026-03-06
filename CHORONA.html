@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>CHORONA · masker wajah</title>
+    <title>CHORONA</title>
     <style>
         * {
             margin: 0;
@@ -12,20 +12,19 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* background dengan floating mask icons (pink cerah) */
+        /* Background penuh dengan floating mask icons (lebih rapat, memenuhi) */
         body {
-            background-color: #ffeff0;  /* pink muda cerah */
+            background-color: #ffebeb;  /* base pink cerah */
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 16px;
             position: relative;
-            overflow-x: hidden;
         }
 
-        /* floating mask icons (animasi melayang) */
-        .floating-mask {
+        .floating-mask-full {
             position: fixed;
             top: 0;
             left: 0;
@@ -38,272 +37,156 @@
 
         .mask-icon {
             position: absolute;
-            opacity: 0.25;
-            font-size: 2.2rem;
+            opacity: 0.2;
+            font-size: 3rem;
             user-select: none;
-            animation: floatMask 18s infinite ease-in-out;
-            filter: drop-shadow(0 6px 10px #fec5bb);
+            animation: floatMask 22s infinite alternate ease-in-out;
+            filter: drop-shadow(0 8px 12px #fbb7a6);
         }
 
-        /* variasi posisi & delay */
-        .mask-icon:nth-child(1) { top: 8%; left: 3%; animation-duration: 20s; animation-delay: -2s; font-size: 3rem; opacity: 0.2; }
-        .mask-icon:nth-child(2) { bottom: 12%; right: 2%; animation-duration: 25s; animation-delay: -5s; font-size: 4rem; opacity: 0.2; transform: rotate(5deg); }
-        .mask-icon:nth-child(3) { top: 20%; right: 10%; animation-duration: 22s; animation-delay: -1s; font-size: 2.8rem; opacity: 0.2; }
-        .mask-icon:nth-child(4) { bottom: 25%; left: 8%; animation-duration: 28s; animation-delay: -10s; font-size: 3.5rem; opacity: 0.15; transform: rotate(-8deg); }
-        .mask-icon:nth-child(5) { top: 65%; left: 20%; animation-duration: 24s; animation-delay: -3s; font-size: 2.5rem; opacity: 0.2; }
-        .mask-icon:nth-child(6) { top: 40%; right: 15%; animation-duration: 30s; animation-delay: -7s; font-size: 3.2rem; opacity: 0.15; }
-        .mask-icon:nth-child(7) { bottom: 40%; left: 25%; animation-duration: 26s; animation-delay: -12s; font-size: 2.2rem; opacity: 0.2; }
+        /* lebih banyak icon, memenuhi latar */
+        .mask-icon:nth-child(1) { top: 2%; left: 1%; font-size: 3.8rem; animation-duration: 18s; }
+        .mask-icon:nth-child(2) { top: 15%; right: 3%; font-size: 4.2rem; animation-duration: 24s; opacity: 0.25; }
+        .mask-icon:nth-child(3) { bottom: 8%; left: 12%; font-size: 5rem; animation-duration: 28s; opacity: 0.2; }
+        .mask-icon:nth-child(4) { bottom: 20%; right: 8%; font-size: 3.5rem; animation-duration: 20s; }
+        .mask-icon:nth-child(5) { top: 40%; left: 5%; font-size: 4.5rem; animation-duration: 30s; opacity: 0.2; }
+        .mask-icon:nth-child(6) { top: 70%; right: 15%; font-size: 3.2rem; animation-duration: 26s; }
+        .mask-icon:nth-child(7) { bottom: 50%; left: 20%; font-size: 4rem; animation-duration: 22s; }
+        .mask-icon:nth-child(8) { top: 85%; left: 40%; font-size: 3.6rem; animation-duration: 19s; }
+        .mask-icon:nth-child(9) { top: 10%; right: 25%; font-size: 5.2rem; opacity: 0.18; animation-duration: 32s; }
+        .mask-icon:nth-child(10) { bottom: 5%; right: 35%; font-size: 4.8rem; animation-duration: 27s; }
+        .mask-icon:nth-child(11) { top: 60%; left: 70%; font-size: 3rem; animation-duration: 21s; }
+        .mask-icon:nth-child(12) { bottom: 30%; left: 85%; font-size: 5.5rem; opacity: 0.15; animation-duration: 29s; }
 
         @keyframes floatMask {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+            0% { transform: translateY(0px) rotate(0deg) scale(1); }
+            100% { transform: translateY(-30px) rotate(6deg) scale(1.05); }
         }
 
-        /* container utama (tetap polos, latar putih transparan? kita buat white card dengan bg soft) */
+        /* card putih di tengah */
         .card {
-            max-width: 680px;  /* lebih ramping untuk mobile */
+            max-width: 680px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(4px);
-            border-radius: 40px;
-            box-shadow: 0 30px 50px -16px #efb7ab, 0 8px 20px rgba(250, 180, 160, 0.3);
+            background: #ffffff;
+            border-radius: 48px;
+            box-shadow: 0 30px 50px -20px #d9a69b, 0 8px 25px rgba(245, 170, 150, 0.4);
             overflow: hidden;
-            border: 1px solid #ffe4dc;
             position: relative;
-            z-index: 10;
+            z-index: 15;
             margin: 20px auto;
+            border: 1px solid #ffd9ce;
         }
 
         .panel {
-            padding: 2rem 2rem;
+            padding: 2.2rem 2.5rem;
         }
 
-        /* mobile compact */
-        @media (max-width: 480px) {
-            .panel { padding: 1.8rem 1.2rem; }
+        /* mobile compact: perkecil padding dan ukuran tombol */
+        @media (max-width: 560px) {
+            .panel { padding: 1.5rem 1.2rem; }
             .card { max-width: 100%; }
         }
 
-        /* ===== TYPOGRAPHY clean ===== */
-        h1, h2, h3, p {
-            font-weight: 400;
-            letter-spacing: -0.01em;
-        }
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3, p { font-weight: 400; letter-spacing: -0.01em; }
 
         /* ===== START SCREEN ===== */
-        #startScreen {
-            text-align: center;
-        }
-
+        #startScreen { text-align: center; }
         .brand-main {
-            font-size: 2rem;
-            font-weight: 450;
-            color: #c97363;
-            margin-bottom: 0.2rem;
-            letter-spacing: -0.3px;
+            font-size: 2rem; font-weight: 440; color: #c56b58; margin-bottom: 0.3rem;
         }
-
-        .brand-main span {
-            font-weight: 300;
-            color: #d48d7a;
-        }
-
         #startScreen h1 {
-            font-size: 2.2rem;
-            font-weight: 380;
-            color: #4d2f26;
-            line-height: 1.3;
-            margin: 1.2rem 0 1.8rem;
+            font-size: 2.2rem; font-weight: 360; color: #512e22; line-height: 1.3;
+            margin: 1rem 0 1.8rem;
         }
-
         .input-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.6rem;
-            width: 100%;
-            max-width: 360px;
-            margin: 1.8rem auto 1.2rem;
+            display: flex; flex-direction: column; align-items: flex-start;
+            gap: 0.5rem; width: 100%; max-width: 340px; margin: 1.5rem auto 1rem;
         }
-
         .input-group label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #b47562;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-left: 0.5rem;
+            font-size: 0.85rem; font-weight: 500; color: #b77a67; text-transform: uppercase;
+            letter-spacing: 1.2px; margin-left: 0.5rem;
         }
-
         .input-group input {
-            width: 100%;
-            padding: 1rem 1.3rem;
-            font-size: 1.1rem;
-            background: #ffffff;
-            border: 1.5px solid #f5cfc2;
-            border-radius: 50px;
-            outline: none;
-            transition: 0.2s;
-            color: #2f1d16;
+            width: 100%; padding: 0.9rem 1.3rem; font-size: 1rem;
+            background: #fffcfb; border: 1.5px solid #f7cfc0; border-radius: 50px;
+            outline: none; transition: 0.2s;
         }
-
         .input-group input:focus {
-            border-color: #d99982;
-            box-shadow: 0 0 0 3px #fee2d8;
+            border-color: #dc8f78; box-shadow: 0 0 0 4px #fee2d6;
         }
 
+        /* tombol konsisten */
         .btn-start, .btn-next, .btn-restart {
-            background: #e3a594;
-            border: none;
-            color: white;
-            font-weight: 450;
-            font-size: 1.2rem;
-            padding: 0.9rem 2.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: background 0.15s;
-            width: fit-content;
-            margin: 2rem auto 0;
-            display: block;
-            box-shadow: 0 6px 14px #efc2b2;
-            border: 1px solid #fad7cb;
+            background: #e7a18e; border: none; color: white; font-weight: 450;
+            font-size: 1.2rem; padding: 0.9rem 2.5rem; border-radius: 50px;
+            cursor: pointer; transition: background 0.15s; width: fit-content;
+            margin: 2rem auto 0; display: block; box-shadow: 0 8px 18px #f2bfae;
+            border: 1px solid #ffe0d4;
         }
-
-        .btn-start:hover, .btn-next:hover, .btn-restart:hover {
-            background: #d0836e;
+        .btn-start:hover, .btn-next:hover, .btn-restart:hover { background: #d1826c; }
+        @media (max-width: 480px) {
+            .btn-start, .btn-next, .btn-restart {
+                font-size: 1rem; padding: 0.75rem 2rem; margin-top: 1.5rem;
+            }
         }
 
         /* ===== QUIZ ===== */
         .quiz-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.8rem;
-            flex-wrap: wrap;
-            gap: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.8rem; flex-wrap: wrap; gap: 10px;
         }
-
-        .user-badge {
-            background: #ffeae3;
-            padding: 0.5rem 1.4rem;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 430;
-            color: #734b3c;
-            border: 1px solid #f2cdbe;
+        .user-badge, .step-indicator {
+            background: #ffede8; padding: 0.5rem 1.4rem; border-radius: 40px;
+            font-size: 1rem; color: #774b3b; border: 1px solid #f3cdbd;
         }
-
-        .step-indicator {
-            color: #b36b58;
-            font-weight: 430;
-            background: #ffede7;
-            padding: 0.5rem 1.4rem;
-            border-radius: 40px;
-            border: 1px solid #f2cdbe;
-            font-size: 1rem;
-        }
-
         .question-text {
-            font-size: 1.6rem;
-            font-weight: 390;
-            color: #3f2921;
-            line-height: 1.4;
+            font-size: 1.6rem; font-weight: 370; color: #40271f; line-height: 1.4;
             margin-bottom: 2rem;
         }
-
         .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 0.9rem;
-            margin: 1.5rem 0 1rem;
+            display: flex; flex-direction: column; gap: 0.8rem; margin: 1.2rem 0 1rem;
         }
-
         .option-btn {
-            background: white;
-            border: 1.5px solid #f5cfc2;
-            border-radius: 100px;
-            padding: 0.8rem 1.8rem 0.8rem 1rem;
-            font-size: 1.2rem;
-            font-weight: 380;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
-            transition: border 0.1s, background 0.1s;
-            color: #311f19;
-            box-shadow: 0 2px 6px #ffd9cd;
+            background: white; border: 1.5px solid #f3ccbd; border-radius: 100px;
+            padding: 0.8rem 1.5rem 0.8rem 0.8rem; font-size: 1.2rem; font-weight: 360;
+            display: flex; align-items: center; gap: 12px; cursor: pointer;
+            transition: 0.1s; color: #2f1c15; box-shadow: 0 2px 6px #ffded1;
         }
-
-        .option-btn:hover {
-            border-color: #cfa48d;
-            background: #fff5ef;
+        @media (max-width: 480px) {
+            .option-btn { font-size: 1rem; padding: 0.6rem 1rem; gap: 8px; }
+            .opt-letter { width: 38px; height: 38px; font-size: 1.3rem; }
         }
-
+        .option-btn:hover { border-color: #cfa48d; background: #fff5ef; }
         .option-btn.selected {
-            border-color: #b87b64;
-            background: #ffefe7;
-            border-width: 2px;
+            border-color: #b87b64; background: #ffede5; border-width: 2px;
         }
-
         .opt-letter {
-            background: #ffffff;
-            border: 1.5px solid #f1bcab;
-            color: #9e604b;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 470;
+            background: white; border: 1.5px solid #efbcab; color: #9e604b;
+            width: 44px; height: 44px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-weight: 500;
             font-size: 1.5rem;
         }
-
         .option-btn.selected .opt-letter {
-            background: #dbb3a2;
-            color: white;
-            border-color: #b87b64;
+            background: #dbb3a2; color: white; border-color: #b87b64;
         }
-
-        .btn-next {
-            margin-top: 1.2rem;
-            background: #e3a594;
-            box-shadow: 0 6px 14px #efc2b2;
-            font-size: 1.1rem;
-            padding: 0.8rem 2.2rem;
-        }
+        .btn-next { margin-top: 1rem; background: #e7a18e; }
 
         /* ===== RESULT ===== */
-        .result-holder {
-            text-align: center;
-        }
-
+        .result-holder { text-align: center; }
         .result-greeting {
-            font-size: 1.4rem;
-            font-weight: 340;
-            color: #9b5f4b;
-            margin-bottom: 1rem;
+            font-size: 1.4rem; font-weight: 340; color: #9b5f4b; margin-bottom: 1rem;
         }
-
-        .result-greeting strong {
-            font-weight: 520;
-            color: #693f2e;
-        }
-
+        .result-greeting strong { font-weight: 520; color: #6d3d2b; }
         .result-image {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            aspect-ratio: 800 / 700;
-            background: #fce3da;
-            border-radius: 32px;
-            margin: 1.2rem auto 1.8rem;
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #fad4c5;
-            box-shadow: 0 20px 30px -14px #e3b3a2;
+            width: 100%; max-width: 500px; height: auto; aspect-ratio: 800 / 700;
+            background: #fce3da; border-radius: 32px; margin: 1rem auto 1.8rem;
+            background-size: cover; background-position: center; border: 2px solid #fad4c5;
+            box-shadow: 0 20px 30px -14px #e3b3a2; cursor: pointer;
+            transition: transform 0.1s;
+            -webkit-touch-callout: default; /* memungkinkan menu download */
         }
+        .result-image:active { transform: scale(0.99); }
 
         /* 7 gambar (simple, tanpa emoji) */
         .cherry-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fce4e0%22/><circle cx=%22400%22 cy=%22330%22 r=%22130%22 fill=%22%23d6574a%22 opacity=%22.9%22/><circle cx=%22320%22 cy=%22280%22 r=%2255%22 fill=%22%23b03d33%22/><circle cx=%22470%22 cy=%22380%22 r=%2255%22 fill=%22%23b03d33%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%23fff3ee%22 text-anchor=%22middle%22 font-weight=%22300%22>cherry</text></svg>'); }
@@ -315,66 +198,48 @@
         .aloe-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23ccebda%22/><path d=%22M400 200 L480 300 L400 540 L320 300 Z%22 fill=%22%233a8c63%22/><text x=%22400%22 y=%22580%22 font-size=%2248%22 fill=%22%2327593f%22 text-anchor=%22middle%22>aloe vera</text></svg>'); }
 
         .result-description-box {
-            background: #fff9f5;
-            border-radius: 32px;
-            padding: 1.8rem 2rem;
-            text-align: left;
-            border: 1px solid #fadfd4;
+            background: #fff9f5; border-radius: 32px; padding: 1.8rem 2rem;
+            text-align: left; border: 1px solid #fadfd4;
         }
-
         .result-description-box h3 {
-            font-size: 2rem;
-            font-weight: 430;
-            color: #7a4231;
-            margin-bottom: 1rem;
+            font-size: 2rem; font-weight: 430; color: #7a4231; margin-bottom: 1rem;
         }
-
         .result-description-box p {
-            font-size: 1.2rem;
-            line-height: 1.5;
-            color: #412d24;
-            font-weight: 340;
+            font-size: 1.2rem; line-height: 1.5; color: #412d24; font-weight: 340;
             white-space: pre-line;
         }
 
-        /* ===== FOOTER DISCLAIMER (di luar card) ===== */
-        .global-footer {
+        /* FOOTER GLOBAL FIXED (di luar card, selalu di bawah, tidak ikut scroll) */
+        .global-footer-fixed {
             position: fixed;
             bottom: 12px;
             left: 0;
             width: 100%;
             text-align: center;
-            font-size: 0.75rem;
-            color: #c98573;
-            z-index: 30;
+            z-index: 40;
             pointer-events: none;
-            padding: 0 16px;
+            font-size: 0.7rem;
+            color: #af6e5a;
             font-weight: 350;
             letter-spacing: 0.2px;
-            opacity: 0.85;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
         }
-
-        .global-footer span {
-            background: rgba(255, 245, 240, 0.55);
-            backdrop-filter: blur(2px);
-            padding: 4px 12px;
+        .global-footer-fixed span {
+            background: rgba(255, 242, 234, 0.7);
+            backdrop-filter: blur(3px);
+            padding: 4px 16px;
             border-radius: 40px;
-            width: fit-content;
-            margin: 0 auto;
-            font-size: 0.75rem;
-            color: #aa6956;
-            border: 0.5px solid #fccbbd;
+            border: 0.5px solid #ffcfbf;
+            color: #975f4b;
+            font-size: 0.7rem;
+            display: inline-block;
         }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <!-- floating masks background -->
-    <div class="floating-mask">
+    <!-- Floating mask full background (memenuhi) -->
+    <div class="floating-mask-full">
         <div class="mask-icon">🧴</div>
         <div class="mask-icon">🧼</div>
         <div class="mask-icon">🫧</div>
@@ -382,6 +247,11 @@
         <div class="mask-icon">🧖‍♀️</div>
         <div class="mask-icon">✨</div>
         <div class="mask-icon">💧</div>
+        <div class="mask-icon">🌿</div>
+        <div class="mask-icon">🍯</div>
+        <div class="mask-icon">🥥</div>
+        <div class="mask-icon">🍊</div>
+        <div class="mask-icon">🧴</div>
     </div>
 
     <!-- CARD UTAMA (konten) -->
@@ -412,21 +282,22 @@
         <div id="resultScreen" class="panel hidden">
             <div class="result-holder">
                 <div class="result-greeting" id="resultGreeting"></div>
-                <div class="result-image" id="resultImage"></div>
+                <!-- Tambahkan oncontextmenu/ontouchstart untuk memudahkan download -->
+                <div class="result-image" id="resultImage" oncontextmenu="return true;" ontouchstart="return true;"></div>
                 <div class="result-description-box" id="resultDesc"></div>
                 <button class="btn-restart" id="restartQuizBtn">Ulang test</button>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER GLOBAL (di luar card, fixed) -->
-    <div class="global-footer">
+    <!-- FOOTER FIXED (di luar card, tidak ikut scroll) -->
+    <div class="global-footer-fixed">
         <span>CHORONA by Kachoo & Ayu Merona. For Roleplay Purpose Only.</span>
     </div>
 
 <script>
     (function() {
-        // Data pertanyaan (teks tanpa huruf)
+        // Data pertanyaan & opsi
         const questions = [
             "Perawatan kulitmu ingin fokus pada?",
             "Saat punya waktu luang di rumah, kamu lebih suka?",
@@ -437,7 +308,6 @@
             "Saat memilih parfum, kamu lebih suka aroma?"
         ];
 
-        // Opsi untuk tiap pertanyaan (teks saja, tanpa huruf)
         const optionTexts = [
             ["Melembabkan kulit", "Mencerahkan", "Menenangkan kulit", "Mengangkat sel kulit mati"],
             ["Berkumpul atau chatting dengan teman", "Masak atau menikmati makanan enak", "Menonton film atau membaca buku", "Istirahat dan menenangkan diri"],
@@ -448,7 +318,6 @@
             ["Manis dan fruity", "Lembut dan creamy", "Fresh dan clean", "Natural dan menenangkan"]
         ];
 
-        // Mapping per opsi: index 0=A,1=B,2=C,3=D
         const mappingPerQuestion = [
             { A: ['avocado','aloe'], B: ['cherry','milk','lemon'], C: ['greentea'], D: ['coffee'] },
             { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] },
@@ -470,11 +339,11 @@
         };
 
         // State
-        let currentStep = 0;              // 0..6
-        let userAnswers = [];              // array of index 0/1/2/3
+        let currentStep = 0;
+        let userAnswers = [];
         let userName = '';
 
-        // Elemen DOM
+        // DOM
         const startScreen = document.getElementById('startScreen');
         const quizScreen = document.getElementById('quizScreen');
         const resultScreen = document.getElementById('resultScreen');
@@ -490,6 +359,11 @@
         const resultImage = document.getElementById('resultImage');
         const resultDesc = document.getElementById('resultDesc');
 
+        // Fungsi untuk memungkinkan download gambar (dengan menekan lama / context menu)
+        // gambar sudah berupa background-image berbasis svg, bisa di-download via context menu "Save image"
+        // kita tambahkan atribut title agar lebih jelas
+        resultImage.title = "Tekan lama atau klik kanan untuk simpan gambar";
+
         function resetToStart() {
             startScreen.classList.remove('hidden');
             quizScreen.classList.add('hidden');
@@ -502,7 +376,7 @@
 
         function startQuiz() {
             const name = namaInput.value.trim();
-            if (!name) { alert('Silakan isi nama panjang'); return; }
+            if (!name) { alert('Isi nama panjang dulu ya'); return; }
             userName = name;
             userAnswers = [];
             currentStep = 0;
@@ -517,21 +391,19 @@
             questionDisplay.innerText = questions[step];
             stepDisplay.innerText = `${step+1} / 7`;
 
-            const letters = ['A', 'B', 'C', 'D'];
+            const letters = ['A','B','C','D'];
             let html = '';
-            for (let i = 0; i < 4; i++) {
+            for (let i=0; i<4; i++) {
                 const selectedClass = (userAnswers[step] === i) ? 'selected' : '';
-                html += `
-                    <div class="option-btn ${selectedClass}" data-opt-index="${i}">
-                        <span class="opt-letter">${letters[i]}</span>
-                        <span>${optionTexts[step][i]}</span>
-                    </div>
-                `;
+                html += `<div class="option-btn ${selectedClass}" data-opt-index="${i}">
+                    <span class="opt-letter">${letters[i]}</span>
+                    <span>${optionTexts[step][i]}</span>
+                </div>`;
             }
             optionsGrid.innerHTML = html;
 
             document.querySelectorAll('.option-btn').forEach(btn => {
-                btn.addEventListener('click', function (e) {
+                btn.addEventListener('click', function() {
                     const idx = parseInt(this.dataset.optIndex);
                     document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                     this.classList.add('selected');
@@ -541,9 +413,9 @@
             });
 
             if (userAnswers[step] !== undefined) {
-                const savedIdx = userAnswers[step];
+                const saved = userAnswers[step];
                 document.querySelectorAll('.option-btn').forEach(btn => {
-                    if (parseInt(btn.dataset.optIndex) === savedIdx) btn.classList.add('selected');
+                    if (parseInt(btn.dataset.optIndex) === saved) btn.classList.add('selected');
                 });
                 nextBtn.classList.remove('hidden');
             } else {
@@ -552,21 +424,14 @@
         }
 
         function goToNext() {
-            if (userAnswers[currentStep] === undefined) {
-                alert('Pilih salah satu opsi');
-                return;
-            }
-            if (currentStep === 6) {
-                computeResult();
-            } else {
-                currentStep++;
-                renderQuestion(currentStep);
-            }
+            if (userAnswers[currentStep] === undefined) { alert('Pilih salah satu opsi'); return; }
+            if (currentStep === 6) computeResult();
+            else { currentStep++; renderQuestion(currentStep); }
         }
 
         function computeResult() {
             let candidates = [];
-            for (let i = 0; i < userAnswers.length; i++) {
+            for (let i=0; i<userAnswers.length; i++) {
                 const ansIdx = userAnswers[i];
                 const letter = String.fromCharCode(65 + ansIdx);
                 const mapping = mappingPerQuestion[i][letter];
@@ -580,14 +445,10 @@
             let maxCount = 0;
             const allKeys = ['cherry','avocado','milk','greentea','coffee','lemon','aloe'];
             for (let k of allKeys) {
-                if ((freq[k]||0) > maxCount) {
-                    maxCount = freq[k];
-                    finalKey = k;
-                }
+                if ((freq[k]||0) > maxCount) { maxCount = freq[k]; finalKey = k; }
             }
 
             const result = resultLibrary[finalKey];
-
             quizScreen.classList.add('hidden');
             resultScreen.classList.remove('hidden');
 
