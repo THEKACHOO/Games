@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>CHORONA · masker wajah</title>
     <style>
         * {
@@ -12,62 +12,109 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
+        /* background dengan floating mask icons (pink cerah) */
         body {
-            background: #faf3f0;  /* warm soft background */
+            background-color: #ffeff0;  /* pink muda cerah */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 16px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .card {
-            max-width: 1000px;
+        /* floating mask icons (animasi melayang) */
+        .floating-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            background: #ffffff;
-            border-radius: 40px;
-            box-shadow: 0 30px 50px -20px rgba(180, 100, 80, 0.25), 0 8px 20px rgba(250, 210, 200, 0.3);
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
             overflow: hidden;
         }
 
+        .mask-icon {
+            position: absolute;
+            opacity: 0.25;
+            font-size: 2.2rem;
+            user-select: none;
+            animation: floatMask 18s infinite ease-in-out;
+            filter: drop-shadow(0 6px 10px #fec5bb);
+        }
+
+        /* variasi posisi & delay */
+        .mask-icon:nth-child(1) { top: 8%; left: 3%; animation-duration: 20s; animation-delay: -2s; font-size: 3rem; opacity: 0.2; }
+        .mask-icon:nth-child(2) { bottom: 12%; right: 2%; animation-duration: 25s; animation-delay: -5s; font-size: 4rem; opacity: 0.2; transform: rotate(5deg); }
+        .mask-icon:nth-child(3) { top: 20%; right: 10%; animation-duration: 22s; animation-delay: -1s; font-size: 2.8rem; opacity: 0.2; }
+        .mask-icon:nth-child(4) { bottom: 25%; left: 8%; animation-duration: 28s; animation-delay: -10s; font-size: 3.5rem; opacity: 0.15; transform: rotate(-8deg); }
+        .mask-icon:nth-child(5) { top: 65%; left: 20%; animation-duration: 24s; animation-delay: -3s; font-size: 2.5rem; opacity: 0.2; }
+        .mask-icon:nth-child(6) { top: 40%; right: 15%; animation-duration: 30s; animation-delay: -7s; font-size: 3.2rem; opacity: 0.15; }
+        .mask-icon:nth-child(7) { bottom: 40%; left: 25%; animation-duration: 26s; animation-delay: -12s; font-size: 2.2rem; opacity: 0.2; }
+
+        @keyframes floatMask {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* container utama (tetap polos, latar putih transparan? kita buat white card dengan bg soft) */
+        .card {
+            max-width: 680px;  /* lebih ramping untuk mobile */
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            box-shadow: 0 30px 50px -16px #efb7ab, 0 8px 20px rgba(250, 180, 160, 0.3);
+            overflow: hidden;
+            border: 1px solid #ffe4dc;
+            position: relative;
+            z-index: 10;
+            margin: 20px auto;
+        }
+
         .panel {
-            padding: 2.5rem 3rem;
+            padding: 2rem 2rem;
         }
 
-        @media (max-width: 600px) {
-            .panel { padding: 2rem 1.5rem; }
+        /* mobile compact */
+        @media (max-width: 480px) {
+            .panel { padding: 1.8rem 1.2rem; }
+            .card { max-width: 100%; }
         }
 
-        /* TYPOGRAPHY clean */
+        /* ===== TYPOGRAPHY clean ===== */
         h1, h2, h3, p {
             font-weight: 400;
             letter-spacing: -0.01em;
         }
 
-        /* ----- START SCREEN ----- */
+        /* ===== START SCREEN ===== */
         #startScreen {
             text-align: center;
         }
 
         .brand-main {
             font-size: 2rem;
-            font-weight: 500;
-            color: #b97a6a;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
+            font-weight: 450;
+            color: #c97363;
+            margin-bottom: 0.2rem;
+            letter-spacing: -0.3px;
         }
 
         .brand-main span {
             font-weight: 300;
-            color: #cb8e7c;
+            color: #d48d7a;
         }
 
         #startScreen h1 {
-            font-size: 2.6rem;
-            font-weight: 500;
-            color: #42271f;
-            line-height: 1.2;
-            margin: 2rem 0 1.8rem;
+            font-size: 2.2rem;
+            font-weight: 380;
+            color: #4d2f26;
+            line-height: 1.3;
+            margin: 1.2rem 0 1.8rem;
         }
 
         .input-group {
@@ -76,142 +123,140 @@
             align-items: flex-start;
             gap: 0.6rem;
             width: 100%;
-            max-width: 420px;
-            margin: 2rem auto 1.2rem;
+            max-width: 360px;
+            margin: 1.8rem auto 1.2rem;
         }
 
         .input-group label {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            color: #a56351;
+            color: #b47562;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-left: 0.75rem;
+            letter-spacing: 1.5px;
+            margin-left: 0.5rem;
         }
 
         .input-group input {
             width: 100%;
-            padding: 1.2rem 1.5rem;
-            font-size: 1.2rem;
-            background: #fefaf8;
-            border: 1.5px solid #edd9d0;
-            border-radius: 32px;
+            padding: 1rem 1.3rem;
+            font-size: 1.1rem;
+            background: #ffffff;
+            border: 1.5px solid #f5cfc2;
+            border-radius: 50px;
             outline: none;
             transition: 0.2s;
             color: #2f1d16;
         }
 
         .input-group input:focus {
-            border-color: #dbaa96;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px #fee8df;
+            border-color: #d99982;
+            box-shadow: 0 0 0 3px #fee2d8;
         }
 
         .btn-start, .btn-next, .btn-restart {
-            background: #d4a392;
+            background: #e3a594;
             border: none;
             color: white;
-            font-weight: 500;
+            font-weight: 450;
             font-size: 1.2rem;
-            padding: 1rem 2.8rem;
-            border-radius: 40px;
+            padding: 0.9rem 2.5rem;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background 0.15s, box-shadow 0.15s;
+            transition: background 0.15s;
             width: fit-content;
             margin: 2rem auto 0;
             display: block;
-            border: 1px solid #eac5b8;
-            box-shadow: 0 4px 10px #efc8bb;
+            box-shadow: 0 6px 14px #efc2b2;
+            border: 1px solid #fad7cb;
         }
 
         .btn-start:hover, .btn-next:hover, .btn-restart:hover {
-            background: #c28672;
-            box-shadow: 0 6px 14px #e5b9aa;
+            background: #d0836e;
         }
 
-        /* ----- QUIZ SCREEN ----- */
+        /* ===== QUIZ ===== */
         .quiz-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
             flex-wrap: wrap;
-            gap: 16px 8px;
+            gap: 12px;
         }
 
         .user-badge {
-            background: #f3e3dc;
-            padding: 0.6rem 1.8rem;
+            background: #ffeae3;
+            padding: 0.5rem 1.4rem;
             border-radius: 40px;
-            font-size: 1.1rem;
-            font-weight: 450;
-            color: #5e3c30;
-            border: 1px solid #eac7bb;
+            font-size: 1rem;
+            font-weight: 430;
+            color: #734b3c;
+            border: 1px solid #f2cdbe;
         }
 
         .step-indicator {
-            color: #ad7665;
-            font-weight: 450;
-            font-size: 1.1rem;
-            background: #fcf1ec;
-            padding: 0.6rem 1.8rem;
+            color: #b36b58;
+            font-weight: 430;
+            background: #ffede7;
+            padding: 0.5rem 1.4rem;
             border-radius: 40px;
-            border: 1px solid #eed3c8;
+            border: 1px solid #f2cdbe;
+            font-size: 1rem;
         }
 
         .question-text {
-            font-size: 1.9rem;
-            font-weight: 430;
-            color: #341f18;
-            line-height: 1.3;
-            margin-bottom: 2.5rem;
+            font-size: 1.6rem;
+            font-weight: 390;
+            color: #3f2921;
+            line-height: 1.4;
+            margin-bottom: 2rem;
         }
 
         .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 1.1rem;
-            margin: 2.2rem 0 1.2rem;
+            gap: 0.9rem;
+            margin: 1.5rem 0 1rem;
         }
 
         .option-btn {
             background: white;
-            border: 1.8px solid #edd2c7;
-            border-radius: 60px;
-            padding: 1rem 2rem 1rem 1rem;
-            font-size: 1.3rem;
-            font-weight: 400;
+            border: 1.5px solid #f5cfc2;
+            border-radius: 100px;
+            padding: 0.8rem 1.8rem 0.8rem 1rem;
+            font-size: 1.2rem;
+            font-weight: 380;
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 14px;
             cursor: pointer;
-            transition: border 0.15s, background 0.1s;
+            transition: border 0.1s, background 0.1s;
             color: #311f19;
-            box-shadow: 0 2px 4px #f8e2d9;
+            box-shadow: 0 2px 6px #ffd9cd;
         }
 
         .option-btn:hover {
             border-color: #cfa48d;
-            background: #fff8f4;
+            background: #fff5ef;
         }
 
         .option-btn.selected {
             border-color: #b87b64;
-            background: #fff0e8;
+            background: #ffefe7;
             border-width: 2px;
         }
 
         .opt-letter {
             background: #ffffff;
-            border: 1.5px solid #dbb3a2;
-            color: #7f5140;
-            width: 48px;
-            height: 48px;
+            border: 1.5px solid #f1bcab;
+            color: #9e604b;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 500;
+            font-weight: 470;
             font-size: 1.5rem;
         }
 
@@ -221,45 +266,46 @@
             border-color: #b87b64;
         }
 
-        /* tombol next hanya huruf, tanpa ikon */
         .btn-next {
             margin-top: 1.2rem;
-            background: #dbb3a2;
-            box-shadow: 0 4px 12px #ecc7ba;
+            background: #e3a594;
+            box-shadow: 0 6px 14px #efc2b2;
+            font-size: 1.1rem;
+            padding: 0.8rem 2.2rem;
         }
 
-        /* ----- RESULT SCREEN ----- */
+        /* ===== RESULT ===== */
         .result-holder {
             text-align: center;
         }
 
         .result-greeting {
-            font-size: 1.7rem;
-            font-weight: 380;
-            color: #7f5543;
-            margin-bottom: 1.2rem;
+            font-size: 1.4rem;
+            font-weight: 340;
+            color: #9b5f4b;
+            margin-bottom: 1rem;
         }
 
         .result-greeting strong {
             font-weight: 520;
-            color: #572f20;
+            color: #693f2e;
         }
 
         .result-image {
             width: 100%;
-            max-width: 800px;
+            max-width: 500px;
             height: auto;
             aspect-ratio: 800 / 700;
-            background: #ecd9d0;
+            background: #fce3da;
             border-radius: 32px;
-            margin: 1.8rem auto 2.2rem;
+            margin: 1.2rem auto 1.8rem;
             background-size: cover;
             background-position: center;
-            border: 2px solid #f2d7cb;
-            box-shadow: 0 25px 35px -16px #d9b5a5;
+            border: 2px solid #fad4c5;
+            box-shadow: 0 20px 30px -14px #e3b3a2;
         }
 
-        /* 7 gambar berbeda (soft tone, tanpa emoji) */
+        /* 7 gambar (simple, tanpa emoji) */
         .cherry-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fce4e0%22/><circle cx=%22400%22 cy=%22330%22 r=%22130%22 fill=%22%23d6574a%22 opacity=%22.9%22/><circle cx=%22320%22 cy=%22280%22 r=%2255%22 fill=%22%23b03d33%22/><circle cx=%22470%22 cy=%22380%22 r=%2255%22 fill=%22%23b03d33%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%23fff3ee%22 text-anchor=%22middle%22 font-weight=%22300%22>cherry</text></svg>'); }
         .avocado-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23e2efda%22/><ellipse cx=%22400%22 cy=%22360%22 rx=%22130%22 ry=%22100%22 fill=%22%235f8b4b%22/><circle cx=%22350%22 cy=%22340%22 r=%2228%22 fill=%22%23945f3a%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%233d3d21%22 text-anchor=%22middle%22>avocado</text></svg>'); }
         .milk-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23f5efe8%22/><path d=%22M340 260 L460 260 L490 420 L310 420 Z%22 fill=%22%23faf9f7%22 stroke=%22%23cfb6a4%22 stroke-width=%2214%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%2380695b%22 text-anchor=%22middle%22>milk</text></svg>'); }
@@ -269,104 +315,118 @@
         .aloe-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23ccebda%22/><path d=%22M400 200 L480 300 L400 540 L320 300 Z%22 fill=%22%233a8c63%22/><text x=%22400%22 y=%22580%22 font-size=%2248%22 fill=%22%2327593f%22 text-anchor=%22middle%22>aloe vera</text></svg>'); }
 
         .result-description-box {
-            background: #fbf4f0;
+            background: #fff9f5;
             border-radius: 32px;
-            padding: 2.2rem 2.5rem;
+            padding: 1.8rem 2rem;
             text-align: left;
-            border: 1px solid #f0d9cf;
-            box-shadow: inset 0 2px 6px #fff2ea;
+            border: 1px solid #fadfd4;
         }
 
         .result-description-box h3 {
-            font-size: 2.4rem;
-            font-weight: 420;
-            color: #6f3d2b;
-            margin-bottom: 1.2rem;
-            letter-spacing: -0.02em;
+            font-size: 2rem;
+            font-weight: 430;
+            color: #7a4231;
+            margin-bottom: 1rem;
         }
 
         .result-description-box p {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            color: #3b271f;
-            font-weight: 350;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #412d24;
+            font-weight: 340;
             white-space: pre-line;
         }
 
-        .footer-note {
-            margin-top: 2.8rem;
-            padding-top: 1.5rem;
+        /* ===== FOOTER DISCLAIMER (di luar card) ===== */
+        .global-footer {
+            position: fixed;
+            bottom: 12px;
+            left: 0;
+            width: 100%;
             text-align: center;
-            border-top: 1px solid #f0d7cd;
-            font-size: 0.9rem;
-            color: #ac8a7a;
+            font-size: 0.75rem;
+            color: #c98573;
+            z-index: 30;
+            pointer-events: none;
+            padding: 0 16px;
+            font-weight: 350;
+            letter-spacing: 0.2px;
+            opacity: 0.85;
             display: flex;
             flex-direction: column;
-            gap: 0.2rem;
+            gap: 2px;
         }
 
-        .footer-note .mini-brand {
-            font-size: 1.1rem;
-            font-weight: 400;
-            color: #c48d78;
-            letter-spacing: 0.3px;
-        }
-
-        .footer-note .roleplay {
-            font-style: italic;
-            font-weight: 300;
-            color: #a98272;
+        .global-footer span {
+            background: rgba(255, 245, 240, 0.55);
+            backdrop-filter: blur(2px);
+            padding: 4px 12px;
+            border-radius: 40px;
+            width: fit-content;
+            margin: 0 auto;
+            font-size: 0.75rem;
+            color: #aa6956;
+            border: 0.5px solid #fccbbd;
         }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-<div class="card" id="appCard">
-    <!-- START SCREEN -->
-    <div id="startScreen" class="panel">
-        <div class="brand-main">CHORONA</div>
-        <h1>Pilihan masker wajah<br>yang cocok untukmu</h1>
-        <div class="input-group">
-            <label for="namaPanjang">Nama panjang</label>
-            <input type="text" id="namaPanjang" placeholder="misal: Alexandria" autocomplete="off">
+    <!-- floating masks background -->
+    <div class="floating-mask">
+        <div class="mask-icon">🧴</div>
+        <div class="mask-icon">🧼</div>
+        <div class="mask-icon">🫧</div>
+        <div class="mask-icon">🌸</div>
+        <div class="mask-icon">🧖‍♀️</div>
+        <div class="mask-icon">✨</div>
+        <div class="mask-icon">💧</div>
+    </div>
+
+    <!-- CARD UTAMA (konten) -->
+    <div class="card" id="appCard">
+        <!-- START SCREEN -->
+        <div id="startScreen" class="panel">
+            <div class="brand-main">CHORONA</div>
+            <h1>Pilihan masker wajah<br>yang cocok untukmu</h1>
+            <div class="input-group">
+                <label for="namaPanjang">Nama panjang</label>
+                <input type="text" id="namaPanjang" placeholder="cth: Alexandria" autocomplete="off">
+            </div>
+            <button class="btn-start" id="btnStart">Mulai</button>
         </div>
-        <button class="btn-start" id="btnStart">Mulai</button>
-        <div class="footer-note" style="border: none; margin-top: 3.2rem;">
-            <div class="mini-brand">Kachoo x Ayu Merona — mini games The Kachoo</div>
-            <div class="roleplay">For Roleplay Purpose Only.</div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quizScreen" class="panel hidden">
+            <div class="quiz-header">
+                <div class="user-badge" id="quizUserName"></div>
+                <div class="step-indicator" id="stepDisplay">1 / 7</div>
+            </div>
+            <div class="question-text" id="questionDisplay"></div>
+            <div class="options-grid" id="optionsGrid"></div>
+            <button class="btn-next hidden" id="nextQuestionBtn">Lanjut</button>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="resultScreen" class="panel hidden">
+            <div class="result-holder">
+                <div class="result-greeting" id="resultGreeting"></div>
+                <div class="result-image" id="resultImage"></div>
+                <div class="result-description-box" id="resultDesc"></div>
+                <button class="btn-restart" id="restartQuizBtn">Ulang test</button>
+            </div>
         </div>
     </div>
 
-    <!-- QUIZ SCREEN -->
-    <div id="quizScreen" class="panel hidden">
-        <div class="quiz-header">
-            <div class="user-badge" id="quizUserName"></div>
-            <div class="step-indicator" id="stepDisplay">1 / 7</div>
-        </div>
-        <div class="question-text" id="questionDisplay"></div>
-        <div class="options-grid" id="optionsGrid"></div>
-        <button class="btn-next hidden" id="nextQuestionBtn">Lanjut</button>
+    <!-- FOOTER GLOBAL (di luar card, fixed) -->
+    <div class="global-footer">
+        <span>CHORONA by Kachoo & Ayu Merona. For Roleplay Purpose Only.</span>
     </div>
-
-    <!-- RESULT SCREEN -->
-    <div id="resultScreen" class="panel hidden">
-        <div class="result-holder">
-            <div class="result-greeting" id="resultGreeting"></div>
-            <div class="result-image" id="resultImage"></div>
-            <div class="result-description-box" id="resultDesc"></div>
-            <button class="btn-restart" id="restartQuizBtn">Ulang test</button>
-        </div>
-        <div class="footer-note">
-            <div class="mini-brand">Kachoo x Ayu Merona — mini games The Kachoo</div>
-            <div class="roleplay">For Roleplay Purpose Only.</div>
-        </div>
-    </div>
-</div>
 
 <script>
     (function() {
-        // Data pertanyaan (teks tanpa huruf A, B, C, D di dalam kalimat)
+        // Data pertanyaan (teks tanpa huruf)
         const questions = [
             "Perawatan kulitmu ingin fokus pada?",
             "Saat punya waktu luang di rumah, kamu lebih suka?",
@@ -388,7 +448,7 @@
             ["Manis dan fruity", "Lembut dan creamy", "Fresh dan clean", "Natural dan menenangkan"]
         ];
 
-        // Mapping per opsi: index 0=A,1=B,2=C,3=D -> daftar bahan (string)
+        // Mapping per opsi: index 0=A,1=B,2=C,3=D
         const mappingPerQuestion = [
             { A: ['avocado','aloe'], B: ['cherry','milk','lemon'], C: ['greentea'], D: ['coffee'] },
             { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] },
@@ -470,7 +530,6 @@
             }
             optionsGrid.innerHTML = html;
 
-            // Event listeners untuk option
             document.querySelectorAll('.option-btn').forEach(btn => {
                 btn.addEventListener('click', function (e) {
                     const idx = parseInt(this.dataset.optIndex);
@@ -481,7 +540,6 @@
                 });
             });
 
-            // Jika sudah ada jawaban, munculkan next dan tandai
             if (userAnswers[step] !== undefined) {
                 const savedIdx = userAnswers[step];
                 document.querySelectorAll('.option-btn').forEach(btn => {
@@ -507,20 +565,17 @@
         }
 
         function computeResult() {
-            // kumpulkan semua bahan dari setiap jawaban
             let candidates = [];
             for (let i = 0; i < userAnswers.length; i++) {
-                const ansIdx = userAnswers[i]; // 0,1,2,3
-                const letter = String.fromCharCode(65 + ansIdx); // A,B,C,D
+                const ansIdx = userAnswers[i];
+                const letter = String.fromCharCode(65 + ansIdx);
                 const mapping = mappingPerQuestion[i][letter];
                 if (mapping) candidates.push(...mapping);
             }
 
-            // frekuensi
             const freq = {};
             candidates.forEach(item => { let key = item.toLowerCase().replace(/\s/g,''); freq[key] = (freq[key]||0)+1; });
 
-            // cari max
             let finalKey = 'cherry';
             let maxCount = 0;
             const allKeys = ['cherry','avocado','milk','greentea','coffee','lemon','aloe'];
@@ -533,26 +588,20 @@
 
             const result = resultLibrary[finalKey];
 
-            // tampilkan result
             quizScreen.classList.add('hidden');
             resultScreen.classList.remove('hidden');
 
             resultGreeting.innerHTML = `<strong>${userName}</strong>, masker yang cocok untukmu adalah...`;
-
-            // set gambar
             resultImage.className = `result-image ${result.img}`;
-
-            // deskripsi
             resultDesc.innerHTML = `<h3>${result.title}</h3><p>${result.desc.replace(/\n/g,'<br>')}</p>`;
         }
 
-        // Event listeners
         btnStart.addEventListener('click', startQuiz);
         nextBtn.addEventListener('click', goToNext);
         restartBtn.addEventListener('click', resetToStart);
         namaInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') btnStart.click(); });
 
-        resetToStart(); // inisialisasi
+        resetToStart();
     })();
 </script>
 </body>
