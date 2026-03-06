@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>CHORONA</title>
+    <title>CHORONA · masker wajah</title>
     <style>
         * {
             margin: 0;
@@ -12,79 +12,49 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Background penuh dengan floating mask icons (lebih rapat, memenuhi) */
         body {
-            background-color: #ffebeb;  /* base pink cerah */
+            background-color: #ffe4dc;  /* pink cerah soft */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding: 16px;
+            justify-content: center;
+            padding: 24px 16px;
             position: relative;
         }
 
-        .floating-mask-full {
+        /* background blur (soft pink) - tanpa icon, hanya efek kabur */
+        body::before {
+            content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 40%, #ffd9d0, #ffc7ba);
+            filter: blur(48px);
+            z-index: -1;
             pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
         }
 
-        .mask-icon {
-            position: absolute;
-            opacity: 0.2;
-            font-size: 3rem;
-            user-select: none;
-            animation: floatMask 22s infinite alternate ease-in-out;
-            filter: drop-shadow(0 8px 12px #fbb7a6);
-        }
-
-        /* lebih banyak icon, memenuhi latar */
-        .mask-icon:nth-child(1) { top: 2%; left: 1%; font-size: 3.8rem; animation-duration: 18s; }
-        .mask-icon:nth-child(2) { top: 15%; right: 3%; font-size: 4.2rem; animation-duration: 24s; opacity: 0.25; }
-        .mask-icon:nth-child(3) { bottom: 8%; left: 12%; font-size: 5rem; animation-duration: 28s; opacity: 0.2; }
-        .mask-icon:nth-child(4) { bottom: 20%; right: 8%; font-size: 3.5rem; animation-duration: 20s; }
-        .mask-icon:nth-child(5) { top: 40%; left: 5%; font-size: 4.5rem; animation-duration: 30s; opacity: 0.2; }
-        .mask-icon:nth-child(6) { top: 70%; right: 15%; font-size: 3.2rem; animation-duration: 26s; }
-        .mask-icon:nth-child(7) { bottom: 50%; left: 20%; font-size: 4rem; animation-duration: 22s; }
-        .mask-icon:nth-child(8) { top: 85%; left: 40%; font-size: 3.6rem; animation-duration: 19s; }
-        .mask-icon:nth-child(9) { top: 10%; right: 25%; font-size: 5.2rem; opacity: 0.18; animation-duration: 32s; }
-        .mask-icon:nth-child(10) { bottom: 5%; right: 35%; font-size: 4.8rem; animation-duration: 27s; }
-        .mask-icon:nth-child(11) { top: 60%; left: 70%; font-size: 3rem; animation-duration: 21s; }
-        .mask-icon:nth-child(12) { bottom: 30%; left: 85%; font-size: 5.5rem; opacity: 0.15; animation-duration: 29s; }
-
-        @keyframes floatMask {
-            0% { transform: translateY(0px) rotate(0deg) scale(1); }
-            100% { transform: translateY(-30px) rotate(6deg) scale(1.05); }
-        }
-
-        /* card putih di tengah */
+        /* container utama (card putih) */
         .card {
-            max-width: 680px;
+            max-width: 700px;
             width: 100%;
             background: #ffffff;
             border-radius: 48px;
-            box-shadow: 0 30px 50px -20px #d9a69b, 0 8px 25px rgba(245, 170, 150, 0.4);
+            box-shadow: 0 30px 50px -20px #cf9585, 0 8px 25px rgba(240, 150, 130, 0.3);
             overflow: hidden;
+            border: 1px solid #ffdbd0;
+            margin: 0 auto 30px auto;  /* margin bawah untuk footer */
             position: relative;
-            z-index: 15;
-            margin: 20px auto;
-            border: 1px solid #ffd9ce;
+            z-index: 5;
         }
 
         .panel {
-            padding: 2.2rem 2.5rem;
+            padding: 2.5rem 2.8rem;
         }
 
-        /* mobile compact: perkecil padding dan ukuran tombol */
+        /* mobile compact */
         @media (max-width: 560px) {
-            .panel { padding: 1.5rem 1.2rem; }
-            .card { max-width: 100%; }
+            .panel { padding: 1.8rem 1.2rem; }
         }
 
         /* ===== TYPOGRAPHY ===== */
@@ -101,7 +71,7 @@
         }
         .input-group {
             display: flex; flex-direction: column; align-items: flex-start;
-            gap: 0.5rem; width: 100%; max-width: 340px; margin: 1.5rem auto 1rem;
+            gap: 0.5rem; width: 100%; max-width: 360px; margin: 1.5rem auto 1rem;
         }
         .input-group label {
             font-size: 0.85rem; font-weight: 500; color: #b77a67; text-transform: uppercase;
@@ -116,7 +86,6 @@
             border-color: #dc8f78; box-shadow: 0 0 0 4px #fee2d6;
         }
 
-        /* tombol konsisten */
         .btn-start, .btn-next, .btn-restart {
             background: #e7a18e; border: none; color: white; font-weight: 450;
             font-size: 1.2rem; padding: 0.9rem 2.5rem; border-radius: 50px;
@@ -125,6 +94,7 @@
             border: 1px solid #ffe0d4;
         }
         .btn-start:hover, .btn-next:hover, .btn-restart:hover { background: #d1826c; }
+
         @media (max-width: 480px) {
             .btn-start, .btn-next, .btn-restart {
                 font-size: 1rem; padding: 0.75rem 2rem; margin-top: 1.5rem;
@@ -184,11 +154,11 @@
             background-size: cover; background-position: center; border: 2px solid #fad4c5;
             box-shadow: 0 20px 30px -14px #e3b3a2; cursor: pointer;
             transition: transform 0.1s;
-            -webkit-touch-callout: default; /* memungkinkan menu download */
+            -webkit-touch-callout: default;
         }
         .result-image:active { transform: scale(0.99); }
 
-        /* 7 gambar (simple, tanpa emoji) */
+        /* 7 gambar (tanpa emoji, hanya teks) */
         .cherry-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fce4e0%22/><circle cx=%22400%22 cy=%22330%22 r=%22130%22 fill=%22%23d6574a%22 opacity=%22.9%22/><circle cx=%22320%22 cy=%22280%22 r=%2255%22 fill=%22%23b03d33%22/><circle cx=%22470%22 cy=%22380%22 r=%2255%22 fill=%22%23b03d33%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%23fff3ee%22 text-anchor=%22middle%22 font-weight=%22300%22>cherry</text></svg>'); }
         .avocado-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23e2efda%22/><ellipse cx=%22400%22 cy=%22360%22 rx=%22130%22 ry=%22100%22 fill=%22%235f8b4b%22/><circle cx=%22350%22 cy=%22340%22 r=%2228%22 fill=%22%23945f3a%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%233d3d21%22 text-anchor=%22middle%22>avocado</text></svg>'); }
         .milk-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23f5efe8%22/><path d=%22M340 260 L460 260 L490 420 L310 420 Z%22 fill=%22%23faf9f7%22 stroke=%22%23cfb6a4%22 stroke-width=%2214%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%2380695b%22 text-anchor=%22middle%22>milk</text></svg>'); }
@@ -209,28 +179,27 @@
             white-space: pre-line;
         }
 
-        /* FOOTER GLOBAL FIXED (di luar card, selalu di bawah, tidak ikut scroll) */
-        .global-footer-fixed {
-            position: fixed;
-            bottom: 12px;
-            left: 0;
+        /* FOOTER ASLI DI BAWAH HALAMAN (tidak fixed, berada di luar card, setelah card) */
+        .page-footer {
             width: 100%;
             text-align: center;
-            z-index: 40;
-            pointer-events: none;
+            padding: 16px 8px 8px;
+            margin-top: 0px;
+            color: #b17a69;
             font-size: 0.7rem;
-            color: #af6e5a;
             font-weight: 350;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.3px;
+            z-index: 10;
+            position: relative;
         }
-        .global-footer-fixed span {
-            background: rgba(255, 242, 234, 0.7);
-            backdrop-filter: blur(3px);
-            padding: 4px 16px;
+        .page-footer span {
+            background: rgba(255, 235, 225, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 6px 20px;
             border-radius: 40px;
-            border: 0.5px solid #ffcfbf;
-            color: #975f4b;
-            font-size: 0.7rem;
+            border: 0.5px solid #ffcbbc;
+            color: #8f5d4b;
+            font-size: 0.75rem;
             display: inline-block;
         }
 
@@ -238,22 +207,8 @@
     </style>
 </head>
 <body>
-    <!-- Floating mask full background (memenuhi) -->
-    <div class="floating-mask-full">
-        <div class="mask-icon">🧴</div>
-        <div class="mask-icon">🧼</div>
-        <div class="mask-icon">🫧</div>
-        <div class="mask-icon">🌸</div>
-        <div class="mask-icon">🧖‍♀️</div>
-        <div class="mask-icon">✨</div>
-        <div class="mask-icon">💧</div>
-        <div class="mask-icon">🌿</div>
-        <div class="mask-icon">🍯</div>
-        <div class="mask-icon">🥥</div>
-        <div class="mask-icon">🍊</div>
-        <div class="mask-icon">🧴</div>
-    </div>
-
+    <!-- Background hanya blur (tanpa floating icon) -->
+    
     <!-- CARD UTAMA (konten) -->
     <div class="card" id="appCard">
         <!-- START SCREEN -->
@@ -282,22 +237,20 @@
         <div id="resultScreen" class="panel hidden">
             <div class="result-holder">
                 <div class="result-greeting" id="resultGreeting"></div>
-                <!-- Tambahkan oncontextmenu/ontouchstart untuk memudahkan download -->
-                <div class="result-image" id="resultImage" oncontextmenu="return true;" ontouchstart="return true;"></div>
+                <div class="result-image" id="resultImage" title="Tekan lama atau klik kanan untuk simpan gambar"></div>
                 <div class="result-description-box" id="resultDesc"></div>
                 <button class="btn-restart" id="restartQuizBtn">Ulang test</button>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER FIXED (di luar card, tidak ikut scroll) -->
-    <div class="global-footer-fixed">
+    <!-- FOOTER DI BAWAH HALAMAN (setelah card, tidak ikut scroll karena di luar) -->
+    <div class="page-footer">
         <span>CHORONA by Kachoo & Ayu Merona. For Roleplay Purpose Only.</span>
     </div>
 
 <script>
     (function() {
-        // Data pertanyaan & opsi
         const questions = [
             "Perawatan kulitmu ingin fokus pada?",
             "Saat punya waktu luang di rumah, kamu lebih suka?",
@@ -338,12 +291,10 @@
             aloe: { title: 'Aloe Vera', desc: 'Cocok banget untukmu yang sabar dan menenangkan. Kamu suka membantu orang lain dan biasanya menjadi tempat bercerita bagi teman-temanmu, tipe yang selalu ada saat orang lain butuh.\nAuranya damai, sabar, dan menenangkan, seperti kamu.', img: 'aloe-bg' }
         };
 
-        // State
         let currentStep = 0;
         let userAnswers = [];
         let userName = '';
 
-        // DOM
         const startScreen = document.getElementById('startScreen');
         const quizScreen = document.getElementById('quizScreen');
         const resultScreen = document.getElementById('resultScreen');
@@ -358,11 +309,6 @@
         const resultGreeting = document.getElementById('resultGreeting');
         const resultImage = document.getElementById('resultImage');
         const resultDesc = document.getElementById('resultDesc');
-
-        // Fungsi untuk memungkinkan download gambar (dengan menekan lama / context menu)
-        // gambar sudah berupa background-image berbasis svg, bisa di-download via context menu "Save image"
-        // kita tambahkan atribut title agar lebih jelas
-        resultImage.title = "Tekan lama atau klik kanan untuk simpan gambar";
 
         function resetToStart() {
             startScreen.classList.remove('hidden');
