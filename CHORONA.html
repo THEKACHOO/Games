@@ -13,7 +13,7 @@
         }
 
         body {
-            background-color: #ffe4dc;  /* pink cerah soft */
+            background-color: #ffe4dc;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -23,7 +23,7 @@
             position: relative;
         }
 
-        /* background blur (soft pink) - tanpa icon, hanya efek kabur */
+        /* background blur (soft pink) */
         body::before {
             content: "";
             position: fixed;
@@ -34,7 +34,6 @@
             pointer-events: none;
         }
 
-        /* container utama (card putih) */
         .card {
             max-width: 700px;
             width: 100%;
@@ -43,7 +42,7 @@
             box-shadow: 0 30px 50px -20px #cf9585, 0 8px 25px rgba(240, 150, 130, 0.3);
             overflow: hidden;
             border: 1px solid #ffdbd0;
-            margin: 0 auto 30px auto;  /* margin bawah untuk footer */
+            margin: 0 auto 30px auto;
             position: relative;
             z-index: 5;
         }
@@ -52,113 +51,276 @@
             padding: 2.5rem 2.8rem;
         }
 
-        /* mobile compact */
         @media (max-width: 560px) {
             .panel { padding: 1.8rem 1.2rem; }
         }
 
-        /* ===== TYPOGRAPHY ===== */
         h1, h2, h3, p { font-weight: 400; letter-spacing: -0.01em; }
 
         /* ===== START SCREEN ===== */
-        #startScreen { text-align: center; }
+        #startScreen { 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* container untuk icon mask PNG (transparan) */
+        .mask-icon-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .mask-icon-img {
+            width: 80px;
+            height: auto;
+            object-fit: contain;
+            opacity: 0.9;
+        }
+
+        /* Placeholder untuk icon mask - nanti diganti dengan PNG asli */
+        .mask-icon-placeholder {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 215, 200, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #d47e6a;
+            border: 2px dashed #d47e6a;
+        }
+
         .brand-main {
-            font-size: 2rem; font-weight: 440; color: #c56b58; margin-bottom: 0.3rem;
+            font-size: 2rem; 
+            font-weight: 440; 
+            color: #c56b58; 
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
         }
+
         #startScreen h1 {
-            font-size: 2.2rem; font-weight: 360; color: #512e22; line-height: 1.3;
-            margin: 1rem 0 1.8rem;
+            font-size: 1.6rem; /* diperkecil dari 2.2rem */
+            font-weight: 360; 
+            color: #512e22; 
+            line-height: 1.3;
+            margin: 0.2rem 0 1.5rem;
+            max-width: 400px;
         }
+
         .input-group {
-            display: flex; flex-direction: column; align-items: flex-start;
-            gap: 0.5rem; width: 100%; max-width: 360px; margin: 1.5rem auto 1rem;
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start;
+            gap: 0.5rem; 
+            width: 100%; 
+            max-width: 360px; 
+            margin: 1rem auto 1rem;
         }
+
         .input-group label {
-            font-size: 0.85rem; font-weight: 500; color: #b77a67; text-transform: uppercase;
-            letter-spacing: 1.2px; margin-left: 0.5rem;
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            color: #b77a67; 
+            text-transform: uppercase;
+            letter-spacing: 1.2px; 
+            margin-left: 0.5rem;
         }
+
         .input-group input {
-            width: 100%; padding: 0.9rem 1.3rem; font-size: 1rem;
-            background: #fffcfb; border: 1.5px solid #f7cfc0; border-radius: 50px;
-            outline: none; transition: 0.2s;
+            width: 100%; 
+            padding: 0.9rem 1.3rem; 
+            font-size: 1rem;
+            background: #fffcfb; 
+            border: 1.5px solid #f7cfc0; 
+            border-radius: 50px;
+            outline: none; 
+            transition: 0.2s;
         }
+
         .input-group input:focus {
-            border-color: #dc8f78; box-shadow: 0 0 0 4px #fee2d6;
+            border-color: #dc8f78; 
+            box-shadow: 0 0 0 4px #fee2d6;
         }
 
         .btn-start, .btn-next, .btn-restart {
-            background: #e7a18e; border: none; color: white; font-weight: 450;
-            font-size: 1.2rem; padding: 0.9rem 2.5rem; border-radius: 50px;
-            cursor: pointer; transition: background 0.15s; width: fit-content;
-            margin: 2rem auto 0; display: block; box-shadow: 0 8px 18px #f2bfae;
+            background: #e7a18e; 
+            border: none; 
+            color: white; 
+            font-weight: 450;
+            font-size: 1.2rem; 
+            padding: 0.9rem 2.5rem; 
+            border-radius: 50px;
+            cursor: pointer; 
+            transition: background 0.15s; 
+            width: fit-content;
+            margin: 1.5rem auto 0; 
+            display: block; 
+            box-shadow: 0 8px 18px #f2bfae;
             border: 1px solid #ffe0d4;
         }
+
         .btn-start:hover, .btn-next:hover, .btn-restart:hover { background: #d1826c; }
 
         @media (max-width: 480px) {
             .btn-start, .btn-next, .btn-restart {
-                font-size: 1rem; padding: 0.75rem 2rem; margin-top: 1.5rem;
+                font-size: 1rem; 
+                padding: 0.75rem 2rem; 
+                margin-top: 1.2rem;
+            }
+            #startScreen h1 {
+                font-size: 1.4rem;
+            }
+            .mask-icon-img, .mask-icon-placeholder {
+                width: 60px;
+                height: 60px;
             }
         }
 
         /* ===== QUIZ ===== */
         .quiz-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.8rem; flex-wrap: wrap; gap: 10px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            margin-bottom: 1.8rem; 
+            flex-wrap: wrap; 
+            gap: 10px;
         }
+
         .user-badge, .step-indicator {
-            background: #ffede8; padding: 0.5rem 1.4rem; border-radius: 40px;
-            font-size: 1rem; color: #774b3b; border: 1px solid #f3cdbd;
+            background: #ffede8; 
+            padding: 0.5rem 1.4rem; 
+            border-radius: 40px;
+            font-size: 1rem; 
+            color: #774b3b; 
+            border: 1px solid #f3cdbd;
         }
+
         .question-text {
-            font-size: 1.6rem; font-weight: 370; color: #40271f; line-height: 1.4;
+            font-size: 1.6rem; 
+            font-weight: 370; 
+            color: #40271f; 
+            line-height: 1.4;
             margin-bottom: 2rem;
         }
+
         .options-grid {
-            display: flex; flex-direction: column; gap: 0.8rem; margin: 1.2rem 0 1rem;
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.8rem; 
+            margin: 1.2rem 0 1rem;
         }
+
         .option-btn {
-            background: white; border: 1.5px solid #f3ccbd; border-radius: 100px;
-            padding: 0.8rem 1.5rem 0.8rem 0.8rem; font-size: 1.2rem; font-weight: 360;
-            display: flex; align-items: center; gap: 12px; cursor: pointer;
-            transition: 0.1s; color: #2f1c15; box-shadow: 0 2px 6px #ffded1;
+            background: white; 
+            border: 1.5px solid #f3ccbd; 
+            border-radius: 100px;
+            padding: 0.8rem 1.5rem 0.8rem 0.8rem; 
+            font-size: 1.2rem; 
+            font-weight: 360;
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            cursor: pointer;
+            transition: 0.1s; 
+            color: #2f1c15; 
+            box-shadow: 0 2px 6px #ffded1;
         }
+
         @media (max-width: 480px) {
-            .option-btn { font-size: 1rem; padding: 0.6rem 1rem; gap: 8px; }
-            .opt-letter { width: 38px; height: 38px; font-size: 1.3rem; }
+            .option-btn { 
+                font-size: 1rem; 
+                padding: 0.6rem 1rem; 
+                gap: 8px; 
+            }
+            .opt-letter { 
+                width: 38px; 
+                height: 38px; 
+                font-size: 1.3rem; 
+            }
+            .question-text {
+                font-size: 1.3rem;
+            }
         }
-        .option-btn:hover { border-color: #cfa48d; background: #fff5ef; }
+
+        .option-btn:hover { 
+            border-color: #cfa48d; 
+            background: #fff5ef; 
+        }
+
         .option-btn.selected {
-            border-color: #b87b64; background: #ffede5; border-width: 2px;
+            border-color: #b87b64; 
+            background: #ffede5; 
+            border-width: 2px;
         }
+
         .opt-letter {
-            background: white; border: 1.5px solid #efbcab; color: #9e604b;
-            width: 44px; height: 44px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-weight: 500;
+            background: white; 
+            border: 1.5px solid #efbcab; 
+            color: #9e604b;
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 500;
             font-size: 1.5rem;
         }
+
         .option-btn.selected .opt-letter {
-            background: #dbb3a2; color: white; border-color: #b87b64;
+            background: #dbb3a2; 
+            color: white; 
+            border-color: #b87b64;
         }
-        .btn-next { margin-top: 1rem; background: #e7a18e; }
+
+        .btn-next { 
+            margin-top: 1rem; 
+            background: #e7a18e; 
+        }
 
         /* ===== RESULT ===== */
-        .result-holder { text-align: center; }
-        .result-greeting {
-            font-size: 1.4rem; font-weight: 340; color: #9b5f4b; margin-bottom: 1rem;
+        .result-holder { 
+            text-align: center; 
         }
-        .result-greeting strong { font-weight: 520; color: #6d3d2b; }
+
+        .result-greeting {
+            font-size: 1.4rem; 
+            font-weight: 340; 
+            color: #9b5f4b; 
+            margin-bottom: 1rem;
+        }
+
+        .result-greeting strong { 
+            font-weight: 520; 
+            color: #6d3d2b; 
+        }
+
         .result-image {
-            width: 100%; max-width: 500px; height: auto; aspect-ratio: 800 / 700;
-            background: #fce3da; border-radius: 32px; margin: 1rem auto 1.8rem;
-            background-size: cover; background-position: center; border: 2px solid #fad4c5;
-            box-shadow: 0 20px 30px -14px #e3b3a2; cursor: pointer;
+            width: 100%; 
+            max-width: 500px; 
+            height: auto; 
+            aspect-ratio: 800 / 700;
+            background: #fce3da; 
+            border-radius: 32px; 
+            margin: 1rem auto 1.8rem;
+            background-size: cover; 
+            background-position: center; 
+            border: 2px solid #fad4c5;
+            box-shadow: 0 20px 30px -14px #e3b3a2; 
+            cursor: pointer;
             transition: transform 0.1s;
             -webkit-touch-callout: default;
         }
-        .result-image:active { transform: scale(0.99); }
 
-        /* 7 gambar (tanpa emoji, hanya teks) */
+        .result-image:active { 
+            transform: scale(0.99); 
+        }
+
+        /* 7 gambar result */
         .cherry-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23fce4e0%22/><circle cx=%22400%22 cy=%22330%22 r=%22130%22 fill=%22%23d6574a%22 opacity=%22.9%22/><circle cx=%22320%22 cy=%22280%22 r=%2255%22 fill=%22%23b03d33%22/><circle cx=%22470%22 cy=%22380%22 r=%2255%22 fill=%22%23b03d33%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%23fff3ee%22 text-anchor=%22middle%22 font-weight=%22300%22>cherry</text></svg>'); }
         .avocado-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23e2efda%22/><ellipse cx=%22400%22 cy=%22360%22 rx=%22130%22 ry=%22100%22 fill=%22%235f8b4b%22/><circle cx=%22350%22 cy=%22340%22 r=%2228%22 fill=%22%23945f3a%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%233d3d21%22 text-anchor=%22middle%22>avocado</text></svg>'); }
         .milk-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23f5efe8%22/><path d=%22M340 260 L460 260 L490 420 L310 420 Z%22 fill=%22%23faf9f7%22 stroke=%22%23cfb6a4%22 stroke-width=%2214%22/><text x=%22400%22 y=%22500%22 font-size=%2248%22 fill=%22%2380695b%22 text-anchor=%22middle%22>milk</text></svg>'); }
@@ -168,18 +330,29 @@
         .aloe-bg { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 700%22><rect width=%22800%22 height=%22700%22 fill=%22%23ccebda%22/><path d=%22M400 200 L480 300 L400 540 L320 300 Z%22 fill=%22%233a8c63%22/><text x=%22400%22 y=%22580%22 font-size=%2248%22 fill=%22%2327593f%22 text-anchor=%22middle%22>aloe vera</text></svg>'); }
 
         .result-description-box {
-            background: #fff9f5; border-radius: 32px; padding: 1.8rem 2rem;
-            text-align: left; border: 1px solid #fadfd4;
+            background: #fff9f5; 
+            border-radius: 32px; 
+            padding: 1.8rem 2rem;
+            text-align: left; 
+            border: 1px solid #fadfd4;
         }
+
         .result-description-box h3 {
-            font-size: 2rem; font-weight: 430; color: #7a4231; margin-bottom: 1rem;
+            font-size: 2rem; 
+            font-weight: 430; 
+            color: #7a4231; 
+            margin-bottom: 1rem;
         }
+
         .result-description-box p {
-            font-size: 1.2rem; line-height: 1.5; color: #412d24; font-weight: 340;
+            font-size: 1.2rem; 
+            line-height: 1.5; 
+            color: #412d24; 
+            font-weight: 340;
             white-space: pre-line;
         }
 
-        /* FOOTER ASLI DI BAWAH HALAMAN (tidak fixed, berada di luar card, setelah card) */
+        /* FOOTER DI BAWAH HALAMAN */
         .page-footer {
             width: 100%;
             text-align: center;
@@ -192,6 +365,7 @@
             z-index: 10;
             position: relative;
         }
+
         .page-footer span {
             background: rgba(255, 235, 225, 0.6);
             backdrop-filter: blur(4px);
@@ -207,14 +381,33 @@
     </style>
 </head>
 <body>
-    <!-- Background hanya blur (tanpa floating icon) -->
+    <!-- Background blur -->
     
-    <!-- CARD UTAMA (konten) -->
+    <!-- CARD UTAMA -->
     <div class="card" id="appCard">
         <!-- START SCREEN -->
         <div id="startScreen" class="panel">
+            <!-- Tempat untuk icon mask PNG (transparan) -->
+            <div class="mask-icon-container">
+                <!-- 
+                    INI ADALAH TEMPAT UNTUK ICON MASK PNG YAK!
+                    Ganti class "mask-icon-placeholder" dengan tag img src ke file PNG anda.
+                    
+                    Contoh:
+                    <img src="mask-icon.png" alt="Mask Icon" class="mask-icon-img">
+                    
+                    Atau jika ingin menggunakan placeholder, biarkan seperti ini.
+                -->
+                <div class="mask-icon-placeholder">🧴</div>
+                <!-- 
+                    UNTUK PNG ASLI, GUNAKAN CODE INI (HAPUS YANG DI ATAS):
+                    <img src="path/ke/file-mu.png" alt="Mask Icon" class="mask-icon-img">
+                -->
+            </div>
+            
             <div class="brand-main">CHORONA</div>
             <h1>Pilihan masker wajah<br>yang cocok untukmu</h1>
+            
             <div class="input-group">
                 <label for="namaPanjang">Nama panjang</label>
                 <input type="text" id="namaPanjang" placeholder="cth: Alexandria" autocomplete="off">
@@ -244,7 +437,7 @@
         </div>
     </div>
 
-    <!-- FOOTER DI BAWAH HALAMAN (setelah card, tidak ikut scroll karena di luar) -->
+    <!-- FOOTER -->
     <div class="page-footer">
         <span>CHORONA by Kachoo & Ayu Merona. For Roleplay Purpose Only.</span>
     </div>
