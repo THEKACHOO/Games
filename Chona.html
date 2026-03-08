@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>CHONA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #ffe4dc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            position: relative;
+        }
+
+        /* background blur (soft pink) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 40%, #ffd9d0, #ffc7ba);
+            filter: blur(48px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .card {
+            max-width: 700px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 48px;
+            box-shadow: 0 30px 50px -20px #cf9585, 0 8px 25px rgba(240, 150, 130, 0.3);
+            overflow: hidden;
+            border: 1px solid #ffdbd0;
+            margin: 0 auto 30px auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .panel {
+            padding: 2.5rem 2.8rem;
+        }
+
+        @media (max-width: 560px) {
+            .panel { padding: 1.8rem 1.2rem; }
+        }
+
+        h1, h2, h3, p { font-weight: 400; letter-spacing: -0.01em; }
+
+        /* ===== START SCREEN ===== */
+        #startScreen { 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* container untuk icon mask PNG (transparan) */
+        .mask-icon-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .mask-icon-img {
+            width: 80px;
+            height: auto;
+            object-fit: contain;
+            opacity: 0.9;
+        }
+
+        /* fallback jika gambar tidak ada */
+        .mask-icon-fallback {
+            display: none;
+        }
+
+        .brand-main {
+            font-size: 2rem; 
+            font-weight: 440; 
+            color: #c56b58; 
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        #startScreen h1 {
+            font-size: 1.6rem; /* diperkecil dari 2.2rem */
+            font-weight: 360; 
+            color: #512e22; 
+            line-height: 1.3;
+            margin: 0.2rem 0 1.5rem;
+            max-width: 400px;
+        }
+
+        .input-group {
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start;
+            gap: 0.5rem; 
+            width: 100%; 
+            max-width: 360px; 
+            margin: 1rem auto 1rem;
+        }
+
+        .input-group label {
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            color: #b77a67; 
+            text-transform: uppercase;
+            letter-spacing: 1.2px; 
+            margin-left: 0.5rem;
+        }
+
+        .input-group input {
+            width: 100%; 
+            padding: 0.9rem 1.3rem; 
+            font-size: 1rem;
+            background: #fffcfb; 
+            border: 1.5px solid #f7cfc0; 
+            border-radius: 50px;
+            outline: none; 
+            transition: 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #dc8f78; 
+            box-shadow: 0 0 0 4px #fee2d6;
+        }
+
+        .btn-start, .btn-next, .btn-restart {
+            background: #e7a18e; 
+            border: none; 
+            color: white; 
+            font-weight: 450;
+            font-size: 1.2rem; 
+            padding: 0.9rem 2.5rem; 
+            border-radius: 50px;
+            cursor: pointer; 
+            transition: background 0.15s; 
+            width: fit-content;
+            margin: 1.5rem auto 0; 
+            display: block; 
+            box-shadow: 0 8px 18px #f2bfae;
+            border: 1px solid #ffe0d4;
+        }
+
+        .btn-start:hover, .btn-next:hover, .btn-restart:hover { background: #d1826c; }
+
+        @media (max-width: 480px) {
+            .btn-start, .btn-next, .btn-restart {
+                font-size: 1rem; 
+                padding: 0.75rem 2rem; 
+                margin-top: 1.2rem;
+            }
+            #startScreen h1 {
+                font-size: 1.4rem;
+            }
+            .mask-icon-img, .mask-icon-placeholder {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-header {
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            margin-bottom: 1.8rem; 
+            flex-wrap: wrap; 
+            gap: 10px;
+        }
+
+        .user-badge, .step-indicator {
+            background: #ffede8; 
+            padding: 0.5rem 1.4rem; 
+            border-radius: 40px;
+            font-size: 1rem; 
+            color: #774b3b; 
+            border: 1px solid #f3cdbd;
+        }
+
+        .question-text {
+            font-size: 1.6rem; 
+            font-weight: 370; 
+            color: #40271f; 
+            line-height: 1.4;
+            margin-bottom: 2rem;
+        }
+
+        .options-grid {
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.8rem; 
+            margin: 1.2rem 0 1rem;
+        }
+
+        .option-btn {
+            background: white; 
+            border: 1.5px solid #f3ccbd; 
+            border-radius: 100px;
+            padding: 0.8rem 1.5rem 0.8rem 0.8rem; 
+            font-size: 1.2rem; 
+            font-weight: 360;
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            cursor: pointer;
+            transition: 0.1s; 
+            color: #2f1c15; 
+            box-shadow: 0 2px 6px #ffded1;
+        }
+
+        @media (max-width: 480px) {
+            .option-btn { 
+                font-size: 1rem; 
+                padding: 0.6rem 1rem; 
+                gap: 8px; 
+            }
+            .opt-letter { 
+                width: 38px; 
+                height: 38px; 
+                font-size: 1.3rem; 
+            }
+            .question-text {
+                font-size: 1.3rem;
+            }
+        }
+
+        .option-btn:hover { 
+            border-color: #cfa48d; 
+            background: #fff5ef; 
+        }
+
+        .option-btn.selected {
+            border-color: #b87b64; 
+            background: #ffede5; 
+            border-width: 2px;
+        }
+
+        .opt-letter {
+            background: white; 
+            border: 1.5px solid #efbcab; 
+            color: #9e604b;
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        .option-btn.selected .opt-letter {
+            background: #dbb3a2; 
+            color: white; 
+            border-color: #b87b64;
+        }
+
+        .btn-next { 
+            margin-top: 1rem; 
+            background: #e7a18e; 
+        }
+
+        /* ===== RESULT ===== */
+        .result-holder { 
+            text-align: center; 
+        }
+
+        .result-greeting {
+            font-size: 1.4rem; 
+            font-weight: 340; 
+            color: #9b5f4b; 
+            margin-bottom: 1rem;
+        }
+
+        .result-greeting strong { 
+            font-weight: 520; 
+            color: #6d3d2b; 
+        }
+
+        /* GANTI: background-image diganti dengan img tag agar png muncul */
+        .result-image-wrapper {
+            width: 100%;
+            max-width: 500px;
+            margin: 1rem auto 1.8rem;
+            border-radius: 32px;
+            background: #fce3da;
+            border: 2px solid #fad4c5;
+            box-shadow: 0 20px 30px -14px #e3b3a2;
+            overflow: hidden;
+            aspect-ratio: 800 / 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .result-image-wrapper:active { 
+            transform: scale(0.99); 
+        }
+        .result-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .result-description-box {
+            background: #fff9f5; 
+            border-radius: 32px; 
+            padding: 1.8rem 2rem;
+            text-align: left; 
+            border: 1px solid #fadfd4;
+        }
+
+        .result-description-box h3 {
+            font-size: 2rem; 
+            font-weight: 430; 
+            color: #7a4231; 
+            margin-bottom: 1rem;
+        }
+
+        .result-description-box p {
+            font-size: 1.2rem; 
+            line-height: 1.5; 
+            color: #412d24; 
+            font-weight: 340;
+            white-space: pre-line;
+        }
+
+        /* FOOTER DI BAWAH HALAMAN */
+        .page-footer {
+            width: 100%;
+            text-align: center;
+            padding: 16px 8px 8px;
+            margin-top: 0px;
+            color: #b17a69;
+            font-size: 0.7rem;
+            font-weight: 350;
+            letter-spacing: 0.3px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .page-footer span {
+            background: rgba(255, 235, 225, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 6px 20px;
+            border-radius: 40px;
+            border: 0.5px solid #ffcbbc;
+            color: #8f5d4b;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Background blur -->
+    
+    <!-- CARD UTAMA -->
+    <div class="card" id="appCard">
+        <!-- START SCREEN -->
+        <div id="startScreen" class="panel">
+            <!-- Tempat untuk icon mask PNG (transparan) -->
+            <div class="mask-icon-container">
+                <!-- GUNAKAN PNG "Chona.png" sesuai permintaan -->
+                <img src="Chona.png" alt="Mask Icon" class="mask-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            </div>
+            
+            <div class="brand-main">CHONA</div>
+            <h1>Pilihan masker wajah<br>yang cocok untukmu</h1>
+            
+            <div class="input-group">
+                <label for="namaPanjang">Nama panjang</label>
+                <input type="text" id="namaPanjang" placeholder="Contoh: Chona" autocomplete="off">
+            </div>
+            <button class="btn-start" id="btnStart">Mulai</button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quizScreen" class="panel hidden">
+            <div class="quiz-header">
+                <div class="user-badge" id="quizUserName"></div>
+                <div class="step-indicator" id="stepDisplay">1 / 7</div>
+            </div>
+            <div class="question-text" id="questionDisplay"></div>
+            <div class="options-grid" id="optionsGrid"></div>
+            <button class="btn-next hidden" id="nextQuestionBtn">Lanjut</button>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="resultScreen" class="panel hidden">
+            <div class="result-holder">
+                <div class="result-greeting" id="resultGreeting"></div>
+                <!-- Ganti div dengan wrapper img agar PNG tampil -->
+                <div class="result-image-wrapper" id="resultImageWrapper" title="Tekan lama atau klik kanan untuk simpan gambar">
+                    <img id="resultImage" src="" alt="Masker rekomendasi" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div class="result-description-box" id="resultDesc"></div>
+                <button class="btn-restart" id="restartQuizBtn">Ulang test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="page-footer">
+        <span>CHONA by Kachoo & Ayu Merona. For Roleplay Purpose Only.</span>
+    </div>
+
+<script>
+    (function() {
+        const questions = [
+            "Perawatan kulitmu ingin fokus pada?",
+            "Saat punya waktu luang di rumah, kamu lebih suka?",
+            "Kalau kamu lagi me-time di malam hari, kamu biasanya?",
+            "Jika kamu harus memilih warna lipstik yang paling kamu suka, kamu pilih?",
+            "Saat ingin tampil cantik untuk acara, kamu lebih fokus pada?",
+            "Jika harus memilih gaya makeup, kamu lebih suka?",
+            "Saat memilih parfum, kamu lebih suka aroma?"
+        ];
+
+        const optionTexts = [
+            ["Melembabkan kulit", "Mencerahkan", "Menenangkan kulit", "Mengangkat sel kulit mati"],
+            ["Berkumpul atau chatting dengan teman", "Masak atau menikmati makanan enak", "Menonton film atau membaca buku", "Istirahat dan menenangkan diri"],
+            ["Pakai masker sambil nonton film", "Skincare-an sambil dengar musik", "Langsung tidur tanpa ribet", "Scroll HP sambil pakai masker"],
+            ["Merah cerah atau warna bold", "Nude atau warna natural", "Pink lembut atau warna soft", "Peach atau warna segar"],
+            ["Makeup yang stand out", "Tampilan natural dan rapi", "Tampilan lembut dan elegan", "Tampilan fresh dan ringan"],
+            ["Glam dan terlihat mencolok", "Natural look yang sederhana", "Soft dan elegan", "Fresh dan ringan"],
+            ["Manis dan fruity", "Lembut dan creamy", "Fresh dan clean", "Natural dan menenangkan"]
+        ];
+
+        const mappingPerQuestion = [
+            { A: ['avocado','aloe'], B: ['cherry','milk','lemon'], C: ['greentea'], D: ['coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] },
+            { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['coffee','greentea'], D: ['aloe'] },
+            { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado'], C: ['milk'], D: ['greentea','aloe','coffee'] },
+            { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['greentea','aloe'], D: ['coffee'] }
+        ];
+
+        // mapping nama file PNG sesuai dengan nama file yang kamu buat
+        const resultLibrary = {
+            cherry: { 
+                title: 'Cherry', 
+                desc: 'Cocok banget untukmu yang ceria dan penuh energi.\nKamu mudah tertawa, suka bercanda, dan sering membuat suasana jadi lebih hidup. Dimanapun kamu berada, biasanya orang lain ikut merasa lebih semangat.\nIni cocok untukmu karena kamu orang yang percaya diri, suka mencoba hal baru, dan tidak takut jadi pusat perhatian.', 
+                img: 'Chonacherry.png' 
+            },
+            avocado: { 
+                title: 'Avocado', 
+                desc: 'Cocok banget untukmu yang santai dan hangat.\nKamu tidak suka hidup yang terlalu ribet dan lebih menikmati hal-hal sederhana. Tipe yang suka suasana tenang, makan enak, dan menghabiskan waktu dengan orang terdekat.\nKehadiranmu membuat orang lain merasa nyaman, seperti sedang bersama teman yang bisa dipercaya.', 
+                img: 'Chonaavo.png' 
+            },
+            milk: { 
+                title: 'Milk', 
+                desc: 'Cocok banget untukmu yang lembut dan tenang.\nKamu biasanya tidak banyak bicara, tapi sikapnya ramah dan tulus. Orang lain sering merasa nyaman berada di dekatmu karena auranya terasa damai.\nIni cocok untukmu sebagai orang yang sabar, sederhana, dan tidak suka mencari masalah.', 
+                img: 'Chonamilk.png' 
+            },
+            greentea: { 
+                title: 'Green Tea', 
+                desc: 'Cocok banget untukmu yang kalem dan suka ketenangan. Kamu lebih suka suasana santai daripada keramaian. Tipe yang sering berpikir dalam, suka belajar hal baru, dan menikmati waktu sendiri.\nMasker ini terlihat sederhana tapi manfaatnya banyak, sesuai denganmu yang punya cara pandang dewasa dan bijak.', 
+                img: 'Chonagreentea.png' 
+            },
+            coffee: { 
+                title: 'Coffee', 
+                desc: 'Cocok banget untukmu yang serius dan penuh semangat dalam bekerja. Kamu fokus pada tujuan dan biasanya punya banyak rencana untuk masa depan. Walau kadang terlihat pendiam atau sedikit misterius, sebenarnya kamu hanya sedang memikirkan banyak hal.\nTipe yang pekerja keras dan tidak mudah menyerah.', 
+                img: 'Chonachoffee.png' 
+            },
+            lemon: { 
+                title: 'Lemon', 
+                desc: 'Cocok banget untukmu yang super fresh dan penuh energi. Kamu jujur, spontan, dan sering berbicara apa adanya. Kadang kata-katamu terasa sedikit tajam, tapi sebenarnya kamu hanya ingin berkata jujur.\nKehadiranmu sering membawa suasana baru yang lebih hidup dan tidak membosankan.', 
+                img: 'Chonalemon.png' 
+            },
+            aloe: { 
+                title: 'Aloe Vera', 
+                desc: 'Cocok banget untukmu yang sabar dan menenangkan. Kamu suka membantu orang lain dan biasanya menjadi tempat bercerita bagi teman-temanmu, tipe yang selalu ada saat orang lain butuh.\nAuranya damai, sabar, dan menenangkan, seperti kamu.', 
+                img: 'Chonaaloe.png' 
+            }
+        };
+
+        let currentStep = 0;
+        let userAnswers = [];
+        let userName = '';
+
+        const startScreen = document.getElementById('startScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const namaInput = document.getElementById('namaPanjang');
+        const btnStart = document.getElementById('btnStart');
+        const quizUserName = document.getElementById('quizUserName');
+        const stepDisplay = document.getElementById('stepDisplay');
+        const questionDisplay = document.getElementById('questionDisplay');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const nextBtn = document.getElementById('nextQuestionBtn');
+        const restartBtn = document.getElementById('restartQuizBtn');
+        const resultGreeting = document.getElementById('resultGreeting');
+        const resultImage = document.getElementById('resultImage'); // elemen img
+        const resultDesc = document.getElementById('resultDesc');
+
+        function resetToStart() {
+            startScreen.classList.remove('hidden');
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            currentStep = 0;
+            userAnswers = [];
+            userName = '';
+            namaInput.value = '';
+        }
+
+        function startQuiz() {
+            const name = namaInput.value.trim();
+            if (!name) { alert('Isi nama panjang dulu ya'); return; }
+            userName = name;
+            userAnswers = [];
+            currentStep = 0;
+            quizUserName.innerText = userName;
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+            renderQuestion(0);
+        }
+
+        function renderQuestion(step) {
+            questionDisplay.innerText = questions[step];
+            stepDisplay.innerText = `${step+1} / 7`;
+
+            const letters = ['A','B','C','D'];
+            let html = '';
+            for (let i=0; i<4; i++) {
+                const selectedClass = (userAnswers[step] === i) ? 'selected' : '';
+                html += `<div class="option-btn ${selectedClass}" data-opt-index="${i}">
+                    <span class="opt-letter">${letters[i]}</span>
+                    <span>${optionTexts[step][i]}</span>
+                </div>`;
+            }
+            optionsGrid.innerHTML = html;
+
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.optIndex);
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    userAnswers[currentStep] = idx;
+                    nextBtn.classList.remove('hidden');
+                });
+            });
+
+            if (userAnswers[step] !== undefined) {
+                const saved = userAnswers[step];
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (parseInt(btn.dataset.optIndex) === saved) btn.classList.add('selected');
+                });
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        function goToNext() {
+            if (userAnswers[currentStep] === undefined) { alert('Pilih salah satu opsi'); return; }
+            if (currentStep === 6) computeResult();
+            else { currentStep++; renderQuestion(currentStep); }
+        }
+
+        function computeResult() {
+            let candidates = [];
+            for (let i=0; i<userAnswers.length; i++) {
+                const ansIdx = userAnswers[i];
+                const letter = String.fromCharCode(65 + ansIdx);
+                const mapping = mappingPerQuestion[i][letter];
+                if (mapping) candidates.push(...mapping);
+            }
+
+            const freq = {};
+            candidates.forEach(item => { let key = item.toLowerCase().replace(/\s/g,''); freq[key] = (freq[key]||0)+1; });
+
+            let finalKey = 'cherry';
+            let maxCount = 0;
+            const allKeys = ['cherry','avocado','milk','greentea','coffee','lemon','aloe'];
+            for (let k of allKeys) {
+                if ((freq[k]||0) > maxCount) { maxCount = freq[k]; finalKey = k; }
+            }
+
+            const result = resultLibrary[finalKey];
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            resultGreeting.innerHTML = `<strong>${userName}</strong>, masker yang cocok untukmu adalah...`;
+            
+            // set src gambar PNG, jika error tampilkan emoji sebagai fallback
+            resultImage.src = result.img;
+            resultImage.alt = result.title;
+            // kalau gambar gagal dimuat, fallback ke teks
+            resultImage.onerror = function() {
+                this.style.display = 'none';
+                // buat fallback sementara
+                if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('img-fallback')) {
+                    const fallback = document.createElement('div');
+                    fallback.className = 'img-fallback';
+                    fallback.innerText = '🍃';
+                    fallback.style.fontSize = '5rem';
+                    fallback.style.display = 'flex';
+                    fallback.style.alignItems = 'center';
+                    fallback.style.justifyContent = 'center';
+                    fallback.style.height = '100%';
+                    fallback.style.background = '#fce3da';
+                    this.parentNode.appendChild(fallback);
+                }
+            };
+            // jika onload dan sebelumnya ada fallback, sembunyikan fallback
+            resultImage.onload = function() {
+                this.style.display = 'block';
+                const parent = this.parentNode;
+                const fallback = parent.querySelector('.img-fallback');
+                if (fallback) fallback.remove();
+            };
+
+            resultDesc.innerHTML = `<h3>${result.title}</h3><p>${result.desc.replace(/\n/g,'<br>')}</p>`;
+        }
+
+        btnStart.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', goToNext);
+        restartBtn.addEventListener('click', resetToStart);
+        namaInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') btnStart.click(); });
+
+        resetToStart();
+    })();
+</script>
+</body>
+                </html>
