@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>CHONA</title>
+    <title>CHONA · masker wajah</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,7 @@
             position: relative;
         }
 
-        /* background blur (soft pink) */
+        /* background blur lembut */
         body::before {
             content: "";
             position: fixed;
@@ -65,159 +65,164 @@
             align-items: center;
         }
 
-        /* container untuk icon mask PNG (transparan) */
-        .mask-icon-container {
-            width: 100%;
+        /* TULISAN CHONA LEBIH MENARIK — tanpa icon PNG */
+        .brand-wordmark {
             display: flex;
+            align-items: center;
             justify-content: center;
-            margin-bottom: 0.5rem;
+            gap: 0.2rem;
+            margin-bottom: 0.6rem;
+            font-size: 4rem;
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: #a3523b;
+            text-shadow: 0 4px 12px #fad2c6, 0 8px 20px #f5d2c2;
+            flex-wrap: wrap;
         }
-
-        .mask-icon-img {
-            width: 80px;
-            height: auto;
-            object-fit: contain;
-            opacity: 0.9;
+        .brand-letter {
+            display: inline-block;
+            transition: transform 0.2s ease;
+            animation: floatGlow 3s infinite ease-in-out;
+            transform-origin: center;
         }
+        /* efek floating dan bayangan warna-warni per huruf */
+        .brand-letter:nth-child(1) { animation-delay: 0s; color: #c96b53; }
+        .brand-letter:nth-child(2) { animation-delay: 0.2s; color: #bf5e45; }
+        .brand-letter:nth-child(3) { animation-delay: 0.4s; color: #b35138; }
+        .brand-letter:nth-child(4) { animation-delay: 0.6s; color: #a7442b; }
+        .brand-letter:nth-child(5) { animation-delay: 0.8s; color: #9d3b22; }
 
-        /* fallback jika gambar tidak ada */
-        .mask-icon-fallback {
-            display: none;
-        }
-
-        .brand-main {
-            font-size: 2rem; 
-            font-weight: 440; 
-            color: #c56b58; 
-            margin-bottom: 0.2rem;
-            line-height: 1.2;
+        @keyframes floatGlow {
+            0% { transform: translateY(0px) scale(1); text-shadow: 0 4px 10px #facfc2; }
+            50% { transform: translateY(-5px) scale(1.03); text-shadow: 0 12px 18px #f8b9a5; }
+            100% { transform: translateY(0px) scale(1); text-shadow: 0 4px 10px #facfc2; }
         }
 
         #startScreen h1 {
-            font-size: 1.6rem; /* diperkecil dari 2.2rem */
-            font-weight: 360; 
-            color: #512e22; 
+            font-size: 1.6rem;
+            font-weight: 360;
+            color: #512e22;
             line-height: 1.3;
             margin: 0.2rem 0 1.5rem;
             max-width: 400px;
         }
 
         .input-group {
-            display: flex; 
-            flex-direction: column; 
+            display: flex;
+            flex-direction: column;
             align-items: flex-start;
-            gap: 0.5rem; 
-            width: 100%; 
-            max-width: 360px; 
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 360px;
             margin: 1rem auto 1rem;
         }
 
         .input-group label {
-            font-size: 0.85rem; 
-            font-weight: 500; 
-            color: #b77a67; 
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #b77a67;
             text-transform: uppercase;
-            letter-spacing: 1.2px; 
+            letter-spacing: 1.2px;
             margin-left: 0.5rem;
         }
 
         .input-group input {
-            width: 100%; 
-            padding: 0.9rem 1.3rem; 
+            width: 100%;
+            padding: 0.9rem 1.3rem;
             font-size: 1rem;
-            background: #fffcfb; 
-            border: 1.5px solid #f7cfc0; 
+            background: #fffcfb;
+            border: 1.5px solid #f7cfc0;
             border-radius: 50px;
-            outline: none; 
+            outline: none;
             transition: 0.2s;
         }
 
         .input-group input:focus {
-            border-color: #dc8f78; 
+            border-color: #dc8f78;
             box-shadow: 0 0 0 4px #fee2d6;
         }
 
         .btn-start, .btn-next, .btn-restart {
-            background: #e7a18e; 
-            border: none; 
-            color: white; 
+            background: #e7a18e;
+            border: none;
+            color: white;
             font-weight: 450;
-            font-size: 1.2rem; 
-            padding: 0.9rem 2.5rem; 
+            font-size: 1.2rem;
+            padding: 0.9rem 2.5rem;
             border-radius: 50px;
-            cursor: pointer; 
-            transition: background 0.15s; 
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
             width: fit-content;
-            margin: 1.5rem auto 0; 
-            display: block; 
+            margin: 1.5rem auto 0;
+            display: block;
             box-shadow: 0 8px 18px #f2bfae;
             border: 1px solid #ffe0d4;
         }
 
-        .btn-start:hover, .btn-next:hover, .btn-restart:hover { background: #d1826c; }
+        .btn-start:hover, .btn-next:hover, .btn-restart:hover { background: #d1826c; transform: scale(0.98); }
 
         @media (max-width: 480px) {
             .btn-start, .btn-next, .btn-restart {
-                font-size: 1rem; 
-                padding: 0.75rem 2rem; 
+                font-size: 1rem;
+                padding: 0.75rem 2rem;
                 margin-top: 1.2rem;
             }
             #startScreen h1 {
                 font-size: 1.4rem;
             }
-            .mask-icon-img, .mask-icon-placeholder {
-                width: 60px;
-                height: 60px;
+            .brand-wordmark {
+                font-size: 3.2rem;
             }
         }
 
         /* ===== QUIZ ===== */
         .quiz-header {
-            display: flex; 
-            align-items: center; 
+            display: flex;
+            align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.8rem; 
-            flex-wrap: wrap; 
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
             gap: 10px;
         }
 
         .user-badge, .step-indicator {
-            background: #ffede8; 
-            padding: 0.5rem 1.4rem; 
+            background: #ffede8;
+            padding: 0.5rem 1.4rem;
             border-radius: 40px;
-            font-size: 1rem; 
-            color: #774b3b; 
+            font-size: 1rem;
+            color: #774b3b;
             border: 1px solid #f3cdbd;
         }
 
         .question-text {
-            font-size: 1.6rem; 
-            font-weight: 370; 
-            color: #40271f; 
+            font-size: 1.6rem;
+            font-weight: 370;
+            color: #40271f;
             line-height: 1.4;
             margin-bottom: 2rem;
         }
 
         .options-grid {
-            display: flex; 
-            flex-direction: column; 
-            gap: 0.8rem; 
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
             margin: 1.2rem 0 1rem;
         }
 
         .option-btn {
-            background: white; 
-            border: 1.5px solid #f3ccbd; 
+            background: white;
+            border: 1.5px solid #f3ccbd;
             border-radius: 100px;
-            padding: 0.8rem 1.5rem 0.8rem 0.8rem; 
-            font-size: 1.2rem; 
+            padding: 0.8rem 1.5rem 0.8rem 0.8rem;
+            font-size: 1.2rem;
             font-weight: 360;
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
+            display: flex;
+            align-items: center;
+            gap: 12px;
             cursor: pointer;
-            transition: 0.1s; 
-            color: #2f1c15; 
+            transition: 0.1s;
+            color: #2f1c15;
             box-shadow: 0 2px 6px #ffded1;
         }
 
@@ -290,7 +295,6 @@
             color: #6d3d2b; 
         }
 
-        /* GANTI: background-image diganti dengan img tag agar png muncul */
         .result-image-wrapper {
             width: 100%;
             max-width: 500px;
@@ -340,7 +344,7 @@
             white-space: pre-line;
         }
 
-        /* FOOTER DI BAWAH HALAMAN */
+        /* FOOTER */
         .page-footer {
             width: 100%;
             text-align: center;
@@ -369,19 +373,19 @@
     </style>
 </head>
 <body>
-    <!-- Background blur -->
-    
     <!-- CARD UTAMA -->
     <div class="card" id="appCard">
-        <!-- START SCREEN -->
+        <!-- START SCREEN (tanpa icon PNG) -->
         <div id="startScreen" class="panel">
-            <!-- Tempat untuk icon mask PNG (transparan) -->
-            <div class="mask-icon-container">
-                <!-- GUNAKAN PNG "Chona.png" sesuai permintaan -->
-                <img src="Chona.png" alt="Mask Icon" class="mask-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <!-- TULISAN CHONA YANG LEBIH HIDUP (tanpa PNG) -->
+            <div class="brand-wordmark">
+                <span class="brand-letter">C</span>
+                <span class="brand-letter">H</span>
+                <span class="brand-letter">O</span>
+                <span class="brand-letter">N</span>
+                <span class="brand-letter">A</span>
             </div>
             
-            <div class="brand-main">CHONA</div>
             <h1>Pilihan masker wajah<br>yang cocok untukmu</h1>
             
             <div class="input-group">
@@ -406,8 +410,7 @@
         <div id="resultScreen" class="panel hidden">
             <div class="result-holder">
                 <div class="result-greeting" id="resultGreeting"></div>
-                <!-- Ganti div dengan wrapper img agar PNG tampil -->
-                <div class="result-image-wrapper" id="resultImageWrapper" title="Tekan lama atau klik kanan untuk simpan gambar">
+                <div class="result-image-wrapper" id="resultImageWrapper">
                     <img id="resultImage" src="" alt="Masker rekomendasi" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div class="result-description-box" id="resultDesc"></div>
@@ -453,7 +456,6 @@
             { A: ['cherry','lemon'], B: ['avocado','milk'], C: ['greentea','aloe'], D: ['coffee'] }
         ];
 
-        // mapping nama file PNG sesuai dengan nama file yang kamu buat
         const resultLibrary = {
             cherry: { 
                 title: 'Cherry', 
@@ -508,7 +510,7 @@
         const nextBtn = document.getElementById('nextQuestionBtn');
         const restartBtn = document.getElementById('restartQuizBtn');
         const resultGreeting = document.getElementById('resultGreeting');
-        const resultImage = document.getElementById('resultImage'); // elemen img
+        const resultImage = document.getElementById('resultImage');
         const resultDesc = document.getElementById('resultDesc');
 
         function resetToStart() {
@@ -601,14 +603,15 @@
 
             resultGreeting.innerHTML = `<strong>${userName}</strong>, masker yang cocok untukmu adalah...`;
             
-            // set src gambar PNG, jika error tampilkan emoji sebagai fallback
+            // set gambar
             resultImage.src = result.img;
             resultImage.alt = result.title;
-            // kalau gambar gagal dimuat, fallback ke teks
+            
+            // fallback sederhana jika gambar gagal dimuat (tetap tampilkan teks)
             resultImage.onerror = function() {
                 this.style.display = 'none';
-                // buat fallback sementara
-                if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('img-fallback')) {
+                const parent = this.parentNode;
+                if (!parent.querySelector('.img-fallback')) {
                     const fallback = document.createElement('div');
                     fallback.className = 'img-fallback';
                     fallback.innerText = '🍃';
@@ -618,10 +621,9 @@
                     fallback.style.justifyContent = 'center';
                     fallback.style.height = '100%';
                     fallback.style.background = '#fce3da';
-                    this.parentNode.appendChild(fallback);
+                    parent.appendChild(fallback);
                 }
             };
-            // jika onload dan sebelumnya ada fallback, sembunyikan fallback
             resultImage.onload = function() {
                 this.style.display = 'block';
                 const parent = this.parentNode;
@@ -641,4 +643,4 @@
     })();
 </script>
 </body>
-                </html>
+                    </html>
