@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KADIO Indonesia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: #000000;
+            line-height: 1.4;
+            scroll-behavior: smooth;
+        }
+
+        /* Soft, calm motion defaults */
+        a, button, .frame-card, .upload-btn, .save-btn, .menu-toggle, .nav-link {
+            transition: all 0.2s ease-out;
+        }
+
+        /* Header styling */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: #ffffff;
+            border-bottom: 1px solid #eaeef2;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(255,255,255,0.92);
+            backdrop-filter: blur(4px);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-kachoo {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.2s;
+        }
+
+        .logo-kachoo:hover {
+            transform: scale(1.02);
+        }
+
+        /* Main menu (right side) */
+        .main-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #111111;
+            letter-spacing: -0.2px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.4rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            border-bottom-color: #000000;
+            color: #000000;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 32px;
+            height: 28px;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 2px;
+            background-color: #000000;
+            transition: all 0.25s;
+            border-radius: 2px;
+        }
+
+        .mobile-nav {
+            display: none;
+            flex-direction: column;
+            background: #ffffff;
+            width: 100%;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .mobile-nav a {
+            padding: 0.8rem 0;
+            text-decoration: none;
+            font-weight: 500;
+            color: #111;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mobile-nav a:last-child {
+            border-bottom: none;
+        }
+
+        /* Main container with soft light background */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: radial-gradient(circle at 30% 20%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.01) 100%);
+            border-radius: 2rem;
+        }
+
+        .frames-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.5rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .frame-card {
+            flex: 1;
+            min-width: 280px;
+            max-width: 500px;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0,0,0,0.02);
+            padding: 1.25rem 1rem 1.5rem 1rem;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            border: 1px solid #f1f1f1;
+        }
+
+        .frame-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 28px 35px -16px rgba(0, 0, 0, 0.12);
+        }
+
+        .frame-title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            letter-spacing: -0.2px;
+            color: #1a1a1a;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            background: #fafafa;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+        }
+
+        .twibbon-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #f3f3f3;
+            cursor: grab;
+            border-radius: 20px;
+        }
+
+        .twibbon-canvas:active {
+            cursor: grabbing;
+        }
+
+        .button-group {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .upload-btn, .save-btn {
+            background: #ffffff;
+            border: 1px solid #cccccc;
+            color: #111;
+            padding: 0.6rem 1.6rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+            font-family: inherit;
+        }
+
+        .upload-btn:hover, .save-btn:hover {
+            background: #f5f5f5;
+            border-color: #000000;
+            transform: scale(0.98);
+        }
+
+        .adjust-note {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 0.6rem;
+            color: #555;
+            letter-spacing: 0.2px;
+        }
+
+        .kadio-description {
+            margin: 2.5rem auto 1.8rem;
+            max-width: 860px;
+            text-align: center;
+            background: #fefefe;
+            padding: 1.8rem 2rem;
+            border-radius: 2rem;
+            border: 1px solid #ececec;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .kadio-description h3 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.8rem;
+            color: #000;
+        }
+
+        .kadio-description p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #2b2b2b;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .footer {
+            border-top: 1px solid #eaeef2;
+            padding: 2rem 2rem 1.8rem;
+            text-align: center;
+            background: #ffffff;
+            font-size: 0.85rem;
+            color: #2c2c2c;
+            margin-top: 1rem;
+        }
+
+        .footer p {
+            margin: 0.2rem 0;
+        }
+
+        .made-by {
+            font-weight: 500;
+            margin-top: 0.5rem;
+            letter-spacing: -0.2px;
+        }
+
+        @media (max-width: 780px) {
+            .header {
+                padding: 0.8rem 1.2rem;
+            }
+            .main-menu {
+                display: none;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .mobile-nav.show-mobile {
+                display: flex;
+            }
+            .frames-wrapper {
+                gap: 1.8rem;
+            }
+            .frame-card {
+                max-width: 100%;
+            }
+            .kadio-description {
+                padding: 1.5rem 1rem;
+            }
+            .kadio-description h3 {
+                font-size: 1.4rem;
+            }
+            .button-group {
+                gap: 0.6rem;
+            }
+            .upload-btn, .save-btn {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 781px) {
+            .mobile-nav {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo-area">
+        <img src="logo-thekachoo.png" alt="The Kachoo Logo" class="logo-kachoo" onerror="this.onerror=null; this.src='https://placehold.co/120x40/ffffff/cccccc?text=Kachoo';">
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="main-menu">
+        <button class="nav-link" data-link="thekachoo">The Kachoo</button>
+        <button class="nav-link" data-link="chobank">Chobank</button>
+        <button class="nav-link" data-link="chonnect">Chonnect</button>
+    </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+    <a href="#" data-link="thekachoo">The Kachoo</a>
+    <a href="#" data-link="chobank">Chobank</a>
+    <a href="#" data-link="chonnect">Chonnect</a>
+</div>
+
+<main class="main-container">
+    <div class="frames-wrapper">
+        <!-- Frame 1 -->
+        <div class="frame-card">
+            <div class="frame-title">FRAME KAMPANYE 1</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas1" class="twibbon-canvas" width="800" height="900" style="width:100%; height:auto; aspect-ratio:800/900"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput1" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn1">+ Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn1">💾 Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Klik & geser untuk atur posisi | Scroll/zoom untuk atur ukuran</div>
+        </div>
+
+        <!-- Frame 2 -->
+        <div class="frame-card">
+            <div class="frame-title">FRAME KAMPANYE 2</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas2" class="twibbon-canvas" width="800" height="900" style="width:100%; height:auto; aspect-ratio:800/900"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput2" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn2">+ Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn2">💾 Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Klik & geser untuk atur posisi | Scroll/zoom untuk atur ukuran</div>
+        </div>
+    </div>
+
+    <div class="kadio-description">
+        <h3>KADIO Indonesia</h3>
+        <p>KADIO is a photo studio owned by Kachoo. Kachoo is a media and news company focused on creative storytelling, visual journalism, and modern brand solutions. Kadio blends professional photography with artistic direction — delivering authentic moments through minimalist, high‑quality framing.</p>
+    </div>
+</main>
+
+<footer class="footer">
+    <p>© 2025 KADIO Indonesia</p>
+    <p class="made-by">made by Kachoo</p>
+</footer>
+
+<script>
+    (function() {
+        const CANVAS_W = 800;
+        const CANVAS_H = 900;
+
+        const frameImgSrc1 = 'Campaign1.png';
+        const frameImgSrc2 = 'Campaign2.png';
+
+        let frameImage1 = new Image();
+        let frameImage2 = new Image();
+        let framesLoaded = { 1: false, 2: false };
+
+        class FrameEditor {
+            constructor(canvasId, uploadInputId, saveBtnId, frameImage) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.uploadInput = document.getElementById(uploadInputId);
+                this.saveBtn = document.getElementById(saveBtnId);
+                this.frameImg = frameImage;
+                
+                this.userImg = null;
+                this.imgX = 0, this.imgY = 0;
+                this.imgScale = 1.0;
+                this.imgWidth = 0, this.imgHeight = 0;
+                
+                this.isDragging = false;
+                this.dragStartX = 0, this.dragStartY = 0;
+                this.lastImgX = 0, this.lastImgY = 0;
+                
+                this.canvas.width = CANVAS_W;
+                this.canvas.height = CANVAS_H;
+                
+                this.initEvents();
+                this.handleFile = this.handleFile.bind(this);
+                this.saveImage = this.saveImage.bind(this);
+                this.uploadInput.addEventListener('change', this.handleFile);
+                this.saveBtn.addEventListener('click', this.saveImage);
+                this.redraw();
+            }
+            
+            initEvents() {
+                const getCoords = (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const scaleX = this.canvas.width / rect.width;
+                    const scaleY = this.canvas.height / rect.height;
+                    let clientX, clientY;
+                    if (e.touches) {
+                        clientX = e.touches[0].clientX;
+                        clientY = e.touches[0].clientY;
+                    } else {
+                        clientX = e.clientX;
+                        clientY = e.clientY;
+                    }
+                    let canvasX = (clientX - rect.left) * scaleX;
+                    let canvasY = (clientY - rect.top) * scaleY;
+                    canvasX = Math.min(Math.max(0, canvasX), CANVAS_W);
+                    canvasY = Math.min(Math.max(0, canvasY), CANVAS_H);
+                    return { x: canvasX, y: canvasY };
+                };
+                
+                const onMouseDown = (e) => {
+                    if (!this.userImg) return;
+                    e.preventDefault();
+                    this.isDragging = true;
+                    const coords = getCoords(e);
+                    this.dragStartX = coords.x;
+                    this.dragStartY = coords.y;
+                    this.lastImgX = this.imgX;
+                    this.lastImgY = this.imgY;
+                    this.canvas.style.cursor = 'grabbing';
+                };
+                
+                const onMouseMove = (e) => {
+                    if (!this.isDragging || !this.userImg) return;
+                    e.preventDefault();
+                    const coords = getCoords(e);
+                    const dx = coords.x - this.dragStartX;
+                    const dy = coords.y - this.dragStartY;
+                    this.imgX = this.lastImgX + dx;
+                    this.imgY = this.lastImgY + dy;
+                    this.clampPosition();
+                    this.redraw();
+                };
+                
+                const onMouseUp = () => {
+                    if (this.isDragging) {
+                        this.isDragging = false;
+                        this.canvas.style.cursor = 'grab';
+                    }
+                };
+                
+                const onWheel = (e) => {
+                    if (!this.userImg) return;
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? 0.95 : 1.05;
+                    let newScale = this.imgScale * delta;
+                    if (newScale < 0.4) newScale = 0.4;
+                    if (newScale > 3.0) newScale = 3.0;
+                    
+                    const rect = this.canvas.getBoundingClientRect();
+                    const mouseCanvasX = (e.clientX - rect.left) / rect.width * CANVAS_W;
+                    const mouseCanvasY = (e.clientY - rect.top) / rect.height * CANVAS_H;
+                    
+                    const prevScale = this.imgScale;
+                    this.imgScale = newScale;
+                    
+                    if (this.userImg && this.imgWidth > 0) {
+                        const mouseImgX = (mouseCanvasX - this.imgX) / prevScale;
+                        const mouseImgY = (mouseCanvasY - this.imgY) / prevScale;
+                        this.imgX = mouseCanvasX - mouseImgX * this.imgScale;
+                        this.imgY = mouseCanvasY - mouseImgY * this.imgScale;
+                        this.clampPosition();
+                        this.redraw();
+                    } else {
+                        this.redraw();
+                    }
+                };
+                
+                this.canvas.addEventListener('mousedown', onMouseDown);
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                this.canvas.addEventListener('wheel', onWheel, { passive: false });
+                
+                this.canvas.addEventListener('touchstart', (e) => {
+                    if (!this.userImg) return;
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const coords = getCoords(touch);
+                    this.isDragging = true;
+                    this.dragStartX = coords.x;
+                    this.dragStartY = coords.y;
+                    this.lastImgX = this.imgX;
+                    this.lastImgY = this.imgY;
+                });
+                window.addEventListener('touchmove', (e) => {
+                    if (!this.isDragging || !this.userImg) return;
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const coords = getCoords(touch);
+                    const dx = coords.x - this.dragStartX;
+                    const dy = coords.y - this.dragStartY;
+                    this.imgX = this.lastImgX + dx;
+                    this.imgY = this.lastImgY + dy;
+                    this.clampPosition();
+                    this.redraw();
+                });
+                window.addEventListener('touchend', () => {
+                    this.isDragging = false;
+                });
+                
+                this.canvas.style.cursor = 'grab';
+            }
+            
+            clampPosition() {
+                if (!this.userImg) return;
+                const dispW = this.imgWidth * this.imgScale;
+                const dispH = this.imgHeight * this.imgScale;
+                let minX = CANVAS_W - dispW;
+                let minY = CANVAS_H - dispH;
+                if (dispW <= CANVAS_W) minX = (CANVAS_W - dispW) / 2;
+                if (dispH <= CANVAS_H) minY = (CANVAS_H - dispH) / 2;
+                let maxX = (dispW > CANVAS_W) ? 0 : (CANVAS_W - dispW) / 2;
+                let maxY = (dispH > CANVAS_H) ? 0 : (CANVAS_H - dispH) / 2;
+                if (dispW > CANVAS_W) maxX = 0;
+                if (dispH > CANVAS_H) maxY = 0;
+                this.imgX = Math.min(Math.max(this.imgX, minX), maxX);
+                this.imgY = Math.min(Math.max(this.imgY, minY), maxY);
+            }
+            
+            handleFile(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.userImg = img;
+                        const imgAspect = img.width / img.height;
+                        const canvasAspect = CANVAS_W / CANVAS_H;
+                        let drawW, drawH;
+                        if (imgAspect > canvasAspect) {
+                            drawW = CANVAS_W;
+                            drawH = CANVAS_W / imgAspect;
+                        } else {
+                            drawH = CANVAS_H;
+                            drawW = CANVAS_H * imgAspect;
+                        }
+                        this.imgWidth = drawW;
+                        this.imgHeight = drawH;
+                        this.imgScale = 1.0;
+                        this.imgX = (CANVAS_W - drawW) / 2;
+                        this.imgY = (CANVAS_H - drawH) / 2;
+                        this.clampPosition();
+                        this.redraw();
+                        this.canvas.style.cursor = 'grab';
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                event.target.value = '';
+            }
+            
+            saveImage() {
+                if (!this.userImg) {
+                    alert('Silakan masukkan foto terlebih dahulu.');
+                    return;
+                }
+                try {
+                    const link = document.createElement('a');
+                    link.download = `twibbon_${Date.now()}.png`;
+                    link.href = this.canvas.toDataURL('image/png');
+                    link.click();
+                } catch(err) {
+                    alert('Gagal menyimpan gambar.');
+                }
+            }
+            
+            redraw() {
+                if (!this.ctx) return;
+                this.ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+                this.ctx.fillStyle = '#f8f8f8';
+                this.ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+                
+                if (this.userImg && this.userImg.complete && this.userImg.naturalWidth > 0) {
+                    const drawW = this.imgWidth * this.imgScale;
+                    const drawH = this.imgHeight * this.imgScale;
+                    this.ctx.save();
+                    this.ctx.beginPath();
+                    this.ctx.rect(0, 0, CANVAS_W, CANVAS_H);
+                    this.ctx.clip();
+                    this.ctx.drawImage(this.userImg, this.imgX, this.imgY, drawW, drawH);
+                    this.ctx.restore();
+                }
+                
+                if (this.frameImg && this.frameImg.complete && this.frameImg.naturalWidth > 0) {
+                    this.ctx.drawImage(this.frameImg, 0, 0, CANVAS_W, CANVAS_H);
+                } else {
+                    this.ctx.font = "bold 18px Inter";
+                    this.ctx.fillStyle = "#999";
+                    this.ctx.fillText("Loading frame...", CANVAS_W/2-70, CANVAS_H/2);
+                }
+            }
+            
+            updateFrameImage(newFrameImg) {
+                this.frameImg = newFrameImg;
+                if (this.frameImg.complete) this.redraw();
+                else this.frameImg.onload = () => this.redraw();
+            }
+        }
+        
+        let editor1 = null;
+        let editor2 = null;
+        
+        function initWhenFramesReady() {
+            if (frameImage1.complete && frameImage1.naturalWidth > 0) framesLoaded[1] = true;
+            if (frameImage2.complete && frameImage2.naturalWidth > 0) framesLoaded[2] = true;
+            
+            if (framesLoaded[1] && framesLoaded[2]) {
+                if (!editor1) {
+                    editor1 = new FrameEditor('twibbonCanvas1', 'uploadInput1', 'saveBtn1', frameImage1);
+                    editor2 = new FrameEditor('twibbonCanvas2', 'uploadInput2', 'saveBtn2', frameImage2);
+                } else {
+                    editor1.redraw();
+                    editor2.redraw();
+                }
+            } else {
+                setTimeout(initWhenFramesReady, 80);
+            }
+        }
+        
+        frameImage1.onload = () => { framesLoaded[1] = true; initWhenFramesReady(); };
+        frameImage2.onload = () => { framesLoaded[2] = true; initWhenFramesReady(); };
+        frameImage1.src = frameImgSrc1;
+        frameImage2.src = frameImgSrc2;
+        
+        frameImage1.onerror = () => { framesLoaded[1] = true; initWhenFramesReady(); };
+        frameImage2.onerror = () => { framesLoaded[2] = true; initWhenFramesReady(); };
+        
+        document.getElementById('uploadBtn1').addEventListener('click', () => {
+            document.getElementById('uploadInput1').click();
+        });
+        document.getElementById('uploadBtn2').addEventListener('click', () => {
+            document.getElementById('uploadInput2').click();
+        });
+        
+        // Mobile menu
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                mobileNav.classList.toggle('show-mobile');
+            });
+        }
+        
+        function navigateTo(linkId) {
+            let url = '';
+            if (linkId === 'thekachoo') url = 'https://thekachoo.github.io/Home';
+            else if (linkId === 'chobank') url = 'https://thekachoo.github.io/CHOBANK';
+            else if (linkId === 'chonnect') url = 'https://thekachoo.github.io/CHONNECT';
+            if (url) window.open(url, '_blank', 'noopener,noreferrer');
+        }
+        
+        document.querySelectorAll('.nav-link').forEach(btn => {
+            btn.addEventListener('click', () => {
+                navigateTo(btn.getAttribute('data-link'));
+            });
+        });
+        
+        document.querySelectorAll('#mobileNav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateTo(link.getAttribute('data-link'));
+                mobileNav.classList.remove('show-mobile');
+            });
+        });
+        
+        window.addEventListener('resize', () => {
+            if (editor1) editor1.redraw();
+            if (editor2) editor2.redraw();
+        });
+    })();
+</script>
+</body>
+</html>
