@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>FOTO DULU YUK</title>
+    <title>FOTO DULU YUK - 6 Campaign</title>
     <style>
         * {
             margin: 0;
@@ -153,6 +153,11 @@
         .frame-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 28px 35px -16px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Untuk campaign ke-5 dan ke-6 ukuran berbeda, kita kasih class khusus agar canvas menyesuaikan */
+        .frame-card.special-landscape {
+            max-width: 580px;
         }
 
         .frame-title {
@@ -336,6 +341,7 @@
 
 <main class="main-container">
     <div class="frames-wrapper">
+        <!-- Campaign 1 (800x1000) -->
         <div class="frame-card">
             <div class="frame-title">KAZINE ICHONIC</div>
             <div class="canvas-container">
@@ -349,6 +355,7 @@
             <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
         </div>
 
+        <!-- Campaign 2 (800x1000) -->
         <div class="frame-card">
             <div class="frame-title">KAZINE ICHONIC</div>
             <div class="canvas-container">
@@ -358,6 +365,62 @@
                 <input type="file" id="uploadInput2" accept="image/jpeg, image/png, image/jpg" style="display:none" />
                 <button class="upload-btn" id="uploadBtn2">Masukkan Foto</button>
                 <button class="save-btn" id="saveBtn2">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 3 (800x1000) -->
+        <div class="frame-card">
+            <div class="frame-title">KAZINE ICHONIC</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas3" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput3" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn3">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn3">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 4 (800x1000) -->
+        <div class="frame-card">
+            <div class="frame-title">KAZINE ICHONIC</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas4" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput4" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn4">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn4">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 5 (1000x800) LANDSCAPE -->
+        <div class="frame-card special-landscape">
+            <div class="frame-title">KAZINE ICHONIC (LANDSCAPE)</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas5" class="twibbon-canvas" width="1000" height="800" style="width:100%; height:auto; aspect-ratio:1000/800"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput5" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn5">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn5">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 6 (1000x800) LANDSCAPE -->
+        <div class="frame-card special-landscape">
+            <div class="frame-title">KAZINE ICHONIC (LANDSCAPE)</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas6" class="twibbon-canvas" width="1000" height="800" style="width:100%; height:auto; aspect-ratio:1000/800"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput6" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn6">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn6">Simpan Foto</button>
             </div>
             <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
         </div>
@@ -376,23 +439,35 @@
 
 <script>
     (function() {
-        const CANVAS_W = 800;
-        const CANVAS_H = 1000;
+        // Ukuran standar untuk 4 campaign pertama (800x1000)
+        const CANVAS_W_PORTRAIT = 800;
+        const CANVAS_H_PORTRAIT = 1000;
+        // Ukuran untuk campaign 5 dan 6 (1000x800)
+        const CANVAS_W_LANDSCAPE = 1000;
+        const CANVAS_H_LANDSCAPE = 800;
 
+        // Frame image sources (sesuai dengan campaign, asumsi file gambar tersedia)
         const frameImgSrc1 = 'Campaign1.png';
         const frameImgSrc2 = 'Campaign2.png';
+        const frameImgSrc3 = 'Campaign3.png';
+        const frameImgSrc4 = 'Campaign4.png';
+        const frameImgSrc5 = 'Campaign5.png';
+        const frameImgSrc6 = 'Campaign6.png';
 
-        let frameImage1 = new Image();
-        let frameImage2 = new Image();
-        let framesLoaded = { 1: false, 2: false };
-
+        let frameImages = [
+            null, null, null, null, null, null
+        ]; // index 1-6
+        
+        // Fungsi untuk membuat editor yang fleksibel dengan dimensi custom
         class FrameEditor {
-            constructor(canvasId, uploadInputId, saveBtnId, frameImage) {
+            constructor(canvasId, uploadInputId, saveBtnId, frameImage, canvasWidth, canvasHeight) {
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
                 this.uploadInput = document.getElementById(uploadInputId);
                 this.saveBtn = document.getElementById(saveBtnId);
                 this.frameImg = frameImage;
+                this.canvasWidth = canvasWidth;
+                this.canvasHeight = canvasHeight;
                 
                 this.userImg = null;
                 this.imgX = 0, this.imgY = 0;
@@ -403,9 +478,10 @@
                 this.initialDistance = 0;
                 this.initialScale = 1;
                 this.isPinching = false;
+                this.isDragging = false;
                 
-                this.canvas.width = CANVAS_W;
-                this.canvas.height = CANVAS_H;
+                this.canvas.width = this.canvasWidth;
+                this.canvas.height = this.canvasHeight;
                 
                 this.initEvents();
                 this.handleFile = this.handleFile.bind(this);
@@ -431,8 +507,8 @@
                 
                 let canvasX = (clientX - rect.left) * scaleX;
                 let canvasY = (clientY - rect.top) * scaleY;
-                canvasX = Math.min(Math.max(0, canvasX), CANVAS_W);
-                canvasY = Math.min(Math.max(0, canvasY), CANVAS_H);
+                canvasX = Math.min(Math.max(0, canvasX), this.canvasWidth);
+                canvasY = Math.min(Math.max(0, canvasY), this.canvasHeight);
                 return { x: canvasX, y: canvasY };
             }
             
@@ -496,8 +572,8 @@
                     if (newScale > 3.0) newScale = 3.0;
                     
                     const rect = this.canvas.getBoundingClientRect();
-                    const mouseCanvasX = (e.clientX - rect.left) / rect.width * CANVAS_W;
-                    const mouseCanvasY = (e.clientY - rect.top) / rect.height * CANVAS_H;
+                    const mouseCanvasX = (e.clientX - rect.left) / rect.width * this.canvasWidth;
+                    const mouseCanvasY = (e.clientY - rect.top) / rect.height * this.canvasHeight;
                     
                     const prevScale = this.imgScale;
                     this.imgScale = newScale;
@@ -525,7 +601,6 @@
                     if (!this.userImg) return;
                     
                     if (e.touches.length === 1) {
-                        // Single touch: drag
                         const touch = e.touches[0];
                         const coords = this.getCanvasCoordsFromEvent(touch);
                         this.isDragging = true;
@@ -535,7 +610,6 @@
                         this.lastImgX = this.imgX;
                         this.lastImgY = this.imgY;
                     } else if (e.touches.length === 2) {
-                        // Two touches: pinch zoom
                         this.isPinching = true;
                         this.isDragging = false;
                         this.initialDistance = this.getTouchDistance(e.touches);
@@ -569,20 +643,15 @@
                             let newScale = this.initialScale * scaleFactor;
                             if (newScale < 0.4) newScale = 0.4;
                             if (newScale > 3.0) newScale = 3.0;
-                            
                             const center = this.getPinchCenter(e.touches);
                             const centerX = center.x;
                             const centerY = center.y;
-                            
                             const prevScale = this.imgScale;
                             this.imgScale = newScale;
-                            
-                            // Adjust position so pinch center stays fixed
                             const pointX = (centerX - this.pinchStartImgX) / this.pinchStartScale;
                             const pointY = (centerY - this.pinchStartImgY) / this.pinchStartScale;
                             this.imgX = centerX - pointX * this.imgScale;
                             this.imgY = centerY - pointY * this.imgScale;
-                            
                             this.clampPosition();
                             this.redraw();
                         }
@@ -604,17 +673,17 @@
                 const dispW = this.imgWidth * this.imgScale;
                 const dispH = this.imgHeight * this.imgScale;
                 
-                let minX = CANVAS_W - dispW;
-                let minY = CANVAS_H - dispH;
+                let minX = this.canvasWidth - dispW;
+                let minY = this.canvasHeight - dispH;
                 
-                if (dispW <= CANVAS_W) minX = (CANVAS_W - dispW) / 2;
-                if (dispH <= CANVAS_H) minY = (CANVAS_H - dispH) / 2;
+                if (dispW <= this.canvasWidth) minX = (this.canvasWidth - dispW) / 2;
+                if (dispH <= this.canvasHeight) minY = (this.canvasHeight - dispH) / 2;
                 
-                let maxX = (dispW > CANVAS_W) ? 0 : (CANVAS_W - dispW) / 2;
-                let maxY = (dispH > CANVAS_H) ? 0 : (CANVAS_H - dispH) / 2;
+                let maxX = (dispW > this.canvasWidth) ? 0 : (this.canvasWidth - dispW) / 2;
+                let maxY = (dispH > this.canvasHeight) ? 0 : (this.canvasHeight - dispH) / 2;
                 
-                if (dispW > CANVAS_W) maxX = 0;
-                if (dispH > CANVAS_H) maxY = 0;
+                if (dispW > this.canvasWidth) maxX = 0;
+                if (dispH > this.canvasHeight) maxY = 0;
                 
                 this.imgX = Math.min(Math.max(this.imgX, minX), maxX);
                 this.imgY = Math.min(Math.max(this.imgY, minY), maxY);
@@ -629,20 +698,20 @@
                     img.onload = () => {
                         this.userImg = img;
                         const imgAspect = img.width / img.height;
-                        const canvasAspect = CANVAS_W / CANVAS_H;
+                        const canvasAspect = this.canvasWidth / this.canvasHeight;
                         let drawW, drawH;
                         if (imgAspect > canvasAspect) {
-                            drawW = CANVAS_W;
-                            drawH = CANVAS_W / imgAspect;
+                            drawW = this.canvasWidth;
+                            drawH = this.canvasWidth / imgAspect;
                         } else {
-                            drawH = CANVAS_H;
-                            drawW = CANVAS_H * imgAspect;
+                            drawH = this.canvasHeight;
+                            drawW = this.canvasHeight * imgAspect;
                         }
                         this.imgWidth = drawW;
                         this.imgHeight = drawH;
                         this.imgScale = 1.0;
-                        this.imgX = (CANVAS_W - drawW) / 2;
-                        this.imgY = (CANVAS_H - drawH) / 2;
+                        this.imgX = (this.canvasWidth - drawW) / 2;
+                        this.imgY = (this.canvasHeight - drawH) / 2;
                         this.clampPosition();
                         this.redraw();
                         this.canvas.style.cursor = 'grab';
@@ -670,66 +739,75 @@
             
             redraw() {
                 if (!this.ctx) return;
-                this.ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+                this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
                 this.ctx.fillStyle = '#f8f8f8';
-                this.ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+                this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
                 
                 if (this.userImg && this.userImg.complete && this.userImg.naturalWidth > 0) {
                     const drawW = this.imgWidth * this.imgScale;
                     const drawH = this.imgHeight * this.imgScale;
                     this.ctx.save();
                     this.ctx.beginPath();
-                    this.ctx.rect(0, 0, CANVAS_W, CANVAS_H);
+                    this.ctx.rect(0, 0, this.canvasWidth, this.canvasHeight);
                     this.ctx.clip();
                     this.ctx.drawImage(this.userImg, this.imgX, this.imgY, drawW, drawH);
                     this.ctx.restore();
                 }
                 
                 if (this.frameImg && this.frameImg.complete && this.frameImg.naturalWidth > 0) {
-                    this.ctx.drawImage(this.frameImg, 0, 0, CANVAS_W, CANVAS_H);
+                    this.ctx.drawImage(this.frameImg, 0, 0, this.canvasWidth, this.canvasHeight);
                 } else {
                     this.ctx.font = "bold 18px Inter";
                     this.ctx.fillStyle = "#999";
-                    this.ctx.fillText("Loading frame...", CANVAS_W/2-70, CANVAS_H/2);
+                    this.ctx.textAlign = "center";
+                    this.ctx.fillText("Loading frame...", this.canvasWidth/2, this.canvasHeight/2);
+                    this.ctx.textAlign = "left";
                 }
             }
         }
         
-        let editor1 = null;
-        let editor2 = null;
+        let editors = [null, null, null, null, null, null]; // index 0..5
         
-        function initWhenFramesReady() {
-            if (frameImage1.complete && frameImage1.naturalWidth > 0) framesLoaded[1] = true;
-            if (frameImage2.complete && frameImage2.naturalWidth > 0) framesLoaded[2] = true;
-            
-            if (framesLoaded[1] && framesLoaded[2]) {
-                if (!editor1) {
-                    editor1 = new FrameEditor('twibbonCanvas1', 'uploadInput1', 'saveBtn1', frameImage1);
-                    editor2 = new FrameEditor('twibbonCanvas2', 'uploadInput2', 'saveBtn2', frameImage2);
+        // Fungsi untuk membuat frame image dan editor sesuai dimensi
+        function setupCampaign(index, canvasId, uploadId, saveId, imgSrc, width, height) {
+            let frameImg = new Image();
+            frameImg.onload = () => {
+                if (!editors[index]) {
+                    editors[index] = new FrameEditor(canvasId, uploadId, saveId, frameImg, width, height);
                 } else {
-                    editor1.redraw();
-                    editor2.redraw();
+                    editors[index].frameImg = frameImg;
+                    editors[index].redraw();
                 }
-            } else {
-                setTimeout(initWhenFramesReady, 80);
-            }
+            };
+            frameImg.onerror = () => {
+                console.warn(`Frame ${index+1} tidak ditemukan, menggunakan placeholder`);
+                if (!editors[index]) {
+                    editors[index] = new FrameEditor(canvasId, uploadId, saveId, frameImg, width, height);
+                } else {
+                    editors[index].redraw();
+                }
+            };
+            frameImg.src = imgSrc;
         }
         
-        frameImage1.onload = () => { framesLoaded[1] = true; initWhenFramesReady(); };
-        frameImage2.onload = () => { framesLoaded[2] = true; initWhenFramesReady(); };
-        frameImage1.src = frameImgSrc1;
-        frameImage2.src = frameImgSrc2;
+        // Inisialisasi 4 campaign pertama (800x1000)
+        setupCampaign(0, 'twibbonCanvas1', 'uploadInput1', 'saveBtn1', frameImgSrc1, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        setupCampaign(1, 'twibbonCanvas2', 'uploadInput2', 'saveBtn2', frameImgSrc2, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        setupCampaign(2, 'twibbonCanvas3', 'uploadInput3', 'saveBtn3', frameImgSrc3, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        setupCampaign(3, 'twibbonCanvas4', 'uploadInput4', 'saveBtn4', frameImgSrc4, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        // Campaign 5 & 6 ukuran 1000x800
+        setupCampaign(4, 'twibbonCanvas5', 'uploadInput5', 'saveBtn5', frameImgSrc5, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
+        setupCampaign(5, 'twibbonCanvas6', 'uploadInput6', 'saveBtn6', frameImgSrc6, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
         
-        frameImage1.onerror = () => { framesLoaded[1] = true; initWhenFramesReady(); };
-        frameImage2.onerror = () => { framesLoaded[2] = true; initWhenFramesReady(); };
+        // Tombol upload untuk semua campaign
+        document.getElementById('uploadBtn1').addEventListener('click', () => document.getElementById('uploadInput1').click());
+        document.getElementById('uploadBtn2').addEventListener('click', () => document.getElementById('uploadInput2').click());
+        document.getElementById('uploadBtn3').addEventListener('click', () => document.getElementById('uploadInput3').click());
+        document.getElementById('uploadBtn4').addEventListener('click', () => document.getElementById('uploadInput4').click());
+        document.getElementById('uploadBtn5').addEventListener('click', () => document.getElementById('uploadInput5').click());
+        document.getElementById('uploadBtn6').addEventListener('click', () => document.getElementById('uploadInput6').click());
         
-        document.getElementById('uploadBtn1').addEventListener('click', () => {
-            document.getElementById('uploadInput1').click();
-        });
-        document.getElementById('uploadBtn2').addEventListener('click', () => {
-            document.getElementById('uploadInput2').click();
-        });
-        
+        // Menu mobile dan navigasi
         const menuToggle = document.getElementById('menuToggle');
         const mobileNav = document.getElementById('mobileNav');
         if (menuToggle) {
@@ -761,10 +839,9 @@
         });
         
         window.addEventListener('resize', () => {
-            if (editor1) editor1.redraw();
-            if (editor2) editor2.redraw();
+            editors.forEach(editor => { if (editor) editor.redraw(); });
         });
     })();
 </script>
 </body>
-</html>
+    </html>
