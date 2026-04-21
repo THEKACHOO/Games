@@ -114,7 +114,6 @@
             flex-wrap: wrap;
         }
 
-        /* KECILKAN GAMBAR ALBUM */
         .header img {
             width: 48px;
             height: 48px;
@@ -147,7 +146,6 @@
             color: #1a1a1a;
         }
 
-        /* LOGO KACHOO PAKAI PNG */
         .kachoo-logo {
             display: flex;
             align-items: center;
@@ -169,23 +167,73 @@
             object-fit: contain;
         }
 
+        /* PERBAIKAN: LIST LAGU DENGAN FOTO KECIL */
+        .song-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .select-song {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 10px 16px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .select-song:hover {
+            background: #f5f5f5;
+            border-color: #1a1a1a;
+            transform: translateX(4px);
+        }
+
+        /* FOTO ALBUM DI LIST LAGU - UKURAN KECIL 40px */
+        .select-song img {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+
+        .select-song .song-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .select-song .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: -0.2px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .select-song .authors {
+            font-size: 0.75rem;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .line-item.selected {
             background: #1a1a1a;
             color: #ffffff;
             border-color: #1a1a1a;
             font-weight: 600;
             transform: scale(1.01);
-            transition: 0.1s;
-        }
-
-        .select-song {
-            background: #ffffff;
-            border: 1px solid #1a1a1a;
-        }
-
-        .select-song:hover {
-            background: #f0f0f0;
-            transform: translateX(6px);
         }
 
         .fab {
@@ -270,7 +318,41 @@
             color: #1a1a1a;
         }
 
-        /* FOOTER STYLE */
+        .song-info-display {
+            display: flex;
+            gap: 14px;
+            background: #f5f5f7;
+            border-radius: 28px;
+            padding: 10px 18px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .song-info-display img {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        .lines-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .line-item {
+            background: #f8f8f8;
+            padding: 12px 16px;
+            border-radius: 24px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        /* FOOTER */
         .kachoo-footer {
             background: #000000;
             color: #ffffff;
@@ -281,6 +363,19 @@
         @media (max-width: 768px) {
             .kachoo-footer {
                 padding: 50px 0 40px;
+            }
+            .select-song {
+                padding: 8px 14px;
+            }
+            .select-song img {
+                width: 36px;
+                height: 36px;
+            }
+            .select-song .name {
+                font-size: 0.85rem;
+            }
+            .screen-wrapper {
+                padding: 20px 18px;
             }
         }
 
@@ -416,9 +511,9 @@
 
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
-                <header>
+                <header style="margin-bottom: 20px;">
                     <button class="go-to-screen material-symbols-outlined" data-number="1" style="background: #eaeef2;">arrow_back</button>
-                    <h2>Pilih lagu</h2>
+                    <h2 style="font-size: 1.3rem;">Pilih lagu</h2>
                 </header>
                 <div class="song-selection" id="song-selection-list"></div>
             </div>
@@ -431,12 +526,15 @@
                     <h2>pilih baris lirik</h2>
                     <button class="go-to-screen right material-symbols-outlined" data-number="4" id="nextToFinalBtn">arrow_forward</button>
                 </header>
-                <div class="song-info-display" id="song-info-mini" style="display: flex; gap: 18px; background: #f5f5f7; border-radius: 40px; padding: 14px 22px; margin-bottom: 20px;">
-                    <img src="" alt="cover" style="width: 48px; height: 48px; border-radius: 16px; border: 1px solid black;">
-                    <div><div class="song-info-name" style="font-weight: 800;"></div><div class="song-info-artist" style="opacity: 0.7;"></div></div>
+                <div class="song-info-display" id="song-info-mini">
+                    <img src="" alt="cover">
+                    <div>
+                        <div class="song-info-name" style="font-weight: 800; font-size: 0.95rem;"></div>
+                        <div class="song-info-artist" style="opacity: 0.7; font-size: 0.75rem;"></div>
+                    </div>
                 </div>
                 <div id="lyrics-loading" class="hidden searching"><span class="loading-spinner"></span> mengambil lirik ...</div>
-                <div class="lines-selection" id="lines-container" style="max-height: 400px; overflow-y: auto;"></div>
+                <div class="lines-selection" id="lines-container"></div>
             </div>
             <button class="fab" id="lyrics-fab"><span class="material-symbols-outlined">arrow_forward</span></button>
         </section>
@@ -451,7 +549,7 @@
 
                 <div id="song-image-preview" class="song-image" style="background: transparent !important; border-radius: 56px; padding: 28px 28px; box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);">
                     <div class="header">
-                        <img src="" alt="album cover" id="preview-cover" style="border-radius: 16px; width: 48px; height: 48px;">
+                        <img src="" alt="album cover" id="preview-cover">
                         <div>
                             <div class="name" id="preview-title" contenteditable="true">Judul Lagu</div>
                             <div class="authors" id="preview-artist" contenteditable="true">Artis</div>
@@ -512,7 +610,6 @@
                     </div>
                 </div>
                 <div class="footer-section">
-
                     <h3>Contact</h3>
                     <ul class="footer-links">
                         <li><span class="x-logo" style="color: #000000; background: white; border-radius: 3px; padding: 2px 4px; font-size: 14px; margin-right: 8px;">𝕏</span><a href="https://twitter.com/TheKachoo" target="_blank">@TheKachoo (Official)</a></li>
@@ -594,14 +691,20 @@
                 const container = document.getElementById('song-selection-list');
                 container.innerHTML = '';
                 if(results.length === 0) {
-                    container.innerHTML = '<div class="error">tidak ditemukan, coba kata kunci lain</div>';
+                    container.innerHTML = '<div class="error" style="padding:20px;text-align:center;">tidak ditemukan, coba kata kunci lain</div>';
                     showScreen(2);
                     return;
                 }
                 results.forEach(song => {
                     const div = document.createElement('div');
                     div.className = 'select-song';
-                    div.innerHTML = `<img src="${song.cover || 'https://placehold.co/200x200?text=No+Cover'}" onerror="this.src='https://placehold.co/200x200?text=No+Cover'"><div><div class="name">${escapeHtml(song.name)}</div><div class="authors">${escapeHtml(song.artist)}</div></div>`;
+                    div.innerHTML = `
+                        <img src="${song.cover || 'https://placehold.co/200x200?text=No+Cover'}" onerror="this.src='https://placehold.co/200x200?text=No+Cover'">
+                        <div class="song-info">
+                            <div class="name">${escapeHtml(song.name)}</div>
+                            <div class="authors">${escapeHtml(song.artist)}</div>
+                        </div>
+                    `;
                     div.addEventListener('click', async () => {
                         currentSongData = song;
                         const lyricsLoading = document.getElementById('lyrics-loading');
@@ -709,11 +812,8 @@
             const kachooSwitch = document.getElementById('kachoo-tag');
             const showLogo = kachooSwitch.classList.contains('active');
             const wasHidden = logoDiv.classList.contains('hidden');
-            if(!showLogo) {
-                logoDiv.classList.add('hidden');
-            } else {
-                logoDiv.classList.remove('hidden');
-            }
+            if(!showLogo) logoDiv.classList.add('hidden');
+            else logoDiv.classList.remove('hidden');
             
             html2canvas(previewContainer, { 
                 scale: 2.8, 
