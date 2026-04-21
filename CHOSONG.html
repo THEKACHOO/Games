@@ -108,7 +108,6 @@
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
                 <header><h1>CHOSONG!</h1></header>
-                <div class="input-tabs" style="display: none;"></div>
                 <div class="tab-content active" id="search-tab">
                     <form id="search-form">
                         <input class="surface" type="text" id="song-name" placeholder="Cari lagu apa saja... contoh: Halu, Rungkad, Blinding Lights">
@@ -191,73 +190,43 @@
     </footer>
 
     <script>
-        // ============ API REAL: SPOTIFY SEARCH + LYRICS.OVH ============
-        const SPOTIFY_TOKEN = 'BQBsP2q5xGg7K9vL3mN4pQ6rS8tU1wX2yZ3aB4cD5eF6gH7iJ8kL9mN0oP1qR2sT3uV4wX5yZ6'; // token akan di-refresh
-        let currentAccessToken = null;
-        
-        // Fungsi untuk mendapatkan token Spotify (client credentials)
-        async function getSpotifyToken() {
-            const clientId = '7c6b6c0b6c0b6c0b6c0b6c0b6c0b6c0b'; // public demo id
-            const clientSecret = '7c6b6c0b6c0b6c0b6c0b6c0b6c0b6c0b';
-            try {
-                const response = await fetch('https://accounts.spotify.com/api/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`
-                });
-                const data = await response.json();
-                if (data.access_token) {
-                    currentAccessToken = data.access_token;
-                    return currentAccessToken;
-                }
-            } catch(e) { console.warn('Token fetch error, using fallback'); }
-            return null;
-        }
+        // ============ PAKAI iTunes API (GRATIS, LANGSUNG JALAN) ============
+        let currentSongData = null;
+        let selectedLines = [];
+        let allLyricsArray = [];
 
-        // Cari lagu di Spotify
+        // Cari lagu pakai iTunes API
         async function searchSongs(query) {
-            if (!currentAccessToken) await getSpotifyToken();
-            if (!currentAccessToken) {
-                // Fallback: return data demo jika gagal
-                return [
-                    { name: "Blinding Lights", artist: "The Weeknd", cover: "https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36", id: "0VjIjW4GlUZAMYd2vXMi3b" },
-                    { name: "Flowers", artist: "Miley Cyrus", cover: "https://i.scdn.co/image/ab67616d0000b273cbf7b7f4f9d6f9a3b9c7e9a3", id: "0yLdNVWF3Srea0uzk55zFn" }
-                ];
-            }
-            const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=15`, {
-                headers: { 'Authorization': `Bearer ${currentAccessToken}` }
-            });
+            const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=20&media=music`);
             const data = await response.json();
-            if (!data.tracks || !data.tracks.items) return [];
-            return data.tracks.items.map(track => ({
-                name: track.name,
-                artist: track.artists.map(a => a.name).join(', '),
-                cover: track.album.images[0]?.url || '',
-                id: track.id
+            
+            if (!data.results || data.results.length === 0) return [];
+            
+            return data.results.map(track => ({
+                name: track.trackName,
+                artist: track.artistName,
+                cover: track.artworkUrl100?.replace('100x100', '600x600') || '',
+                id: track.trackId
             }));
         }
 
-        // Ambil lirik dari API Lyrics.ovh
+        // Ambil lirik dari Lyrics.ovh
         async function fetchLyrics(artist, title) {
             try {
-                const cleanArtist = artist.split(',')[0].trim().toLowerCase();
-                const cleanTitle = title.toLowerCase();
+                const cleanArtist = artist.split(' feat')[0].split(' &')[0].trim();
+                const cleanTitle = title.replace(/\([^)]*\)/g, '').trim();
                 const response = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(cleanArtist)}/${encodeURIComponent(cleanTitle)}`);
-                const data = await response.json();
-                if (data.lyrics) return data.lyrics;
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.lyrics) return data.lyrics;
+                }
             } catch(e) { console.warn('Lyrics fetch error'); }
             return null;
         }
 
-        // Backup lirik jika API gagal
         function getFallbackLyrics(songName, artist) {
-            return `${songName} - ${artist}\n\nLirik tidak tersedia untuk lagu ini.\nSilakan edit teks secara manual.\n\n✨ What's Your Mood Today? ✨`;
+            return `✨ ${songName} - ${artist} ✨\n\nKetik atau tempel lirik di sini.\nLirik otomatis tidak tersedia untuk lagu ini.\n\n🎵 What's Your Mood Today? 🎵`;
         }
-
-        // State
-        let currentSongData = null;
-        let selectedLines = [];
-        let allLyricsArray = [];
 
         const screens = {
             1: document.querySelector('.search-form'),
@@ -265,12 +234,13 @@
             3: document.querySelector('.lyrics-results'),
             4: document.querySelector('.final-options')
         };
+        
         function showScreen(num) {
             Object.values(screens).forEach(s => s?.classList.add('hidden'));
             if(screens[num]) screens[num].classList.remove('hidden');
         }
 
-        // Pencarian dengan API Spotify
+        // Pencarian
         document.getElementById('search-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const query = document.getElementById('song-name').value.trim();
@@ -278,7 +248,7 @@
             
             const statusDiv = document.getElementById('search-status');
             statusDiv.className = 'searching';
-            statusDiv.innerHTML = '<span class="loading-spinner"></span> Mencari lagu di Spotify...';
+            statusDiv.innerHTML = '<span class="loading-spinner"></span> Mencari lagu...';
             statusDiv.classList.remove('hidden');
             
             try {
@@ -298,21 +268,17 @@
                     clone.className = 'select-song';
                     clone.innerHTML = `<img src="${song.cover || 'https://placehold.co/200x200?text=No+Cover'}" onerror="this.src='https://placehold.co/200x200?text=No+Cover'"><div><div class="name">${escapeHtml(song.name)}</div><div class="authors">${escapeHtml(song.artist)}</div></div>`;
                     clone.addEventListener('click', async () => {
-                        // Simpan data lagu
                         currentSongData = song;
-                        // Tampilkan loading lirik
                         const lyricsLoading = document.getElementById('lyrics-loading');
                         const linesContainer = document.getElementById('lines-container');
                         lyricsLoading.classList.remove('hidden');
                         linesContainer.innerHTML = '';
                         showScreen(3);
                         
-                        // Update info mini
                         document.getElementById('song-info-mini').querySelector('img').src = song.cover || 'https://placehold.co/200x200?text=No+Cover';
                         document.querySelector('.song-info-name').innerText = song.name;
                         document.querySelector('.song-info-artist').innerText = song.artist;
                         
-                        // Ambil lirik dari API
                         let lyricsText = await fetchLyrics(song.artist, song.name);
                         if(!lyricsText) {
                             lyricsText = getFallbackLyrics(song.name, song.artist);
@@ -335,12 +301,19 @@
                 showScreen(2);
             } catch(err) {
                 statusDiv.className = 'error';
-                statusDiv.innerHTML = '⚠️ Gagal mencari lagu. Coba lagi.';
+                statusDiv.innerHTML = `⚠️ Error: ${err.message}`;
                 console.error(err);
             }
         });
 
-        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m;}); }
+        function escapeHtml(str) { 
+            return str.replace(/[&<>]/g, function(m) { 
+                if(m === '&') return '&amp;'; 
+                if(m === '<') return '&lt;'; 
+                if(m === '>') return '&gt;'; 
+                return m;
+            }); 
+        }
 
         function goToFinal() {
             const selected = Array.from(document.querySelectorAll('.line-item.selected')).map(el => el.innerText);
@@ -350,16 +323,13 @@
             document.getElementById('preview-title').innerText = currentSongData?.name || 'Judul Lagu';
             document.getElementById('preview-artist').innerText = currentSongData?.artist || 'Artis';
             document.getElementById('preview-lyrics').innerHTML = selectedLines.join('<br>');
-            document.getElementById('song-image-preview').style.backgroundColor = '#0a0a0a';
-            document.getElementById('song-image-preview').style.color = '#ffffff';
-            document.getElementById('spotify-tag-img').classList.remove('hidden');
             showScreen(4);
         }
 
         document.querySelector('.go-to-screen[data-number="4"]')?.addEventListener('click', goToFinal);
         document.getElementById('lyrics-fab')?.addEventListener('click', goToFinal);
         document.querySelectorAll('.go-to-screen').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
                 const num = parseInt(btn.getAttribute('data-number'));
                 if(!isNaN(num)) showScreen(num);
             });
@@ -402,13 +372,11 @@
         }
         initSwitch('light-text', (active) => {
             const preview = document.getElementById('song-image-preview');
-            if(active) preview.style.color = '#ffffff';
-            else preview.style.color = '#cccccc';
+            preview.style.color = active ? '#ffffff' : '#cccccc';
         });
         initSwitch('additional-bg', (active) => {
             const preview = document.getElementById('song-image-preview');
-            if(active) preview.style.backgroundColor = '#000000';
-            else preview.style.backgroundColor = '#0a0a0a';
+            preview.style.backgroundColor = active ? '#000000' : '#0a0a0a';
         });
         
         const colorPicker = document.getElementById('custom-color-input');
@@ -426,14 +394,8 @@
         document.getElementById('spotify-tag').classList.add('active');
         document.getElementById('spotify-tag-img').classList.remove('hidden');
         document.getElementById('additional-bg').classList.remove('active');
-        document.getElementById('song-image-preview').style.backgroundColor = '#0a0a0a';
         document.getElementById('light-text').classList.add('active');
-        document.getElementById('song-image-preview').style.color = '#ffffff';
-        
         showScreen(1);
-        
-        // Pre-fetch token di awal
-        getSpotifyToken();
     </script>
 </body>
 </html>
