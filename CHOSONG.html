@@ -108,16 +108,17 @@
 
         .header {
             display: flex;
-            gap: 20px;
+            gap: 16px;
             align-items: center;
             margin-bottom: 28px;
             flex-wrap: wrap;
         }
 
+        /* KECILKAN GAMBAR ALBUM */
         .header img {
-            width: 72px;
-            height: 72px;
-            border-radius: 28px;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
             object-fit: cover;
             border: 2px solid #1a1a1a;
             background: #fff;
@@ -125,46 +126,47 @@
 
         .name {
             font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: -0.5px;
+            font-size: 1.3rem;
+            letter-spacing: -0.3px;
             color: #1a1a1a;
         }
 
         .authors {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: #333;
+            color: #555;
         }
 
         .lyrics {
             white-space: pre-wrap;
-            font-size: 1.1rem;
-            line-height: 1.55;
-            margin: 28px 0 24px;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 24px 0 20px;
             padding: 6px 0;
             font-weight: 500;
             color: #1a1a1a;
         }
 
+        /* LOGO KACHOO PAKAI PNG */
         .kachoo-logo {
             display: flex;
             align-items: center;
             justify-content: flex-start;
             gap: 8px;
-            margin-top: 20px;
-            font-size: 0.85rem;
+            margin-top: 16px;
+            font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: -0.2px;
             color: #1a1a1a;
-            border-top: 1px dashed rgba(0,0,0,0.2);
-            padding-top: 16px;
+            border-top: 1px dashed rgba(0,0,0,0.15);
+            padding-top: 14px;
             width: fit-content;
         }
 
-        .kachoo-logo svg {
-            width: 30px;
-            height: 30px;
-            color: #1a1a1a;
+        .kachoo-logo img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
         }
 
         .line-item.selected {
@@ -252,14 +254,14 @@
             align-items: center;
             gap: 10px;
             background: rgba(26,26,26,0.05);
-            padding: 8px 20px;
+            padding: 6px 18px;
             border-radius: 100px;
             backdrop-filter: blur(4px);
         }
-        .hero-logo svg {
-            width: 36px;
-            height: 36px;
-            color: #1a1a1a;
+        .hero-logo img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
         }
         .hero-logo span {
             font-weight: 700;
@@ -268,17 +270,17 @@
             color: #1a1a1a;
         }
 
-        /* FOOTER STYLE DARI KACHOO OFFICIAL */
+        /* FOOTER STYLE */
         .kachoo-footer {
             background: #000000;
             color: #ffffff;
-            padding: 80px 0 40px;
+            padding: 60px 0 40px;
             margin-top: 60px;
         }
 
         @media (max-width: 768px) {
             .kachoo-footer {
-                padding: 60px 0 40px;
+                padding: 50px 0 40px;
             }
         }
 
@@ -391,16 +393,11 @@
 </head>
 <body>
     <main>
-        <!-- screen 1 : awal dengan motion & logo KACHOO -->
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
                 <div class="hero-logo">
                     <div class="kachoo-symbol">
-                        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="50" cy="50" r="44" stroke="currentColor" fill="none"/>
-                            <path d="M35 38 L65 38 L65 62 L35 62 Z" fill="currentColor" opacity="0.9"/>
-                            <path d="M50 30 L72 50 L50 70 L28 50 Z" fill="#ffffff" stroke="currentColor" stroke-width="1.2"/>
-                        </svg>
+                        <img src="logo-thekachoo.png" alt="Kachoo Logo" onerror="this.src='https://placehold.co/32x32?text=K'">
                         <span>the kachoo</span>
                     </div>
                 </div>
@@ -417,7 +414,6 @@
             </div>
         </section>
 
-        <!-- screen 2 : hasil pencarian lagu -->
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
                 <header>
@@ -428,7 +424,6 @@
             </div>
         </section>
 
-        <!-- screen 3 : pilih baris lirik -->
         <section class="lyrics-image-screen hidden lyrics-results" data-number="3">
             <div class="screen-wrapper">
                 <header>
@@ -437,7 +432,7 @@
                     <button class="go-to-screen right material-symbols-outlined" data-number="4" id="nextToFinalBtn">arrow_forward</button>
                 </header>
                 <div class="song-info-display" id="song-info-mini" style="display: flex; gap: 18px; background: #f5f5f7; border-radius: 40px; padding: 14px 22px; margin-bottom: 20px;">
-                    <img src="" alt="cover" style="width: 56px; height: 56px; border-radius: 24px; border: 1px solid black;">
+                    <img src="" alt="cover" style="width: 48px; height: 48px; border-radius: 16px; border: 1px solid black;">
                     <div><div class="song-info-name" style="font-weight: 800;"></div><div class="song-info-artist" style="opacity: 0.7;"></div></div>
                 </div>
                 <div id="lyrics-loading" class="hidden searching"><span class="loading-spinner"></span> mengambil lirik ...</div>
@@ -446,7 +441,6 @@
             <button class="fab" id="lyrics-fab"><span class="material-symbols-outlined">arrow_forward</span></button>
         </section>
 
-        <!-- screen 4 : final design gambar transparan -->
         <section class="lyrics-image-screen hidden final-options" data-number="4">
             <div class="screen-wrapper" style="background: rgba(255,255,245,0.92);">
                 <header style="margin-bottom: 24px;">
@@ -457,7 +451,7 @@
 
                 <div id="song-image-preview" class="song-image" style="background: transparent !important; border-radius: 56px; padding: 28px 28px; box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);">
                     <div class="header">
-                        <img src="" alt="album cover" id="preview-cover" style="border-radius: 32px;">
+                        <img src="" alt="album cover" id="preview-cover" style="border-radius: 16px; width: 48px; height: 48px;">
                         <div>
                             <div class="name" id="preview-title" contenteditable="true">Judul Lagu</div>
                             <div class="authors" id="preview-artist" contenteditable="true">Artis</div>
@@ -465,11 +459,7 @@
                     </div>
                     <div class="lyrics" id="preview-lyrics" contenteditable="true"></div>
                     <div class="kachoo-logo" id="kachoo-tag-img">
-                        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="50" cy="50" r="44" stroke="currentColor" fill="none"/>
-                            <path d="M35 38 L65 38 L65 62 L35 62 Z" fill="currentColor" opacity="0.9"/>
-                            <path d="M50 30 L72 50 L50 70 L28 50 Z" fill="#ffffff" stroke="currentColor" stroke-width="1.2"/>
-                        </svg>
+                        <img src="logo-thekachoo.png" alt="Kachoo" onerror="this.src='https://placehold.co/24x24?text=K'">
                         <span>the kachoo</span>
                     </div>
                 </div>
@@ -510,7 +500,6 @@
         </section>
     </main>
 
-    <!-- FOOTER DARI KACHOO OFFICIAL -->
     <footer class="kachoo-footer">
         <div class="footer-container">
             <div class="footer-content">
@@ -523,6 +512,7 @@
                     </div>
                 </div>
                 <div class="footer-section">
+
                     <h3>Contact</h3>
                     <ul class="footer-links">
                         <li><span class="x-logo" style="color: #000000; background: white; border-radius: 3px; padding: 2px 4px; font-size: 14px; margin-right: 8px;">𝕏</span><a href="https://twitter.com/TheKachoo" target="_blank">@TheKachoo (Official)</a></li>
@@ -705,7 +695,6 @@
             const artistElem = document.getElementById('preview-artist');
             const logoDiv = document.getElementById('kachoo-tag-img');
             const logoSpan = logoDiv?.querySelector('span');
-            const logoSvg = logoDiv?.querySelector('svg');
             
             const originalLyricsColor = lyricsElem.style.color;
             const originalTitleColor = titleElem.style.color;
@@ -716,7 +705,6 @@
             titleElem.style.color = textColor;
             artistElem.style.color = textColor;
             if(logoSpan) logoSpan.style.color = textColor;
-            if(logoSvg) logoSvg.setAttribute('stroke', textColor);
             
             const kachooSwitch = document.getElementById('kachoo-tag');
             const showLogo = kachooSwitch.classList.contains('active');
@@ -734,13 +722,12 @@
                 logging: false,
                 allowTaint: false
             }).then(canvas => {
-                canvas.toBlob(blob => { saveAs(blob, `kachoo_${currentSongData?.name || 'lyrics'}.png`); });
+                canvas.toBlob(blob => { saveAs(blob, `chosong_${currentSongData?.name || 'lyrics'}.png`); });
                 previewContainer.style.width = originalWidth;
                 lyricsElem.style.color = originalLyricsColor || '';
                 titleElem.style.color = originalTitleColor || '';
                 artistElem.style.color = originalArtistColor || '';
                 if(logoSpan) logoSpan.style.color = originalSpanColor || '#1a1a1a';
-                if(logoSvg) logoSvg.setAttribute('stroke', '#1a1a1a');
                 if(!useSolidBg) previewContainer.style.backgroundColor = 'transparent';
                 if(wasHidden && showLogo) logoDiv.classList.add('hidden');
                 else if(!wasHidden && !showLogo) logoDiv.classList.remove('hidden');
@@ -789,8 +776,6 @@
             document.getElementById('preview-artist').style.color = col;
             const spanLogo = document.querySelector('#kachoo-tag-img span');
             if(spanLogo) spanLogo.style.color = col;
-            const svgLogo = document.querySelector('#kachoo-tag-img svg');
-            if(svgLogo) svgLogo.setAttribute('stroke', col);
         });
         
         document.getElementById('kachoo-tag').classList.add('active');
