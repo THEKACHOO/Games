@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Kachoo - Ruang Menulis | Hari Buku & Hak Cipta</title>
+  <title>Ruang Menulis Kachoo</title>
   <!-- html2canvas -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <!-- Google Fonts: Outfit -->
@@ -35,7 +35,7 @@
       align-items: center;
     }
 
-    /* HEADER: logo kecil di tengah atas */
+    /* HEADER: hanya logo kecil di tengah atas (tanpa tulisan Kachoo) */
     .header-section {
       text-align: center;
       margin-bottom: 32px;
@@ -54,14 +54,6 @@
       width: auto;
       display: block;
       filter: grayscale(100%) brightness(0);
-    }
-    .logo-text {
-      font-size: 1.2rem;
-      font-weight: 500;
-      letter-spacing: 1px;
-      color: #000000;
-      font-family: 'Outfit', sans-serif;
-      margin-bottom: 6px;
     }
     .main-title {
       font-size: 1.5rem;
@@ -139,7 +131,7 @@
       font-size: 0.8rem;
     }
 
-    /* TOOLBAR: FONT + BOLD/ITALIC/UNDERLINE */
+    /* TOOLBAR: FONT + STYLE + ALIGNMENT */
     .toolbar-group {
       width: 100%;
       display: flex;
@@ -177,8 +169,9 @@
     }
     .text-style-buttons {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .style-btn {
       background: #FFFFFF;
@@ -277,12 +270,11 @@
 </head>
 <body>
 <div class="app-wrapper">
-  <!-- HEADER -->
+  <!-- HEADER: hanya logo kecil tengah atas (tanpa tulisan Kachoo) -->
   <div class="header-section">
     <div class="logo-kecil">
-      <img src="https://kachoo.my.id/assets/logo/thekachoo.png" alt="Kachoo" class="logo-img" onerror="this.style.display='none'">
+      <img src="logo-thekachoo.png" alt="Kachoo" class="logo-img" onerror="this.style.display='none'">
     </div>
-    <div class="logo-text">Kachoo</div>
     <div class="main-title">Selamat Hari Buku dan Hak Cipta Sedunia!</div>
   </div>
 
@@ -308,11 +300,11 @@
       </ul>
     </div>
     <div class="reminder">
-      <span>✎ Jangan lupa isi namamu (IC atau Writer name) di footer kertas (tengah bawah kolom).</span>
+      <span>Jangan lupa isi namamu (IC atau Writer name) di footer kertas (tengah bawah kolom).</span>
     </div>
   </div>
 
-  <!-- TOOLBAR: FONT + BOLD/ITALIC/UNDERLINE -->
+  <!-- TOOLBAR: FONT + STYLE + ALIGNMENT -->
   <div class="toolbar-group">
     <div class="font-selector-group">
       <label>PILIH FONT</label>
@@ -330,13 +322,16 @@
       <button type="button" id="boldBtn" class="style-btn">B</button>
       <button type="button" id="italicBtn" class="style-btn">I</button>
       <button type="button" id="underlineBtn" class="style-btn">U</button>
+      <button type="button" id="alignLeftBtn" class="style-btn">⬅ Kiri</button>
+      <button type="button" id="alignCenterBtn" class="style-btn">Tengah</button>
+      <button type="button" id="alignRightBtn" class="style-btn">Kanan ➡</button>
     </div>
   </div>
 
   <!-- RICH TEXT EDITOR (contenteditable) -->
   <div class="editor-container">
     <div id="richEditor" class="rich-editor" contenteditable="true"></div>
-    <div class="word-stats" id="wordCounter">0 kata | 0 halaman (batas 300 kata/halaman)</div>
+    <div class="word-stats" id="wordCounter">0 kata | 0 halaman</div>
   </div>
 
   <!-- TOMBOL UNDUH DI BAWAH -->
@@ -352,10 +347,10 @@
     const captureBtn = document.getElementById('captureBtn');
     const wordCounterSpan = document.getElementById('wordCounter');
     
-    // === INISIALISASI DEFAULT TEKS ===
+    // === INISIALISASI DEFAULT ===
     editor.innerHTML = `<p>Tumpahkan karyamu disini...</p>`;
     
-    // === FUNGSI HITUNG KATA (dari teks biasa) ===
+    // === HITUNG KATA ===
     function getPlainTextFromEditor() {
       const temp = document.createElement('div');
       temp.innerHTML = editor.innerHTML;
@@ -371,7 +366,7 @@
       const plain = getPlainTextFromEditor();
       const words = countWords(plain);
       const pages = Math.max(1, Math.ceil(words / 300));
-      wordCounterSpan.innerHTML = `${words} kata | ${pages} halaman (batas 300 kata/halaman)`;
+      wordCounterSpan.innerHTML = `${words} kata | ${pages} halaman`;
     }
     
     editor.addEventListener('input', updateWordCounter);
@@ -388,7 +383,7 @@
     });
     applyFontToEditor(currentFontFamily);
     
-    // === BOLD / ITALIC / UNDERLINE (menggunakan document.execCommand agar sesuai selection) ===
+    // === BOLD / ITALIC / UNDERLINE ===
     const boldBtn = document.getElementById('boldBtn');
     const italicBtn = document.getElementById('italicBtn');
     const underlineBtn = document.getElementById('underlineBtn');
@@ -415,12 +410,24 @@
       setActiveButtonState();
     });
     
+    // === ALIGNMENT: KIRI, TENGAH, KANAN ===
+    const alignLeftBtn = document.getElementById('alignLeftBtn');
+    const alignCenterBtn = document.getElementById('alignCenterBtn');
+    const alignRightBtn = document.getElementById('alignRightBtn');
+    
+    function setAlign(alignment) {
+      document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1), false, null);
+      editor.focus();
+    }
+    
+    alignLeftBtn.addEventListener('click', () => setAlign('left'));
+    alignCenterBtn.addEventListener('click', () => setAlign('center'));
+    alignRightBtn.addEventListener('click', () => setAlign('right'));
+    
     editor.addEventListener('keyup', setActiveButtonState);
     editor.addEventListener('mouseup', setActiveButtonState);
     
-    // === INPUT NAMA PENULIS (DI TENGAH BAWAH KOLOM / FOOTER KERTAS) ===
-    // Kita buat input di dalam footer saat capture, tetapi untuk UI global kita sediakan input tersembunyi atau di luar?
-    // Agar user bisa mengisi nama dengan mudah, kita buat input kecil di bawah toolbar (tapi nanti akan muncul di footer setiap halaman)
+    // === INPUT NAMA PENULIS (DI TENGAH BAWAH) ===
     const authorInputWrapper = document.createElement('div');
     authorInputWrapper.style.marginTop = '16px';
     authorInputWrapper.style.width = '100%';
@@ -442,43 +449,18 @@
     authorField.style.width = '260px';
     authorInputWrapper.appendChild(authorLabel);
     authorInputWrapper.appendChild(authorField);
-    // sisipkan setelah toolbar group
     const toolbarGroup = document.querySelector('.toolbar-group');
     toolbarGroup.parentNode.insertBefore(authorInputWrapper, toolbarGroup.nextSibling);
     
     let globalAuthorName = authorField.value;
     authorField.addEventListener('input', (e) => { globalAuthorName = e.target.value; });
     
-    // === MEMBAGI TEKS PER 300 KATA (berdasarkan teks biasa) ===
-    function splitTextIntoPages(fullText, wordsPerPage = 300) {
-      if (!fullText.trim()) return [];
-      const words = fullText.trim().split(/\s+/);
-      const pages = [];
-      for (let i = 0; i < words.length; i += wordsPerPage) {
-        const pageWords = words.slice(i, i + wordsPerPage);
-        pages.push(pageWords.join(' '));
-      }
-      return pages;
-    }
-    
-    // === MEMBUAT HALAMAN KERTAS UNTUK CAPTURE ===
-    // ukuran 800x900, font 20px di tengah, tanpa border, format HTML sama persis (bold/italic/underline ikut dari editor)
-    // Karena kita perlu mempertahankan style teks (bold/italic/underline) dan posisi tengah, kita akan mengambil HTML dari editor,
-    // lalu membaginya per kata secara cerdas? Tidak, karena tag HTML bisa rusak jika dipotong tengah.
-    // Solusi: kita gunakan pendekatan clone editor, tampilkan teks dengan style lengkap, lalu bagi halaman berdasarkan ketinggian konten? 
-    // TAPI itu rumit. Karena permintaan: "text beserta desain text (font, bold, italic, underline) harus sama persis dgn hasil gambar"
-    // dan "apabila ada enter ke bawah, ikuti sama persis" maka kita perlu mempertahankan struktur HTML.
-    // Cara paling aman: kita buat banyak halaman dengan cara memotong paragraf / blok teks berdasarkan perkiraan 300 kata, 
-    // namun tetap mempertahankan tag. Untuk menjaga format, kita akan split berdasarkan kata tetapi tetap membungkus dalam div dengan style yang diwarisi.
-    // Karena HTML editor bisa berisi <p>, <div>, <b>, <i>, <u>, kita akan ekstrak teks + simpan struktur asli? tidak sederhana.
-    // Pendekatan: kita akan gunakan clone dari editor, ambil innerHTML, lalu potong per 300 kata dengan tetap menjaga integritas tag (menggunakan fungsi yang mempertahankan formatting)
-    // Fungsi truncateHTMLByWords: memotong HTML berdasarkan jumlah kata tanpa merusak tag.
+    // === MEMBAGI HTML BERDASARKAN 300 KATA ===
     function truncateHTMLByWords(html, wordLimit) {
       const container = document.createElement('div');
       container.innerHTML = html;
       let wordCount = 0;
       const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
-      const nodesToRemove = [];
       let exceeded = false;
       while (walker.nextNode()) {
         const node = walker.currentNode;
@@ -488,7 +470,6 @@
         if (wordCount + words.length <= wordLimit) {
           wordCount += words.length;
         } else {
-          // potong teks pada node ini
           let soFar = 0;
           let newText = '';
           for (let i = 0; i < words.length; i++) {
@@ -501,13 +482,11 @@
           }
           node.textContent = newText;
           wordCount = wordLimit;
-          // tandai node selanjutnya untuk dihapus
           exceeded = true;
           break;
         }
       }
       if (exceeded) {
-        // hapus semua node teks setelah batas
         let after = false;
         const walker2 = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
         while (walker2.nextNode()) {
@@ -521,7 +500,6 @@
     }
     
     function getRemainingHTML(html, startFromWord) {
-      // fungsi untuk mengambil html mulai dari kata ke sekian
       const container = document.createElement('div');
       container.innerHTML = html;
       let wordIdx = 0;
@@ -552,7 +530,6 @@
       return container.innerHTML;
     }
     
-    // Membagi HTML utuh menjadi beberapa page berdasarkan batas 300 kata
     function splitHtmlIntoPages(fullHtml, wordsPerPage = 300) {
       const plainText = getPlainTextFromEditor();
       const totalWords = countWords(plainText);
@@ -560,7 +537,6 @@
       const pagesHtml = [];
       let startWord = 0;
       while (startWord < totalWords) {
-        const endWord = Math.min(startWord + wordsPerPage, totalWords);
         let pageHtml;
         if (startWord === 0) {
           pageHtml = truncateHTMLByWords(fullHtml, wordsPerPage);
@@ -569,12 +545,12 @@
           pageHtml = truncateHTMLByWords(pageHtml, wordsPerPage);
         }
         pagesHtml.push(pageHtml);
-        startWord = endWord;
+        startWord += wordsPerPage;
       }
       return pagesHtml;
     }
     
-    // Membuat elemen kertas untuk satu halaman (font 20px, posisi tengah, tanpa border)
+    // === MEMBUAT HALAMAN KERTAS DENGAN LOGO DI POJOK KIRI ATAS ===
     function createPaperPageFromHTML(contentHtml, pageNumber, totalPages, authorName, fontFamily) {
       const paperDiv = document.createElement('div');
       paperDiv.style.width = '800px';
@@ -590,20 +566,41 @@
       paperDiv.style.fontFamily = fontFamily;
       paperDiv.style.display = 'flex';
       paperDiv.style.flexDirection = 'column';
-      paperDiv.style.justifyContent = 'center'; // pusat vertikal
-      paperDiv.style.alignItems = 'center';
+      paperDiv.style.position = 'relative';
       
+      // LOGO KECIL DI POJOK KIRI ATAS (absolute)
+      const logoTopLeft = document.createElement('img');
+      logoTopLeft.src = 'logo-thekachoo.png';
+      logoTopLeft.alt = 'Kachoo';
+      logoTopLeft.style.position = 'absolute';
+      logoTopLeft.style.top = '16px';
+      logoTopLeft.style.left = '20px';
+      logoTopLeft.style.width = '28px';
+      logoTopLeft.style.height = 'auto';
+      logoTopLeft.style.filter = 'grayscale(100%) brightness(0)';
+      logoTopLeft.style.opacity = '0.7';
+      logoTopLeft.onerror = function() { this.style.display = 'none'; };
+      paperDiv.appendChild(logoTopLeft);
+      
+      // KONTEN UTAMA (pusat vertikal)
       const contentWrapper = document.createElement('div');
+      contentWrapper.style.flex = '1';
+      contentWrapper.style.display = 'flex';
+      contentWrapper.style.flexDirection = 'column';
+      contentWrapper.style.justifyContent = 'center';
       contentWrapper.style.width = '100%';
-      contentWrapper.style.maxWidth = '680px';
-      contentWrapper.style.fontSize = '20px';
-      contentWrapper.style.lineHeight = '1.5';
-      contentWrapper.style.color = '#000000';
-      contentWrapper.style.fontFamily = 'inherit';
-      contentWrapper.style.textAlign = 'left';
-      contentWrapper.innerHTML = contentHtml;
       
-      // footer copyright (tengah bawah)
+      const textDiv = document.createElement('div');
+      textDiv.style.width = '100%';
+      textDiv.style.maxWidth = '680px';
+      textDiv.style.margin = '0 auto';
+      textDiv.style.fontSize = '20px';
+      textDiv.style.lineHeight = '1.5';
+      textDiv.style.color = '#000000';
+      textDiv.style.fontFamily = 'inherit';
+      textDiv.innerHTML = contentHtml;
+      
+      // FOOTER COPYRIGHT (tengah bawah)
       const footerDiv = document.createElement('div');
       footerDiv.style.width = '100%';
       footerDiv.style.textAlign = 'center';
@@ -616,16 +613,10 @@
       const authorDisplay = authorName && authorName.trim() !== '' ? authorName : 'Tanpa Nama';
       footerDiv.innerHTML = `<span>© </span>${escapeHtml(authorDisplay)}`;
       
-      const innerContainer = document.createElement('div');
-      innerContainer.style.flex = '1';
-      innerContainer.style.display = 'flex';
-      innerContainer.style.flexDirection = 'column';
-      innerContainer.style.justifyContent = 'center';
-      innerContainer.style.width = '100%';
-      innerContainer.appendChild(contentWrapper);
-      innerContainer.appendChild(footerDiv);
+      contentWrapper.appendChild(textDiv);
+      contentWrapper.appendChild(footerDiv);
+      paperDiv.appendChild(contentWrapper);
       
-      paperDiv.appendChild(innerContainer);
       return paperDiv;
     }
     
@@ -639,7 +630,7 @@
       });
     }
     
-    // === PROSES DOWNLOAD MULTI HALAMAN ===
+    // === DOWNLOAD MULTI HALAMAN ===
     async function downloadMultiPagePng() {
       const fullHtml = editor.innerHTML;
       const plainFull = getPlainTextFromEditor();
@@ -713,15 +704,12 @@
     
     captureBtn.addEventListener('click', downloadMultiPagePng);
     
-    // handle logo error
-    const logoImg = document.querySelector('.logo-img');
-    if (logoImg) {
-      logoImg.onerror = function() { this.style.display = 'none'; };
+    // handle logo error di header
+    const headerLogo = document.querySelector('.header-section .logo-img');
+    if (headerLogo) {
+      headerLogo.onerror = function() { this.style.display = 'none'; };
     }
-    
-    // set initial editor font
-    editor.style.fontFamily = currentFontFamily;
   })();
 </script>
 </body>
-  </html>
+</html>
