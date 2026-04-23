@@ -46,12 +46,11 @@
       justify-content: center;
       margin-bottom: 8px;
     }
-    .logo-teks {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: 4px;
-      color: #000000;
-      font-family: 'Outfit', sans-serif;
+    .logo-img {
+      height: 48px;
+      width: auto;
+      display: block;
+      filter: grayscale(100%) brightness(0);
     }
     .main-title {
       font-size: 1.5rem;
@@ -231,7 +230,6 @@
     .rich-editor:focus {
       border-color: #000000;
     }
-    /* Style untuk paragraf di editor */
     .rich-editor p {
       margin-bottom: 1em;
     }
@@ -273,6 +271,9 @@
       .rich-editor {
         padding: 16px;
       }
+      .logo-img {
+        height: 36px;
+      }
       .main-title {
         font-size: 1.2rem;
       }
@@ -286,7 +287,7 @@
 <div class="app-wrapper">
   <div class="header-section">
     <div class="logo-kecil">
-      <div class="logo-teks">KACHOO</div>
+      <img src="logo-thekachoo.png" alt="Kachoo" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:32px; font-weight:bold; letter-spacing:4px;\'>KACHOO</div>'">
     </div>
     <div class="main-title">Selamat Hari Buku dan Hak Cipta Sedunia!</div>
   </div>
@@ -363,48 +364,30 @@
     const captureBtn = document.getElementById('captureBtn');
     const wordCounterSpan = document.getElementById('wordCounter');
     
-    // DEFAULT: buat paragraf pertama
     editor.innerHTML = `<p>Tumpahkan karyamu disini...</p>`;
     
-    // === FUNGSI UNTUK MENERAPKAN UKURAN FONT PER PARAGRAF ===
-    // Mengubah ukuran font pada paragraf yang sedang terpilih / berisi cursor
+    // TERAPKAN UKURAN PER PARAGRAF
     function applyFontSizeToSelectedParagraph(size) {
       const selection = window.getSelection();
       if (!selection.rangeCount) return;
       
       const range = selection.getRangeAt(0);
       let container = range.commonAncestorContainer;
-      
-      // Cari elemen paragraf (p) atau heading
       let paragraph = null;
+      
       if (container.nodeType === Node.TEXT_NODE) {
         paragraph = container.parentElement.closest('p, div, h1, h2, h3, h4');
       } else {
         paragraph = container.closest('p, div, h1, h2, h3, h4');
       }
       
-      // Jika tidak ada paragraf, cari block terdekat atau buat span
-      if (!paragraph) {
-        if (container.nodeType === Node.TEXT_NODE) {
-          paragraph = container.parentElement;
-        } else {
-          paragraph = container;
-        }
-      }
-      
       if (paragraph) {
         paragraph.style.fontSize = size + 'px';
-        // Tandai bahwa ini custom size
-        paragraph.setAttribute('data-custom-size', 'true');
-      } else {
-        // Fallback: buat span di sekitar selection
-        const span = document.createElement('span');
-        span.style.fontSize = size + 'px';
-        range.surroundContents(span);
+      } else if (container.nodeType === Node.TEXT_NODE) {
+        container.parentElement.style.fontSize = size + 'px';
       }
     }
     
-    // Slider untuk mengubah ukuran paragraf yang sedang aktif
     fontSizeSlider.addEventListener('input', (e) => {
       const newSize = e.target.value;
       fontSizeValue.textContent = newSize;
@@ -412,7 +395,7 @@
       editor.focus();
     });
     
-    // === HITUNG KATA (120 kata per halaman) ===
+    // HITUNG KATA (120 per halaman)
     function getPlainTextFromEditor() {
       const temp = document.createElement('div');
       temp.innerHTML = editor.innerHTML;
@@ -435,18 +418,15 @@
     editor.addEventListener('keyup', updateWordCounter);
     updateWordCounter();
     
-    // === FONT GLOBAL ===
+    // FONT GLOBAL
     let currentFontFamily = "'Outfit', sans-serif";
-    function applyFontToEditor(font) {
-      editor.style.fontFamily = font;
-    }
     fontSelector.addEventListener('change', (e) => {
       currentFontFamily = e.target.value;
-      applyFontToEditor(currentFontFamily);
+      editor.style.fontFamily = currentFontFamily;
     });
-    applyFontToEditor(currentFontFamily);
+    editor.style.fontFamily = currentFontFamily;
     
-    // === BOLD, ITALIC, UNDERLINE ===
+    // BOLD, ITALIC, UNDERLINE
     const boldBtn = document.getElementById('boldBtn');
     const italicBtn = document.getElementById('italicBtn');
     const underlineBtn = document.getElementById('underlineBtn');
@@ -473,7 +453,7 @@
       setActiveButtonState();
     });
     
-    // === ALIGNMENT ===
+    // ALIGNMENT
     const alignLeftBtn = document.getElementById('alignLeftBtn');
     const alignCenterBtn = document.getElementById('alignCenterBtn');
     const alignRightBtn = document.getElementById('alignRightBtn');
@@ -490,7 +470,7 @@
     editor.addEventListener('keyup', setActiveButtonState);
     editor.addEventListener('mouseup', setActiveButtonState);
     
-    // === INPUT NAMA PENULIS ===
+    // INPUT NAMA PENULIS
     const authorInputWrapper = document.createElement('div');
     authorInputWrapper.style.marginTop = '16px';
     authorInputWrapper.style.width = '100%';
@@ -502,7 +482,6 @@
     authorLabel.style.marginRight = '8px';
     const authorField = document.createElement('input');
     authorField.type = 'text';
-    authorField.id = 'globalAuthorField';
     authorField.placeholder = 'Nama penulis / IC / Writer name';
     authorField.value = 'Penulis Kachoo';
     authorField.style.border = '1px solid #000000';
@@ -518,103 +497,24 @@
     let globalAuthorName = authorField.value;
     authorField.addEventListener('input', (e) => { globalAuthorName = e.target.value; });
     
-    // === MEMBAGI HTML PER 120 KATA (mempertahankan style per paragraf) ===
-    function truncateHTMLByWords(html, wordLimit) {
-      const container = document.createElement('div');
-      container.innerHTML = html;
-      let wordCount = 0;
-      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
-      let lastNode = null;
-      while (walker.nextNode()) {
-        const node = walker.currentNode;
-        const text = node.textContent;
-        const words = text.split(/\s+/).filter(w => w.length > 0);
-        const remaining = wordLimit - wordCount;
-        if (wordCount + words.length <= wordLimit) {
-          wordCount += words.length;
-        } else {
-          let soFar = 0;
-          let newText = '';
-          for (let i = 0; i < words.length; i++) {
-            if (soFar < remaining) {
-              newText += (soFar === 0 ? '' : ' ') + words[i];
-              soFar++;
-            } else {
-              break;
-            }
-          }
-          node.textContent = newText;
-          wordCount = wordLimit;
-          lastNode = node;
-          break;
-        }
-      }
-      if (lastNode) {
-        let after = false;
-        const walker2 = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
-        while (walker2.nextNode()) {
-          if (after) {
-            walker2.currentNode.textContent = '';
-          }
-          if (walker2.currentNode === lastNode) after = true;
-        }
-      }
-      return container.innerHTML;
-    }
-    
-    function getRemainingHTML(html, startFromWord) {
-      const container = document.createElement('div');
-      container.innerHTML = html;
-      let wordIdx = 0;
-      let started = false;
-      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
-      while (walker.nextNode()) {
-        const node = walker.currentNode;
-        const text = node.textContent;
-        const words = text.split(/\s+/);
-        if (!started) {
-          let cumulative = 0;
-          let newText = '';
-          for (let i = 0; i < words.length; i++) {
-            if (wordIdx + cumulative >= startFromWord) {
-              started = true;
-              newText += (newText ? ' ' : '') + words[i];
-            } else {
-              cumulative++;
-            }
-          }
-          node.textContent = newText;
-          wordIdx += cumulative;
-        }
-        if (!started) {
-          node.textContent = '';
-        }
-      }
-      return container.innerHTML;
-    }
-    
+    // MEMBAGI HTML PER 120 KATA
     function splitHtmlIntoPages(fullHtml, wordsPerPage = 120) {
       const plainText = getPlainTextFromEditor();
       const totalWords = countWords(plainText);
       if (totalWords === 0) return [];
-      const pagesHtml = [];
-      let startWord = 0;
-      while (startWord < totalWords) {
-        let pageHtml;
-        if (startWord === 0) {
-          pageHtml = truncateHTMLByWords(fullHtml, wordsPerPage);
-        } else {
-          pageHtml = getRemainingHTML(fullHtml, startWord);
-          pageHtml = truncateHTMLByWords(pageHtml, wordsPerPage);
-        }
-        pagesHtml.push(pageHtml);
-        startWord += wordsPerPage;
+      
+      // Sederhana: bagi berdasarkan kata
+      const words = plainText.split(/\s+/);
+      const pages = [];
+      for (let i = 0; i < words.length; i += wordsPerPage) {
+        const pageWords = words.slice(i, i + wordsPerPage);
+        pages.push(pageWords.join(' '));
       }
-      return pagesHtml;
+      return pages;
     }
     
-    // === MEMBUAT HALAMAN KERTAS ===
-    function createPaperPageFromHTML(contentHtml, pageNumber, totalPages, authorName, fontFamily) {
+    // MEMBUAT HALAMAN KERTAS
+    function createPaperPageFromHTML(contentText, authorName, fontFamily) {
       const paperDiv = document.createElement('div');
       paperDiv.style.width = '800px';
       paperDiv.style.height = '900px';
@@ -631,18 +531,18 @@
       paperDiv.style.flexDirection = 'column';
       paperDiv.style.position = 'relative';
       
-      // LOGO KACHOO pojok kiri atas
-      const logoTopLeft = document.createElement('div');
-      logoTopLeft.innerText = 'KACHOO';
+      // LOGO KIRI ATAS
+      const logoTopLeft = document.createElement('img');
+      logoTopLeft.src = 'logo-thekachoo.png';
+      logoTopLeft.alt = 'Kachoo';
       logoTopLeft.style.position = 'absolute';
       logoTopLeft.style.top = '16px';
       logoTopLeft.style.left = '20px';
-      logoTopLeft.style.fontSize = '12px';
-      logoTopLeft.style.fontWeight = '600';
-      logoTopLeft.style.letterSpacing = '2px';
-      logoTopLeft.style.color = '#000000';
-      logoTopLeft.style.fontFamily = fontFamily;
-      logoTopLeft.style.opacity = '0.6';
+      logoTopLeft.style.width = '28px';
+      logoTopLeft.style.height = 'auto';
+      logoTopLeft.style.filter = 'grayscale(100%) brightness(0)';
+      logoTopLeft.style.opacity = '0.7';
+      logoTopLeft.onerror = function() { this.style.display = 'none'; };
       paperDiv.appendChild(logoTopLeft);
       
       // KONTEN
@@ -657,11 +557,12 @@
       textDiv.style.width = '100%';
       textDiv.style.maxWidth = '680px';
       textDiv.style.margin = '0 auto';
+      textDiv.style.fontSize = '16px';
       textDiv.style.lineHeight = '1.5';
       textDiv.style.color = '#000000';
       textDiv.style.fontFamily = 'inherit';
-      // UKURAN FONT akan dipertahankan dari HTML asli (sudah ada inline style)
-      textDiv.innerHTML = contentHtml;
+      textDiv.style.whiteSpace = 'pre-wrap';
+      textDiv.innerText = contentText;
       
       // FOOTER
       const footerDiv = document.createElement('div');
@@ -674,7 +575,12 @@
       footerDiv.style.fontFamily = 'inherit';
       footerDiv.style.color = '#000000';
       const authorDisplay = authorName && authorName.trim() !== '' ? authorName : 'Tanpa Nama';
-      footerDiv.innerHTML = `<span>© </span>${escapeHtml(authorDisplay)}`;
+      footerDiv.innerHTML = `<span>© </span>${authorDisplay.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      })}`;
       
       contentWrapper.appendChild(textDiv);
       contentWrapper.appendChild(footerDiv);
@@ -683,42 +589,29 @@
       return paperDiv;
     }
     
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
-    }
-    
-    // === DOWNLOAD ===
+    // DOWNLOAD
     async function downloadMultiPagePng() {
-      const fullHtml = editor.innerHTML;
-      const plainFull = getPlainTextFromEditor();
-      const totalWords = countWords(plainFull);
+      const plainText = getPlainTextFromEditor();
+      const totalWords = countWords(plainText);
       if (totalWords === 0) {
         alert("Tulis sesuatu terlebih dahulu.");
         return;
       }
       
-      const pagesHtml = splitHtmlIntoPages(fullHtml, 120);
-      if (pagesHtml.length === 0) return;
+      const pagesText = splitHtmlIntoPages(plainText, 120);
+      if (pagesText.length === 0) return;
       
-      if (pagesHtml.length > 10) {
-        const confirm = window.confirm(`Teks Anda akan terbagi menjadi ${pagesHtml.length} halaman. Lanjutkan download?`);
-        if (!confirm) return;
+      if (pagesText.length > 10) {
+        if (!confirm(`Teks Anda akan terbagi menjadi ${pagesText.length} halaman. Lanjutkan download?`)) return;
       }
       
       captureBtn.innerText = "MEMPROSES...";
       captureBtn.disabled = true;
       
       try {
-        const allCanvases = [];
-        for (let i = 0; i < pagesHtml.length; i++) {
-          const pageContent = pagesHtml[i];
-          const pageDiv = createPaperPageFromHTML(pageContent, i+1, pagesHtml.length, globalAuthorName, currentFontFamily);
+        for (let i = 0; i < pagesText.length; i++) {
+          const pageText = pagesText[i];
+          const pageDiv = createPaperPageFromHTML(pageText, globalAuthorName, currentFontFamily);
           pageDiv.style.position = 'absolute';
           pageDiv.style.top = '-9999px';
           pageDiv.style.left = '-9999px';
@@ -741,21 +634,17 @@
           finalCanvas.height = 900;
           const ctx = finalCanvas.getContext('2d');
           ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 800, 900);
-          allCanvases.push(finalCanvas);
-        }
-        
-        for (let idx = 0; idx < allCanvases.length; idx++) {
-          const canvasImg = allCanvases[idx];
+          
           const link = document.createElement('a');
           const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '-');
-          const pageNum = (idx + 1).toString().padStart(2, '0');
+          const pageNum = (i + 1).toString().padStart(2, '0');
           link.download = `karyakachoo_${timestamp}_halaman_${pageNum}.png`;
-          link.href = canvasImg.toDataURL('image/png');
+          link.href = finalCanvas.toDataURL('image/png');
           link.click();
           await new Promise(r => setTimeout(r, 200));
         }
         
-        alert(`Berhasil menyimpan ${allCanvases.length} halaman sebagai PNG.`);
+        alert(`Berhasil menyimpan ${pagesText.length} halaman sebagai PNG.`);
       } catch (err) {
         console.error(err);
         alert("Gagal menghasilkan gambar: " + err.message);
@@ -767,7 +656,7 @@
     
     captureBtn.addEventListener('click', downloadMultiPagePng);
     
-    // Enter untuk membuat paragraf baru
+    // ENTER UNTUK PARAGRAF BARU
     editor.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         document.execCommand('insertParagraph', false, null);
@@ -777,4 +666,4 @@
   })();
 </script>
 </body>
-</html>
+          </html>
