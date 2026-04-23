@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Ruang Menulis Kachoo</title>
-  <!-- html2canvas -->
+  <title>Kachoo - Ruang Menulis | Hari Buku & Hak Cipta</title>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <!-- Google Fonts: Outfit -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -35,7 +33,6 @@
       align-items: center;
     }
 
-    /* HEADER: hanya logo kecil di tengah atas (tanpa tulisan Kachoo) */
     .header-section {
       text-align: center;
       margin-bottom: 32px;
@@ -49,11 +46,12 @@
       justify-content: center;
       margin-bottom: 8px;
     }
-    .logo-img {
-      height: 36px;
-      width: auto;
-      display: block;
-      filter: grayscale(100%) brightness(0);
+    .logo-teks {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #000000;
+      font-family: 'Outfit', sans-serif;
     }
     .main-title {
       font-size: 1.5rem;
@@ -64,7 +62,6 @@
       font-family: 'Outfit', sans-serif;
     }
 
-    /* KETENTUAN */
     .rules-container {
       width: 100%;
       background: #FFFFFF;
@@ -131,7 +128,6 @@
       font-size: 0.8rem;
     }
 
-    /* TOOLBAR: FONT + STYLE + ALIGNMENT */
     .toolbar-group {
       width: 100%;
       display: flex;
@@ -167,6 +163,25 @@
       background: #000000;
       color: #FFFFFF;
     }
+    .font-size-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .font-size-group label {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    input[type="range"] {
+      width: 120px;
+      cursor: pointer;
+      accent-color: #000000;
+    }
+    .font-size-value {
+      font-size: 0.8rem;
+      width: 35px;
+      text-align: center;
+    }
     .text-style-buttons {
       display: flex;
       gap: 8px;
@@ -194,14 +209,13 @@
       border-color: #000000;
     }
 
-    /* AREA EDITOR (RICH TEXT) */
     .editor-container {
       width: 100%;
       margin-bottom: 20px;
     }
     .rich-editor {
       width: 100%;
-      min-height: 320px;
+      min-height: 380px;
       background: #FFFFFF;
       border: 1px solid #000000;
       padding: 20px 24px;
@@ -217,6 +231,10 @@
     .rich-editor:focus {
       border-color: #000000;
     }
+    /* Style untuk paragraf di editor */
+    .rich-editor p {
+      margin-bottom: 1em;
+    }
     .word-stats {
       font-size: 0.85rem;
       font-family: monospace;
@@ -225,7 +243,6 @@
       font-weight: 500;
     }
 
-    /* TOMBOL UNDUH DI BAWAH */
     .download-section {
       width: 100%;
       display: flex;
@@ -256,9 +273,6 @@
       .rich-editor {
         padding: 16px;
       }
-      .logo-img {
-        height: 28px;
-      }
       .main-title {
         font-size: 1.2rem;
       }
@@ -270,22 +284,20 @@
 </head>
 <body>
 <div class="app-wrapper">
-  <!-- HEADER: hanya logo kecil tengah atas (tanpa tulisan Kachoo) -->
   <div class="header-section">
     <div class="logo-kecil">
-      <img src="logo-thekachoo.png" alt="Kachoo" class="logo-img" onerror="this.style.display='none'">
+      <div class="logo-teks">KACHOO</div>
     </div>
     <div class="main-title">Selamat Hari Buku dan Hak Cipta Sedunia!</div>
   </div>
 
-  <!-- KETENTUAN -->
   <div class="rules-container">
     <h3>Kachoo mengajak para penulis untuk menumpahkan perasaannya disini.</h3>
     <div class="invitation-text">
       Entah itu rasa senang, sedih, kesal, marah, kecewa, hampa, dan lainnya setelah membaca buku atau tulisan seseorang.
     </div>
     <ul class="rules-list">
-      <li>Kamu bisa menulis bebas disini, <strong>1 halaman kertas memuat 300 kata</strong>. Jika lebih, akan otomatis terbagi ke halaman berikutnya.</li>
+      <li>Kamu bisa menulis bebas disini, <strong>1 halaman kertas memuat 120 kata</strong>. Jika lebih, akan otomatis terbagi ke halaman berikutnya.</li>
       <li>Jika bingung, Kachoo akan memberikan beberapa topik untukmu, pilih ya!</li>
     </ul>
     <div class="topics">
@@ -304,12 +316,11 @@
     </div>
   </div>
 
-  <!-- TOOLBAR: FONT + STYLE + ALIGNMENT -->
   <div class="toolbar-group">
     <div class="font-selector-group">
-      <label>PILIH FONT</label>
+      <label>FONT</label>
       <select id="fontSelector">
-        <option value="'Outfit', sans-serif">Outfit (default)</option>
+        <option value="'Outfit', sans-serif">Outfit</option>
         <option value="'Courier New', monospace">Courier New</option>
         <option value="'Georgia', serif">Georgia</option>
         <option value="'Times New Roman', serif">Times New Roman</option>
@@ -317,6 +328,11 @@
         <option value="'Verdana', sans-serif">Verdana</option>
         <option value="'Garamond', serif">Garamond</option>
       </select>
+    </div>
+    <div class="font-size-group">
+      <label>UKURAN PARAGRAF</label>
+      <input type="range" id="fontSizeSlider" min="10" max="40" value="16" step="1">
+      <span id="fontSizeValue" class="font-size-value">16</span>
     </div>
     <div class="text-style-buttons">
       <button type="button" id="boldBtn" class="style-btn">B</button>
@@ -328,13 +344,11 @@
     </div>
   </div>
 
-  <!-- RICH TEXT EDITOR (contenteditable) -->
   <div class="editor-container">
     <div id="richEditor" class="rich-editor" contenteditable="true"></div>
     <div class="word-stats" id="wordCounter">0 kata | 0 halaman</div>
   </div>
 
-  <!-- TOMBOL UNDUH DI BAWAH -->
   <div class="download-section">
     <button id="captureBtn" class="download-png-btn">⬇ SIMPAN SEBAGAI PNG (MULTI HALAMAN)</button>
   </div>
@@ -344,13 +358,61 @@
   (function() {
     const editor = document.getElementById('richEditor');
     const fontSelector = document.getElementById('fontSelector');
+    const fontSizeSlider = document.getElementById('fontSizeSlider');
+    const fontSizeValue = document.getElementById('fontSizeValue');
     const captureBtn = document.getElementById('captureBtn');
     const wordCounterSpan = document.getElementById('wordCounter');
     
-    // === INISIALISASI DEFAULT ===
+    // DEFAULT: buat paragraf pertama
     editor.innerHTML = `<p>Tumpahkan karyamu disini...</p>`;
     
-    // === HITUNG KATA ===
+    // === FUNGSI UNTUK MENERAPKAN UKURAN FONT PER PARAGRAF ===
+    // Mengubah ukuran font pada paragraf yang sedang terpilih / berisi cursor
+    function applyFontSizeToSelectedParagraph(size) {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+      
+      const range = selection.getRangeAt(0);
+      let container = range.commonAncestorContainer;
+      
+      // Cari elemen paragraf (p) atau heading
+      let paragraph = null;
+      if (container.nodeType === Node.TEXT_NODE) {
+        paragraph = container.parentElement.closest('p, div, h1, h2, h3, h4');
+      } else {
+        paragraph = container.closest('p, div, h1, h2, h3, h4');
+      }
+      
+      // Jika tidak ada paragraf, cari block terdekat atau buat span
+      if (!paragraph) {
+        if (container.nodeType === Node.TEXT_NODE) {
+          paragraph = container.parentElement;
+        } else {
+          paragraph = container;
+        }
+      }
+      
+      if (paragraph) {
+        paragraph.style.fontSize = size + 'px';
+        // Tandai bahwa ini custom size
+        paragraph.setAttribute('data-custom-size', 'true');
+      } else {
+        // Fallback: buat span di sekitar selection
+        const span = document.createElement('span');
+        span.style.fontSize = size + 'px';
+        range.surroundContents(span);
+      }
+    }
+    
+    // Slider untuk mengubah ukuran paragraf yang sedang aktif
+    fontSizeSlider.addEventListener('input', (e) => {
+      const newSize = e.target.value;
+      fontSizeValue.textContent = newSize;
+      applyFontSizeToSelectedParagraph(newSize);
+      editor.focus();
+    });
+    
+    // === HITUNG KATA (120 kata per halaman) ===
     function getPlainTextFromEditor() {
       const temp = document.createElement('div');
       temp.innerHTML = editor.innerHTML;
@@ -365,14 +427,15 @@
     function updateWordCounter() {
       const plain = getPlainTextFromEditor();
       const words = countWords(plain);
-      const pages = Math.max(1, Math.ceil(words / 300));
+      const pages = Math.max(1, Math.ceil(words / 120));
       wordCounterSpan.innerHTML = `${words} kata | ${pages} halaman`;
     }
     
     editor.addEventListener('input', updateWordCounter);
+    editor.addEventListener('keyup', updateWordCounter);
     updateWordCounter();
     
-    // === FONT ===
+    // === FONT GLOBAL ===
     let currentFontFamily = "'Outfit', sans-serif";
     function applyFontToEditor(font) {
       editor.style.fontFamily = font;
@@ -383,7 +446,7 @@
     });
     applyFontToEditor(currentFontFamily);
     
-    // === BOLD / ITALIC / UNDERLINE ===
+    // === BOLD, ITALIC, UNDERLINE ===
     const boldBtn = document.getElementById('boldBtn');
     const italicBtn = document.getElementById('italicBtn');
     const underlineBtn = document.getElementById('underlineBtn');
@@ -410,7 +473,7 @@
       setActiveButtonState();
     });
     
-    // === ALIGNMENT: KIRI, TENGAH, KANAN ===
+    // === ALIGNMENT ===
     const alignLeftBtn = document.getElementById('alignLeftBtn');
     const alignCenterBtn = document.getElementById('alignCenterBtn');
     const alignRightBtn = document.getElementById('alignRightBtn');
@@ -427,7 +490,7 @@
     editor.addEventListener('keyup', setActiveButtonState);
     editor.addEventListener('mouseup', setActiveButtonState);
     
-    // === INPUT NAMA PENULIS (DI TENGAH BAWAH) ===
+    // === INPUT NAMA PENULIS ===
     const authorInputWrapper = document.createElement('div');
     authorInputWrapper.style.marginTop = '16px';
     authorInputWrapper.style.width = '100%';
@@ -455,13 +518,13 @@
     let globalAuthorName = authorField.value;
     authorField.addEventListener('input', (e) => { globalAuthorName = e.target.value; });
     
-    // === MEMBAGI HTML BERDASARKAN 300 KATA ===
+    // === MEMBAGI HTML PER 120 KATA (mempertahankan style per paragraf) ===
     function truncateHTMLByWords(html, wordLimit) {
       const container = document.createElement('div');
       container.innerHTML = html;
       let wordCount = 0;
       const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
-      let exceeded = false;
+      let lastNode = null;
       while (walker.nextNode()) {
         const node = walker.currentNode;
         const text = node.textContent;
@@ -482,18 +545,18 @@
           }
           node.textContent = newText;
           wordCount = wordLimit;
-          exceeded = true;
+          lastNode = node;
           break;
         }
       }
-      if (exceeded) {
+      if (lastNode) {
         let after = false;
         const walker2 = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
         while (walker2.nextNode()) {
           if (after) {
             walker2.currentNode.textContent = '';
           }
-          if (walker2.currentNode === walker.currentNode) after = true;
+          if (walker2.currentNode === lastNode) after = true;
         }
       }
       return container.innerHTML;
@@ -530,7 +593,7 @@
       return container.innerHTML;
     }
     
-    function splitHtmlIntoPages(fullHtml, wordsPerPage = 300) {
+    function splitHtmlIntoPages(fullHtml, wordsPerPage = 120) {
       const plainText = getPlainTextFromEditor();
       const totalWords = countWords(plainText);
       if (totalWords === 0) return [];
@@ -550,7 +613,7 @@
       return pagesHtml;
     }
     
-    // === MEMBUAT HALAMAN KERTAS DENGAN LOGO DI POJOK KIRI ATAS ===
+    // === MEMBUAT HALAMAN KERTAS ===
     function createPaperPageFromHTML(contentHtml, pageNumber, totalPages, authorName, fontFamily) {
       const paperDiv = document.createElement('div');
       paperDiv.style.width = '800px';
@@ -568,21 +631,21 @@
       paperDiv.style.flexDirection = 'column';
       paperDiv.style.position = 'relative';
       
-      // LOGO KECIL DI POJOK KIRI ATAS (absolute)
-      const logoTopLeft = document.createElement('img');
-      logoTopLeft.src = 'logo-thekachoo.png';
-      logoTopLeft.alt = 'Kachoo';
+      // LOGO KACHOO pojok kiri atas
+      const logoTopLeft = document.createElement('div');
+      logoTopLeft.innerText = 'KACHOO';
       logoTopLeft.style.position = 'absolute';
       logoTopLeft.style.top = '16px';
       logoTopLeft.style.left = '20px';
-      logoTopLeft.style.width = '28px';
-      logoTopLeft.style.height = 'auto';
-      logoTopLeft.style.filter = 'grayscale(100%) brightness(0)';
-      logoTopLeft.style.opacity = '0.7';
-      logoTopLeft.onerror = function() { this.style.display = 'none'; };
+      logoTopLeft.style.fontSize = '12px';
+      logoTopLeft.style.fontWeight = '600';
+      logoTopLeft.style.letterSpacing = '2px';
+      logoTopLeft.style.color = '#000000';
+      logoTopLeft.style.fontFamily = fontFamily;
+      logoTopLeft.style.opacity = '0.6';
       paperDiv.appendChild(logoTopLeft);
       
-      // KONTEN UTAMA (pusat vertikal)
+      // KONTEN
       const contentWrapper = document.createElement('div');
       contentWrapper.style.flex = '1';
       contentWrapper.style.display = 'flex';
@@ -594,13 +657,13 @@
       textDiv.style.width = '100%';
       textDiv.style.maxWidth = '680px';
       textDiv.style.margin = '0 auto';
-      textDiv.style.fontSize = '20px';
       textDiv.style.lineHeight = '1.5';
       textDiv.style.color = '#000000';
       textDiv.style.fontFamily = 'inherit';
+      // UKURAN FONT akan dipertahankan dari HTML asli (sudah ada inline style)
       textDiv.innerHTML = contentHtml;
       
-      // FOOTER COPYRIGHT (tengah bawah)
+      // FOOTER
       const footerDiv = document.createElement('div');
       footerDiv.style.width = '100%';
       footerDiv.style.textAlign = 'center';
@@ -630,7 +693,7 @@
       });
     }
     
-    // === DOWNLOAD MULTI HALAMAN ===
+    // === DOWNLOAD ===
     async function downloadMultiPagePng() {
       const fullHtml = editor.innerHTML;
       const plainFull = getPlainTextFromEditor();
@@ -640,7 +703,7 @@
         return;
       }
       
-      const pagesHtml = splitHtmlIntoPages(fullHtml, 300);
+      const pagesHtml = splitHtmlIntoPages(fullHtml, 120);
       if (pagesHtml.length === 0) return;
       
       if (pagesHtml.length > 10) {
@@ -704,11 +767,13 @@
     
     captureBtn.addEventListener('click', downloadMultiPagePng);
     
-    // handle logo error di header
-    const headerLogo = document.querySelector('.header-section .logo-img');
-    if (headerLogo) {
-      headerLogo.onerror = function() { this.style.display = 'none'; };
-    }
+    // Enter untuk membuat paragraf baru
+    editor.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.execCommand('insertParagraph', false, null);
+        e.preventDefault();
+      }
+    });
   })();
 </script>
 </body>
