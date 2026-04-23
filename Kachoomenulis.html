@@ -139,20 +139,24 @@
       font-size: 0.8rem;
     }
 
-    /* PEMILIH FONT - DI ATAS KERTAS */
-    .font-tool-wrapper {
+    /* TOOLBAR: FONT + BOLD/ITALIC/UNDERLINE */
+    .toolbar-group {
       width: 100%;
       display: flex;
-      justify-content: flex-end;
-      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 12px 0;
+      border-top: 1px solid #000000;
+      border-bottom: 1px solid #000000;
     }
     .font-selector-group {
       display: flex;
       align-items: baseline;
       gap: 12px;
       background: #FFFFFF;
-      border: 1px solid #000000;
-      padding: 6px 16px;
     }
     .font-selector-group label {
       font-size: 0.8rem;
@@ -171,25 +175,60 @@
       background: #000000;
       color: #FFFFFF;
     }
+    .text-style-buttons {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .style-btn {
+      background: #FFFFFF;
+      border: 1px solid #000000;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      transition: 0.15s;
+      min-width: 48px;
+    }
+    .style-btn:hover {
+      background: #000000;
+      color: #FFFFFF;
+    }
+    .style-btn.active {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
 
-    /* AREA EDITOR */
-    .main-text {
+    /* AREA EDITOR (RICH TEXT) */
+    .editor-container {
       width: 100%;
+      margin-bottom: 20px;
+    }
+    .rich-editor {
+      width: 100%;
+      min-height: 320px;
       background: #FFFFFF;
       border: 1px solid #000000;
       padding: 20px 24px;
       font-size: 1rem;
       line-height: 1.6;
-      resize: vertical;
+      color: #000000;
       font-family: inherit;
       outline: none;
-      margin-bottom: 16px;
+      text-align: left;
+      overflow-y: auto;
+      resize: vertical;
+    }
+    .rich-editor:focus {
+      border-color: #000000;
     }
     .word-stats {
       font-size: 0.85rem;
       font-family: monospace;
       text-align: center;
-      margin-bottom: 20px;
+      margin-top: 12px;
       font-weight: 500;
     }
 
@@ -217,7 +256,11 @@
     }
 
     @media (max-width: 860px) {
-      .main-text {
+      .toolbar-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .rich-editor {
         padding: 16px;
       }
       .logo-img {
@@ -225,9 +268,6 @@
       }
       .main-title {
         font-size: 1.2rem;
-      }
-      .font-tool-wrapper {
-        justify-content: center;
       }
       .rules-container {
         padding: 18px;
@@ -237,7 +277,7 @@
 </head>
 <body>
 <div class="app-wrapper">
-  <!-- HEADER: logo kecil tengah atas -->
+  <!-- HEADER -->
   <div class="header-section">
     <div class="logo-kecil">
       <img src="https://kachoo.my.id/assets/logo/thekachoo.png" alt="Kachoo" class="logo-img" onerror="this.style.display='none'">
@@ -268,12 +308,12 @@
       </ul>
     </div>
     <div class="reminder">
-      <span>✎ Jangan lupa isi namamu (IC atau Writer name) di kolom pojok kanan bawah halaman ini.</span>
+      <span>✎ Jangan lupa isi namamu (IC atau Writer name) di footer kertas (tengah bawah kolom).</span>
     </div>
   </div>
 
-  <!-- PEMILIH FONT - DI ATAS KERTAS (sebelum kolom) -->
-  <div class="font-tool-wrapper">
+  <!-- TOOLBAR: FONT + BOLD/ITALIC/UNDERLINE -->
+  <div class="toolbar-group">
     <div class="font-selector-group">
       <label>PILIH FONT</label>
       <select id="fontSelector">
@@ -286,11 +326,18 @@
         <option value="'Garamond', serif">Garamond</option>
       </select>
     </div>
+    <div class="text-style-buttons">
+      <button type="button" id="boldBtn" class="style-btn">B</button>
+      <button type="button" id="italicBtn" class="style-btn">I</button>
+      <button type="button" id="underlineBtn" class="style-btn">U</button>
+    </div>
   </div>
 
-  <!-- KOLOM MENULIS -->
-  <textarea id="textContent" class="main-text" rows="14" placeholder="Tumpahkan karyamu disini..."></textarea>
-  <div class="word-stats" id="wordCounter">0 kata | 0 halaman (batas 300 kata/halaman)</div>
+  <!-- RICH TEXT EDITOR (contenteditable) -->
+  <div class="editor-container">
+    <div id="richEditor" class="rich-editor" contenteditable="true"></div>
+    <div class="word-stats" id="wordCounter">0 kata | 0 halaman (batas 300 kata/halaman)</div>
+  </div>
 
   <!-- TOMBOL UNDUH DI BAWAH -->
   <div class="download-section">
@@ -300,62 +347,109 @@
 
 <script>
   (function() {
-    const textarea = document.getElementById('textContent');
+    const editor = document.getElementById('richEditor');
     const fontSelector = document.getElementById('fontSelector');
     const captureBtn = document.getElementById('captureBtn');
     const wordCounterSpan = document.getElementById('wordCounter');
-
-    // === INPUT NAMA PENULIS (pojok kanan bawah, fixed) ===
-    const authorInput = document.createElement('input');
-    authorInput.type = 'text';
-    authorInput.id = 'globalAuthorInput';
-    authorInput.placeholder = 'Nama penulis / IC / Writer name';
-    authorInput.value = 'Penulis Kachoo';
-    authorInput.style.cssText = `
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      width: 220px;
-      background: #FFFFFF;
-      border: 1px solid #000000;
-      padding: 6px 10px;
-      font-size: 0.75rem;
-      font-family: 'Outfit', monospace;
-      z-index: 9999;
-      color: #000000;
-    `;
-    document.body.appendChild(authorInput);
-
-    let globalAuthorName = authorInput.value;
-    authorInput.addEventListener('input', (e) => { globalAuthorName = e.target.value; });
-
-    // default teks
-    textarea.value = "Tumpahkan karyamu disini...";
     
-    // hitung kata
+    // === INISIALISASI DEFAULT TEKS ===
+    editor.innerHTML = `<p>Tumpahkan karyamu disini...</p>`;
+    
+    // === FUNGSI HITUNG KATA (dari teks biasa) ===
+    function getPlainTextFromEditor() {
+      const temp = document.createElement('div');
+      temp.innerHTML = editor.innerHTML;
+      return temp.innerText || temp.textContent || '';
+    }
+    
     function countWords(str) {
       if (!str.trim()) return 0;
       return str.trim().split(/\s+/).filter(w => w.length > 0).length;
     }
-
+    
     function updateWordCounter() {
-      const raw = textarea.value;
-      const words = countWords(raw);
+      const plain = getPlainTextFromEditor();
+      const words = countWords(plain);
       const pages = Math.max(1, Math.ceil(words / 300));
       wordCounterSpan.innerHTML = `${words} kata | ${pages} halaman (batas 300 kata/halaman)`;
     }
-
-    textarea.addEventListener('input', updateWordCounter);
+    
+    editor.addEventListener('input', updateWordCounter);
     updateWordCounter();
-
+    
+    // === FONT ===
     let currentFontFamily = "'Outfit', sans-serif";
+    function applyFontToEditor(font) {
+      editor.style.fontFamily = font;
+    }
     fontSelector.addEventListener('change', (e) => {
       currentFontFamily = e.target.value;
-      textarea.style.fontFamily = currentFontFamily;
+      applyFontToEditor(currentFontFamily);
     });
-    textarea.style.fontFamily = currentFontFamily;
-
-    // === MEMBAGI TEKS PER 300 KATA ===
+    applyFontToEditor(currentFontFamily);
+    
+    // === BOLD / ITALIC / UNDERLINE (menggunakan document.execCommand agar sesuai selection) ===
+    const boldBtn = document.getElementById('boldBtn');
+    const italicBtn = document.getElementById('italicBtn');
+    const underlineBtn = document.getElementById('underlineBtn');
+    
+    function setActiveButtonState() {
+      boldBtn.classList.toggle('active', document.queryCommandState('bold'));
+      italicBtn.classList.toggle('active', document.queryCommandState('italic'));
+      underlineBtn.classList.toggle('active', document.queryCommandState('underline'));
+    }
+    
+    boldBtn.addEventListener('click', () => {
+      document.execCommand('bold', false, null);
+      editor.focus();
+      setActiveButtonState();
+    });
+    italicBtn.addEventListener('click', () => {
+      document.execCommand('italic', false, null);
+      editor.focus();
+      setActiveButtonState();
+    });
+    underlineBtn.addEventListener('click', () => {
+      document.execCommand('underline', false, null);
+      editor.focus();
+      setActiveButtonState();
+    });
+    
+    editor.addEventListener('keyup', setActiveButtonState);
+    editor.addEventListener('mouseup', setActiveButtonState);
+    
+    // === INPUT NAMA PENULIS (DI TENGAH BAWAH KOLOM / FOOTER KERTAS) ===
+    // Kita buat input di dalam footer saat capture, tetapi untuk UI global kita sediakan input tersembunyi atau di luar?
+    // Agar user bisa mengisi nama dengan mudah, kita buat input kecil di bawah toolbar (tapi nanti akan muncul di footer setiap halaman)
+    const authorInputWrapper = document.createElement('div');
+    authorInputWrapper.style.marginTop = '16px';
+    authorInputWrapper.style.width = '100%';
+    authorInputWrapper.style.textAlign = 'center';
+    authorInputWrapper.style.marginBottom = '16px';
+    const authorLabel = document.createElement('span');
+    authorLabel.innerText = 'Nama Penulis / Copyright: ';
+    authorLabel.style.fontSize = '0.8rem';
+    authorLabel.style.marginRight = '8px';
+    const authorField = document.createElement('input');
+    authorField.type = 'text';
+    authorField.id = 'globalAuthorField';
+    authorField.placeholder = 'Nama penulis / IC / Writer name';
+    authorField.value = 'Penulis Kachoo';
+    authorField.style.border = '1px solid #000000';
+    authorField.style.padding = '6px 12px';
+    authorField.style.fontSize = '0.8rem';
+    authorField.style.fontFamily = 'inherit';
+    authorField.style.width = '260px';
+    authorInputWrapper.appendChild(authorLabel);
+    authorInputWrapper.appendChild(authorField);
+    // sisipkan setelah toolbar group
+    const toolbarGroup = document.querySelector('.toolbar-group');
+    toolbarGroup.parentNode.insertBefore(authorInputWrapper, toolbarGroup.nextSibling);
+    
+    let globalAuthorName = authorField.value;
+    authorField.addEventListener('input', (e) => { globalAuthorName = e.target.value; });
+    
+    // === MEMBAGI TEKS PER 300 KATA (berdasarkan teks biasa) ===
     function splitTextIntoPages(fullText, wordsPerPage = 300) {
       if (!fullText.trim()) return [];
       const words = fullText.trim().split(/\s+/);
@@ -366,12 +460,123 @@
       }
       return pages;
     }
-
-    // === MEMBUAT SATU HALAMAN KERTAS UNTUK DI-CAPTURE ===
-    // tidak ada border, font size 12px, ukuran 800x900, footer dengan nama penulis
-    function createPaperPage(contentText, pageNumber, totalPages, authorName, fontFamily) {
+    
+    // === MEMBUAT HALAMAN KERTAS UNTUK CAPTURE ===
+    // ukuran 800x900, font 20px di tengah, tanpa border, format HTML sama persis (bold/italic/underline ikut dari editor)
+    // Karena kita perlu mempertahankan style teks (bold/italic/underline) dan posisi tengah, kita akan mengambil HTML dari editor,
+    // lalu membaginya per kata secara cerdas? Tidak, karena tag HTML bisa rusak jika dipotong tengah.
+    // Solusi: kita gunakan pendekatan clone editor, tampilkan teks dengan style lengkap, lalu bagi halaman berdasarkan ketinggian konten? 
+    // TAPI itu rumit. Karena permintaan: "text beserta desain text (font, bold, italic, underline) harus sama persis dgn hasil gambar"
+    // dan "apabila ada enter ke bawah, ikuti sama persis" maka kita perlu mempertahankan struktur HTML.
+    // Cara paling aman: kita buat banyak halaman dengan cara memotong paragraf / blok teks berdasarkan perkiraan 300 kata, 
+    // namun tetap mempertahankan tag. Untuk menjaga format, kita akan split berdasarkan kata tetapi tetap membungkus dalam div dengan style yang diwarisi.
+    // Karena HTML editor bisa berisi <p>, <div>, <b>, <i>, <u>, kita akan ekstrak teks + simpan struktur asli? tidak sederhana.
+    // Pendekatan: kita akan gunakan clone dari editor, ambil innerHTML, lalu potong per 300 kata dengan tetap menjaga integritas tag (menggunakan fungsi yang mempertahankan formatting)
+    // Fungsi truncateHTMLByWords: memotong HTML berdasarkan jumlah kata tanpa merusak tag.
+    function truncateHTMLByWords(html, wordLimit) {
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      let wordCount = 0;
+      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
+      const nodesToRemove = [];
+      let exceeded = false;
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        const text = node.textContent;
+        const words = text.split(/\s+/).filter(w => w.length > 0);
+        const remaining = wordLimit - wordCount;
+        if (wordCount + words.length <= wordLimit) {
+          wordCount += words.length;
+        } else {
+          // potong teks pada node ini
+          let soFar = 0;
+          let newText = '';
+          for (let i = 0; i < words.length; i++) {
+            if (soFar < remaining) {
+              newText += (soFar === 0 ? '' : ' ') + words[i];
+              soFar++;
+            } else {
+              break;
+            }
+          }
+          node.textContent = newText;
+          wordCount = wordLimit;
+          // tandai node selanjutnya untuk dihapus
+          exceeded = true;
+          break;
+        }
+      }
+      if (exceeded) {
+        // hapus semua node teks setelah batas
+        let after = false;
+        const walker2 = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
+        while (walker2.nextNode()) {
+          if (after) {
+            walker2.currentNode.textContent = '';
+          }
+          if (walker2.currentNode === walker.currentNode) after = true;
+        }
+      }
+      return container.innerHTML;
+    }
+    
+    function getRemainingHTML(html, startFromWord) {
+      // fungsi untuk mengambil html mulai dari kata ke sekian
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      let wordIdx = 0;
+      let started = false;
+      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        const text = node.textContent;
+        const words = text.split(/\s+/);
+        if (!started) {
+          let cumulative = 0;
+          let newText = '';
+          for (let i = 0; i < words.length; i++) {
+            if (wordIdx + cumulative >= startFromWord) {
+              started = true;
+              newText += (newText ? ' ' : '') + words[i];
+            } else {
+              cumulative++;
+            }
+          }
+          node.textContent = newText;
+          wordIdx += cumulative;
+        }
+        if (!started) {
+          node.textContent = '';
+        }
+      }
+      return container.innerHTML;
+    }
+    
+    // Membagi HTML utuh menjadi beberapa page berdasarkan batas 300 kata
+    function splitHtmlIntoPages(fullHtml, wordsPerPage = 300) {
+      const plainText = getPlainTextFromEditor();
+      const totalWords = countWords(plainText);
+      if (totalWords === 0) return [];
+      const pagesHtml = [];
+      let startWord = 0;
+      while (startWord < totalWords) {
+        const endWord = Math.min(startWord + wordsPerPage, totalWords);
+        let pageHtml;
+        if (startWord === 0) {
+          pageHtml = truncateHTMLByWords(fullHtml, wordsPerPage);
+        } else {
+          pageHtml = getRemainingHTML(fullHtml, startWord);
+          pageHtml = truncateHTMLByWords(pageHtml, wordsPerPage);
+        }
+        pagesHtml.push(pageHtml);
+        startWord = endWord;
+      }
+      return pagesHtml;
+    }
+    
+    // Membuat elemen kertas untuk satu halaman (font 20px, posisi tengah, tanpa border)
+    function createPaperPageFromHTML(contentHtml, pageNumber, totalPages, authorName, fontFamily) {
       const paperDiv = document.createElement('div');
-      // styling presisi untuk PNG
       paperDiv.style.width = '800px';
       paperDiv.style.height = '900px';
       paperDiv.style.minHeight = '900px';
@@ -385,48 +590,42 @@
       paperDiv.style.fontFamily = fontFamily;
       paperDiv.style.display = 'flex';
       paperDiv.style.flexDirection = 'column';
-      paperDiv.style.justifyContent = 'space-between';
+      paperDiv.style.justifyContent = 'center'; // pusat vertikal
+      paperDiv.style.alignItems = 'center';
       
-      // area konten tulisan
-      const writingDiv = document.createElement('div');
-      writingDiv.style.flex = '1';
-      writingDiv.style.width = '100%';
-      writingDiv.style.display = 'flex';
-      writingDiv.style.flexDirection = 'column';
-      writingDiv.style.justifyContent = 'flex-start';
-      writingDiv.style.alignItems = 'center';
+      const contentWrapper = document.createElement('div');
+      contentWrapper.style.width = '100%';
+      contentWrapper.style.maxWidth = '680px';
+      contentWrapper.style.fontSize = '20px';
+      contentWrapper.style.lineHeight = '1.5';
+      contentWrapper.style.color = '#000000';
+      contentWrapper.style.fontFamily = 'inherit';
+      contentWrapper.style.textAlign = 'left';
+      contentWrapper.innerHTML = contentHtml;
       
-      const contentDiv = document.createElement('div');
-      contentDiv.style.width = '100%';
-      contentDiv.style.maxWidth = '680px';
-      contentDiv.style.fontSize = '12px';
-      contentDiv.style.lineHeight = '1.5';
-      contentDiv.style.color = '#000000';
-      contentDiv.style.fontFamily = 'inherit';
-      contentDiv.style.textAlign = 'left';
-      contentDiv.style.whiteSpace = 'pre-wrap';
-      contentDiv.style.wordWrap = 'break-word';
-      contentDiv.innerText = contentText;
-      
-      writingDiv.appendChild(contentDiv);
-      
-      // footer copyright dengan nama penulis
+      // footer copyright (tengah bawah)
       const footerDiv = document.createElement('div');
       footerDiv.style.width = '100%';
       footerDiv.style.textAlign = 'center';
-      footerDiv.style.marginTop = '32px';
+      footerDiv.style.marginTop = '24px';
       footerDiv.style.paddingTop = '16px';
       footerDiv.style.borderTop = '1px solid #000000';
-      footerDiv.style.fontSize = '0.7rem';
+      footerDiv.style.fontSize = '0.8rem';
       footerDiv.style.fontFamily = 'inherit';
       footerDiv.style.color = '#000000';
-      
       const authorDisplay = authorName && authorName.trim() !== '' ? authorName : 'Tanpa Nama';
       footerDiv.innerHTML = `<span>© </span>${escapeHtml(authorDisplay)}`;
       
-      paperDiv.appendChild(writingDiv);
-      paperDiv.appendChild(footerDiv);
+      const innerContainer = document.createElement('div');
+      innerContainer.style.flex = '1';
+      innerContainer.style.display = 'flex';
+      innerContainer.style.flexDirection = 'column';
+      innerContainer.style.justifyContent = 'center';
+      innerContainer.style.width = '100%';
+      innerContainer.appendChild(contentWrapper);
+      innerContainer.appendChild(footerDiv);
       
+      paperDiv.appendChild(innerContainer);
       return paperDiv;
     }
     
@@ -442,19 +641,19 @@
     
     // === PROSES DOWNLOAD MULTI HALAMAN ===
     async function downloadMultiPagePng() {
-      const fullText = textarea.value;
-      const author = globalAuthorName || "Penulis Kachoo";
-      const font = currentFontFamily;
-      
-      const pagesContent = splitTextIntoPages(fullText, 300);
-      if (pagesContent.length === 0) {
+      const fullHtml = editor.innerHTML;
+      const plainFull = getPlainTextFromEditor();
+      const totalWords = countWords(plainFull);
+      if (totalWords === 0) {
         alert("Tulis sesuatu terlebih dahulu.");
         return;
       }
       
-      // konfirmasi ringan jika terlalu banyak halaman
-      if (pagesContent.length > 10) {
-        const confirm = window.confirm(`Teks Anda akan terbagi menjadi ${pagesContent.length} halaman. Lanjutkan download?`);
+      const pagesHtml = splitHtmlIntoPages(fullHtml, 300);
+      if (pagesHtml.length === 0) return;
+      
+      if (pagesHtml.length > 10) {
+        const confirm = window.confirm(`Teks Anda akan terbagi menjadi ${pagesHtml.length} halaman. Lanjutkan download?`);
         if (!confirm) return;
       }
       
@@ -463,9 +662,9 @@
       
       try {
         const allCanvases = [];
-        for (let i = 0; i < pagesContent.length; i++) {
-          const pageText = pagesContent[i];
-          const pageDiv = createPaperPage(pageText, i+1, pagesContent.length, author, font);
+        for (let i = 0; i < pagesHtml.length; i++) {
+          const pageContent = pagesHtml[i];
+          const pageDiv = createPaperPageFromHTML(pageContent, i+1, pagesHtml.length, globalAuthorName, currentFontFamily);
           pageDiv.style.position = 'absolute';
           pageDiv.style.top = '-9999px';
           pageDiv.style.left = '-9999px';
@@ -483,7 +682,6 @@
           
           document.body.removeChild(pageDiv);
           
-          // resize ke 800x900 exact
           const finalCanvas = document.createElement('canvas');
           finalCanvas.width = 800;
           finalCanvas.height = 900;
@@ -492,7 +690,6 @@
           allCanvases.push(finalCanvas);
         }
         
-        // download semua halaman
         for (let idx = 0; idx < allCanvases.length; idx++) {
           const canvasImg = allCanvases[idx];
           const link = document.createElement('a');
@@ -521,6 +718,9 @@
     if (logoImg) {
       logoImg.onerror = function() { this.style.display = 'none'; };
     }
+    
+    // set initial editor font
+    editor.style.fontFamily = currentFontFamily;
   })();
 </script>
 </body>
