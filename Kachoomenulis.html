@@ -41,22 +41,10 @@
       padding-bottom: 20px;
     }
 
-    .logo-kecil {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 8px;
-    }
-    .logo-img {
-      height: 48px;
-      width: auto;
-      display: block;
-      filter: grayscale(100%) brightness(0);
-    }
     .main-title {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      margin-top: 6px;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.3px;
       color: #000000;
       font-family: 'Outfit', sans-serif;
     }
@@ -227,9 +215,6 @@
       overflow-y: auto;
       resize: vertical;
     }
-    .rich-editor:focus {
-      border-color: #000000;
-    }
     .rich-editor p {
       margin-bottom: 1em;
     }
@@ -271,11 +256,8 @@
       .rich-editor {
         padding: 16px;
       }
-      .logo-img {
-        height: 36px;
-      }
       .main-title {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
       }
       .rules-container {
         padding: 18px;
@@ -285,13 +267,12 @@
 </head>
 <body>
 <div class="app-wrapper">
+  <!-- HEADER: tanpa logo, hanya judul -->
   <div class="header-section">
-    <div class="logo-kecil">
-      <img src="logo-thekachoo.png" alt="Kachoo" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:32px; font-weight:bold; letter-spacing:4px;\'>KACHOO</div>'">
-    </div>
     <div class="main-title">Selamat Hari Buku dan Hak Cipta Sedunia!</div>
   </div>
 
+  <!-- KETENTUAN -->
   <div class="rules-container">
     <h3>Kachoo mengajak para penulis untuk menumpahkan perasaannya disini.</h3>
     <div class="invitation-text">
@@ -317,6 +298,7 @@
     </div>
   </div>
 
+  <!-- TOOLBAR -->
   <div class="toolbar-group">
     <div class="font-selector-group">
       <label>FONT</label>
@@ -345,11 +327,13 @@
     </div>
   </div>
 
+  <!-- RICH TEXT EDITOR -->
   <div class="editor-container">
     <div id="richEditor" class="rich-editor" contenteditable="true"></div>
     <div class="word-stats" id="wordCounter">0 kata | 0 halaman</div>
   </div>
 
+  <!-- TOMBOL UNDUH -->
   <div class="download-section">
     <button id="captureBtn" class="download-png-btn">⬇ SIMPAN SEBAGAI PNG (MULTI HALAMAN)</button>
   </div>
@@ -364,23 +348,21 @@
     const captureBtn = document.getElementById('captureBtn');
     const wordCounterSpan = document.getElementById('wordCounter');
     
+    // DEFAULT
     editor.innerHTML = `<p>Tumpahkan karyamu disini...</p>`;
     
     // TERAPKAN UKURAN PER PARAGRAF
     function applyFontSizeToSelectedParagraph(size) {
       const selection = window.getSelection();
       if (!selection.rangeCount) return;
-      
       const range = selection.getRangeAt(0);
       let container = range.commonAncestorContainer;
       let paragraph = null;
-      
       if (container.nodeType === Node.TEXT_NODE) {
         paragraph = container.parentElement.closest('p, div, h1, h2, h3, h4');
       } else {
         paragraph = container.closest('p, div, h1, h2, h3, h4');
       }
-      
       if (paragraph) {
         paragraph.style.fontSize = size + 'px';
       } else if (container.nodeType === Node.TEXT_NODE) {
@@ -395,7 +377,7 @@
       editor.focus();
     });
     
-    // HITUNG KATA (120 per halaman)
+    // HITUNG KATA (120 PER HALAMAN)
     function getPlainTextFromEditor() {
       const temp = document.createElement('div');
       temp.innerHTML = editor.innerHTML;
@@ -497,24 +479,19 @@
     let globalAuthorName = authorField.value;
     authorField.addEventListener('input', (e) => { globalAuthorName = e.target.value; });
     
-    // MEMBAGI HTML PER 120 KATA
-    function splitHtmlIntoPages(fullHtml, wordsPerPage = 120) {
-      const plainText = getPlainTextFromEditor();
-      const totalWords = countWords(plainText);
-      if (totalWords === 0) return [];
-      
-      // Sederhana: bagi berdasarkan kata
-      const words = plainText.split(/\s+/);
+    // MEMBAGI TEKS PER 120 KATA
+    function splitTextIntoPages(fullText, wordsPerPage = 120) {
+      if (!fullText.trim()) return [];
+      const words = fullText.trim().split(/\s+/);
       const pages = [];
       for (let i = 0; i < words.length; i += wordsPerPage) {
-        const pageWords = words.slice(i, i + wordsPerPage);
-        pages.push(pageWords.join(' '));
+        pages.push(words.slice(i, i + wordsPerPage).join(' '));
       }
       return pages;
     }
     
-    // MEMBUAT HALAMAN KERTAS
-    function createPaperPageFromHTML(contentText, authorName, fontFamily) {
+    // MEMBUAT HALAMAN KERTAS DENGAN LOGO DI POJOK KIRI ATAS
+    function createPaperPage(contentText, authorName, fontFamily, htmlContent = null) {
       const paperDiv = document.createElement('div');
       paperDiv.style.width = '800px';
       paperDiv.style.height = '900px';
@@ -531,21 +508,28 @@
       paperDiv.style.flexDirection = 'column';
       paperDiv.style.position = 'relative';
       
-      // LOGO KIRI ATAS
-      const logoTopLeft = document.createElement('img');
-      logoTopLeft.src = 'logo-thekachoo.png';
-      logoTopLeft.alt = 'Kachoo';
-      logoTopLeft.style.position = 'absolute';
-      logoTopLeft.style.top = '16px';
-      logoTopLeft.style.left = '20px';
-      logoTopLeft.style.width = '28px';
-      logoTopLeft.style.height = 'auto';
-      logoTopLeft.style.filter = 'grayscale(100%) brightness(0)';
-      logoTopLeft.style.opacity = '0.7';
-      logoTopLeft.onerror = function() { this.style.display = 'none'; };
-      paperDiv.appendChild(logoTopLeft);
+      // LOGO KACHOO (lingkaran hitam dengan huruf K) - ini pasti muncul
+      const logoBulat = document.createElement('div');
+      logoBulat.style.position = 'absolute';
+      logoBulat.style.top = '16px';
+      logoBulat.style.left = '20px';
+      logoBulat.style.width = '32px';
+      logoBulat.style.height = '32px';
+      logoBulat.style.backgroundColor = '#000000';
+      logoBulat.style.borderRadius = '50%';
+      logoBulat.style.display = 'flex';
+      logoBulat.style.alignItems = 'center';
+      logoBulat.style.justifyContent = 'center';
+      const logoSpan = document.createElement('span');
+      logoSpan.innerText = 'K';
+      logoSpan.style.color = '#FFFFFF';
+      logoSpan.style.fontSize = '18px';
+      logoSpan.style.fontWeight = '700';
+      logoSpan.style.fontFamily = 'Outfit, sans-serif';
+      logoBulat.appendChild(logoSpan);
+      paperDiv.appendChild(logoBulat);
       
-      // KONTEN
+      // KONTEN UTAMA
       const contentWrapper = document.createElement('div');
       contentWrapper.style.flex = '1';
       contentWrapper.style.display = 'flex';
@@ -562,9 +546,15 @@
       textDiv.style.color = '#000000';
       textDiv.style.fontFamily = 'inherit';
       textDiv.style.whiteSpace = 'pre-wrap';
-      textDiv.innerText = contentText;
       
-      // FOOTER
+      // Jika ada HTML dengan style, gunakan itu (untuk bold/italic/dll)
+      if (htmlContent) {
+        textDiv.innerHTML = htmlContent;
+      } else {
+        textDiv.innerText = contentText;
+      }
+      
+      // FOOTER COPYRIGHT
       const footerDiv = document.createElement('div');
       footerDiv.style.width = '100%';
       footerDiv.style.textAlign = 'center';
@@ -589,7 +579,7 @@
       return paperDiv;
     }
     
-    // DOWNLOAD
+    // DOWNLOAD MULTI HALAMAN
     async function downloadMultiPagePng() {
       const plainText = getPlainTextFromEditor();
       const totalWords = countWords(plainText);
@@ -598,11 +588,12 @@
         return;
       }
       
-      const pagesText = splitHtmlIntoPages(plainText, 120);
+      const pagesText = splitTextIntoPages(plainText, 120);
       if (pagesText.length === 0) return;
       
       if (pagesText.length > 10) {
-        if (!confirm(`Teks Anda akan terbagi menjadi ${pagesText.length} halaman. Lanjutkan download?`)) return;
+        const confirm = window.confirm(`Teks Anda akan terbagi menjadi ${pagesText.length} halaman. Lanjutkan download?`);
+        if (!confirm) return;
       }
       
       captureBtn.innerText = "MEMPROSES...";
@@ -611,7 +602,7 @@
       try {
         for (let i = 0; i < pagesText.length; i++) {
           const pageText = pagesText[i];
-          const pageDiv = createPaperPageFromHTML(pageText, globalAuthorName, currentFontFamily);
+          const pageDiv = createPaperPage(pageText, globalAuthorName, currentFontFamily, null);
           pageDiv.style.position = 'absolute';
           pageDiv.style.top = '-9999px';
           pageDiv.style.left = '-9999px';
@@ -666,4 +657,4 @@
   })();
 </script>
 </body>
-          </html>
+  </html>
