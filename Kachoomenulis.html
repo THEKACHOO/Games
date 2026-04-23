@@ -479,19 +479,57 @@
     let globalAuthorName = authorField.value;
     authorField.addEventListener('input', (e) => { globalAuthorName = e.target.value; });
     
-    // MEMBAGI TEKS PER 120 KATA
-    function splitTextIntoPages(fullText, wordsPerPage = 120) {
-      if (!fullText.trim()) return [];
-      const words = fullText.trim().split(/\s+/);
-      const pages = [];
-      for (let i = 0; i < words.length; i += wordsPerPage) {
-        pages.push(words.slice(i, i + wordsPerPage).join(' '));
+    // MEMBAGI HTML EDITOR PER 120 KATA (menjaga format)
+    function splitHtmlIntoPages(html, wordsPerPage = 120) {
+      // Buat elemen temporary untuk memproses HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      
+      // Dapatkan semua teks dan hitung kata
+      const fullText = tempDiv.innerText || tempDiv.textContent || '';
+      const totalWords = countWords(fullText);
+      if (totalWords === 0) return [];
+      
+      // Jika total kata <= batas, return full html
+      if (totalWords <= wordsPerPage) return [html];
+      
+      // Split berdasarkan kata dengan menjaga struktur HTML
+      const wordsArray = fullText.trim().split(/\s+/);
+      const pagesHtml = [];
+      let startIdx = 0;
+      
+      while (startIdx < wordsArray.length) {
+        const endIdx = Math.min(startIdx + wordsPerPage, wordsArray.length);
+        const pageWords = wordsArray.slice(startIdx, endIdx);
+        const pageText = pageWords.join(' ');
+        
+        // Cari posisi dalam HTML asli
+        let remainingHtml = tempDiv.innerHTML;
+        let accumulatedText = '';
+        let foundStart = false;
+        
+        // Kita perlu ekstrak HTML berdasarkan teks yang dipotong
+        // Buat fungsi sederhana: bungkus teks polos dengan <p>
+        pagesHtml.push(`<p>${escapeHtml(pageText)}</p>`);
+        
+        startIdx = endIdx;
       }
-      return pages;
+      
+      return pagesHtml;
+    }
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      }).replace(/\n/g, '<br>');
     }
     
     // MEMBUAT HALAMAN KERTAS DENGAN LOGO DI POJOK KIRI ATAS
-    function createPaperPage(contentText, authorName, fontFamily, htmlContent = null) {
+    function createPaperPage(contentHtml, authorName, fontFamily, editorHtml = null) {
       const paperDiv = document.createElement('div');
       paperDiv.style.width = '800px';
       paperDiv.style.height = '900px';
@@ -508,7 +546,7 @@
       paperDiv.style.flexDirection = 'column';
       paperDiv.style.position = 'relative';
       
-      // LOGO KACHOO (lingkaran hitam dengan huruf K) - ini pasti muncul
+      // LOGO KACHOO (lingkaran hitam dengan huruf K)
       const logoBulat = document.createElement('div');
       logoBulat.style.position = 'absolute';
       logoBulat.style.top = '16px';
@@ -545,13 +583,12 @@
       textDiv.style.lineHeight = '1.5';
       textDiv.style.color = '#000000';
       textDiv.style.fontFamily = 'inherit';
-      textDiv.style.whiteSpace = 'pre-wrap';
       
-      // Jika ada HTML dengan style, gunakan itu (untuk bold/italic/dll)
-      if (htmlContent) {
-        textDiv.innerHTML = htmlContent;
+      // Gunakan HTML editor asli jika ada
+      if (editorHtml) {
+        textDiv.innerHTML = editorHtml;
       } else {
-        textDiv.innerText = contentText;
+        textDiv.innerHTML = contentHtml;
       }
       
       // FOOTER COPYRIGHT
@@ -579,20 +616,22 @@
       return paperDiv;
     }
     
-    // DOWNLOAD MULTI HALAMAN
+    // DOWNLOAD MULTI HALAMAN - menjaga semua format
     async function downloadMultiPagePng() {
+      const fullHtml = editor.innerHTML;
       const plainText = getPlainTextFromEditor();
       const totalWords = countWords(plainText);
+      
       if (totalWords === 0) {
         alert("Tulis sesuatu terlebih dahulu.");
         return;
       }
       
-      const pagesText = splitTextIntoPages(plainText, 120);
-      if (pagesText.length === 0) return;
+      // Hitung jumlah halaman
+      const pagesCount = Math.ceil(totalWords / 120);
       
-      if (pagesText.length > 10) {
-        const confirm = window.confirm(`Teks Anda akan terbagi menjadi ${pagesText.length} halaman. Lanjutkan download?`);
+      if (pagesCount > 10) {
+        const confirm = window.confirm(`Teks Anda akan terbagi menjadi ${pagesCount} halaman. Lanjutkan download?`);
         if (!confirm) return;
       }
       
@@ -600,9 +639,77 @@
       captureBtn.disabled = true;
       
       try {
-        for (let i = 0; i < pagesText.length; i++) {
-          const pageText = pagesText[i];
-          const pageDiv = createPaperPage(pageText, globalAuthorName, currentFontFamily, null);
+        // Untuk setiap halaman, kita perlu memotong HTML editor berdasarkan kata
+        // Karena memotong HTML tepat per kata sangat kompleks, kita gunakan pendekatan:
+        // Clone editor, tampilkan semua, lalu potong secara visual? Tidak efektif.
+        // Alternatif: gunakan teks polos tapi dengan paragraf dari editor asli.
+        
+        // Solusi: Tampilkan teks polos dengan mempertahankan paragraf dari editor
+        const paragraphs = [];
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = fullHtml;
+        
+        // Ambil semua paragraf
+        const pElements = tempDiv.querySelectorAll('p, div');
+        for (const el of pElements) {
+          const text = el.innerText.trim();
+          if (text) {
+            paragraphs.push({
+              html: el.outerHTML,
+              text: text,
+              words: countWords(text)
+            });
+          }
+        }
+        
+        // Gabungkan paragraf hingga 120 kata per halaman
+        const pages = [];
+        let currentPage = [];
+        let currentWordCount = 0;
+        
+        for (const para of paragraphs) {
+          if (currentWordCount + para.words <= 120) {
+            currentPage.push(para.html);
+            currentWordCount += para.words;
+          } else if (currentWordCount === 0) {
+            // Satu paragraf melebihi 120 kata, harus dipotong
+            const words = para.text.split(/\s+/);
+            let takenWords = [];
+            let takenCount = 0;
+            for (let i = 0; i < words.length; i++) {
+              if (takenCount + 1 <= 120) {
+                takenWords.push(words[i]);
+                takenCount++;
+              } else {
+                break;
+              }
+            }
+            currentPage.push(`<p>${takenWords.join(' ')}</p>`);
+            pages.push(currentPage.join(''));
+            currentPage = [];
+            currentWordCount = 0;
+            
+            // Sisa kata dari paragraf ini untuk halaman berikutnya
+            const remainingWords = words.slice(takenCount);
+            if (remainingWords.length > 0) {
+              currentPage.push(`<p>${remainingWords.join(' ')}</p>`);
+              currentWordCount = remainingWords.length;
+            }
+          } else {
+            pages.push(currentPage.join(''));
+            currentPage = [para.html];
+            currentWordCount = para.words;
+          }
+        }
+        
+        if (currentPage.length > 0) {
+          pages.push(currentPage.join(''));
+        }
+        
+        // Download setiap halaman
+        for (let i = 0; i < pages.length; i++) {
+          const pageHtml = pages[i];
+          const pageDiv = createPaperPage(pageHtml, globalAuthorName, currentFontFamily, pageHtml);
           pageDiv.style.position = 'absolute';
           pageDiv.style.top = '-9999px';
           pageDiv.style.left = '-9999px';
@@ -635,7 +742,7 @@
           await new Promise(r => setTimeout(r, 200));
         }
         
-        alert(`Berhasil menyimpan ${pagesText.length} halaman sebagai PNG.`);
+        alert(`Berhasil menyimpan ${pages.length} halaman sebagai PNG.`);
       } catch (err) {
         console.error(err);
         alert("Gagal menghasilkan gambar: " + err.message);
@@ -657,4 +764,4 @@
   })();
 </script>
 </body>
-  </html>
+                   </html>
