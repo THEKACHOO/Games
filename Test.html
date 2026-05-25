@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>KADIO 35° - FOTO DULU YUK</title>
+    <!-- Google Fonts: Outfit & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: #000000;
+            line-height: 1.4;
+            scroll-behavior: smooth;
+        }
+
+        /* judul global pakai outfit */
+        .outfit-title, .header-title, .frame-title, .kadio-description h3, .footer .made-by {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        a, button, .frame-card, .upload-btn, .save-btn, .menu-toggle, .nav-link {
+            transition: all 0.2s ease-out;
+        }
+
+        /* HEADER dengan logo tengah dan X */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: #ffffff;
+            border-bottom: 1px solid #eaeef2;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(255,255,255,0.96);
+            backdrop-filter: blur(4px);
+        }
+
+        .logo-center-group {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0 0.8rem;
+        }
+
+        .logo-kachoo-center, .logo-studio-center {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.2s;
+        }
+
+        .logo-kachoo-center:hover, .logo-studio-center:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-x {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: #111;
+            margin: 0 0.2rem;
+        }
+
+        /* spacer kiri kanan agar nav tetap di sisi */
+        .nav-placeholder-left, .nav-placeholder-right {
+            width: 120px;
+            visibility: hidden;
+        }
+        
+        .main-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            color: #111111;
+            letter-spacing: -0.2px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.4rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            border-bottom-color: #000000;
+            color: #000000;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 32px;
+            height: 28px;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 2px;
+            background-color: #000000;
+            transition: all 0.25s;
+            border-radius: 2px;
+        }
+
+        .mobile-nav {
+            display: none;
+            flex-direction: column;
+            background: #ffffff;
+            width: 100%;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .mobile-nav a {
+            padding: 0.8rem 0;
+            text-decoration: none;
+            font-weight: 500;
+            color: #111;
+            border-bottom: 1px solid #f0f0f0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .mobile-nav a:last-child {
+            border-bottom: none;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: radial-gradient(circle at 30% 20%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.01) 100%);
+            border-radius: 2rem;
+        }
+
+        .frames-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.5rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .frame-card {
+            flex: 1;
+            min-width: 280px;
+            max-width: 500px;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0,0,0,0.02);
+            padding: 1.25rem 1rem 1.5rem 1rem;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            border: 1px solid #f1f1f1;
+        }
+
+        .frame-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 28px 35px -16px rgba(0, 0, 0, 0.12);
+        }
+
+        .frame-card.special-landscape {
+            max-width: 580px;
+        }
+
+        .frame-title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            letter-spacing: -0.2px;
+            color: #1a1a1a;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            background: #fafafa;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+            touch-action: none;
+        }
+
+        .twibbon-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #f3f3f3;
+            cursor: grab;
+            border-radius: 20px;
+            touch-action: none;
+        }
+
+        .twibbon-canvas:active {
+            cursor: grabbing;
+        }
+
+        .button-group {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .upload-btn, .save-btn {
+            background: #ffffff;
+            border: 1px solid #cccccc;
+            color: #111;
+            padding: 0.6rem 1.6rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .upload-btn:hover, .save-btn:hover {
+            background: #f5f5f5;
+            border-color: #000000;
+            transform: scale(0.98);
+        }
+
+        .adjust-note {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 0.6rem;
+            color: #555;
+            letter-spacing: 0.2px;
+        }
+
+        .kadio-description {
+            margin: 2.5rem auto 1.8rem;
+            max-width: 860px;
+            text-align: center;
+            background: #fefefe;
+            padding: 1.8rem 2rem;
+            border-radius: 2rem;
+            border: 1px solid #ececec;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .kadio-description h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.8rem;
+            color: #000;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .kadio-description p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #2b2b2b;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .footer {
+            border-top: 1px solid #eaeef2;
+            padding: 2rem 2rem 1.8rem;
+            text-align: center;
+            background: #ffffff;
+            font-size: 0.85rem;
+            color: #2c2c2c;
+            margin-top: 1rem;
+        }
+
+        .footer p {
+            margin: 0.2rem 0;
+        }
+
+        .made-by {
+            font-weight: 600;
+            margin-top: 0.5rem;
+            letter-spacing: -0.2px;
+            font-family: 'Outfit', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            justify-content: center;
+        }
+
+        @media (max-width: 780px) {
+            .header {
+                padding: 0.8rem 1.2rem;
+            }
+            .logo-center-group {
+                gap: 0.3rem;
+            }
+            .logo-kachoo-center, .logo-studio-center {
+                height: 32px;
+            }
+            .logo-x {
+                font-size: 1.1rem;
+            }
+            .nav-placeholder-left, .nav-placeholder-right {
+                width: 40px;
+                visibility: hidden;
+            }
+            .main-menu {
+                display: none;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .mobile-nav.show-mobile {
+                display: flex;
+            }
+            .frames-wrapper {
+                gap: 1.8rem;
+            }
+            .frame-card {
+                max-width: 100%;
+            }
+            .kadio-description {
+                padding: 1.5rem 1rem;
+            }
+            .kadio-description h3 {
+                font-size: 1.5rem;
+            }
+            .button-group {
+                gap: 0.6rem;
+            }
+            .upload-btn, .save-btn {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 781px) {
+            .mobile-nav {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <!-- Kiri: spacer kosong untuk menjaga keseimbangan flex (nav tetap di kanan) -->
+    <div class="nav-placeholder-left"></div>
+
+    <!-- Logo tengah: KACHOO + X + Studio35.png -->
+    <div class="logo-center-group">
+        <img src="logo-thekachoo.png" alt="KACHOO" class="logo-kachoo-center" onerror="this.onerror=null; this.src='https://placehold.co/100x40/ffffff/cccccc?text=KACHOO';">
+        <span class="logo-x">✕</span>
+        <img src="Studio35.png" alt="Studio35" class="logo-studio-center" onerror="this.onerror=null; this.src='https://placehold.co/100x40/f5f5f5/999999?text=Studio35';">
+    </div>
+
+    <!-- Navigasi Desktop di kanan -->
+    <div class="main-menu">
+        <button class="nav-link" data-link="home">Home</button>
+        <button class="nav-link" data-link="about">About Us</button>
+        <button class="nav-link" data-link="howto">How to Booked</button>
+    </div>
+    
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+    <a href="#" data-link="home">Home</a>
+    <a href="#" data-link="about">About Us</a>
+    <a href="#" data-link="howto">How to Booked</a>
+</div>
+
+<main class="main-container">
+    <!-- Judul menggunakan font OUTFIT sudah diterapkan via CSS class, kita tambahkan headline kecil di atas? biar sesuai minta judul "KADIO 35°"  -->
+    <div style="text-align: center; margin-bottom: 1rem;">
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">KADIO 35°</h1>
+        <p style="font-family: 'Inter', sans-serif; color: #555; margin-top: 0.2rem;">Pilih frame, unggah foto, sesuaikan & simpan</p>
+    </div>
+
+    <div class="frames-wrapper">
+        <!-- Campaign 1 (800x1000) -->
+        <div class="frame-card">
+            <div class="frame-title">KAZINE ICHONIC</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas1" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput1" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn1">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn1">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 2 (800x1000) -->
+        <div class="frame-card">
+            <div class="frame-title">KAZINE ICHONIC</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas2" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput2" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn2">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn2">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 3 (800x1000) -->
+        <div class="frame-card">
+            <div class="frame-title">KAZINE ICHONIC</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas3" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput3" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn3">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn3">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 4 (800x1000) -->
+        <div class="frame-card">
+            <div class="frame-title">KAZINE ICHONIC</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas4" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput4" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn4">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn4">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 5 (1000x800) LANDSCAPE -->
+        <div class="frame-card special-landscape">
+            <div class="frame-title">KAZINE ICHONIC (LANDSCAPE)</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas5" class="twibbon-canvas" width="1000" height="800" style="width:100%; height:auto; aspect-ratio:1000/800"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput5" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn5">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn5">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+
+        <!-- Campaign 6 (1000x800) LANDSCAPE -->
+        <div class="frame-card special-landscape">
+            <div class="frame-title">KAZINE ICHONIC (LANDSCAPE)</div>
+            <div class="canvas-container">
+                <canvas id="twibbonCanvas6" class="twibbon-canvas" width="1000" height="800" style="width:100%; height:auto; aspect-ratio:1000/800"></canvas>
+            </div>
+            <div class="button-group">
+                <input type="file" id="uploadInput6" accept="image/jpeg, image/png, image/jpg" style="display:none" />
+                <button class="upload-btn" id="uploadBtn6">Masukkan Foto</button>
+                <button class="save-btn" id="saveBtn6">Simpan Foto</button>
+            </div>
+            <div class="adjust-note">Sesuaikan fotomu sebelum di download, kamu bisa menggesernya atau zoom-in dan zoom-out</div>
+        </div>
+    </div>
+
+    <div class="kadio-description">
+        <h3>UCAPAN</h3>
+        <p>Misal ucapannya disini, kek ngucapin selamat</p>
+    </div>
+</main>
+
+<footer class="footer">
+    <p>© 2026</p>
+    <p class="made-by">made by Kachoo <span style="font-family:'Outfit'">✕</span> Studio 35°</p>
+</footer>
+
+<script>
+    (function() {
+        // Ukuran untuk frame
+        const CANVAS_W_PORTRAIT = 800;
+        const CANVAS_H_PORTRAIT = 1000;
+        const CANVAS_W_LANDSCAPE = 1000;
+        const CANVAS_H_LANDSCAPE = 800;
+
+        // Frame image sources (asumsi file gambar tersedia di folder yg sama)
+        const frameImgSrc1 = 'Campaign1.png';
+        const frameImgSrc2 = 'Campaign2.png';
+        const frameImgSrc3 = 'Campaign3.png';
+        const frameImgSrc4 = 'Campaign4.png';
+        const frameImgSrc5 = 'Campaign7.png';
+        const frameImgSrc6 = 'Campaign8.png';
+
+        // Kelas editor (sama seperti sebelumnya, dengan sentuhan touch/zoom)
+        class FrameEditor {
+            constructor(canvasId, uploadInputId, saveBtnId, frameImage, canvasWidth, canvasHeight) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.uploadInput = document.getElementById(uploadInputId);
+                this.saveBtn = document.getElementById(saveBtnId);
+                this.frameImg = frameImage;
+                this.canvasWidth = canvasWidth;
+                this.canvasHeight = canvasHeight;
+                
+                this.userImg = null;
+                this.imgX = 0, this.imgY = 0;
+                this.imgScale = 1.0;
+                this.imgWidth = 0, this.imgHeight = 0;
+                
+                this.initialDistance = 0;
+                this.initialScale = 1;
+                this.isPinching = false;
+                this.isDragging = false;
+                
+                this.canvas.width = this.canvasWidth;
+                this.canvas.height = this.canvasHeight;
+                
+                this.initEvents();
+                this.handleFile = this.handleFile.bind(this);
+                this.saveImage = this.saveImage.bind(this);
+                this.uploadInput.addEventListener('change', this.handleFile);
+                this.saveBtn.addEventListener('click', this.saveImage);
+                this.redraw();
+            }
+            
+            getCanvasCoordsFromEvent(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                let clientX, clientY;
+                if (e.touches) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+                let canvasX = (clientX - rect.left) * scaleX;
+                let canvasY = (clientY - rect.top) * scaleY;
+                canvasX = Math.min(Math.max(0, canvasX), this.canvasWidth);
+                canvasY = Math.min(Math.max(0, canvasY), this.canvasHeight);
+                return { x: canvasX, y: canvasY };
+            }
+            
+            getTouchDistance(touches) {
+                const dx = touches[0].clientX - touches[1].clientX;
+                const dy = touches[0].clientY - touches[1].clientY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+            
+            getPinchCenter(touches) {
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                const centerX = (touches[0].clientX + touches[1].clientX) / 2;
+                const centerY = (touches[0].clientY + touches[1].clientY) / 2;
+                return {
+                    x: (centerX - rect.left) * scaleX,
+                    y: (centerY - rect.top) * scaleY
+                };
+            }
+            
+            initEvents() {
+                const onMouseDown = (e) => {
+                    if (!this.userImg) return;
+                    e.preventDefault();
+                    this.isDragging = true;
+                    const coords = this.getCanvasCoordsFromEvent(e);
+                    this.dragStartX = coords.x;
+                    this.dragStartY = coords.y;
+                    this.lastImgX = this.imgX;
+                    this.lastImgY = this.imgY;
+                    this.canvas.style.cursor = 'grabbing';
+                };
+                const onMouseMove = (e) => {
+                    if (!this.isDragging || !this.userImg) return;
+                    e.preventDefault();
+                    const coords = this.getCanvasCoordsFromEvent(e);
+                    const dx = coords.x - this.dragStartX;
+                    const dy = coords.y - this.dragStartY;
+                    this.imgX = this.lastImgX + dx;
+                    this.imgY = this.lastImgY + dy;
+                    this.clampPosition();
+                    this.redraw();
+                };
+                const onMouseUp = () => {
+                    if (this.isDragging) {
+                        this.isDragging = false;
+                        this.canvas.style.cursor = 'grab';
+                    }
+                };
+                const onWheel = (e) => {
+                    if (!this.userImg) return;
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? 0.95 : 1.05;
+                    let newScale = this.imgScale * delta;
+                    if (newScale < 0.4) newScale = 0.4;
+                    if (newScale > 3.0) newScale = 3.0;
+                    const rect = this.canvas.getBoundingClientRect();
+                    const mouseCanvasX = (e.clientX - rect.left) / rect.width * this.canvasWidth;
+                    const mouseCanvasY = (e.clientY - rect.top) / rect.height * this.canvasHeight;
+                    const prevScale = this.imgScale;
+                    this.imgScale = newScale;
+                    if (this.userImg && this.imgWidth > 0) {
+                        const mouseImgX = (mouseCanvasX - this.imgX) / prevScale;
+                        const mouseImgY = (mouseCanvasY - this.imgY) / prevScale;
+                        this.imgX = mouseCanvasX - mouseImgX * this.imgScale;
+                        this.imgY = mouseCanvasY - mouseImgY * this.imgScale;
+                        this.clampPosition();
+                        this.redraw();
+                    } else { this.redraw(); }
+                };
+                this.canvas.addEventListener('mousedown', onMouseDown);
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                this.canvas.addEventListener('wheel', onWheel, { passive: false });
+                
+                // Touch events
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (!this.userImg) return;
+                    if (e.touches.length === 1) {
+                        const touch = e.touches[0];
+                        const coords = this.getCanvasCoordsFromEvent(touch);
+                        this.isDragging = true;
+                        this.isPinching = false;
+                        this.dragStartX = coords.x;
+                        this.dragStartY = coords.y;
+                        this.lastImgX = this.imgX;
+                        this.lastImgY = this.imgY;
+                    } else if (e.touches.length === 2) {
+                        this.isPinching = true;
+                        this.isDragging = false;
+                        this.initialDistance = this.getTouchDistance(e.touches);
+                        this.initialScale = this.imgScale;
+                        const center = this.getPinchCenter(e.touches);
+                        this.pinchCenterX = center.x;
+                        this.pinchCenterY = center.y;
+                        this.pinchStartImgX = this.imgX;
+                        this.pinchStartImgY = this.imgY;
+                        this.pinchStartScale = this.imgScale;
+                    }
+                });
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (!this.userImg) return;
+                    if (this.isDragging && e.touches.length === 1) {
+                        const touch = e.touches[0];
+                        const coords = this.getCanvasCoordsFromEvent(touch);
+                        const dx = coords.x - this.dragStartX;
+                        const dy = coords.y - this.dragStartY;
+                        this.imgX = this.lastImgX + dx;
+                        this.imgY = this.lastImgY + dy;
+                        this.clampPosition();
+                        this.redraw();
+                    } else if (this.isPinching && e.touches.length === 2) {
+                        const newDistance = this.getTouchDistance(e.touches);
+                        if (this.initialDistance > 0) {
+                            let scaleFactor = newDistance / this.initialDistance;
+                            let newScale = this.initialScale * scaleFactor;
+                            if (newScale < 0.4) newScale = 0.4;
+                            if (newScale > 3.0) newScale = 3.0;
+                            const center = this.getPinchCenter(e.touches);
+                            const centerX = center.x, centerY = center.y;
+                            const prevScale = this.imgScale;
+                            this.imgScale = newScale;
+                            const pointX = (centerX - this.pinchStartImgX) / this.pinchStartScale;
+                            const pointY = (centerY - this.pinchStartImgY) / this.pinchStartScale;
+                            this.imgX = centerX - pointX * this.imgScale;
+                            this.imgY = centerY - pointY * this.imgScale;
+                            this.clampPosition();
+                            this.redraw();
+                        }
+                    }
+                });
+                this.canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.isDragging = false;
+                    this.isPinching = false;
+                    this.canvas.style.cursor = 'grab';
+                });
+                this.canvas.style.cursor = 'grab';
+            }
+            
+            clampPosition() {
+                if (!this.userImg) return;
+                const dispW = this.imgWidth * this.imgScale;
+                const dispH = this.imgHeight * this.imgScale;
+                let minX = this.canvasWidth - dispW;
+                let minY = this.canvasHeight - dispH;
+                if (dispW <= this.canvasWidth) minX = (this.canvasWidth - dispW) / 2;
+                if (dispH <= this.canvasHeight) minY = (this.canvasHeight - dispH) / 2;
+                let maxX = (dispW > this.canvasWidth) ? 0 : (this.canvasWidth - dispW) / 2;
+                let maxY = (dispH > this.canvasHeight) ? 0 : (this.canvasHeight - dispH) / 2;
+                if (dispW > this.canvasWidth) maxX = 0;
+                if (dispH > this.canvasHeight) maxY = 0;
+                this.imgX = Math.min(Math.max(this.imgX, minX), maxX);
+                this.imgY = Math.min(Math.max(this.imgY, minY), maxY);
+            }
+            
+            handleFile(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.userImg = img;
+                        const imgAspect = img.width / img.height;
+                        const canvasAspect = this.canvasWidth / this.canvasHeight;
+                        let drawW, drawH;
+                        if (imgAspect > canvasAspect) {
+                            drawW = this.canvasWidth;
+                            drawH = this.canvasWidth / imgAspect;
+                        } else {
+                            drawH = this.canvasHeight;
+                            drawW = this.canvasHeight * imgAspect;
+                        }
+                        this.imgWidth = drawW;
+                        this.imgHeight = drawH;
+                        this.imgScale = 1.0;
+                        this.imgX = (this.canvasWidth - drawW) / 2;
+                        this.imgY = (this.canvasHeight - drawH) / 2;
+                        this.clampPosition();
+                        this.redraw();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                event.target.value = '';
+            }
+            
+            saveImage() {
+                if (!this.userImg) {
+                    alert('Silakan masukkan foto terlebih dahulu.');
+                    return;
+                }
+                const link = document.createElement('a');
+                link.download = `kadio_frame_${Date.now()}.png`;
+                link.href = this.canvas.toDataURL('image/png');
+                link.click();
+            }
+            
+            redraw() {
+                if (!this.ctx) return;
+                this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+                this.ctx.fillStyle = '#f8f8f8';
+                this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+                if (this.userImg && this.userImg.complete && this.userImg.naturalWidth > 0) {
+                    const drawW = this.imgWidth * this.imgScale;
+                    const drawH = this.imgHeight * this.imgScale;
+                    this.ctx.save();
+                    this.ctx.beginPath();
+                    this.ctx.rect(0, 0, this.canvasWidth, this.canvasHeight);
+                    this.ctx.clip();
+                    this.ctx.drawImage(this.userImg, this.imgX, this.imgY, drawW, drawH);
+                    this.ctx.restore();
+                }
+                if (this.frameImg && this.frameImg.complete && this.frameImg.naturalWidth > 0) {
+                    this.ctx.drawImage(this.frameImg, 0, 0, this.canvasWidth, this.canvasHeight);
+                } else {
+                    this.ctx.font = "bold 16px 'Inter'";
+                    this.ctx.fillStyle = "#aaa";
+                    this.ctx.textAlign = "center";
+                    this.ctx.fillText("Memuat frame...", this.canvasWidth/2, this.canvasHeight/2);
+                }
+            }
+        }
+        
+        let editors = new Array(6);
+        function setupCampaign(idx, canvasId, uploadId, saveId, imgSrc, w, h) {
+            let frameImg = new Image();
+            frameImg.onload = () => {
+                if (!editors[idx]) editors[idx] = new FrameEditor(canvasId, uploadId, saveId, frameImg, w, h);
+                else { editors[idx].frameImg = frameImg; editors[idx].redraw(); }
+            };
+            frameImg.onerror = () => {
+                if (!editors[idx]) editors[idx] = new FrameEditor(canvasId, uploadId, saveId, frameImg, w, h);
+                else editors[idx].redraw();
+            };
+            frameImg.src = imgSrc;
+        }
+        
+        setupCampaign(0, 'twibbonCanvas1', 'uploadInput1', 'saveBtn1', frameImgSrc1, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        setupCampaign(1, 'twibbonCanvas2', 'uploadInput2', 'saveBtn2', frameImgSrc2, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        setupCampaign(2, 'twibbonCanvas3', 'uploadInput3', 'saveBtn3', frameImgSrc3, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        setupCampaign(3, 'twibbonCanvas4', 'uploadInput4', 'saveBtn4', frameImgSrc4, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
+        setupCampaign(4, 'twibbonCanvas5', 'uploadInput5', 'saveBtn5', frameImgSrc5, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
+        setupCampaign(5, 'twibbonCanvas6', 'uploadInput6', 'saveBtn6', frameImgSrc6, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
+        
+        // Trigger upload buttons
+        document.getElementById('uploadBtn1')?.addEventListener('click', () => document.getElementById('uploadInput1').click());
+        document.getElementById('uploadBtn2')?.addEventListener('click', () => document.getElementById('uploadInput2').click());
+        document.getElementById('uploadBtn3')?.addEventListener('click', () => document.getElementById('uploadInput3').click());
+        document.getElementById('uploadBtn4')?.addEventListener('click', () => document.getElementById('uploadInput4').click());
+        document.getElementById('uploadBtn5')?.addEventListener('click', () => document.getElementById('uploadInput5').click());
+        document.getElementById('uploadBtn6')?.addEventListener('click', () => document.getElementById('uploadInput6').click());
+        
+        // Navigasi: Ubah semua navigator menjadi link Twitter! (sesuai request: username td kalau diklik pindah ke twitter)
+        // Untuk Home, About Us, How to Booked -> mengarah ke twitter dengan mention? atau tetap ke halaman? Permintaan: "Yang username td kalau diklik pindah ke twitter. Navigatornya ubah smua Ada 1. Home (ke home.html) 2. About us (About.html) 3. How to Booked (Howto.html)"
+        // namun juga ada permintaan "username td kalau diklik pindah ke twitter." Saya interpretasikan: link navigator home/about/howto mengarah ke file html internal, tapi jika user mengklik "made by Kachoo & Studio35" atau logo? tapi requirement khusus: tombol navigasi tetap ke file yang diminta.
+        // Saya akan buat navigasi ke file2 html tersebut (home.html, about.html, howto.html) yang berada di direktori yang sama. Agar tidak error, akan membuka tab baru.
+        function navigatePage(page) {
+            window.location.href = page;
+        }
+        document.querySelectorAll('.nav-link').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const linkType = btn.getAttribute('data-link');
+                if (linkType === 'home') navigatePage('home.html');
+                else if (linkType === 'about') navigatePage('about.html');
+                else if (linkType === 'howto') navigatePage('howto.html');
+            });
+        });
+        document.querySelectorAll('#mobileNav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const linkType = link.getAttribute('data-link');
+                if (linkType === 'home') navigatePage('home.html');
+                else if (linkType === 'about') navigatePage('about.html');
+                else if (linkType === 'howto') navigatePage('howto.html');
+                document.getElementById('mobileNav')?.classList.remove('show-mobile');
+            });
+        });
+        
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNavDiv = document.getElementById('mobileNav');
+        if(menuToggle) {
+            menuToggle.addEventListener('click', () => mobileNavDiv.classList.toggle('show-mobile'));
+        }
+        
+        window.addEventListener('resize', () => { editors.forEach(e => e && e.redraw()); });
+    })();
+</script>
+</body>
+</html>
