@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHODET - Instagram Post Preview Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f5f5f5;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            gap: 30px;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        /* Form Panel - putih */
+        .form-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            width: 340px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+        /* Header CHODET */
+        .chodet-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #1a1a1a;
+        }
+        .chodet-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+        .chodet-sub {
+            font-size: 10px;
+            font-weight: 500;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .lang-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .lang-btn {
+            flex: 1;
+            padding: 8px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+        }
+        .lang-btn.active {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 11px;
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-family: 'Poppins', sans-serif;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #1a1a1a;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        input:focus, textarea:focus {
+            border-color: #0095f6;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+        input::placeholder, textarea::placeholder {
+            color: #bbb;
+            font-weight: 400;
+            font-size: 12px;
+        }
+        .download-btn {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .download-btn:hover {
+            background: #333;
+        }
+        .file-input-label {
+            background: #f5f5f5;
+            text-align: center;
+            padding: 8px;
+            border-radius: 12px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            color: #555;
+            border: 1px solid #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Love color option */
+        .love-option {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .love-option span {
+            font-size: 11px;
+            color: #555;
+            font-family: 'Poppins', sans-serif;
+        }
+        .love-color-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+        .love-color-btn.black {
+            background: #262626;
+        }
+        .love-color-btn.red {
+            background: #ed4956;
+        }
+        .love-color-btn.active {
+            border-color: #0095f6;
+            transform: scale(1.1);
+        }
+        
+        /* Container luar dengan gradient blur */
+        .preview-outer {
+            background: radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), rgba(0,0,0,0.02));
+            padding: 25px 20px 25px 20px;
+            border-radius: 48px;
+            position: relative;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+        }
+        
+        .preview-outer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 48px;
+            padding: 2px;
+            background: linear-gradient(145deg, rgba(0,0,0,0.2), rgba(255,255,255,0.5), rgba(0,0,0,0.1));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        /* Preview card - font default Instagram */
+        .instagram-preview {
+            background: white;
+            width: 360px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: scale(0.98);
+            transition: transform 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        .instagram-preview:hover {
+            transform: scale(0.99);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 11px 14px;
+            gap: 10px;
+            background: white;
+        }
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #0095f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            overflow: hidden;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .username {
+            font-weight: 700;
+            font-size: 13px;
+            color: #262626;
+        }
+        .location {
+            font-size: 11px;
+            color: #8e8e8e;
+            margin-top: 2px;
+        }
+        .menu-dot {
+            margin-left: auto;
+            font-size: 16px;
+            font-weight: bold;
+            color: #262626;
+        }
+        .media-container {
+            width: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 360px;
+            background-color: #efefef;
+        }
+        .media-container img, .media-container video {
+            width: 100%;
+            height: auto;
+            max-height: 450px;
+            object-fit: cover;
+            display: block;
+        }
+        .action-buttons {
+            padding: 6px 12px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .action-icons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .action-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .action-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .save-icon {
+            margin-left: auto;
+        }
+        .like-count {
+            font-weight: 600;
+            font-size: 13px;
+            padding: 0 12px 5px 12px;
+            color: #262626;
+        }
+        .caption-text {
+            padding: 0 12px 8px 12px;
+            font-size: 13px;
+        }
+        .caption-username {
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        .caption-message {
+            font-weight: 400;
+        }
+        .timestamp {
+            padding: 0 12px 12px 12px;
+            font-size: 10px;
+            color: #8e8e8e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-panel">
+    <div class="chodet-header">
+        <div class="chodet-title">CHODET</div>
+        <div class="chodet-sub">Social Media Editor System<br>Featured by The Kachoo For Roleplay Purpose Only</div>
+    </div>
+    <div class="lang-buttons">
+        <button class="lang-btn active" id="btnIndonesia">Bahasa Indonesia</button>
+        <button class="lang-btn" id="btnInggris">English</button>
+    </div>
+    
+    <div class="form-group">
+        <label id="labelAvatar">Foto Profil</label>
+        <input type="file" id="avatarUpload" accept="image/*">
+        <div class="file-input-label" id="uploadAvatarLabel">Upload foto profil</div>
+    </div>
+    <div class="form-group">
+        <label id="labelUsername">Username</label>
+        <input type="text" id="username" placeholder="thekachoo" value="">
+    </div>
+    <div class="form-group">
+        <label id="labelLocation">Lokasi (opsional)</label>
+        <input type="text" id="location" placeholder="Jakarta Selatan, Indonesia" value="">
+    </div>
+    <div class="form-group">
+        <label id="labelMedia">Upload Foto/Video Postingan</label>
+        <input type="file" id="mediaUpload" accept="image/*,video/*">
+        <div class="file-input-label" id="uploadMediaLabel">Klik untuk pilih gambar atau video</div>
+    </div>
+    <div class="form-group">
+        <label id="labelCaption">Caption</label>
+        <textarea id="caption" placeholder="Tulis caption..."></textarea>
+    </div>
+    <div class="form-group">
+        <label id="labelLikes">Jumlah Like</label>
+        <input type="number" id="likeCount" value="0" step="1" placeholder="0">
+    </div>
+    <div class="form-group">
+        <label id="labelTimestamp">Waktu posting</label>
+        <input type="text" id="timestamp" placeholder="Baru saja" value="">
+    </div>
+    <div class="form-group">
+        <label>Warna Love</label>
+        <div class="love-option">
+            <span>Pilih warna:</span>
+            <div class="love-color-btn black active" id="loveBlack"></div>
+            <div class="love-color-btn red" id="loveRed"></div>
+        </div>
+    </div>
+    <button class="download-btn" id="downloadBtn">Download sebagai PNG</button>
+</div>
+
+<div class="preview-outer" id="previewOuter">
+    <div class="instagram-preview" id="instagramCard">
+        <div class="post-header">
+            <div class="avatar" id="avatarContainer">
+                <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3ETK%3C/text%3E%3C/svg%3E" alt="avatar">
+            </div>
+            <div>
+                <div class="username" id="displayUsername">thekachoo</div>
+                <div class="location" id="displayLocation">Jakarta Selatan, Indonesia</div>
+            </div>
+            <div class="menu-dot">•••</div>
+        </div>
+
+        <div class="media-container" id="mediaContainer">
+            <img id="previewMedia" src="https://placehold.co/360x360/EFEFEF/888888?text=Preview" alt="preview">
+        </div>
+
+        <div class="action-buttons">
+            <div class="action-icons">
+                <div class="action-icon" id="likeIcon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </div>
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"/>
+                        <circle cx="6" cy="12" r="3"/>
+                        <circle cx="18" cy="19" r="3"/>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="save-icon">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="like-count" id="displayLikes">0 suka</div>
+
+        <div class="caption-text">
+            <span class="caption-username" id="captionUsername">thekachoo</span>
+            <span class="caption-message" id="displayCaption"></span>
+        </div>
+
+        <div class="timestamp" id="displayTimestamp">Baru saja</div>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        id: {
+            labelAvatar: "Foto Profil",
+            uploadAvatarLabel: "Upload foto profil",
+            labelUsername: "Username",
+            labelLocation: "Lokasi (opsional)",
+            labelMedia: "Upload Foto/Video Postingan",
+            uploadMediaLabel: "Klik untuk pilih gambar atau video",
+            labelCaption: "Caption",
+            labelLikes: "Jumlah Like",
+            labelTimestamp: "Waktu posting",
+            downloadBtn: "Download sebagai PNG",
+            likesSuffix: "suka",
+            defaultTimestamp: "Baru saja"
+        },
+        en: {
+            labelAvatar: "Profile Photo",
+            uploadAvatarLabel: "Upload profile photo",
+            labelUsername: "Username",
+            labelLocation: "Location (optional)",
+            labelMedia: "Upload Post Photo/Video",
+            uploadMediaLabel: "Click to select image or video",
+            labelCaption: "Caption",
+            labelLikes: "Number of Likes",
+            labelTimestamp: "Post time",
+            downloadBtn: "Download as PNG",
+            likesSuffix: "likes",
+            defaultTimestamp: "Just now"
+        }
+    };
+    
+    let currentLang = 'id';
+    let loveColor = 'black'; // black atau red
+    let liked = false;
+    
+    const usernameInput = document.getElementById('username');
+    const locationInput = document.getElementById('location');
+    const captionInput = document.getElementById('caption');
+    const likeCountInput = document.getElementById('likeCount');
+    const timestampInput = document.getElementById('timestamp');
+    const mediaUpload = document.getElementById('mediaUpload');
+    const avatarUpload = document.getElementById('avatarUpload');
+    const mediaContainer = document.getElementById('mediaContainer');
+    const avatarImg = document.getElementById('avatarImg');
+    const likeIcon = document.getElementById('likeIcon');
+    let likeSvg = likeIcon.querySelector('svg');
+    
+    const displayUsername = document.getElementById('displayUsername');
+    const displayLocation = document.getElementById('displayLocation');
+    const displayCaption = document.getElementById('displayCaption');
+    const displayLikes = document.getElementById('displayLikes');
+    const displayTimestamp = document.getElementById('displayTimestamp');
+    const captionUsernameSpan = document.getElementById('captionUsername');
+    
+    // Set placeholder value (tenggelam, tidak mengisi value)
+    usernameInput.placeholder = 'thekachoo';
+    locationInput.placeholder = 'Jakarta Selatan, Indonesia';
+    timestampInput.placeholder = 'Baru saja';
+    
+    function updateLoveColor() {
+        const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956';
+        const fillColor = loveColor === 'black' ? 'none' : '#ed4956';
+        
+        if (!liked) {
+            likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`;
+        } else {
+            likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>`;
+        }
+    }
+    
+    function updatePreview() {
+        let username = usernameInput.value.trim() || (usernameInput.placeholder);
+        displayUsername.innerText = username;
+        captionUsernameSpan.innerText = username;
+        
+        let location = locationInput.value.trim() || '';
+        displayLocation.innerText = location || '';
+        
+        let captionText = captionInput.value || '';
+        displayCaption.innerText = captionText;
+        
+        let likes = parseInt(likeCountInput.value) || 0;
+        let likesText = currentLang === 'id' ? 'suka' : 'likes';
+        let formattedLikes = likes.toLocaleString(currentLang === 'id' ? 'id-ID' : 'en-US');
+        displayLikes.innerText = formattedLikes + ' ' + likesText;
+        
+        let timestampText = timestampInput.value.trim() || (currentLang === 'id' ? 'Baru saja' : 'Just now');
+        displayTimestamp.innerText = timestampText;
+        
+        // Update avatar inisial jika belum upload foto
+        if (!avatarUpload.files.length) {
+            let initial = (usernameInput.value.trim() || 'TK').slice(0,2).toUpperCase();
+            avatarImg.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3E${initial}%3C/text%3E%3C/svg%3E`;
+        }
+    }
+    
+    function updateLanguage() {
+        const t = translations[currentLang];
+        document.getElementById('labelAvatar').innerText = t.labelAvatar;
+        document.getElementById('uploadAvatarLabel').innerText = t.uploadAvatarLabel;
+        document.getElementById('labelUsername').innerText = t.labelUsername;
+        document.getElementById('labelLocation').innerText = t.labelLocation;
+        document.getElementById('labelMedia').innerText = t.labelMedia;
+        document.getElementById('uploadMediaLabel').innerText = t.uploadMediaLabel;
+        document.getElementById('labelCaption').innerText = t.labelCaption;
+        document.getElementById('labelLikes').innerText = t.labelLikes;
+        document.getElementById('labelTimestamp').innerText = t.labelTimestamp;
+        document.getElementById('downloadBtn').innerText = t.downloadBtn;
+        
+        timestampInput.placeholder = t.defaultTimestamp;
+        updatePreview();
+    }
+    
+    // Event listeners
+    document.getElementById('btnIndonesia').addEventListener('click', () => {
+        currentLang = 'id';
+        document.getElementById('btnIndonesia').classList.add('active');
+        document.getElementById('btnInggris').classList.remove('active');
+        updateLanguage();
+    });
+    
+    document.getElementById('btnInggris').addEventListener('click', () => {
+        currentLang = 'en';
+        document.getElementById('btnInggris').classList.add('active');
+        document.getElementById('btnIndonesia').classList.remove('active');
+        updateLanguage();
+    });
+    
+    document.getElementById('loveBlack').addEventListener('click', () => {
+        loveColor = 'black';
+        document.getElementById('loveBlack').classList.add('active');
+        document.getElementById('loveRed').classList.remove('active');
+        updateLoveColor();
+    });
+    
+    document.getElementById('loveRed').addEventListener('click', () => {
+        loveColor = 'red';
+        document.getElementById('loveRed').classList.add('active');
+        document.getElementById('loveBlack').classList.remove('active');
+        updateLoveColor();
+    });
+    
+    avatarUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                avatarImg.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    mediaUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(!file) return;
+        const fileURL = URL.createObjectURL(file);
+        const fileType = file.type;
+        
+        if(fileType.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = fileURL;
+            img.style.width = '100%';
+            img.style.maxHeight = '450px';
+            img.style.objectFit = 'cover';
+            mediaContainer.innerHTML = '';
+            mediaContainer.appendChild(img);
+        } else if(fileType.startsWith('video/')) {
+            const video = document.createElement('video');
+            video.src = fileURL;
+            video.controls = true;
+            video.style.width = '100%';
+            video.style.maxHeight = '450px';
+            mediaContainer.innerHTML = '';
+            mediaContainer.appendChild(video);
+        } else {
+            alert(currentLang === 'id' ? "Format tidak didukung" : "Format not supported");
+        }
+    });
+    
+    function setDefaultMedia() {
+        if(!mediaContainer.querySelector('img, video')) {
+            const defaultImg = document.createElement('img');
+            defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Preview";
+            defaultImg.style.width = '100%';
+            defaultImg.style.objectFit = 'cover';
+            mediaContainer.innerHTML = '';
+            mediaContainer.appendChild(defaultImg);
+        }
+    }
+    
+    usernameInput.addEventListener('input', updatePreview);
+    locationInput.addEventListener('input', updatePreview);
+    captionInput.addEventListener('input', updatePreview);
+    likeCountInput.addEventListener('input', updatePreview);
+    timestampInput.addEventListener('input', updatePreview);
+    mediaUpload.addEventListener('change', updatePreview);
+    
+    // Like interaktif
+    likeIcon.addEventListener('click', function() {
+        if(!liked) {
+            let currentLikes = parseInt(likeCountInput.value) || 0;
+            likeCountInput.value = currentLikes + 1;
+            updatePreview();
+            liked = true;
+            likeSvg.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>';
+        } else {
+            let currentLikes = parseInt(likeCountInput.value) || 0;
+            if(currentLikes > 0) likeCountInput.value = currentLikes - 1;
+            updatePreview();
+            liked = false;
+            const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956';
+            const fillColor = loveColor === 'black' ? 'none' : '#ed4956';
+            likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`;
+        }
+    });
+    
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        const outerElement = document.getElementById('previewOuter');
+        html2canvas(outerElement, {
+            scale: 3,
+            backgroundColor: null,
+            logging: false,
+            useCORS: true,
+            allowTaint: false
+        }).then((canvas) => {
+            const link = document.createElement('a');
+            let usernameForFile = usernameInput.value.trim() || 'post';
+            link.download = `instagram_${usernameForFile}_post.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(error => {
+            alert(currentLang === 'id' ? 'Terjadi kesalahan' : 'Error occurred');
+        });
+    });
+    
+    updateLanguage();
+    setDefaultMedia();
+    updateLoveColor();
+</script>
+</body>
+</html>
