@@ -109,7 +109,7 @@
         .x-logo { font-weight: 900; font-size: 16px; }
         .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; }
 
-        /* CROP MODAL - SOLID HITAM, DI PALING DEPAN */
+        /* CROP MODAL */
         .crop-modal {
             display: none;
             position: fixed;
@@ -153,14 +153,12 @@
         .crop-modal-btn.cancel { background: #333; color: white; }
         .crop-modal-btn.save { background: #0095f6; color: white; }
         
-        /* Cropper styling biar keliatan di background hitam */
         .cropper-view-box { outline: 2px solid white; }
         .cropper-line, .cropper-point { background-color: white; }
         .cropper-dashed { border-color: rgba(255,255,255,0.5); }
         .cropper-center::before, .cropper-center::after { background-color: white; }
         
-        /* toast untuk notifikasi */
-        .toast-notif { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 10px 24px; border-radius: 60px; font-size: 14px; font-weight: 500; z-index: 30000; box-shadow: 0 4px 12px rgba(0,0,0,0.3); pointer-events: none; opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
+        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 30000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
     </style>
 </head>
 <body>
@@ -341,29 +339,9 @@
         </div>
     </footer>
 
-    <!-- MODAL CROP UNTUK FOTO PROFIL -->
-    <div class="crop-modal" id="profileCropModal">
-        <div class="crop-container">
-            <img id="profileCropImage" src="">
-        </div>
-        <div class="crop-modal-buttons">
-            <button class="crop-modal-btn cancel" id="cancelProfileCrop">Batal</button>
-            <button class="crop-modal-btn save" id="saveProfileCrop">Simpan</button>
-        </div>
-    </div>
-
-    <!-- MODAL CROP UNTUK FOTO POSTINGAN -->
-    <div class="crop-modal" id="postCropModal">
-        <div class="crop-container">
-            <img id="postCropImage" src="">
-        </div>
-        <div class="crop-modal-buttons">
-            <button class="crop-modal-btn cancel" id="cancelPostCrop">Batal</button>
-            <button class="crop-modal-btn save" id="savePostCrop">Simpan</button>
-        </div>
-    </div>
-    
-    <div class="toast-notif" id="toastMsg"></div>
+    <div class="crop-modal" id="profileCropModal"><div class="crop-container"><img id="profileCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelProfileCrop">Batal</button><button class="crop-modal-btn save" id="saveProfileCrop">Simpan</button></div></div>
+    <div class="crop-modal" id="postCropModal"><div class="crop-container"><img id="postCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelPostCrop">Batal</button><button class="crop-modal-btn save" id="savePostCrop">Simpan</button></div></div>
+    <div class="toast-msg" id="toastMsg"></div>
 
     <script>
         // Mobile menu
@@ -385,11 +363,7 @@
             document.addEventListener('click', function(e) { if (!desktopNavTrigger.contains(e.target) && !desktopNavDropdown.contains(e.target)) desktopNavDropdown.classList.remove('active'); });
         }
 
-        // Translations
-        const translations = {
-            id: { labelAvatar: "Foto Profil", uploadAvatarLabel: "Upload foto profil", labelUsername: "Username", labelLocation: "Lokasi", labelMedia: "Upload Foto/Video", uploadMediaLabel: "Klik untuk pilih", labelCaption: "Caption", labelLikes: "Jumlah Like", labelTimestamp: "Waktu posting", likesSuffix: "suka", defaultTimestamp: "Baru saja" },
-            en: { labelAvatar: "Profile Photo", uploadAvatarLabel: "Upload profile photo", labelUsername: "Username", labelLocation: "Location", labelMedia: "Upload Photo/Video", uploadMediaLabel: "Click to select", labelCaption: "Caption", labelLikes: "Number of Likes", labelTimestamp: "Post time", likesSuffix: "likes", defaultTimestamp: "Just now" }
-        };
+        const translations = { id: { labelAvatar: "Foto Profil", uploadAvatarLabel: "Upload foto profil", labelUsername: "Username", labelLocation: "Lokasi", labelMedia: "Upload Foto/Video", uploadMediaLabel: "Klik untuk pilih", labelCaption: "Caption", labelLikes: "Jumlah Like", labelTimestamp: "Waktu posting", likesSuffix: "suka", defaultTimestamp: "Baru saja" }, en: { labelAvatar: "Profile Photo", uploadAvatarLabel: "Upload profile photo", labelUsername: "Username", labelLocation: "Location", labelMedia: "Upload Photo/Video", uploadMediaLabel: "Click to select", labelCaption: "Caption", labelLikes: "Number of Likes", labelTimestamp: "Post time", likesSuffix: "likes", defaultTimestamp: "Just now" } };
         
         let currentLang = 'id';
         let loveColor = 'black';
@@ -398,8 +372,7 @@
         let currentVideoFile = null;
         let currentVideoElement = null;
         let currentCropRatio = '1:1';
-        let profileCropper = null;
-        let postCropper = null;
+        let profileCropper = null, postCropper = null;
         
         const usernameInput = document.getElementById('username');
         const locationInput = document.getElementById('location');
@@ -422,11 +395,6 @@
         const displayTimestamp = document.getElementById('displayTimestamp');
         const captionUsernameSpan = document.getElementById('captionUsername');
         
-        usernameInput.placeholder = 'thekachoo';
-        locationInput.placeholder = 'Jakarta Selatan, Indonesia';
-        timestampInput.placeholder = 'Baru saja';
-        
-        // Ratio selection untuk foto
         document.querySelectorAll('.ratio-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
@@ -435,7 +403,6 @@
             });
         });
         
-        // Background options
         let currentBg = 'transparent';
         function updateBackground() {
             if (currentBg === 'transparent') previewOuter.style.background = 'radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), rgba(0,0,0,0.02))';
@@ -491,105 +458,34 @@
             updatePreview();
         }
         
-        // PROFILE CROP (1:1 saja)
         function showProfileCrop(file) {
             const modal = document.getElementById('profileCropModal');
             const img = document.getElementById('profileCropImage');
-            const url = URL.createObjectURL(file);
-            img.src = url;
+            img.src = URL.createObjectURL(file);
             modal.style.display = 'flex';
-            setTimeout(() => {
-                if (profileCropper) profileCropper.destroy();
-                profileCropper = new Cropper(img, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    autoCropArea: 1,
-                    scalable: true,
-                    zoomable: true,
-                    background: false
-                });
-            }, 100);
+            setTimeout(() => { if (profileCropper) profileCropper.destroy(); profileCropper = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1 }); }, 100);
         }
+        document.getElementById('cancelProfileCrop').addEventListener('click', () => { document.getElementById('profileCropModal').style.display = 'none'; if (profileCropper) profileCropper.destroy(); profileCropper = null; });
+        document.getElementById('saveProfileCrop').addEventListener('click', () => { if (profileCropper) { const canvas = profileCropper.getCroppedCanvas({ width: 300, height: 300 }); canvas.toBlob(blob => { avatarImg.src = URL.createObjectURL(blob); document.getElementById('profileCropModal').style.display = 'none'; if (profileCropper) profileCropper.destroy(); profileCropper = null; }, 'image/png'); } });
         
-        document.getElementById('cancelProfileCrop').addEventListener('click', () => {
-            document.getElementById('profileCropModal').style.display = 'none';
-            if (profileCropper) profileCropper.destroy();
-            profileCropper = null;
-        });
-        
-        document.getElementById('saveProfileCrop').addEventListener('click', () => {
-            if (profileCropper) {
-                const canvas = profileCropper.getCroppedCanvas({ width: 300, height: 300 });
-                canvas.toBlob((blob) => {
-                    avatarImg.src = URL.createObjectURL(blob);
-                    document.getElementById('profileCropModal').style.display = 'none';
-                    if (profileCropper) profileCropper.destroy();
-                    profileCropper = null;
-                }, 'image/png');
-            }
-        });
-        
-        // POST CROP untuk FOTO (1:1 atau 4:5)
         function showPostCrop(file) {
             const modal = document.getElementById('postCropModal');
             const img = document.getElementById('postCropImage');
-            const url = URL.createObjectURL(file);
-            img.src = url;
+            img.src = URL.createObjectURL(file);
             modal.style.display = 'flex';
             const aspect = currentCropRatio === '1:1' ? 1 : 4/5;
-            setTimeout(() => {
-                if (postCropper) postCropper.destroy();
-                postCropper = new Cropper(img, {
-                    aspectRatio: aspect,
-                    viewMode: 1,
-                    autoCropArea: 1,
-                    scalable: true,
-                    zoomable: true,
-                    background: false
-                });
-            }, 100);
+            setTimeout(() => { if (postCropper) postCropper.destroy(); postCropper = new Cropper(img, { aspectRatio: aspect, viewMode: 1, autoCropArea: 1 }); }, 100);
         }
+        document.getElementById('cancelPostCrop').addEventListener('click', () => { document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; });
+        document.getElementById('savePostCrop').addEventListener('click', () => { if (postCropper) { let width = 1080, height = 1080; if (currentCropRatio === '4:5') { width = 1080; height = 1350; } const canvas = postCropper.getCroppedCanvas({ width, height }); canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const img = document.createElement('img'); img.src = url; img.style.width = '100%'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(img); currentMediaType = 'image'; currentVideoFile = null; document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; }, 'image/png'); } });
         
-        document.getElementById('cancelPostCrop').addEventListener('click', () => {
-            document.getElementById('postCropModal').style.display = 'none';
-            if (postCropper) postCropper.destroy();
-            postCropper = null;
-        });
-        
-        document.getElementById('savePostCrop').addEventListener('click', () => {
-            if (postCropper) {
-                let width = 1080, height = 1080;
-                if (currentCropRatio === '4:5') { width = 1080; height = 1350; }
-                const canvas = postCropper.getCroppedCanvas({ width: width, height: height });
-                canvas.toBlob((blob) => {
-                    const url = URL.createObjectURL(blob);
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.style.width = '100%';
-                    img.style.height = 'auto';
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(img);
-                    currentMediaType = 'image';
-                    currentVideoFile = null;
-                    document.getElementById('postCropModal').style.display = 'none';
-                    if (postCropper) postCropper.destroy();
-                    postCropper = null;
-                }, 'image/png');
-            }
-        });
-        
-        avatarUpload.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) showProfileCrop(file);
-        });
-        
+        avatarUpload.addEventListener('change', (e) => { if (e.target.files[0] && e.target.files[0].type.startsWith('image/')) showProfileCrop(e.target.files[0]); });
         mediaUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
             ratioOptions.style.display = 'flex';
-            if (file.type.startsWith('image/')) {
-                showPostCrop(file);
-            } else if (file.type.startsWith('video/')) {
+            if (file.type.startsWith('image/')) showPostCrop(file);
+            else if (file.type.startsWith('video/')) {
                 currentMediaType = 'video';
                 currentVideoFile = file;
                 const url = URL.createObjectURL(file);
@@ -605,66 +501,53 @@
             }
         });
         
-        function setDefaultMedia() {
-            if (!mediaContainer.querySelector('img, video')) {
-                const defaultImg = document.createElement('img');
-                defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload";
-                defaultImg.style.width = '100%';
-                mediaContainer.innerHTML = '';
-                mediaContainer.appendChild(defaultImg);
-                currentMediaType = 'image';
-            }
-        }
+        function setDefaultMedia() { if (!mediaContainer.querySelector('img, video')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); currentMediaType = 'image'; } }
         
-        function showToast(msg) {
-            const toast = document.getElementById('toastMsg');
-            toast.innerText = msg;
-            toast.style.opacity = '1';
-            setTimeout(() => { toast.style.opacity = '0'; }, 2500);
-        }
+        function showToast(msg) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 2500); }
         
-        // FIX: Download video BERSAMA FRAME INSTAGRAM secara 100% WORKING
-        // Menggunakan pendekatan rekaman dari previewOuter dengan captureStream + MediaRecorder
+        // PERBAIKAN UTAMA: Rekam video dengan durasi 10 detik, stabil
         async function downloadVideoWithFrame() {
             const previewElement = document.getElementById('previewOuter');
             if (!previewElement) return;
             
-            // Pastikan video sedang diputar agar ada gambar
-            if (currentVideoElement && currentVideoElement.paused) {
-                await currentVideoElement.play().catch(e => console.warn("Auto-play mungkin diblokir, video akan tetap direkam"));
-            }
-            
-            showToast("Merekam video dengan frame Instagram... (max 6 detik)");
+            showToast('⏺️ Merekam video dengan frame Instagram (10 detik)...');
             
             try {
-                // Gunakan captureStream dari element jika didukung, jika tidak fallback ke canvas capture
+                // Pastikan video berjalan
+                if (currentVideoElement && currentVideoElement.paused) {
+                    await currentVideoElement.play().catch(e => console.log("Play gagal, tetap lanjut"));
+                }
+                
+                // Buat canvas untuk fallback jika captureStream tidak tersedia
                 let stream = null;
+                let intervalId = null;
+                let canvas = null;
+                
                 if (previewElement.captureStream) {
                     stream = previewElement.captureStream(30);
                 } else {
-                    // fallback: gunakan canvas capture dari html2canvas setiap frame
-                    const canvas = document.createElement('canvas');
+                    // Fallback: canvas capture
+                    canvas = document.createElement('canvas');
                     canvas.width = previewElement.offsetWidth;
                     canvas.height = previewElement.offsetHeight;
                     const ctx = canvas.getContext('2d');
                     stream = canvas.captureStream(30);
-                    const interval = setInterval(async () => {
+                    intervalId = setInterval(async () => {
                         try {
                             const frameCanvas = await html2canvas(previewElement, { scale: 2, backgroundColor: null, useCORS: true });
                             ctx.drawImage(frameCanvas, 0, 0, canvas.width, canvas.height);
-                        } catch(e) { console.warn(e); }
+                        } catch(e) {}
                     }, 100);
-                    setTimeout(() => clearInterval(interval), 7000);
                 }
                 
-                if (!stream) throw new Error("Tidak dapat membuat stream");
+                if (!stream) throw new Error("Tidak bisa membuat stream");
                 
                 const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
                 const chunks = [];
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) chunks.push(e.data);
-                };
+                
+                mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
                 mediaRecorder.onstop = () => {
+                    if (intervalId) clearInterval(intervalId);
                     const blob = new Blob(chunks, { type: 'video/webm' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -672,19 +555,21 @@
                     a.href = url;
                     a.click();
                     URL.revokeObjectURL(url);
-                    showToast("Video dengan frame Instagram berhasil diunduh! (.webm)");
+                    showToast('✅ Video siap! File .webm dengan frame Instagram');
                 };
+                
                 mediaRecorder.start();
+                // Rekam selama 10 detik (cukup untuk video pendek)
                 setTimeout(() => {
                     if (mediaRecorder.state === 'recording') mediaRecorder.stop();
-                }, 6000);
+                }, 10000);
+                
             } catch (err) {
                 console.error(err);
-                showToast("Gagal merekam video, coba gunakan browser modern (Chrome/Edge)");
+                showToast('❌ Gagal merekam video, coba browser lain (Chrome/Edge)');
             }
         }
         
-        // DOWNLOAD: untuk gambar png, untuk video panggil fungsi video dengan frame
         document.getElementById('downloadBtn').addEventListener('click', async () => {
             if (currentMediaType === 'video' && currentVideoElement) {
                 await downloadVideoWithFrame();
@@ -695,34 +580,14 @@
                     link.download = `instapost_${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-                }).catch(() => showToast("Gagal mengunduh gambar"));
+                }).catch(() => showToast('Gagal mengunduh gambar'));
             }
         });
         
-        document.getElementById('btnIndonesia').addEventListener('click', () => {
-            currentLang = 'id';
-            document.getElementById('btnIndonesia').classList.add('active');
-            document.getElementById('btnInggris').classList.remove('active');
-            updateLanguage();
-        });
-        document.getElementById('btnInggris').addEventListener('click', () => {
-            currentLang = 'en';
-            document.getElementById('btnInggris').classList.add('active');
-            document.getElementById('btnIndonesia').classList.remove('active');
-            updateLanguage();
-        });
-        document.getElementById('loveBlack').addEventListener('click', () => {
-            loveColor = 'black';
-            document.getElementById('loveBlack').classList.add('active');
-            document.getElementById('loveRed').classList.remove('active');
-            updateLoveColor();
-        });
-        document.getElementById('loveRed').addEventListener('click', () => {
-            loveColor = 'red';
-            document.getElementById('loveRed').classList.add('active');
-            document.getElementById('loveBlack').classList.remove('active');
-            updateLoveColor();
-        });
+        document.getElementById('btnIndonesia').addEventListener('click', () => { currentLang = 'id'; document.getElementById('btnIndonesia').classList.add('active'); document.getElementById('btnInggris').classList.remove('active'); updateLanguage(); });
+        document.getElementById('btnInggris').addEventListener('click', () => { currentLang = 'en'; document.getElementById('btnInggris').classList.add('active'); document.getElementById('btnIndonesia').classList.remove('active'); updateLanguage(); });
+        document.getElementById('loveBlack').addEventListener('click', () => { loveColor = 'black'; document.getElementById('loveBlack').classList.add('active'); document.getElementById('loveRed').classList.remove('active'); updateLoveColor(); });
+        document.getElementById('loveRed').addEventListener('click', () => { loveColor = 'red'; document.getElementById('loveRed').classList.add('active'); document.getElementById('loveBlack').classList.remove('active'); updateLoveColor(); });
         
         usernameInput.addEventListener('input', updatePreview);
         locationInput.addEventListener('input', updatePreview);
@@ -753,4 +618,4 @@
         updateBackground();
     </script>
 </body>
-        </html>
+                                                            </html>
