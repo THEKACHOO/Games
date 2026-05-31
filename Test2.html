@@ -468,6 +468,25 @@
             border: 1px solid #ddd;
             cursor: pointer;
         }
+        
+        .ratio-options {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .ratio-btn {
+            padding: 6px 16px;
+            border-radius: 100px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .ratio-btn.active {
+            background: #1a1a1a;
+            color: white;
+        }
 
         /* Preview Outer */
         .preview-outer {
@@ -540,15 +559,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 360px;
             background-color: #efefef;
         }
 
         .media-container img, .media-container video {
             width: 100%;
             height: auto;
-            max-height: 450px;
-            object-fit: cover;
             display: block;
         }
 
@@ -726,12 +742,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 2000;
             justify-content: center;
             align-items: center;
         }
-        .cropper-container {
+        .cropper-container-custom {
             background: white;
             border-radius: 20px;
             max-width: 90vw;
@@ -753,6 +769,12 @@
         }
         .cropper-btn.cancel { background: #ccc; }
         .cropper-btn.save { background: #0095f6; color: white; }
+        
+        .video-canvas-preview {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -769,9 +791,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="desktop-nav-dropdown" id="desktopNavDropdown">
-                    <a href="#" class="nav-button"><i class="fas fa-home"></i>Home</a>
-                    <a href="#" class="nav-button"><i class="fas fa-star"></i>Menu 2</a>
-                    <a href="#" class="nav-button"><i class="fas fa-bolt"></i>Menu 3</a>
+                    <a href="#" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a>
+                    <a href="#" class="nav-button"><i class="fas fa-star"></i> Studio 35°</a>
+                    <a href="#" class="nav-button"><i class="fas fa-bolt"></i> FLEQ</a>
                 </div>
             </div>
             <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -786,9 +808,9 @@
             <i class="fas fa-times"></i>
         </button>
         <ul class="mobile-menu-list">
-            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i>Home</a></li>
-            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-star"></i>Menu 2</a></li>
-            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-bolt"></i>Menu 3</a></li>
+            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i> The Kachoo</a></li>
+            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-star"></i> Studio 35°</a></li>
+            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-bolt"></i> FLEQ</a></li>
         </ul>
     </div>
 
@@ -818,6 +840,10 @@
                         <label id="labelMedia">Upload Foto/Video</label>
                         <input type="file" id="mediaUpload" accept="image/*,video/*">
                         <div class="file-input-label" id="uploadMediaLabel">Klik untuk pilih</div>
+                        <div class="ratio-options" id="ratioOptions" style="display:none;">
+                            <button class="ratio-btn active" data-ratio="1:1">1:1 (Persegi)</button>
+                            <button class="ratio-btn" data-ratio="4:5">4:5 (Portrait)</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label id="labelCaption">Caption</label>
@@ -941,12 +967,24 @@
         </div>
     </footer>
 
+    <!-- Modal Cropper untuk Profil -->
     <div class="cropper-modal" id="cropperModal">
-        <div class="cropper-container">
+        <div class="cropper-container-custom">
             <img id="cropperImage" src="">
             <div class="cropper-buttons">
                 <button class="cropper-btn cancel" id="cancelCrop">Batal</button>
                 <button class="cropper-btn save" id="saveCrop">Simpan</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Cropper untuk Post -->
+    <div class="cropper-modal" id="postCropperModal">
+        <div class="cropper-container-custom">
+            <img id="postCropperImage" src="">
+            <div class="cropper-buttons">
+                <button class="cropper-btn cancel" id="cancelPostCrop">Batal</button>
+                <button class="cropper-btn save" id="savePostCrop">Simpan</button>
             </div>
         </div>
     </div>
@@ -987,10 +1025,14 @@
         let currentLang = 'id';
         let loveColor = 'black';
         let liked = false;
-        let currentMediaType = null;
+        let currentMediaType = 'image';
         let currentMediaBlob = null;
+        let currentMediaCroppedBlob = null;
+        let currentRatio = '1:1';
         let cropper = null;
+        let postCropper = null;
         let pendingAvatarFile = null;
+        let pendingPostFile = null;
         
         const usernameInput = document.getElementById('username');
         const locationInput = document.getElementById('location');
@@ -1004,6 +1046,7 @@
         const likeIcon = document.getElementById('likeIcon');
         let likeSvg = likeIcon.querySelector('svg');
         const previewOuter = document.getElementById('previewOuter');
+        const ratioOptions = document.getElementById('ratioOptions');
         
         const displayUsername = document.getElementById('displayUsername');
         const displayLocation = document.getElementById('displayLocation');
@@ -1015,6 +1058,41 @@
         usernameInput.placeholder = 'thekachoo';
         locationInput.placeholder = 'Jakarta Selatan, Indonesia';
         timestampInput.placeholder = 'Baru saja';
+        
+        // Ratio selection
+        document.querySelectorAll('.ratio-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentRatio = btn.getAttribute('data-ratio');
+                if (currentMediaCroppedBlob) {
+                    displayCroppedMedia(currentMediaCroppedBlob);
+                }
+            });
+        });
+        
+        function displayCroppedMedia(blob) {
+            const url = URL.createObjectURL(blob);
+            if (currentMediaType === 'image') {
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.width = '100%';
+                img.style.height = 'auto';
+                img.style.display = 'block';
+                mediaContainer.innerHTML = '';
+                mediaContainer.appendChild(img);
+            } else {
+                const video = document.createElement('video');
+                video.src = url;
+                video.controls = true;
+                video.style.width = '100%';
+                video.style.height = 'auto';
+                video.style.display = 'block';
+                mediaContainer.innerHTML = '';
+                mediaContainer.appendChild(video);
+                currentMediaBlob = blob;
+            }
+        }
         
         // Background options
         let currentBg = 'transparent';
@@ -1085,8 +1163,8 @@
             updatePreview();
         }
         
-        // Cropper logic
-        function showCropper(file) {
+        // Cropper untuk Profil (1:1)
+        function showAvatarCropper(file) {
             const modal = document.getElementById('cropperModal');
             const img = document.getElementById('cropperImage');
             const url = URL.createObjectURL(file);
@@ -1124,10 +1202,55 @@
             }
         });
         
+        // Cropper untuk Post (1:1 atau 4:5)
+        function showPostCropper(file) {
+            const modal = document.getElementById('postCropperModal');
+            const img = document.getElementById('postCropperImage');
+            const url = URL.createObjectURL(file);
+            img.src = url;
+            modal.style.display = 'flex';
+            const aspect = currentRatio === '1:1' ? 1 : 4/5;
+            setTimeout(() => {
+                if (postCropper) postCropper.destroy();
+                postCropper = new Cropper(img, {
+                    aspectRatio: aspect,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    scalable: true,
+                    zoomable: true
+                });
+            }, 100);
+            pendingPostFile = file;
+        }
+        
+        document.getElementById('cancelPostCrop').addEventListener('click', () => {
+            document.getElementById('postCropperModal').style.display = 'none';
+            if (postCropper) postCropper.destroy();
+            postCropper = null;
+        });
+        
+        document.getElementById('savePostCrop').addEventListener('click', () => {
+            if (postCropper) {
+                let width = 1080, height = 1080;
+                if (currentRatio === '4:5') {
+                    width = 1080;
+                    height = 1350;
+                }
+                const canvas = postCropper.getCroppedCanvas({ width: width, height: height });
+                canvas.toBlob((blob) => {
+                    currentMediaCroppedBlob = blob;
+                    displayCroppedMedia(blob);
+                    document.getElementById('postCropperModal').style.display = 'none';
+                    if (postCropper) postCropper.destroy();
+                    postCropper = null;
+                }, 'image/png');
+            }
+        });
+        
         avatarUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file && file.type.startsWith('image/')) {
-                showCropper(file);
+                showAvatarCropper(file);
             }
         });
         
@@ -1135,23 +1258,21 @@
         mediaUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(!file) return;
-            const fileURL = URL.createObjectURL(file);
-            currentMediaType = file.type.startsWith('image/') ? 'image' : 'video';
-            currentMediaBlob = file;
-            if(currentMediaType === 'image') {
-                const img = document.createElement('img');
-                img.src = fileURL;
-                img.style.width = '100%';
-                img.style.maxHeight = '450px';
-                img.style.objectFit = 'cover';
-                mediaContainer.innerHTML = '';
-                mediaContainer.appendChild(img);
-            } else {
+            ratioOptions.style.display = 'flex';
+            if (file.type.startsWith('image/')) {
+                currentMediaType = 'image';
+                showPostCropper(file);
+            } else if (file.type.startsWith('video/')) {
+                currentMediaType = 'video';
+                currentMediaBlob = file;
+                currentMediaCroppedBlob = file;
+                const url = URL.createObjectURL(file);
                 const video = document.createElement('video');
-                video.src = fileURL;
+                video.src = url;
                 video.controls = true;
                 video.style.width = '100%';
-                video.style.maxHeight = '450px';
+                video.style.height = 'auto';
+                video.style.display = 'block';
                 mediaContainer.innerHTML = '';
                 mediaContainer.appendChild(video);
             }
@@ -1162,25 +1283,57 @@
                 const defaultImg = document.createElement('img');
                 defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload";
                 defaultImg.style.width = '100%';
-                defaultImg.style.objectFit = 'cover';
+                defaultImg.style.height = 'auto';
+                defaultImg.style.display = 'block';
                 mediaContainer.innerHTML = '';
                 mediaContainer.appendChild(defaultImg);
                 currentMediaType = 'image';
-                currentMediaBlob = null;
+                currentMediaCroppedBlob = null;
             }
         }
         
         // Download
         document.getElementById('downloadBtn').addEventListener('click', async function() {
             const element = document.getElementById('previewOuter');
-            if (currentMediaType === 'video' && currentMediaBlob) {
-                // Download video as MP4
-                const link = document.createElement('a');
-                link.download = `instapost_${Date.now()}.mp4`;
-                link.href = URL.createObjectURL(currentMediaBlob);
-                link.click();
+            if (currentMediaType === 'video' && currentMediaCroppedBlob) {
+                // Untuk video, kita capture preview dengan html2canvas (frame pertama)
+                // Tapi karena video, lebih baik screenshot frame pertama
+                const videoElement = mediaContainer.querySelector('video');
+                if (videoElement) {
+                    // Create canvas from video frame
+                    const canvas = document.createElement('canvas');
+                    canvas.width = videoElement.videoWidth || 360;
+                    canvas.height = videoElement.videoHeight || 360;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(async (blob) => {
+                        // Temporarily replace video with image for screenshot
+                        const originalContent = mediaContainer.innerHTML;
+                        const tempImg = document.createElement('img');
+                        tempImg.src = URL.createObjectURL(blob);
+                        tempImg.style.width = '100%';
+                        tempImg.style.height = 'auto';
+                        mediaContainer.innerHTML = '';
+                        mediaContainer.appendChild(tempImg);
+                        
+                        await new Promise(r => setTimeout(r, 200));
+                        html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+                            let link = document.createElement('a');
+                            link.download = `instapost_${Date.now()}.png`;
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            mediaContainer.innerHTML = originalContent;
+                        });
+                    }, 'image/png');
+                } else {
+                    html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+                        let link = document.createElement('a');
+                        link.download = `instapost_${Date.now()}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    });
+                }
             } else {
-                // Download as PNG
                 html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
                     let link = document.createElement('a');
                     link.download = `instapost_${Date.now()}.png`;
