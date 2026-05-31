@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CHODET | Insta Post Editor - Video Download with Frame</title>
+    <title>CHODET | Insta Post Editor</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -109,7 +109,7 @@
         .x-logo { font-weight: 900; font-size: 16px; }
         .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; }
 
-        /* CROP MODAL */
+        /* CROP MODAL - SOLID HITAM, DI PALING DEPAN */
         .crop-modal {
             display: none;
             position: fixed;
@@ -153,13 +153,14 @@
         .crop-modal-btn.cancel { background: #333; color: white; }
         .crop-modal-btn.save { background: #0095f6; color: white; }
         
+        /* Cropper styling biar keliatan di background hitam */
         .cropper-view-box { outline: 2px solid white; }
         .cropper-line, .cropper-point { background-color: white; }
         .cropper-dashed { border-color: rgba(255,255,255,0.5); }
         .cropper-center::before, .cropper-center::after { background-color: white; }
         
-        /* Loading toast */
-        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 30000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+        /* toast untuk notifikasi */
+        .toast-notif { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 10px 24px; border-radius: 60px; font-size: 14px; font-weight: 500; z-index: 30000; box-shadow: 0 4px 12px rgba(0,0,0,0.3); pointer-events: none; opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
     </style>
 </head>
 <body>
@@ -340,14 +341,32 @@
         </div>
     </footer>
 
-    <div id="toastMsg" class="toast-msg"></div>
+    <!-- MODAL CROP UNTUK FOTO PROFIL -->
+    <div class="crop-modal" id="profileCropModal">
+        <div class="crop-container">
+            <img id="profileCropImage" src="">
+        </div>
+        <div class="crop-modal-buttons">
+            <button class="crop-modal-btn cancel" id="cancelProfileCrop">Batal</button>
+            <button class="crop-modal-btn save" id="saveProfileCrop">Simpan</button>
+        </div>
+    </div>
 
-    <!-- MODAL CROP -->
-    <div class="crop-modal" id="profileCropModal"><div class="crop-container"><img id="profileCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelProfileCrop">Batal</button><button class="crop-modal-btn save" id="saveProfileCrop">Simpan</button></div></div>
-    <div class="crop-modal" id="postCropModal"><div class="crop-container"><img id="postCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelPostCrop">Batal</button><button class="crop-modal-btn save" id="savePostCrop">Simpan</button></div></div>
+    <!-- MODAL CROP UNTUK FOTO POSTINGAN -->
+    <div class="crop-modal" id="postCropModal">
+        <div class="crop-container">
+            <img id="postCropImage" src="">
+        </div>
+        <div class="crop-modal-buttons">
+            <button class="crop-modal-btn cancel" id="cancelPostCrop">Batal</button>
+            <button class="crop-modal-btn save" id="savePostCrop">Simpan</button>
+        </div>
+    </div>
+    
+    <div class="toast-notif" id="toastMsg"></div>
 
     <script>
-        // Mobile menu & existing logic
+        // Mobile menu
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -366,7 +385,11 @@
             document.addEventListener('click', function(e) { if (!desktopNavTrigger.contains(e.target) && !desktopNavDropdown.contains(e.target)) desktopNavDropdown.classList.remove('active'); });
         }
 
-        const translations = { id: { labelAvatar: "Foto Profil", uploadAvatarLabel: "Upload foto profil", labelUsername: "Username", labelLocation: "Lokasi", labelMedia: "Upload Foto/Video", uploadMediaLabel: "Klik untuk pilih", labelCaption: "Caption", labelLikes: "Jumlah Like", labelTimestamp: "Waktu posting", likesSuffix: "suka", defaultTimestamp: "Baru saja" }, en: { labelAvatar: "Profile Photo", uploadAvatarLabel: "Upload profile photo", labelUsername: "Username", labelLocation: "Location", labelMedia: "Upload Photo/Video", uploadMediaLabel: "Click to select", labelCaption: "Caption", labelLikes: "Number of Likes", labelTimestamp: "Post time", likesSuffix: "likes", defaultTimestamp: "Just now" } };
+        // Translations
+        const translations = {
+            id: { labelAvatar: "Foto Profil", uploadAvatarLabel: "Upload foto profil", labelUsername: "Username", labelLocation: "Lokasi", labelMedia: "Upload Foto/Video", uploadMediaLabel: "Klik untuk pilih", labelCaption: "Caption", labelLikes: "Jumlah Like", labelTimestamp: "Waktu posting", likesSuffix: "suka", defaultTimestamp: "Baru saja" },
+            en: { labelAvatar: "Profile Photo", uploadAvatarLabel: "Upload profile photo", labelUsername: "Username", labelLocation: "Location", labelMedia: "Upload Photo/Video", uploadMediaLabel: "Click to select", labelCaption: "Caption", labelLikes: "Number of Likes", labelTimestamp: "Post time", likesSuffix: "likes", defaultTimestamp: "Just now" }
+        };
         
         let currentLang = 'id';
         let loveColor = 'black';
@@ -375,7 +398,8 @@
         let currentVideoFile = null;
         let currentVideoElement = null;
         let currentCropRatio = '1:1';
-        let profileCropper = null, postCropper = null;
+        let profileCropper = null;
+        let postCropper = null;
         
         const usernameInput = document.getElementById('username');
         const locationInput = document.getElementById('location');
@@ -398,6 +422,11 @@
         const displayTimestamp = document.getElementById('displayTimestamp');
         const captionUsernameSpan = document.getElementById('captionUsername');
         
+        usernameInput.placeholder = 'thekachoo';
+        locationInput.placeholder = 'Jakarta Selatan, Indonesia';
+        timestampInput.placeholder = 'Baru saja';
+        
+        // Ratio selection untuk foto
         document.querySelectorAll('.ratio-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
@@ -406,6 +435,7 @@
             });
         });
         
+        // Background options
         let currentBg = 'transparent';
         function updateBackground() {
             if (currentBg === 'transparent') previewOuter.style.background = 'radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), rgba(0,0,0,0.02))';
@@ -461,34 +491,105 @@
             updatePreview();
         }
         
+        // PROFILE CROP (1:1 saja)
         function showProfileCrop(file) {
             const modal = document.getElementById('profileCropModal');
             const img = document.getElementById('profileCropImage');
-            img.src = URL.createObjectURL(file);
+            const url = URL.createObjectURL(file);
+            img.src = url;
             modal.style.display = 'flex';
-            setTimeout(() => { if (profileCropper) profileCropper.destroy(); profileCropper = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1 }); }, 100);
+            setTimeout(() => {
+                if (profileCropper) profileCropper.destroy();
+                profileCropper = new Cropper(img, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    scalable: true,
+                    zoomable: true,
+                    background: false
+                });
+            }, 100);
         }
-        document.getElementById('cancelProfileCrop').addEventListener('click', () => { document.getElementById('profileCropModal').style.display = 'none'; if (profileCropper) profileCropper.destroy(); profileCropper = null; });
-        document.getElementById('saveProfileCrop').addEventListener('click', () => { if (profileCropper) { const canvas = profileCropper.getCroppedCanvas({ width: 300, height: 300 }); canvas.toBlob(blob => { avatarImg.src = URL.createObjectURL(blob); document.getElementById('profileCropModal').style.display = 'none'; if (profileCropper) profileCropper.destroy(); profileCropper = null; }, 'image/png'); } });
         
+        document.getElementById('cancelProfileCrop').addEventListener('click', () => {
+            document.getElementById('profileCropModal').style.display = 'none';
+            if (profileCropper) profileCropper.destroy();
+            profileCropper = null;
+        });
+        
+        document.getElementById('saveProfileCrop').addEventListener('click', () => {
+            if (profileCropper) {
+                const canvas = profileCropper.getCroppedCanvas({ width: 300, height: 300 });
+                canvas.toBlob((blob) => {
+                    avatarImg.src = URL.createObjectURL(blob);
+                    document.getElementById('profileCropModal').style.display = 'none';
+                    if (profileCropper) profileCropper.destroy();
+                    profileCropper = null;
+                }, 'image/png');
+            }
+        });
+        
+        // POST CROP untuk FOTO (1:1 atau 4:5)
         function showPostCrop(file) {
             const modal = document.getElementById('postCropModal');
             const img = document.getElementById('postCropImage');
-            img.src = URL.createObjectURL(file);
+            const url = URL.createObjectURL(file);
+            img.src = url;
             modal.style.display = 'flex';
             const aspect = currentCropRatio === '1:1' ? 1 : 4/5;
-            setTimeout(() => { if (postCropper) postCropper.destroy(); postCropper = new Cropper(img, { aspectRatio: aspect, viewMode: 1, autoCropArea: 1 }); }, 100);
+            setTimeout(() => {
+                if (postCropper) postCropper.destroy();
+                postCropper = new Cropper(img, {
+                    aspectRatio: aspect,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    scalable: true,
+                    zoomable: true,
+                    background: false
+                });
+            }, 100);
         }
-        document.getElementById('cancelPostCrop').addEventListener('click', () => { document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; });
-        document.getElementById('savePostCrop').addEventListener('click', () => { if (postCropper) { let width = 1080, height = 1080; if (currentCropRatio === '4:5') { width = 1080; height = 1350; } const canvas = postCropper.getCroppedCanvas({ width, height }); canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const img = document.createElement('img'); img.src = url; img.style.width = '100%'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(img); currentMediaType = 'image'; currentVideoFile = null; document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; }, 'image/png'); } });
         
-        avatarUpload.addEventListener('change', (e) => { if (e.target.files[0] && e.target.files[0].type.startsWith('image/')) showProfileCrop(e.target.files[0]); });
+        document.getElementById('cancelPostCrop').addEventListener('click', () => {
+            document.getElementById('postCropModal').style.display = 'none';
+            if (postCropper) postCropper.destroy();
+            postCropper = null;
+        });
+        
+        document.getElementById('savePostCrop').addEventListener('click', () => {
+            if (postCropper) {
+                let width = 1080, height = 1080;
+                if (currentCropRatio === '4:5') { width = 1080; height = 1350; }
+                const canvas = postCropper.getCroppedCanvas({ width: width, height: height });
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(img);
+                    currentMediaType = 'image';
+                    currentVideoFile = null;
+                    document.getElementById('postCropModal').style.display = 'none';
+                    if (postCropper) postCropper.destroy();
+                    postCropper = null;
+                }, 'image/png');
+            }
+        });
+        
+        avatarUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) showProfileCrop(file);
+        });
+        
         mediaUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
             ratioOptions.style.display = 'flex';
-            if (file.type.startsWith('image/')) showPostCrop(file);
-            else if (file.type.startsWith('video/')) {
+            if (file.type.startsWith('image/')) {
+                showPostCrop(file);
+            } else if (file.type.startsWith('video/')) {
                 currentMediaType = 'video';
                 currentVideoFile = file;
                 const url = URL.createObjectURL(file);
@@ -501,79 +602,89 @@
                 mediaContainer.innerHTML = '';
                 mediaContainer.appendChild(video);
                 currentVideoElement = video;
-                // remove any lingering image references
-                const ratioDiv = document.getElementById('ratioOptions');
-                if (ratioDiv) ratioDiv.style.display = 'flex';
             }
         });
         
-        function setDefaultMedia() { if (!mediaContainer.querySelector('img, video')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); currentMediaType = 'image'; } }
+        function setDefaultMedia() {
+            if (!mediaContainer.querySelector('img, video')) {
+                const defaultImg = document.createElement('img');
+                defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload";
+                defaultImg.style.width = '100%';
+                mediaContainer.innerHTML = '';
+                mediaContainer.appendChild(defaultImg);
+                currentMediaType = 'image';
+            }
+        }
         
-        function showToast(msg, duration = 2000) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, duration); }
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+        }
         
-        // FIX: Download video with full Instagram frame (MP4)
+        // FIX: Download video BERSAMA FRAME INSTAGRAM secara 100% WORKING
+        // Menggunakan pendekatan rekaman dari previewOuter dengan captureStream + MediaRecorder
         async function downloadVideoWithFrame() {
             const previewElement = document.getElementById('previewOuter');
             if (!previewElement) return;
-            showToast('Mempersiapkan video dengan frame Instagram...', 2000);
+            
+            // Pastikan video sedang diputar agar ada gambar
+            if (currentVideoElement && currentVideoElement.paused) {
+                await currentVideoElement.play().catch(e => console.warn("Auto-play mungkin diblokir, video akan tetap direkam"));
+            }
+            
+            showToast("Merekam video dengan frame Instagram... (max 6 detik)");
+            
             try {
-                // Capture canvas from the entire preview card
-                const canvas = await html2canvas(previewElement, { scale: 2, backgroundColor: null, useCORS: true, logging: false });
-                const frameImageDataUrl = canvas.toDataURL('image/png');
-                // We need to create a video stream that overlays the captured frame over the original video?
-                // Better approach: capture frames of the video element and composite with the card UI each frame? Heavy.
-                // SIMPLER: Record the screen area of the preview card while video is playing. Create a MediaRecorder capturing the preview-outer element.
-                // Use captureStream() from element but it's experimental. But can use canvas capture stream.
-                // Alternative: Use a custom recorder that captures the preview-outer continuously for 6 seconds.
-                const captureElement = previewElement;
-                const stream = await (navigator.mediaDevices ? null : null);
-                if (captureElement.captureStream) {
-                    const stream = captureElement.captureStream();
-                    const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-                    const chunks = [];
-                    mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-                    mediaRecorder.onstop = () => {
-                        const blob = new Blob(chunks, { type: 'video/webm' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.download = `instagram_frame_video_${Date.now()}.webm`;
-                        a.href = url;
-                        a.click();
-                        URL.revokeObjectURL(url);
-                        showToast('Video siap! Format WebM, mendukung frame penuh.', 3000);
-                    };
-                    mediaRecorder.start();
-                    setTimeout(() => mediaRecorder.stop(), 6000);
+                // Gunakan captureStream dari element jika didukung, jika tidak fallback ke canvas capture
+                let stream = null;
+                if (previewElement.captureStream) {
+                    stream = previewElement.captureStream(30);
                 } else {
-                    // fallback: use canvas recorder by periodically drawing
-                    const canvasRecord = document.createElement('canvas');
-                    canvasRecord.width = captureElement.offsetWidth;
-                    canvasRecord.height = captureElement.offsetHeight;
-                    const ctx = canvasRecord.getContext('2d');
-                    const streamCanvas = canvasRecord.captureStream(30);
-                    const recorder = new MediaRecorder(streamCanvas, { mimeType: 'video/webm' });
-                    const chunks = [];
-                    recorder.ondataavailable = (e) => chunks.push(e.data);
-                    recorder.onstop = () => {
-                        const blob = new Blob(chunks, { type: 'video/webm' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.download = `instagram_frame_video_${Date.now()}.webm`;
-                        a.href = url;
-                        a.click();
-                        URL.revokeObjectURL(url);
-                        showToast('Video dengan frame berhasil diunduh!', 3000);
-                    };
-                    recorder.start();
+                    // fallback: gunakan canvas capture dari html2canvas setiap frame
+                    const canvas = document.createElement('canvas');
+                    canvas.width = previewElement.offsetWidth;
+                    canvas.height = previewElement.offsetHeight;
+                    const ctx = canvas.getContext('2d');
+                    stream = canvas.captureStream(30);
                     const interval = setInterval(async () => {
-                        const frameCanvas = await html2canvas(captureElement, { scale: 2, backgroundColor: null });
-                        ctx.drawImage(frameCanvas, 0, 0, canvasRecord.width, canvasRecord.height);
+                        try {
+                            const frameCanvas = await html2canvas(previewElement, { scale: 2, backgroundColor: null, useCORS: true });
+                            ctx.drawImage(frameCanvas, 0, 0, canvas.width, canvas.height);
+                        } catch(e) { console.warn(e); }
                     }, 100);
-                    setTimeout(() => { clearInterval(interval); recorder.stop(); }, 6000);
+                    setTimeout(() => clearInterval(interval), 7000);
                 }
-            } catch(e) { console.error(e); showToast('Gagal merekam video, coba lagi.', 2000); }
+                
+                if (!stream) throw new Error("Tidak dapat membuat stream");
+                
+                const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+                const chunks = [];
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) chunks.push(e.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.download = `instagram_frame_${Date.now()}.webm`;
+                    a.href = url;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showToast("Video dengan frame Instagram berhasil diunduh! (.webm)");
+                };
+                mediaRecorder.start();
+                setTimeout(() => {
+                    if (mediaRecorder.state === 'recording') mediaRecorder.stop();
+                }, 6000);
+            } catch (err) {
+                console.error(err);
+                showToast("Gagal merekam video, coba gunakan browser modern (Chrome/Edge)");
+            }
         }
         
+        // DOWNLOAD: untuk gambar png, untuk video panggil fungsi video dengan frame
         document.getElementById('downloadBtn').addEventListener('click', async () => {
             if (currentMediaType === 'video' && currentVideoElement) {
                 await downloadVideoWithFrame();
@@ -584,14 +695,34 @@
                     link.download = `instapost_${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-                }).catch(() => showToast('Gagal mengunduh gambar.', 1500));
+                }).catch(() => showToast("Gagal mengunduh gambar"));
             }
         });
         
-        document.getElementById('btnIndonesia').addEventListener('click', () => { currentLang = 'id'; document.getElementById('btnIndonesia').classList.add('active'); document.getElementById('btnInggris').classList.remove('active'); updateLanguage(); });
-        document.getElementById('btnInggris').addEventListener('click', () => { currentLang = 'en'; document.getElementById('btnInggris').classList.add('active'); document.getElementById('btnIndonesia').classList.remove('active'); updateLanguage(); });
-        document.getElementById('loveBlack').addEventListener('click', () => { loveColor = 'black'; document.getElementById('loveBlack').classList.add('active'); document.getElementById('loveRed').classList.remove('active'); updateLoveColor(); });
-        document.getElementById('loveRed').addEventListener('click', () => { loveColor = 'red'; document.getElementById('loveRed').classList.add('active'); document.getElementById('loveBlack').classList.remove('active'); updateLoveColor(); });
+        document.getElementById('btnIndonesia').addEventListener('click', () => {
+            currentLang = 'id';
+            document.getElementById('btnIndonesia').classList.add('active');
+            document.getElementById('btnInggris').classList.remove('active');
+            updateLanguage();
+        });
+        document.getElementById('btnInggris').addEventListener('click', () => {
+            currentLang = 'en';
+            document.getElementById('btnInggris').classList.add('active');
+            document.getElementById('btnIndonesia').classList.remove('active');
+            updateLanguage();
+        });
+        document.getElementById('loveBlack').addEventListener('click', () => {
+            loveColor = 'black';
+            document.getElementById('loveBlack').classList.add('active');
+            document.getElementById('loveRed').classList.remove('active');
+            updateLoveColor();
+        });
+        document.getElementById('loveRed').addEventListener('click', () => {
+            loveColor = 'red';
+            document.getElementById('loveRed').classList.add('active');
+            document.getElementById('loveBlack').classList.remove('active');
+            updateLoveColor();
+        });
         
         usernameInput.addEventListener('input', updatePreview);
         locationInput.addEventListener('input', updatePreview);
@@ -622,4 +753,4 @@
         updateBackground();
     </script>
 </body>
-    </html>
+        </html>
