@@ -10,738 +10,107 @@
     <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html, div, span, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, li, span, label {
             font-family: 'Outfit', sans-serif !important;
         }
-
-        i, .fas, .far, .fab, [class*="fa-"] {
-            font-family: "Font Awesome 6 Free" !important;
-        }
-
-        :root {
-            --primary-black: #000000;
-            --primary-white: #FFFFFF;
-            --text-gray: #6E6E73;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            color: var(--primary-black);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 32px;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 20px;
-            }
-        }
+        i, .fas, .far, .fab, [class*="fa-"] { font-family: "Font Awesome 6 Free" !important; }
+        body { background-color: #f5f5f5; line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; width: 100%; }
+        @media (max-width: 768px) { .container { padding: 0 20px; } }
 
         /* Header */
-        header {
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(16px);
-            padding: 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
-            position: relative;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .logo-img {
-            height: 40px;
-            width: auto;
-        }
-
-        .center-logo-text {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: white;
-            white-space: nowrap;
-        }
-        
-        .sub-logo {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 48px;
-            font-size: 10px;
-            color: rgba(255,255,255,0.5);
-            white-space: nowrap;
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 640px) {
-            .center-logo-text {
-                font-size: 18px;
-            }
-            .sub-logo {
-                top: 42px;
-                font-size: 8px;
-            }
-            .logo-img {
-                height: 34px;
-            }
-        }
-
-        .desktop-nav-container {
-            position: relative;
-            display: block;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-            .desktop-nav-container {
-                display: none;
-            }
-        }
-
-        .desktop-nav-trigger {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(4px);
-            padding: 10px 24px;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .desktop-nav-trigger:hover {
-            background: rgba(255,255,255,0.25);
-            transform: translateY(-2px);
-        }
-
-        .desktop-nav-dropdown {
-            position: absolute;
-            top: calc(100% + 12px);
-            right: 0;
-            width: 260px;
-            background: rgba(0,0,0,0.96);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 12px 8px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-
-        .desktop-nav-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .desktop-nav-dropdown .nav-button {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            width: 100%;
-            padding: 12px 18px;
-            background: transparent;
-            border: none;
-            border-radius: 22px;
-            font-weight: 500;
-            font-size: 14px;
-            color: rgba(255,255,255,0.9);
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-
-        .desktop-nav-dropdown .nav-button:hover {
-            background: rgba(255,255,255,0.12);
-            color: white;
-            transform: translateX(6px);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            font-size: 20px;
-            color: white;
-            width: 42px;
-            height: 42px;
-            border-radius: 60px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 85%;
-            max-width: 320px;
-            height: 100vh;
-            background: rgba(0,0,0,0.98);
-            backdrop-filter: blur(28px);
-            padding: 110px 28px 40px;
-            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 999;
-            border-left: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .mobile-menu.active {
-            right: 0;
-        }
-
-        .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(6px);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            z-index: 998;
-        }
-
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .mobile-menu-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 40px;
-            font-size: 20px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .mobile-menu-link {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 60px;
-            text-decoration: none;
-            color: white;
-            font-weight: 600;
-            margin-bottom: 14px;
-            transition: 0.25s;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .mobile-menu-link:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateX(8px);
-        }
+        header { background: rgba(0,0,0,0.95); backdrop-filter: blur(16px); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; position: relative; }
+        .logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-img { height: 40px; width: auto; }
+        .center-logo-text { position: absolute; left: 50%; transform: translateX(-50%); font-size: 24px; font-weight: 800; color: white; white-space: nowrap; }
+        .sub-logo { position: absolute; left: 50%; transform: translateX(-50%); top: 48px; font-size: 10px; color: rgba(255,255,255,0.5); white-space: nowrap; }
+        @media (max-width: 640px) { .center-logo-text { font-size: 18px; } .sub-logo { top: 42px; font-size: 8px; } .logo-img { height: 34px; } }
+        .desktop-nav-container { position: relative; display: block; }
+        @media (max-width: 768px) { .desktop-nav-container { display: none; } }
+        .desktop-nav-trigger { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 10px 24px; border-radius: 100px; font-weight: 600; font-size: 14px; color: white; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
+        .desktop-nav-dropdown { position: absolute; top: calc(100% + 12px); right: 0; width: 220px; background: rgba(0,0,0,0.96); border-radius: 28px; padding: 12px 8px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; border: 1px solid rgba(255,255,255,0.15); }
+        .desktop-nav-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .desktop-nav-dropdown .nav-button { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 18px; border-radius: 22px; font-weight: 500; font-size: 14px; color: rgba(255,255,255,0.9); text-decoration: none; transition: all 0.2s; }
+        .desktop-nav-dropdown .nav-button:hover { background: rgba(255,255,255,0.12); transform: translateX(6px); }
+        .mobile-menu-btn { display: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 20px; color: white; width: 42px; height: 42px; border-radius: 60px; cursor: pointer; }
+        @media (max-width: 768px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } }
+        .mobile-menu { position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh; background: rgba(0,0,0,0.98); padding: 110px 28px 40px; transition: right 0.4s; z-index: 999; border-left: 1px solid rgba(255,255,255,0.1); }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 998; }
+        .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+        .mobile-menu-close { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.1); border: none; width: 44px; height: 44px; border-radius: 40px; font-size: 20px; color: white; cursor: pointer; }
+        .mobile-menu-link { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: rgba(255,255,255,0.06); border-radius: 60px; text-decoration: none; color: white; font-weight: 600; margin-bottom: 14px; }
 
         /* Main Content */
-        .main-content {
-            padding: 140px 0 60px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 120px 0 40px;
-            }
-        }
-
-        .page-title {
-            text-align: center;
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 40px;
-            color: #1a1a1a;
-        }
-
-        .insta-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 40px;
-        }
+        .main-content { padding: 140px 0 60px; }
+        .page-title { text-align: center; font-size: 42px; font-weight: 800; margin-bottom: 40px; color: #1a1a1a; }
+        .insta-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
 
         /* Form Panel */
-        .form-panel {
-            background: white;
-            border-radius: 28px;
-            padding: 24px;
-            width: 340px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            border: 1px solid #e0e0e0;
-        }
+        .form-panel { background: white; border-radius: 28px; padding: 24px; width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border: 1px solid #e0e0e0; }
+        .lang-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .lang-btn { flex: 1; padding: 8px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 100px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .lang-btn.active { background: #1a1a1a; color: white; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 600; font-size: 12px; display: block; margin-bottom: 6px; color: #555; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #dbdbdb; border-radius: 16px; font-size: 13px; outline: none; }
+        input:focus, textarea:focus { border-color: #0095f6; }
+        textarea { resize: vertical; min-height: 70px; }
+        input::placeholder, textarea::placeholder { color: #bbb; }
+        .file-input-label { background: #f5f5f5; text-align: center; padding: 10px; border-radius: 16px; margin-top: 5px; cursor: pointer; font-size: 12px; border: 1px solid #e0e0e0; }
+        .love-option { display: flex; gap: 15px; align-items: center; margin-top: 5px; }
+        .love-color-btn { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .love-color-btn.black { background: #262626; }
+        .love-color-btn.red { background: #ed4956; }
+        .love-color-btn.active { border-color: #0095f6; transform: scale(1.1); }
+        .bg-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+        .bg-option-btn { padding: 8px 16px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; }
+        .bg-option-btn.active { background: #1a1a1a; color: white; }
+        .color-picker-input { width: 50px; height: 40px; border-radius: 12px; border: 1px solid #ddd; cursor: pointer; }
+        .ratio-options { display: flex; gap: 12px; margin-top: 8px; }
+        .ratio-btn { padding: 6px 16px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; }
+        .ratio-btn.active { background: #1a1a1a; color: white; }
 
-        .lang-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .lang-btn {
-            flex: 1;
-            padding: 8px;
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 100px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-            color: #333;
-            font-size: 12px;
-        }
-
-        .lang-btn.active {
-            background: #1a1a1a;
-            color: white;
-            border-color: #1a1a1a;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 12px;
-            display: block;
-            margin-bottom: 6px;
-            color: #555;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            border: 1px solid #dbdbdb;
-            border-radius: 16px;
-            font-size: 13px;
-            color: #1a1a1a;
-            outline: none;
-        }
-
-        input:focus, textarea:focus {
-            border-color: #0095f6;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #bbb;
-            font-weight: 400;
-            font-size: 12px;
-        }
-
-        .file-input-label {
-            background: #f5f5f5;
-            text-align: center;
-            padding: 10px;
-            border-radius: 16px;
-            margin-top: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            color: #555;
-            border: 1px solid #e0e0e0;
-        }
-
-        .love-option {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .love-option span {
-            font-size: 12px;
-            color: #555;
-        }
-
-        .love-color-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.2s;
-        }
-
-        .love-color-btn.black {
-            background: #262626;
-        }
-
-        .love-color-btn.red {
-            background: #ed4956;
-        }
-
-        .love-color-btn.active {
-            border-color: #0095f6;
-            transform: scale(1.1);
-        }
-        
-        /* Background options */
-        .bg-options {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .bg-option-btn {
-            padding: 8px 16px;
-            border-radius: 100px;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-        .bg-option-btn.active {
-            background: #1a1a1a;
-            color: white;
-            border-color: #1a1a1a;
-        }
-        .color-picker-input {
-            width: 50px;
-            height: 40px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            cursor: pointer;
-        }
-        
-        .ratio-options {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .ratio-btn {
-            padding: 6px 16px;
-            border-radius: 100px;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .ratio-btn.active {
-            background: #1a1a1a;
-            color: white;
-        }
-
-        /* Preview Outer */
-        .preview-outer {
-            padding: 25px 20px;
-            border-radius: 48px;
-            transition: background 0.2s;
-            display: inline-block;
-        }
-        
-        .preview-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .instagram-preview {
-            background: white;
-            width: 360px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            padding: 11px 14px;
-            gap: 10px;
-            background: white;
-        }
-
-        .avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #0095f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 13px;
-            overflow: hidden;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .username {
-            font-weight: 700;
-            font-size: 13px;
-            color: #262626;
-        }
-
-        .location {
-            font-size: 11px;
-            color: #8e8e8e;
-            margin-top: 2px;
-        }
-        
-        .menu-dot {
-            margin-left: auto;
-            font-size: 16px;
-            font-weight: bold;
-            color: #262626;
-            cursor: default;
-        }
-
-        .media-container {
-            width: 100%;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #efefef;
-        }
-
-        .media-container img, .media-container video {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .action-buttons {
-            padding: 6px 12px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .action-icons {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .action-icon {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-        }
-
-        .action-icon svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .save-icon {
-            margin-left: auto;
-        }
-
-        .like-count {
-            font-weight: 600;
-            font-size: 13px;
-            padding: 0 12px 5px 12px;
-            color: #262626;
-        }
-
-        .caption-text {
-            padding: 0 12px 8px 12px;
-            font-size: 13px;
-        }
-
-        .caption-username {
-            font-weight: 700;
-            margin-right: 6px;
-        }
-
-        .caption-message {
-            font-weight: 400;
-        }
-
-        .timestamp {
-            padding: 0 12px 12px 12px;
-            font-size: 10px;
-            color: #8e8e8e;
-        }
-        
-        .download-area {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .download-btn {
-            background: #1a1a1a;
-            color: white;
-            border: none;
-            padding: 14px 40px;
-            border-radius: 100px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.2s;
-        }
-        .download-btn:hover {
-            background: #333;
-            transform: scale(1.02);
-        }
+        /* Preview */
+        .preview-outer { padding: 25px 20px; border-radius: 48px; transition: background 0.2s; display: inline-block; }
+        .preview-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .instagram-preview { background: white; width: 360px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .post-header { display: flex; align-items: center; padding: 11px 14px; gap: 10px; background: white; }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; background: #0095f6; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .username { font-weight: 700; font-size: 13px; color: #262626; }
+        .location { font-size: 11px; color: #8e8e8e; margin-top: 2px; }
+        .menu-dot { margin-left: auto; font-size: 16px; font-weight: bold; color: #262626; }
+        .media-container { width: 100%; background: #000; display: flex; justify-content: center; align-items: center; background-color: #efefef; }
+        .media-container img, .media-container video { width: 100%; height: auto; display: block; }
+        .action-buttons { padding: 6px 12px; display: flex; gap: 16px; align-items: center; }
+        .action-icons { display: flex; gap: 16px; align-items: center; }
+        .action-icon { width: 24px; height: 24px; cursor: pointer; }
+        .action-icon svg { width: 100%; height: 100%; }
+        .save-icon { margin-left: auto; }
+        .like-count { font-weight: 600; font-size: 13px; padding: 0 12px 5px 12px; color: #262626; }
+        .caption-text { padding: 0 12px 8px 12px; font-size: 13px; }
+        .caption-username { font-weight: 700; margin-right: 6px; }
+        .timestamp { padding: 0 12px 12px 12px; font-size: 10px; color: #8e8e8e; }
+        .download-area { text-align: center; margin-top: 20px; }
+        .download-btn { background: #1a1a1a; color: white; border: none; padding: 14px 40px; border-radius: 100px; font-weight: 600; cursor: pointer; font-size: 16px; }
 
         /* Footer */
-        footer {
-            background: #000000;
-            color: #ddd;
-            padding: 70px 0 40px;
-            margin-top: 40px;
-        }
+        footer { background: #000000; color: #ddd; padding: 70px 0 40px; margin-top: 40px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 48px; margin-bottom: 55px; }
+        .footer-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 24px; color: white; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; }
+        .footer-links a:hover { color: white; }
+        .social-links { display: flex; gap: 16px; margin-top: 26px; }
+        .social-link { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(255,255,255,0.08); border-radius: 60px; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); }
+        .x-logo { font-weight: 900; font-size: 16px; }
+        .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; }
 
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 48px;
-            margin-bottom: 55px;
-        }
-
-        @media (max-width: 768px) {
-            .footer-content {
-                gap: 36px;
-            }
-        }
-
-        .footer-section h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            color: white;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: rgba(255,255,255,0.65);
-            text-decoration: none;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 16px;
-            margin-top: 26px;
-        }
-
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 60px;
-            color: white;
-            text-decoration: none;
-            transition: 0.25s;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .social-link:hover {
-            background: white;
-            color: black;
-            transform: translateY(-4px);
-        }
-
-        .x-logo {
-            font-weight: 900;
-            font-size: 16px;
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255,255,255,0.07);
-            color: rgba(255,255,255,0.5);
-            font-size: 13px;
-        }
-        
-        /* Cropper Modal - BACKGROUND HITAM SOLID & MENUTUPI KONTEN */
+        /* Cropper Modal - DI DEPAN */
         .cropper-modal {
             display: none;
             position: fixed;
@@ -749,13 +118,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000000;
-            z-index: 9999;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
             justify-content: center;
             align-items: center;
         }
         .cropper-container-custom {
-            background: #000000;
+            background: #1a1a1a;
             max-width: 90vw;
             max-height: 90vh;
             overflow: hidden;
@@ -766,7 +135,7 @@
             display: flex;
             gap: 12px;
             justify-content: center;
-            background: #000000;
+            background: #1a1a1a;
         }
         .cropper-btn {
             padding: 10px 24px;
@@ -777,16 +146,8 @@
         }
         .cropper-btn.cancel { background: #333; color: white; }
         .cropper-btn.save { background: #0095f6; color: white; }
-        
-        .cropper-view-box {
-            outline: 2px solid white;
-        }
-        .cropper-line, .cropper-point {
-            background-color: white;
-        }
-        .cropper-dashed {
-            border-color: rgba(255,255,255,0.5);
-        }
+        .cropper-view-box { outline: 2px solid white; }
+        .cropper-line, .cropper-point { background-color: white; }
     </style>
 </head>
 <body>
@@ -798,32 +159,19 @@
             <div class="center-logo-text">CHODET</div>
             <div class="sub-logo">(Kachoo Update)</div>
             <div class="desktop-nav-container">
-                <button class="desktop-nav-trigger" id="desktopNavTrigger">
-                    <span>Menu</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
+                <button class="desktop-nav-trigger" id="desktopNavTrigger"><span>Menu</span> <i class="fas fa-chevron-down"></i></button>
                 <div class="desktop-nav-dropdown" id="desktopNavDropdown">
                     <a href="#" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a>
-                    <a href="#" class="nav-button"><i class="fas fa-star"></i> Studio 35°</a>
-                    <a href="#" class="nav-button"><i class="fas fa-bolt"></i> FLEQ</a>
                 </div>
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
         </div>
     </header>
 
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
-        <button class="mobile-menu-close" id="mobileMenuClose">
-            <i class="fas fa-times"></i>
-        </button>
-        <ul class="mobile-menu-list">
-            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i> The Kachoo</a></li>
-            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-star"></i> Studio 35°</a></li>
-            <li><a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-bolt"></i> FLEQ</a></li>
-        </ul>
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fas fa-times"></i></button>
+        <a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i> The Kachoo</a>
     </div>
 
     <div class="main-content">
@@ -955,7 +303,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>CHODET</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-top: 14px; max-width: 280px;">Social Media Editor System by The Kachoo For Roleplay.</p>
+                    <p style="color: rgba(255,255,255,0.7); margin-top: 14px;">Social Media Editor System by The Kachoo For Roleplay.</p>
                     <div class="social-links">
                         <a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
                         <a href="#" class="social-link"><span class="x-logo">𝕏</span></a>
@@ -964,15 +312,15 @@
                 <div class="footer-section">
                     <h3>Contact</h3>
                     <ul class="footer-links">
-                        <li><span class="x-logo" style="color: #000000; background: white; border-radius: 6px; padding: 2px 8px; font-size: 12px; margin-right: 8px;">𝕏</span><a href="#">@TheKachoo (Official)</a></li>
-                        <li><span class="x-logo" style="color: #000000; background: white; border-radius: 6px; padding: 2px 8px; font-size: 12px; margin-right: 8px;">𝕏</span><a href="#">@HaiKachoo (Contact Person)</a></li>
-                        <li><i class="fas fa-envelope" style="color: rgba(255,255,255,0.7);"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li>
+                        <li><span class="x-logo" style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">𝕏</span><a href="#">@TheKachoo (Official)</a></li>
+                        <li><span class="x-logo" style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">𝕏</span><a href="#">@HaiKachoo (Contact Person)</a></li>
+                        <li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Address</h3>
                     <ul class="footer-links">
-                        <li style="color: rgba(255,255,255,0.7);"><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li>
+                        <li><i class="fas fa-map-marker-alt"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li>
                     </ul>
                 </div>
             </div>
@@ -980,7 +328,7 @@
         </div>
     </footer>
 
-    <!-- Modal Cropper untuk Profil -->
+    <!-- Modal Cropper Profil -->
     <div class="cropper-modal" id="cropperModal">
         <div class="cropper-container-custom">
             <img id="cropperImage" src="">
@@ -991,7 +339,7 @@
         </div>
     </div>
     
-    <!-- Modal Cropper untuk Post -->
+    <!-- Modal Cropper Post -->
     <div class="cropper-modal" id="postCropperModal">
         <div class="cropper-container-custom">
             <img id="postCropperImage" src="">
@@ -1018,15 +366,8 @@
         const desktopNavTrigger = document.getElementById('desktopNavTrigger');
         const desktopNavDropdown = document.getElementById('desktopNavDropdown');
         if (desktopNavTrigger && desktopNavDropdown) {
-            desktopNavTrigger.addEventListener('click', function(e) { 
-                e.stopPropagation(); 
-                desktopNavDropdown.classList.toggle('active'); 
-            });
-            document.addEventListener('click', function(e) { 
-                if (!desktopNavTrigger.contains(e.target) && !desktopNavDropdown.contains(e.target)) { 
-                    desktopNavDropdown.classList.remove('active'); 
-                } 
-            });
+            desktopNavTrigger.addEventListener('click', function(e) { e.stopPropagation(); desktopNavDropdown.classList.toggle('active'); });
+            document.addEventListener('click', function(e) { if (!desktopNavTrigger.contains(e.target) && !desktopNavDropdown.contains(e.target)) desktopNavDropdown.classList.remove('active'); });
         }
 
         // Translations
@@ -1039,9 +380,8 @@
         let loveColor = 'black';
         let liked = false;
         let currentMediaType = 'image';
-        let currentMediaBlob = null;
-        let currentMediaCroppedBlob = null;
-        let currentRatio = '1:1';
+        let currentVideoFile = null;
+        let currentCropRatio = '1:1';
         let cropper = null;
         let postCropper = null;
         
@@ -1075,44 +415,18 @@
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                currentRatio = btn.getAttribute('data-ratio');
-                if (currentMediaCroppedBlob && currentMediaType === 'image') {
-                    displayCroppedMedia(currentMediaCroppedBlob);
-                }
+                currentCropRatio = btn.getAttribute('data-ratio');
             });
         });
-        
-        function displayCroppedMedia(blob) {
-            const url = URL.createObjectURL(blob);
-            if (currentMediaType === 'image') {
-                const img = document.createElement('img');
-                img.src = url;
-                img.style.width = '100%';
-                img.style.height = 'auto';
-                img.style.display = 'block';
-                mediaContainer.innerHTML = '';
-                mediaContainer.appendChild(img);
-            }
-        }
         
         // Background options
         let currentBg = 'transparent';
         function updateBackground() {
-            if (currentBg === 'transparent') {
-                previewOuter.style.background = 'radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), rgba(0,0,0,0.02))';
-                previewOuter.style.boxShadow = 'none';
-            } else if (currentBg === 'white') {
-                previewOuter.style.background = 'white';
-                previewOuter.style.boxShadow = '0 20px 35px rgba(0,0,0,0.1)';
-            } else if (currentBg === 'black') {
-                previewOuter.style.background = 'black';
-                previewOuter.style.boxShadow = '0 20px 35px rgba(0,0,0,0.3)';
-            } else {
-                previewOuter.style.background = currentBg;
-                previewOuter.style.boxShadow = '0 20px 35px rgba(0,0,0,0.1)';
-            }
+            if (currentBg === 'transparent') previewOuter.style.background = 'radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), rgba(0,0,0,0.02))';
+            else if (currentBg === 'white') previewOuter.style.background = 'white';
+            else if (currentBg === 'black') previewOuter.style.background = 'black';
+            else previewOuter.style.background = currentBg;
         }
-        
         document.querySelectorAll('.bg-option-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.bg-option-btn').forEach(b => b.classList.remove('active'));
@@ -1130,11 +444,8 @@
         function updateLoveColor() {
             const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956';
             const fillColor = loveColor === 'black' ? 'none' : '#ed4956';
-            if (!liked) {
-                likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`;
-            } else {
-                likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>`;
-            }
+            if (!liked) likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`;
+            else likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>`;
         }
         
         function updatePreview() {
@@ -1164,7 +475,7 @@
             updatePreview();
         }
         
-        // Cropper untuk Profil (1:1)
+        // Cropper Profil (1:1)
         function showAvatarCropper(file) {
             const modal = document.getElementById('cropperModal');
             const img = document.getElementById('cropperImage');
@@ -1173,177 +484,111 @@
             modal.style.display = 'flex';
             setTimeout(() => {
                 if (cropper) cropper.destroy();
-                cropper = new Cropper(img, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    autoCropArea: 1,
-                    scalable: true,
-                    zoomable: true,
-                    background: false,
-                    guides: true,
-                    center: true,
-                    highlight: true
-                });
+                cropper = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1, scalable: true, zoomable: true });
             }, 100);
         }
-        
         document.getElementById('cancelCrop').addEventListener('click', () => {
             document.getElementById('cropperModal').style.display = 'none';
             if (cropper) cropper.destroy();
-            cropper = null;
         });
-        
         document.getElementById('saveCrop').addEventListener('click', () => {
             if (cropper) {
                 const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
-                canvas.toBlob((blob) => {
-                    const url = URL.createObjectURL(blob);
-                    avatarImg.src = url;
-                    document.getElementById('cropperModal').style.display = 'none';
-                    if (cropper) cropper.destroy();
-                    cropper = null;
-                }, 'image/png');
+                canvas.toBlob((blob) => { avatarImg.src = URL.createObjectURL(blob); });
+                document.getElementById('cropperModal').style.display = 'none';
+                if (cropper) cropper.destroy();
             }
         });
         
-        // Cropper untuk Post (1:1 atau 4:5) - BISA UNTUK VIDEO JUGA (crop tetap tampil)
+        // Cropper Post (1:1 atau 4:5)
         function showPostCropper(file) {
             const modal = document.getElementById('postCropperModal');
             const img = document.getElementById('postCropperImage');
             const url = URL.createObjectURL(file);
             img.src = url;
             modal.style.display = 'flex';
-            const aspect = currentRatio === '1:1' ? 1 : 4/5;
+            const aspect = currentCropRatio === '1:1' ? 1 : 4/5;
             setTimeout(() => {
                 if (postCropper) postCropper.destroy();
-                postCropper = new Cropper(img, {
-                    aspectRatio: aspect,
-                    viewMode: 1,
-                    autoCropArea: 1,
-                    scalable: true,
-                    zoomable: true,
-                    background: false,
-                    guides: true,
-                    center: true,
-                    highlight: true
-                });
+                postCropper = new Cropper(img, { aspectRatio: aspect, viewMode: 1, autoCropArea: 1, scalable: true, zoomable: true });
             }, 100);
         }
-        
         document.getElementById('cancelPostCrop').addEventListener('click', () => {
             document.getElementById('postCropperModal').style.display = 'none';
             if (postCropper) postCropper.destroy();
-            postCropper = null;
         });
-        
         document.getElementById('savePostCrop').addEventListener('click', () => {
             if (postCropper) {
                 let width = 1080, height = 1080;
-                if (currentRatio === '4:5') {
-                    width = 1080;
-                    height = 1350;
-                }
+                if (currentCropRatio === '4:5') { width = 1080; height = 1350; }
                 const canvas = postCropper.getCroppedCanvas({ width: width, height: height });
                 canvas.toBlob((blob) => {
-                    currentMediaCroppedBlob = blob;
-                    displayCroppedMedia(blob);
-                    document.getElementById('postCropperModal').style.display = 'none';
-                    if (postCropper) postCropper.destroy();
-                    postCropper = null;
-                }, 'image/png');
+                    const url = URL.createObjectURL(blob);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(img);
+                    currentMediaType = 'image';
+                    currentVideoFile = null;
+                });
+                document.getElementById('postCropperModal').style.display = 'none';
+                if (postCropper) postCropper.destroy();
             }
         });
         
-        avatarUpload.addEventListener('change', function(e) {
+        avatarUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                showAvatarCropper(file);
-            }
+            if (file && file.type.startsWith('image/')) showAvatarCropper(file);
         });
         
-        // Media upload (foto & video)
-        mediaUpload.addEventListener('change', function(e) {
+        mediaUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if(!file) return;
+            if (!file) return;
             ratioOptions.style.display = 'flex';
             if (file.type.startsWith('image/')) {
-                currentMediaType = 'image';
                 showPostCropper(file);
             } else if (file.type.startsWith('video/')) {
                 currentMediaType = 'video';
-                currentMediaBlob = file;
-                currentMediaCroppedBlob = file;
+                currentVideoFile = file;
                 const url = URL.createObjectURL(file);
                 const video = document.createElement('video');
                 video.src = url;
                 video.controls = true;
                 video.style.width = '100%';
                 video.style.height = 'auto';
-                video.style.display = 'block';
                 mediaContainer.innerHTML = '';
                 mediaContainer.appendChild(video);
-                // Video juga bisa di-crop dengan rasio yang sama (tapi hanya untuk screenshot nanti)
-                // Crop untuk video: kita tetap simpan rasio pilihan user
             }
         });
         
         function setDefaultMedia() {
-            if(!mediaContainer.querySelector('img, video')) {
+            if (!mediaContainer.querySelector('img, video')) {
                 const defaultImg = document.createElement('img');
                 defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload";
                 defaultImg.style.width = '100%';
-                defaultImg.style.height = 'auto';
-                defaultImg.style.display = 'block';
                 mediaContainer.innerHTML = '';
                 mediaContainer.appendChild(defaultImg);
-                currentMediaType = 'image';
-                currentMediaCroppedBlob = null;
             }
         }
         
-        // Download
-        document.getElementById('downloadBtn').addEventListener('click', async function() {
-            const element = document.getElementById('previewOuter');
-            if (currentMediaType === 'video' && currentMediaBlob) {
-                const videoElement = mediaContainer.querySelector('video');
-                if (videoElement) {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = videoElement.videoWidth || 360;
-                    canvas.height = videoElement.videoHeight || 360;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                    canvas.toBlob(async (blob) => {
-                        const originalContent = mediaContainer.innerHTML;
-                        const tempImg = document.createElement('img');
-                        tempImg.src = URL.createObjectURL(blob);
-                        tempImg.style.width = '100%';
-                        tempImg.style.height = 'auto';
-                        mediaContainer.innerHTML = '';
-                        mediaContainer.appendChild(tempImg);
-                        await new Promise(r => setTimeout(r, 200));
-                        html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-                            let link = document.createElement('a');
-                            link.download = `instapost_${Date.now()}.png`;
-                            link.href = canvas.toDataURL('image/png');
-                            link.click();
-                            mediaContainer.innerHTML = originalContent;
-                        });
-                    }, 'image/png');
-                } else {
-                    html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-                        let link = document.createElement('a');
-                        link.download = `instapost_${Date.now()}.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                    });
-                }
+        // Download: Video as MP4, Image as PNG
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            if (currentMediaType === 'video' && currentVideoFile) {
+                // Download video as MP4
+                const link = document.createElement('a');
+                link.download = `instapost_video_${Date.now()}.mp4`;
+                link.href = URL.createObjectURL(currentVideoFile);
+                link.click();
             } else {
+                const element = document.getElementById('previewOuter');
                 html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-                    let link = document.createElement('a');
+                    const link = document.createElement('a');
                     link.download = `instapost_${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-                }).catch(() => alert('Error generating image'));
+                });
             }
         });
         
@@ -1378,15 +623,15 @@
         likeCountInput.addEventListener('input', updatePreview);
         timestampInput.addEventListener('input', updatePreview);
         
-        likeIcon.addEventListener('click', function() {
-            if(!liked) {
+        likeIcon.addEventListener('click', () => {
+            if (!liked) {
                 likeCountInput.value = (parseInt(likeCountInput.value) || 0) + 1;
                 updatePreview();
                 liked = true;
                 likeSvg.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>';
             } else {
                 let curr = parseInt(likeCountInput.value) || 0;
-                if(curr > 0) likeCountInput.value = curr - 1;
+                if (curr > 0) likeCountInput.value = curr - 1;
                 updatePreview();
                 liked = false;
                 const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956';
@@ -1401,4 +646,4 @@
         updateBackground();
     </script>
 </body>
-</html>
+    </html>
