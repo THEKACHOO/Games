@@ -110,6 +110,792 @@
         .x-logo { font-weight: 900; font-size: 16px; }
         .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; }
 
+        /* Cropper Modal - DI DEPAN dengan background hitam solid */
+        .cropper-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .cropper-container-custom {
+            background: #000000;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        .cropper-buttons {
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            background: #000000;
+        }
+        .cropper-btn {
+            padding: 10px 24px;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .cropper-btn.cancel { background: #333; color: white; }
+        .cropper-btn.save { background: #0095f6; color: white; }
+        .cropper-view-box { outline: 2px solid white; }
+        .cropper-line, .cropper-point { background-color: white; }
+        .cropper-dashed { border-color: rgba(255,255,255,0.5); }
+        
+        /* Video crop overlay */
+        .video-crop-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .video-crop-container {
+            background: #000000;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow: hidden;
+            border-radius: 20px;
+            position: relative;
+        }
+        .video-crop-container video {
+            max-width: 100%;
+            max-height: 70vh;
+            display: block;
+        }
+        .video-crop-buttons {
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            background: #000000;
+        }
+        .crop-frame {
+            position: absolute;
+            border: 2px solid white;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.6);
+            cursor: move;
+            z-index: 10;
+        }
+        .crop-frame::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 1px dashed rgba(255,255,255,0.8);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <img src="logo-thekachoo.png" alt="CHODET Logo" class="logo-img" onerror="this.style.display='none'">
+            </div>
+            <div class="center-logo-text">CHODET</div>
+            <div class="sub-logo">(Kachoo Update)</div>
+            <div class="desktop-nav-container">
+                <button class="desktop-nav-trigger" id="desktopNavTrigger"><span>Menu</span> <i class="fas fa-chevron-down"></i></button>
+                <div class="desktop-nav-dropdown" id="desktopNavDropdown">
+                    <a href="#" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a>
+                </div>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fas fa-times"></i></button>
+        <a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i> The Kachoo</a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1 class="page-title">INSTA POST</h1>
+            <div class="insta-wrapper">
+                <div class="form-panel">
+                    <div class="lang-buttons">
+                        <button class="lang-btn active" id="btnIndonesia">Bahasa Indonesia</button>
+                        <button class="lang-btn" id="btnInggris">English</button>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelAvatar">Foto Profil</label>
+                        <input type="file" id="avatarUpload" accept="image/*">
+                        <div class="file-input-label" id="uploadAvatarLabel">Upload foto profil</div>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelUsername">Username</label>
+                        <input type="text" id="username" placeholder="thekachoo" value="thekachoo">
+                    </div>
+                    <div class="form-group">
+                        <label id="labelLocation">Lokasi</label>
+                        <input type="text" id="location" placeholder="Jakarta Selatan, Indonesia" value="Jakarta Selatan, Indonesia">
+                    </div>
+                    <div class="form-group">
+                        <label id="labelMedia">Upload Foto/Video</label>
+                        <input type="file" id="mediaUpload" accept="image/*,video/*">
+                        <div class="file-input-label" id="uploadMediaLabel">Klik untuk pilih</div>
+                        <div class="ratio-options" id="ratioOptions" style="display:none;">
+                            <button class="ratio-btn active" data-ratio="1:1">1:1 (Persegi)</button>
+                            <button class="ratio-btn" data-ratio="4:5">4:5 (Portrait)</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelCaption">Caption</label>
+                        <textarea id="caption" placeholder="Tulis caption..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelLikes">Jumlah Like</label>
+                        <input type="number" id="likeCount" value="0" step="1" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label id="labelTimestamp">Waktu posting</label>
+                        <input type="text" id="timestamp" placeholder="Baru saja" value="Baru saja">
+                    </div>
+                    <div class="form-group">
+                        <label>Warna Love</label>
+                        <div class="love-option">
+                            <span>Pilih:</span>
+                            <div class="love-color-btn black active" id="loveBlack"></div>
+                            <div class="love-color-btn red" id="loveRed"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Background Preview</label>
+                        <div class="bg-options">
+                            <button class="bg-option-btn" data-bg="transparent">Transparan</button>
+                            <button class="bg-option-btn" data-bg="white">Putih</button>
+                            <button class="bg-option-btn" data-bg="black">Hitam</button>
+                            <input type="color" id="customColorPicker" class="color-picker-input" value="#f5f5f5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-container">
+                    <div class="preview-outer" id="previewOuter">
+                        <div class="instagram-preview" id="instagramCard">
+                            <div class="post-header">
+                                <div class="avatar" id="avatarContainer">
+                                    <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3ETK%3C/text%3E%3C/svg%3E">
+                                </div>
+                                <div>
+                                    <div class="username" id="displayUsername">thekachoo</div>
+                                    <div class="location" id="displayLocation">Jakarta Selatan, Indonesia</div>
+                                </div>
+                                <div class="menu-dot">•••</div>
+                            </div>
+                            <div class="media-container" id="mediaContainer">
+                                <img src="https://placehold.co/360x360/EFEFEF/888888?text=Upload">
+                            </div>
+                            <div class="action-buttons">
+                                <div class="action-icons">
+                                    <div class="action-icon" id="likeIcon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="action-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="action-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="18" cy="5" r="3"/>
+                                            <circle cx="6" cy="12" r="3"/>
+                                            <circle cx="18" cy="19" r="3"/>
+                                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="save-icon">
+                                    <div class="action-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="like-count" id="displayLikes">0 suka</div>
+                            <div class="caption-text">
+                                <span class="caption-username" id="captionUsername">thekachoo</span>
+                                <span class="caption-message" id="displayCaption"></span>
+                            </div>
+                            <div class="timestamp" id="displayTimestamp">Baru saja</div>
+                        </div>
+                    </div>
+                    <div class="download-area">
+                        <button class="download-btn" id="downloadBtn">Unduh</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CHODET</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-top: 14px;">Social Media Editor System by The Kachoo For Roleplay.</p>
+                    <div class="social-links">
+                        <a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+                        <a href="#" class="social-link"><span class="x-logo">X</span></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@TheKachoo (Official)</a></li>
+                        <li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@HaiKachoo (Contact Person)</a></li>
+                        <li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Address</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">© 2026 CHODET. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <!-- Modal Cropper Profil -->
+    <div class="cropper-modal" id="cropperModal">
+        <div class="cropper-container-custom">
+            <img id="cropperImage" src="">
+            <div class="cropper-buttons">
+                <button class="cropper-btn cancel" id="cancelCrop">Batal</button>
+                <button class="cropper-btn save" id="saveCrop">Simpan</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Cropper Post untuk Foto -->
+    <div class="cropper-modal" id="postCropperModal">
+        <div class="cropper-container-custom">
+            <img id="postCropperImage" src="">
+            <div class="cropper-buttons">
+                <button class="cropper-btn cancel" id="cancelPostCrop">Batal</button>
+                <button class="cropper-btn save" id="savePostCrop">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Crop untuk Video -->
+    <div class="video-crop-overlay" id="videoCropOverlay">
+        <div class="video-crop-container" id="videoCropContainer">
+            <video id="cropVideo" controls loop></video>
+            <div class="crop-frame" id="cropFrame"></div>
+        </div>
+        <div class="video-crop-buttons">
+            <button class="cropper-btn cancel" id="cancelVideoCrop">Batal</button>
+            <button class="cropper-btn save" id="saveVideoCrop">Simpan Crop</button>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        function openMobileMenu() { mobileMenu.classList.add('active'); mobileMenuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeMobileMenu() { mobileMenu.classList.remove('active'); mobileMenuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+        if(mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+        if(mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        window.closeMobileMenu = closeMobileMenu;
+
+        const desktopNavTrigger = document.getElementById('desktopNavTrigger');
+        const desktopNavDropdown = document.getElementById('desktopNavDropdown');
+        if (desktopNavTrigger && desktopNavDropdown) {
+            desktopNavTrigger.addEventListener('click', function(e) { e.stopPropagation(); desktopNavDropdown.classList.toggle('active'); });
+            document.addEventListener('click', function(e) { if (!desktopNavTrigger.contains(e.target) && !desktopNavDropdown.contains(e.target)) desktopNavDropdown.classList.remove('active'); });
+        }
+
+        // Translations
+        const translations = {
+            id: { labelAvatar: "Foto Profil", uploadAvatarLabel: "Upload foto profil", labelUsername: "Username", labelLocation: "Lokasi", labelMedia: "Upload Foto/Video", uploadMediaLabel: "Klik untuk pilih", labelCaption: "Caption", labelLikes: "Jumlah Like", labelTimestamp: "Waktu posting", likesSuffix: "suka", defaultTimestamp: "Baru saja" },
+            en: { labelAvatar: "Profile Photo", uploadAvatarLabel: "Upload profile photo", labelUsername: "Username", labelLocation: "Location", labelMedia: "Upload Photo/Video", uploadMediaLabel: "Click to select", labelCaption: "Caption", labelLikes: "Number of Likes", labelTimestamp: "Post time", likesSuffix: "likes", defaultTimestamp: "Just now" }
+        };
+        
+        let currentLang = 'id';
+        let loveColor = 'black';
+        let liked = false;
+        let currentMediaType = 'image';
+        let currentVideoFile = null;
+        let currentVideoCroppedBlob = null;
+        let currentCropRatio = '1:1';
+        let cropper = null;
+        let postCropper = null;
+        let isDragging = false;
+        let startX, startY, startLeft, startTop;
+        
+        const usernameInput = document.getElementById('username');
+        const locationInput = document.getElementById('location');
+        const captionInput = document.getElementById('caption');
+        const likeCountInput = document.getElementById('likeCount');
+        const timestampInput = document.getElementById('timestamp');
+        const mediaUpload = document.getElementById('mediaUpload');
+        const avatarUpload = document.getElementById('avatarUpload');
+        const mediaContainer = document.getElementById('mediaContainer');
+        const avatarImg = document.getElementById('avatarImg');
+        const likeIcon = document.getElementById('likeIcon');
+        let likeSvg = likeIcon.querySelector('svg');
+        const previewOuter = document.getElementById('previewOuter');
+        const ratioOptions = document.getElementById('ratioOptions');
+        
+        const displayUsername = document.getElementById('displayUsername');
+        const displayLocation = document.getElementById('displayLocation');
+        const displayCaption = document.getElementById('displayCaption');
+        const displayLikes = document.getElementById('displayLikes');
+        const displayTimestamp = document.getElementById('displayTimestamp');
+        const captionUsernameSpan = document.getElementById('captionUsername');
+        
+        usernameInput.placeholder = 'thekachoo';
+        locationInput.placeholder = 'Jakarta Selatan, Indonesia';
+        timestampInput.placeholder = 'Baru saja';
+        
+        // Ratio selection
+        document.querySelectorAll('.ratio-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCropRatio = btn.getAttribute('data-ratio');
+            });
+        });
+        
+        // Background options
+        let currentBg = 'transparent';
+        function updateBackground() {
+            if (currentBg === 'transparent') previewOuter.style.background = 'radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), rgba(0,0,0,0.02))';
+            else if (currentBg === 'white') previewOuter.style.background = 'white';
+            else if (currentBg === 'black') previewOuter.style.background = 'black';
+            else previewOuter.style.background = currentBg;
+        }
+        document.querySelectorAll('.bg-option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.bg-option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentBg = btn.getAttribute('data-bg');
+                updateBackground();
+            });
+        });
+        document.getElementById('customColorPicker').addEventListener('input', (e) => {
+            document.querySelectorAll('.bg-option-btn').forEach(b => b.classList.remove('active'));
+            currentBg = e.target.value;
+            updateBackground();
+        });
+        
+        function updateLoveColor() {
+            const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956';
+            const fillColor = loveColor === 'black' ? 'none' : '#ed4956';
+            if (!liked) likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`;
+            else likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>`;
+        }
+        
+        function updatePreview() {
+            let username = usernameInput.value.trim() || 'thekachoo';
+            displayUsername.innerText = username;
+            captionUsernameSpan.innerText = username;
+            displayLocation.innerText = locationInput.value.trim() || '';
+            displayCaption.innerText = captionInput.value || '';
+            let likes = parseInt(likeCountInput.value) || 0;
+            let likesText = currentLang === 'id' ? 'suka' : 'likes';
+            displayLikes.innerText = likes.toLocaleString() + ' ' + likesText;
+            displayTimestamp.innerText = timestampInput.value.trim() || (currentLang === 'id' ? 'Baru saja' : 'Just now');
+        }
+        
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('labelAvatar').innerText = t.labelAvatar;
+            document.getElementById('uploadAvatarLabel').innerText = t.uploadAvatarLabel;
+            document.getElementById('labelUsername').innerText = t.labelUsername;
+            document.getElementById('labelLocation').innerText = t.labelLocation;
+            document.getElementById('labelMedia').innerText = t.labelMedia;
+            document.getElementById('uploadMediaLabel').innerText = t.uploadMediaLabel;
+            document.getElementById('labelCaption').innerText = t.labelCaption;
+            document.getElementById('labelLikes').innerText = t.labelLikes;
+            document.getElementById('labelTimestamp').innerText = t.labelTimestamp;
+            timestampInput.placeholder = t.defaultTimestamp;
+            updatePreview();
+        }
+        
+        // Cropper Profil (1:1)
+        function showAvatarCropper(file) {
+            const modal = document.getElementById('cropperModal');
+            const img = document.getElementById('cropperImage');
+            const url = URL.createObjectURL(file);
+            img.src = url;
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1, scalable: true, zoomable: true });
+            }, 100);
+        }
+        document.getElementById('cancelCrop').addEventListener('click', () => {
+            document.getElementById('cropperModal').style.display = 'none';
+            if (cropper) cropper.destroy();
+        });
+        document.getElementById('saveCrop').addEventListener('click', () => {
+            if (cropper) {
+                const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
+                canvas.toBlob((blob) => { avatarImg.src = URL.createObjectURL(blob); });
+                document.getElementById('cropperModal').style.display = 'none';
+                if (cropper) cropper.destroy();
+            }
+        });
+        
+        // Cropper Post untuk FOTO
+        function showPostCropper(file) {
+            const modal = document.getElementById('postCropperModal');
+            const img = document.getElementById('postCropperImage');
+            const url = URL.createObjectURL(file);
+            img.src = url;
+            modal.style.display = 'flex';
+            const aspect = currentCropRatio === '1:1' ? 1 : 4/5;
+            setTimeout(() => {
+                if (postCropper) postCropper.destroy();
+                postCropper = new Cropper(img, { aspectRatio: aspect, viewMode: 1, autoCropArea: 1, scalable: true, zoomable: true });
+            }, 100);
+        }
+        document.getElementById('cancelPostCrop').addEventListener('click', () => {
+            document.getElementById('postCropperModal').style.display = 'none';
+            if (postCropper) postCropper.destroy();
+        });
+        document.getElementById('savePostCrop').addEventListener('click', () => {
+            if (postCropper) {
+                let width = 1080, height = 1080;
+                if (currentCropRatio === '4:5') { width = 1080; height = 1350; }
+                const canvas = postCropper.getCroppedCanvas({ width: width, height: height });
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(img);
+                    currentMediaType = 'image';
+                    currentVideoFile = null;
+                    currentVideoCroppedBlob = null;
+                });
+                document.getElementById('postCropperModal').style.display = 'none';
+                if (postCropper) postCropper.destroy();
+            }
+        });
+        
+        // Video Crop Function
+        function showVideoCropper(file) {
+            const overlay = document.getElementById('videoCropOverlay');
+            const video = document.getElementById('cropVideo');
+            const container = document.getElementById('videoCropContainer');
+            const cropFrame = document.getElementById('cropFrame');
+            
+            const url = URL.createObjectURL(file);
+            video.src = url;
+            overlay.style.display = 'flex';
+            
+            video.onloadedmetadata = () => {
+                const videoRect = video.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                const aspect = currentCropRatio === '1:1' ? 1 : 4/5;
+                let frameWidth, frameHeight;
+                
+                if (aspect === 1) {
+                    frameWidth = Math.min(videoRect.width, videoRect.height);
+                    frameHeight = frameWidth;
+                } else {
+                    frameHeight = videoRect.height;
+                    frameWidth = frameHeight * (4/5);
+                    if (frameWidth > videoRect.width) {
+                        frameWidth = videoRect.width;
+                        frameHeight = frameWidth / (4/5);
+                    }
+                }
+                
+                cropFrame.style.width = frameWidth + 'px';
+                cropFrame.style.height = frameHeight + 'px';
+                cropFrame.style.left = ((videoRect.width - frameWidth) / 2) + 'px';
+                cropFrame.style.top = ((videoRect.height - frameHeight) / 2) + 'px';
+                cropFrame.style.position = 'absolute';
+                
+                makeDraggable(cropFrame, videoRect);
+            };
+        }
+        
+        function makeDraggable(element, videoRect) {
+            element.onmousedown = (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                startLeft = parseInt(element.style.left);
+                startTop = parseInt(element.style.top);
+                document.onmousemove = (moveEvent) => {
+                    if (!isDragging) return;
+                    let dx = moveEvent.clientX - startX;
+                    let dy = moveEvent.clientY - startY;
+                    let newLeft = startLeft + dx;
+                    let newTop = startTop + dy;
+                    newLeft = Math.max(0, Math.min(newLeft, videoRect.width - element.offsetWidth));
+                    newTop = Math.max(0, Math.min(newTop, videoRect.height - element.offsetHeight));
+                    element.style.left = newLeft + 'px';
+                    element.style.top = newTop + 'px';
+                };
+                document.onmouseup = () => {
+                    isDragging = false;
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+            };
+        }
+        
+        document.getElementById('cancelVideoCrop').addEventListener('click', () => {
+            document.getElementById('videoCropOverlay').style.display = 'none';
+            const video = document.getElementById('cropVideo');
+            video.pause();
+            video.src = '';
+        });
+        
+        document.getElementById('saveVideoCrop').addEventListener('click', () => {
+            const video = document.getElementById('cropVideo');
+            const cropFrame = document.getElementById('cropFrame');
+            const frameRect = cropFrame.getBoundingClientRect();
+            const videoRect = video.getBoundingClientRect();
+            const scaleX = video.videoWidth / videoRect.width;
+            const scaleY = video.videoHeight / videoRect.height;
+            
+            const cropX = (frameRect.left - videoRect.left) * scaleX;
+            const cropY = (frameRect.top - videoRect.top) * scaleY;
+            const cropWidth = frameRect.width * scaleX;
+            const cropHeight = frameRect.height * scaleY;
+            
+            video.currentTime = 0.1;
+            video.onseeked = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = cropWidth;
+                canvas.height = cropHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+                canvas.toBlob((blob) => {
+                    currentVideoCroppedBlob = blob;
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(blob);
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(img);
+                    currentMediaType = 'image';
+                    currentVideoFile = null;
+                    document.getElementById('videoCropOverlay').style.display = 'none';
+                    video.pause();
+                    video.src = '';
+                }, 'image/png');
+            };
+        });
+        
+        avatarUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) showAvatarCropper(file);
+        });
+        
+        mediaUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            ratioOptions.style.display = 'flex';
+            if (file.type.startsWith('image/')) {
+                showPostCropper(file);
+            } else if (file.type.startsWith('video/')) {
+                currentMediaType = 'video';
+                currentVideoFile = file;
+                showVideoCropper(file);
+            }
+        });
+        
+        function setDefaultMedia() {
+            if (!mediaContainer.querySelector('img, video')) {
+                const defaultImg = document.createElement('img');
+                defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload";
+                defaultImg.style.width = '100%';
+                mediaContainer.innerHTML = '';
+                mediaContainer.appendChild(defaultImg);
+            }
+        }
+        
+        // Download - Video jadi MP4 dengan frame crop, Image jadi PNG
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            if (currentMediaType === 'video' && currentVideoFile) {
+                const element = document.getElementById('previewOuter');
+                html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `instapost_video_${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            } else {
+                const element = document.getElementById('previewOuter');
+                html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `instapost_${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            }
+        });
+        
+        document.getElementById('btnIndonesia').addEventListener('click', () => {
+            currentLang = 'id';
+            document.getElementById('btnIndonesia').classList.add('active');
+            document.getElementById('btnInggris').classList.remove('active');
+            updateLanguage();
+        });
+        document.getElementById('btnInggris').addEventListener('click', () => {
+            currentLang = 'en';
+            document.getElementById('btnInggris').classList.add('active');
+            document.getElementById('btnIndonesia').classList.remove('active');
+            updateLanguage();
+        });
+        document.getElementById('loveBlack').addEventListener('click', () => {
+            loveColor = 'black';
+            document.getElementById('loveBlack').classList.add('active');
+            document.getElementById('loveRed').classList.remove('active');
+            updateLoveColor();
+        });
+        document.getElementById('loveRed').addEventListener('click', () => {
+            loveColor = 'red';
+            document.getElementById('loveRed').classList.add('active');
+            document.getElementById('loveBlack').classList.remove('active');
+            updateLoveColor();
+        });
+        
+        usernameInput.addEventListener('input', updatePreview);
+        locationInput.addEventListener('input', updatePreview);
+        captionInput.addEventListener('input', updatePreview);
+        likeCountInput.addEventListener('input', updatePreview);
+        timestampInput.addEventListener('input', updatePreview);
+        
+        likeIcon.addEventListener('click', () => {
+            if (!liked) {
+                likeCountInput.value = (parseInt(likeCountInput.value) || 0) + 1;
+                updatePreview();
+                liked = true;
+                likeSvg.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>';
+            } else {
+                let curr = parseInt(likeCountInput.value) || 0;
+                if (curr > 0) likeCountInput.value = curr - 1;
+                updatePreview();
+                liked = false;
+                const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956';
+                const fillColor = loveColor === 'black' ? 'none' : '#ed4956';
+                likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`;
+            }
+        });
+        
+        updateLanguage();
+        setDefaultMedia();
+        updateLoveColor();
+        updateBackground();
+    </script>
+</body>
+</html>        .mobile-menu-btn { display: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 20px; color: white; width: 42px; height: 42px; border-radius: 60px; cursor: pointer; }
+        @media (max-width: 768px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } }
+        .mobile-menu { position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh; background: rgba(0,0,0,0.98); padding: 110px 28px 40px; transition: right 0.4s; z-index: 999; border-left: 1px solid rgba(255,255,255,0.1); }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 998; }
+        .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+        .mobile-menu-close { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.1); border: none; width: 44px; height: 44px; border-radius: 40px; font-size: 20px; color: white; cursor: pointer; }
+        .mobile-menu-link { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: rgba(255,255,255,0.06); border-radius: 60px; text-decoration: none; color: white; font-weight: 600; margin-bottom: 14px; }
+
+        /* Main Content */
+        .main-content { padding: 140px 0 60px; }
+        .page-title { text-align: center; font-size: 42px; font-weight: 800; margin-bottom: 40px; color: #1a1a1a; }
+        .insta-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+
+        /* Form Panel */
+        .form-panel { background: white; border-radius: 28px; padding: 24px; width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border: 1px solid #e0e0e0; }
+        .lang-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .lang-btn { flex: 1; padding: 8px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 100px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .lang-btn.active { background: #1a1a1a; color: white; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 600; font-size: 12px; display: block; margin-bottom: 6px; color: #555; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #dbdbdb; border-radius: 16px; font-size: 13px; outline: none; }
+        input:focus, textarea:focus { border-color: #0095f6; }
+        textarea { resize: vertical; min-height: 70px; }
+        input::placeholder, textarea::placeholder { color: #bbb; }
+        .file-input-label { background: #f5f5f5; text-align: center; padding: 10px; border-radius: 16px; margin-top: 5px; cursor: pointer; font-size: 12px; border: 1px solid #e0e0e0; }
+        .love-option { display: flex; gap: 15px; align-items: center; margin-top: 5px; }
+        .love-color-btn { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .love-color-btn.black { background: #262626; }
+        .love-color-btn.red { background: #ed4956; }
+        .love-color-btn.active { border-color: #0095f6; transform: scale(1.1); }
+        .bg-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+        .bg-option-btn { padding: 8px 16px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; }
+        .bg-option-btn.active { background: #1a1a1a; color: white; }
+        .color-picker-input { width: 50px; height: 40px; border-radius: 12px; border: 1px solid #ddd; cursor: pointer; }
+        .ratio-options { display: flex; gap: 12px; margin-top: 8px; }
+        .ratio-btn { padding: 6px 16px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; }
+        .ratio-btn.active { background: #1a1a1a; color: white; }
+
+        /* Preview */
+        .preview-outer { padding: 25px 20px; border-radius: 48px; transition: background 0.2s; display: inline-block; }
+        .preview-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .instagram-preview { background: white; width: 360px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .post-header { display: flex; align-items: center; padding: 11px 14px; gap: 10px; background: white; }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; background: #0095f6; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .username { font-weight: 700; font-size: 13px; color: #262626; }
+        .location { font-size: 11px; color: #8e8e8e; margin-top: 2px; }
+        .menu-dot { margin-left: auto; font-size: 16px; font-weight: bold; color: #262626; }
+        .media-container { width: 100%; background: #000; display: flex; justify-content: center; align-items: center; background-color: #efefef; }
+        .media-container img, .media-container video { width: 100%; height: auto; display: block; }
+        .action-buttons { padding: 6px 12px; display: flex; gap: 16px; align-items: center; }
+        .action-icons { display: flex; gap: 16px; align-items: center; }
+        .action-icon { width: 24px; height: 24px; cursor: pointer; }
+        .action-icon svg { width: 100%; height: 100%; }
+        .save-icon { margin-left: auto; }
+        .like-count { font-weight: 600; font-size: 13px; padding: 0 12px 5px 12px; color: #262626; }
+        .caption-text { padding: 0 12px 8px 12px; font-size: 13px; }
+        .caption-username { font-weight: 700; margin-right: 6px; }
+        .timestamp { padding: 0 12px 12px 12px; font-size: 10px; color: #8e8e8e; }
+        .download-area { text-align: center; margin-top: 20px; }
+        .download-btn { background: #1a1a1a; color: white; border: none; padding: 14px 40px; border-radius: 100px; font-weight: 600; cursor: pointer; font-size: 16px; }
+
+        /* Footer */
+        footer { background: #000000; color: #ddd; padding: 70px 0 40px; margin-top: 40px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 48px; margin-bottom: 55px; }
+        .footer-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 24px; color: white; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; }
+        .footer-links a:hover { color: white; }
+        .social-links { display: flex; gap: 16px; margin-top: 26px; }
+        .social-link { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(255,255,255,0.08); border-radius: 60px; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); }
+        .x-logo { font-weight: 900; font-size: 16px; }
+        .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; }
+
         /* Cropper Modal - DI DEPAN */
         .cropper-modal {
             display: none;
