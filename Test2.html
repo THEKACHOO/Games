@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CHODET | Insta Post Editor</title>
+    <title>CHODET | Insta Post Frame</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css">
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html, div, span, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, li, span, label {
@@ -159,16 +160,50 @@
         .cropper-center::before, .cropper-center::after { background-color: white; }
         
         .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 30000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+        
+        /* Loading overlay untuk ffmpeg */
+        .ffmpeg-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 40000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 18px;
+            gap: 20px;
+        }
+        .ffmpeg-loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .ffmpeg-loading .progress-text { font-size: 14px; opacity: 0.8; }
     </style>
 </head>
 <body>
+    <div class="ffmpeg-loading" id="ffmpegLoading">
+        <div class="spinner"></div>
+        <div>Memproses video...</div>
+        <div class="progress-text" id="ffmpegProgress">Mohon tunggu, ini bisa makan waktu 15-60 detik</div>
+    </div>
+
     <header>
         <div class="container header-content">
             <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
                 <img src="logo-thekachoo.png" alt="CHODET Logo" class="logo-img" onerror="this.style.display='none'">
             </div>
             <div class="center-logo-text">CHODET</div>
-            <div class="sub-logo">(Kachoo Update)</div>
+            <div class="sub-logo">(Kachoo Update - MP4 with Frame)</div>
             <div class="desktop-nav-container">
                 <button class="desktop-nav-trigger" id="desktopNavTrigger"><span>Menu</span> <i class="fas fa-chevron-down"></i></button>
                 <div class="desktop-nav-dropdown" id="desktopNavDropdown">
@@ -374,6 +409,10 @@
         let currentCropRatio = '1:1';
         let profileCropper = null, postCropper = null;
         
+        // ffmpeg instances
+        let ffmpeg = null;
+        let ffmpegLoaded = false;
+        
         const usernameInput = document.getElementById('username');
         const locationInput = document.getElementById('location');
         const captionInput = document.getElementById('caption');
@@ -503,76 +542,107 @@
         
         function setDefaultMedia() { if (!mediaContainer.querySelector('img, video')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); currentMediaType = 'image'; } }
         
-        function showToast(msg) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 2500); }
+        function showToast(msg) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 3000); }
         
-        // PERBAIKAN UTAMA: Rekam video dengan durasi 10 detik, stabil
-        async function downloadVideoWithFrame() {
-            const previewElement = document.getElementById('previewOuter');
-            if (!previewElement) return;
-            
-            showToast('⏺️ Merekam video dengan frame Instagram (10 detik)...');
-            
-            try {
-                // Pastikan video berjalan
-                if (currentVideoElement && currentVideoElement.paused) {
-                    await currentVideoElement.play().catch(e => console.log("Play gagal, tetap lanjut"));
-                }
-                
-                // Buat canvas untuk fallback jika captureStream tidak tersedia
-                let stream = null;
-                let intervalId = null;
-                let canvas = null;
-                
-                if (previewElement.captureStream) {
-                    stream = previewElement.captureStream(30);
-                } else {
-                    // Fallback: canvas capture
-                    canvas = document.createElement('canvas');
-                    canvas.width = previewElement.offsetWidth;
-                    canvas.height = previewElement.offsetHeight;
-                    const ctx = canvas.getContext('2d');
-                    stream = canvas.captureStream(30);
-                    intervalId = setInterval(async () => {
-                        try {
-                            const frameCanvas = await html2canvas(previewElement, { scale: 2, backgroundColor: null, useCORS: true });
-                            ctx.drawImage(frameCanvas, 0, 0, canvas.width, canvas.height);
-                        } catch(e) {}
-                    }, 100);
-                }
-                
-                if (!stream) throw new Error("Tidak bisa membuat stream");
-                
-                const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-                const chunks = [];
-                
-                mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
-                mediaRecorder.onstop = () => {
-                    if (intervalId) clearInterval(intervalId);
-                    const blob = new Blob(chunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.download = `instagram_frame_${Date.now()}.webm`;
-                    a.href = url;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    showToast('✅ Video siap! File .webm dengan frame Instagram');
-                };
-                
-                mediaRecorder.start();
-                // Rekam selama 10 detik (cukup untuk video pendek)
-                setTimeout(() => {
-                    if (mediaRecorder.state === 'recording') mediaRecorder.stop();
-                }, 10000);
-                
-            } catch (err) {
-                console.error(err);
-                showToast('❌ Gagal merekam video, coba browser lain (Chrome/Edge)');
+        function showLoading(show, progressMsg = '') {
+            const loadingDiv = document.getElementById('ffmpegLoading');
+            const progressText = document.getElementById('ffmpegProgress');
+            if (show) {
+                if (progressMsg) progressText.innerText = progressMsg;
+                loadingDiv.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            } else {
+                loadingDiv.style.display = 'none';
+                document.body.style.overflow = '';
             }
         }
         
+        // Load ffmpeg
+        async function loadFFmpeg() {
+            if (ffmpegLoaded) return true;
+            showLoading(true, 'Mengunduh library ffmpeg.wasm (25MB)... pertama kali agak lama');
+            try {
+                const { createFFmpeg, fetchFile } = FFmpeg;
+                ffmpeg = createFFmpeg({ log: false, corePath: 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/ffmpeg-core.js' });
+                await ffmpeg.load();
+                ffmpegLoaded = true;
+                showLoading(false);
+                showToast('✅ Library ffmpeg siap! Sekarang bisa export MP4 dengan frame');
+                return true;
+            } catch (err) {
+                console.error(err);
+                showLoading(false);
+                showToast('❌ Gagal load ffmpeg, coba refresh atau ganti browser');
+                return false;
+            }
+        }
+        
+        // Capture frame Instagram as image
+        async function captureInstagramFrame() {
+            const element = document.getElementById('previewOuter');
+            const canvas = await html2canvas(element, { scale: 2, backgroundColor: null, useCORS: true });
+            return canvas.toDataURL('image/png');
+        }
+        
+        // Main function: gabung video + frame pakai ffmpeg
+        async function downloadMP4WithFrame() {
+            if (!currentVideoFile) {
+                showToast('Tidak ada video yang diupload');
+                return;
+            }
+            
+            const loaded = await loadFFmpeg();
+            if (!loaded) return;
+            
+            showLoading(true, 'Mengambil screenshot frame Instagram...');
+            
+            try {
+                // 1. Capture frame Instagram sebagai gambar
+                const frameDataUrl = await captureInstagramFrame();
+                const frameBlob = await (await fetch(frameDataUrl)).blob();
+                
+                // 2. Baca video asli
+                const videoBlob = currentVideoFile;
+                
+                // 3. Tulis ke filesystem ffmpeg
+                ffmpeg.FS('writeFile', 'frame.png', new Uint8Array(await frameBlob.arrayBuffer()));
+                ffmpeg.FS('writeFile', 'input.mp4', new Uint8Array(await videoBlob.arrayBuffer()));
+                
+                showLoading(true, 'Menggabungkan video dengan frame (proses transcoding)... bisa makan waktu 30-60 detik');
+                
+                // 4. Jalankan ffmpeg: scale frame ke ukuran video, lalu overlay
+                // Dapatkan durasi video
+                await ffmpeg.run('-i', 'input.mp4', '-i', 'frame.png', '-filter_complex', '[1:v]scale=360:640[frame];[0:v][frame]overlay=0:0', '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'copy', 'output.mp4');
+                
+                // 5. Baca hasil
+                const data = ffmpeg.FS('readFile', 'output.mp4');
+                const outputBlob = new Blob([data.buffer], { type: 'video/mp4' });
+                const url = URL.createObjectURL(outputBlob);
+                const a = document.createElement('a');
+                a.download = `instagram_frame_${Date.now()}.mp4`;
+                a.href = url;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                showLoading(false);
+                showToast('✅ MP4 dengan frame Instagram berhasil diunduh!');
+                
+                // Cleanup
+                ffmpeg.FS('unlink', 'frame.png');
+                ffmpeg.FS('unlink', 'input.mp4');
+                ffmpeg.FS('unlink', 'output.mp4');
+                
+            } catch (err) {
+                console.error(err);
+                showLoading(false);
+                showToast('❌ Gagal memproses video: ' + err.message);
+            }
+        }
+        
+        // DOWNLOAD BUTTON
         document.getElementById('downloadBtn').addEventListener('click', async () => {
             if (currentMediaType === 'video' && currentVideoElement) {
-                await downloadVideoWithFrame();
+                await downloadMP4WithFrame();
             } else {
                 const element = document.getElementById('previewOuter');
                 html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
@@ -618,4 +688,4 @@
         updateBackground();
     </script>
 </body>
-                                                            </html>
+                                                                                               </html>
