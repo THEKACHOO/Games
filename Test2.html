@@ -78,7 +78,7 @@
         .ratio-btn { padding: 6px 18px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; font-weight: 500; }
         .ratio-btn.active { background: #1a1a1a; color: white; }
 
-        /* PREVIEW - CARD INSTAGRAM TIDAK BERUBAH, HASIL UNDUHAN PERSEGI 1:1 */
+        /* PREVIEW - Card Instagram TIDAK BERUBAH */
         .preview-outer { 
             padding: 28px 24px; 
             border-radius: 48px; 
@@ -87,7 +87,6 @@
             box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); 
             background: transparent;
         }
-        /* CARD TETAP SEPERTI ASLI, TIDAK DIUBAH */
         .instagram-preview { 
             background: white; 
             width: 380px; 
@@ -108,7 +107,6 @@
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            position: relative;
             overflow: hidden;
         }
         .media-container img { 
@@ -117,16 +115,11 @@
             height: 100%;
             object-fit: cover;
         }
-        /* Untuk rasio 4:5, frame dibuat lebih tinggi dan diposisikan di tengah card */
-        .media-container.ratio-4-5 {
-            aspect-ratio: 4 / 5;
-        }
-        .media-container.ratio-1-1 {
-            aspect-ratio: 1 / 1;
-        }
+        .media-container.ratio-1-1 { aspect-ratio: 1 / 1; }
+        .media-container.ratio-4-5 { aspect-ratio: 4 / 5; }
         
         .post-header { display: flex; align-items: center; padding: 12px 14px; gap: 10px; background: white; }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #0095f6; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #0095f6; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
         .username { font-weight: 700; font-size: 13px; color: #262626; }
         .location { font-size: 11px; color: #8e8e8e; margin-top: 2px; }
@@ -143,6 +136,27 @@
         .download-area { text-align: center; margin-top: 8px; }
         .download-btn { background: #1a1a1a; color: white; border: none; padding: 14px 42px; border-radius: 100px; font-weight: 700; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .download-btn:hover { background: #333; transform: scale(0.98); }
+
+        /* CANVAS UNTUK DOWNLOAD - PERSEGI 500x500, CARD DI TENGAH */
+        .download-canvas-wrapper {
+            position: fixed;
+            top: -9999px;
+            left: -9999px;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+        }
+        .download-card {
+            width: 380px;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
         footer { background: #000000; color: #ddd; padding: 70px 0 40px; margin-top: 60px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 48px; margin-bottom: 55px; }
@@ -202,7 +216,6 @@
                     <div class="form-group"><label id="labelUsername">Username</label><input type="text" id="username" placeholder="thekachoo"></div>
                     <div class="form-group"><label id="labelLocation">Lokasi</label><input type="text" id="location" placeholder="Jakarta Selatan, Indonesia"></div>
                     <div class="form-group"><label id="labelMedia">Upload Foto</label><input type="file" id="mediaUpload" accept="image/*" style="display:none;"><div class="file-input-label" id="uploadMediaLabel" onclick="document.getElementById('mediaUpload').click()">Klik untuk pilih</div>
-                        <!-- OPSI RASIO MUNCUL DARI AWAL, TIDAK PERLU UPLOAD DULU -->
                         <div class="ratio-options" id="ratioOptions" style="display:flex;">
                             <button class="ratio-btn active" data-ratio="1:1">1:1 (Persegi)</button>
                             <button class="ratio-btn" data-ratio="4:5">4:5 (Portrait)</button>
@@ -219,7 +232,7 @@
                     <div class="preview-outer" id="previewOuter">
                         <div class="instagram-preview" id="instagramCard">
                             <div class="post-header"><div class="avatar" id="avatarContainer"><img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3ETK%3C/text%3E%3C/svg%3E"></div><div><div class="username" id="displayUsername">thekachoo</div><div class="location" id="displayLocation"></div></div><div class="menu-dot">•••</div></div>
-                            <div class="media-container" id="mediaContainer"><img src="https://placehold.co/360x360/EFEFEF/888888?text=Upload"></div>
+                            <div class="media-container ratio-1-1" id="mediaContainer"><img src="https://placehold.co/380x380/EFEFEF/888888?text=Upload"></div>
                             <div class="action-buttons"><div class="action-icons"><div class="action-icon" id="likeIcon"><svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div></div><div class="save-icon"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div></div></div>
                             <div class="like-count" id="displayLikes">0 suka</div>
                             <div class="caption-text"><span class="caption-username" id="captionUsername">thekachoo</span><span class="caption-message" id="displayCaption"></span></div>
@@ -230,6 +243,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Hidden download canvas wrapper -->
+    <div class="download-canvas-wrapper" id="downloadCanvasWrapper">
+        <div class="download-card" id="downloadCard"></div>
     </div>
 
     <footer>
@@ -286,7 +304,6 @@
         const likeIcon = document.getElementById('likeIcon');
         let likeSvg = likeIcon.querySelector('svg');
         const previewOuter = document.getElementById('previewOuter');
-        const ratioOptions = document.getElementById('ratioOptions');
         
         const displayUsername = document.getElementById('displayUsername');
         const displayLocation = document.getElementById('displayLocation');
@@ -295,14 +312,10 @@
         const displayTimestamp = document.getElementById('displayTimestamp');
         const captionUsernameSpan = document.getElementById('captionUsername');
         
-        // Fungsi mengubah frame foto sesuai rasio (tanpa mengubah card)
         function setFrameRatio(ratio) {
             mediaContainer.classList.remove('ratio-1-1', 'ratio-4-5');
-            if (ratio === '1:1') {
-                mediaContainer.classList.add('ratio-1-1');
-            } else {
-                mediaContainer.classList.add('ratio-4-5');
-            }
+            if (ratio === '1:1') mediaContainer.classList.add('ratio-1-1');
+            else mediaContainer.classList.add('ratio-4-5');
         }
         
         document.querySelectorAll('.ratio-btn').forEach(btn => {
@@ -396,23 +409,60 @@
         mediaUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            if (file.type.startsWith('image/')) {
-                showPostCrop(file);
-            }
+            if (file.type.startsWith('image/')) showPostCrop(file);
         });
         
-        function setDefaultMedia() { if (!mediaContainer.querySelector('img')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; defaultImg.style.height = '100%'; defaultImg.style.objectFit = 'cover'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); } }
+        function setDefaultMedia() { if (!mediaContainer.querySelector('img')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/380x380/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; defaultImg.style.height = '100%'; defaultImg.style.objectFit = 'cover'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); } }
         function showToast(msg) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 2000); }
         
+        // DOWNLOAD: membuat canvas 500x500, card di tengah
         document.getElementById('downloadBtn').addEventListener('click', async () => {
-            const element = document.getElementById('previewOuter');
-            html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+            const downloadWrapper = document.getElementById('downloadCanvasWrapper');
+            const downloadCard = document.getElementById('downloadCard');
+            const originalCard = document.getElementById('instagramCard');
+            
+            // Clone card untuk di-download
+            downloadCard.innerHTML = '';
+            const cloneCard = originalCard.cloneNode(true);
+            downloadCard.appendChild(cloneCard);
+            
+            // Terapkan background yang dipilih ke wrapper
+            let bgColor = 'transparent';
+            if (currentBg === 'white') bgColor = 'white';
+            else if (currentBg === 'black') bgColor = 'black';
+            else if (currentBg !== 'transparent') bgColor = currentBg;
+            downloadWrapper.style.backgroundColor = bgColor;
+            
+            // Tampilkan wrapper sebentar untuk di-screenshot
+            downloadWrapper.style.position = 'fixed';
+            downloadWrapper.style.top = '0';
+            downloadWrapper.style.left = '0';
+            downloadWrapper.style.opacity = '1';
+            downloadWrapper.style.zIndex = '99999';
+            
+            try {
+                const canvas = await html2canvas(downloadWrapper, {
+                    scale: 3,
+                    backgroundColor: bgColor === 'transparent' ? null : bgColor,
+                    useCORS: true,
+                    logging: false
+                });
+                
                 const link = document.createElement('a');
                 link.download = `instapost_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 showToast('✅ Gambar berhasil diunduh!');
-            }).catch(() => showToast('❌ Gagal mengunduh gambar'));
+            } catch (err) {
+                console.error(err);
+                showToast('❌ Gagal mengunduh gambar');
+            }
+            
+            // Sembunyikan lagi
+            downloadWrapper.style.position = 'fixed';
+            downloadWrapper.style.top = '-9999px';
+            downloadWrapper.style.left = '-9999px';
+            downloadWrapper.style.opacity = '0';
         });
         
         document.getElementById('btnIndonesia').addEventListener('click', () => { currentLang = 'id'; document.getElementById('btnIndonesia').classList.add('active'); document.getElementById('btnInggris').classList.remove('active'); updateLanguage(); });
@@ -450,4 +500,4 @@
         setFrameRatio('1:1');
     </script>
 </body>
-                        </html>
+                                                                                                                 </html>
