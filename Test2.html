@@ -109,7 +109,6 @@
         .setting-verif { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
         .verif-btn { background: #f0f0f0; border: 1px solid #ddd; padding: 10px; border-radius: 60px; width: 100%; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
 
-        /* PREVIEW CARD */
         .preview-outer { padding: 25px 20px; border-radius: 48px; transition: background 0.2s; display: inline-block; }
         .instagram-preview { background: white; width: 360px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .post-header { display: flex; align-items: center; padding: 11px 14px; gap: 10px; background: white; }
@@ -129,23 +128,24 @@
         .caption-text { padding: 0 12px 8px 12px; font-size: 13px; }
         .caption-username { font-weight: 700; margin-right: 6px; }
         .timestamp { padding: 0 12px 12px 12px; font-size: 10px; color: #8e8e8e; }
-        /* Spacer bawah agar tidak mepet setelah aksi */
         .post-footer-spacer { height: 8px; }
         
         .download-area { text-align: center; margin-top: 20px; }
         .download-btn { background: #1a1a1a; color: white; border: none; padding: 14px 40px; border-radius: 100px; font-weight: 600; cursor: pointer; font-size: 16px; }
 
-        footer { background: #000000; color: #ddd; padding: 70px 0 40px; margin-top: 40px; width: 100%; }
+        /* FOOTER - copied from reference */
+        footer { background: #000000; color: #ddd; padding: 70px 0 40px; margin-top: 60px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 48px; margin-bottom: 55px; max-width: 1400px; margin-left: auto; margin-right: auto; padding: 0 16px; }
         @media (min-width: 1400px) { .footer-content { padding: 0 32px; } }
-        .footer-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 24px; color: white; }
+        .footer-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 24px; color: white; font-family: 'Outfit', sans-serif; }
         .footer-links { list-style: none; }
-        .footer-links li { margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
-        .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; }
+        .footer-links li { margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; }
+        .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; transition: 0.2s; font-family: 'Outfit', sans-serif; }
         .footer-links a:hover { color: white; }
         .social-links { display: flex; gap: 16px; margin-top: 26px; }
         .social-link { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(255,255,255,0.08); border-radius: 60px; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); }
-        .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; max-width: 1400px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+        .x-logo { font-weight: 900; font-size: 16px; }
+        .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; font-family: 'Outfit', sans-serif; max-width: 1400px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
         
         .crop-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 20000; justify-content: center; align-items: center; flex-direction: column; }
         .crop-modal .crop-container { background: #000000; max-width: 90vw; max-height: 85vh; overflow: hidden; border-radius: 24px; }
@@ -259,7 +259,6 @@
                 <div class="preview-container">
                     <div class="preview-outer" id="previewOuter">
                         <div class="instagram-preview" id="instagramCard">
-                            <!-- HEADER: selalu tampil -->
                             <div class="post-header">
                                 <div class="avatar" id="avatarContainer">
                                     <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3ETK%3C/text%3E%3C/svg%3E">
@@ -281,11 +280,9 @@
                                 </div>
                                 <div class="save-icon"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div></div>
                             </div>
-                            <!-- Bagian yang bisa disembunyikan di Insta 2 -->
                             <div class="like-count" id="displayLikes">0 suka</div>
                             <div class="caption-text" id="captionWrapper"><span class="caption-username" id="captionUsername">thekachoo</span><span class="caption-message" id="displayCaption"></span></div>
                             <div class="timestamp" id="displayTimestamp"></div>
-                            <!-- Spacer agar tidak mepet -->
                             <div class="post-footer-spacer"></div>
                         </div>
                     </div>
@@ -295,7 +292,18 @@
         </div>
     </div>
 
-    <footer>...</footer>
+    <!-- FOOTER - copied exactly from reference -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>CHODET</h3><p style="color:rgba(255,255,255,0.7); margin-top:14px;">Social Media Editor System by The Kachoo For Roleplay.</p><div class="social-links"><a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a><a href="#" class="social-link"><span class="x-logo">X</span></a></div></div>
+                <div class="footer-section"><h3>Contact</h3><ul class="footer-links"><li><span style="background:white; border-radius:6px; padding:2px 8px; font-size:12px; color:#000;">X</span><a href="#">@TheKachoo (Official)</a></li><li><span style="background:white; border-radius:6px; padding:2px 8px; font-size:12px; color:#000;">X</span><a href="#">@HaiKachoo (Business Contact)</a></li><li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li></ul></div>
+                <div class="footer-section"><h3>Address</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li></ul></div>
+            </div>
+            <div class="copyright">© 2026 CHODET. All rights reserved.</div>
+        </div>
+    </footer>
+
     <div class="crop-modal" id="profileCropModal"><div class="crop-container"><img id="profileCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelProfileCrop">Batal</button><button class="crop-modal-btn save" id="saveProfileCrop">Simpan</button></div></div>
     <div class="crop-modal" id="postCropModal"><div class="crop-container"><img id="postCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelPostCrop">Batal</button><button class="crop-modal-btn save" id="savePostCrop">Simpan</button></div></div>
     <div class="toast-msg" id="toastMsg"></div>
@@ -332,15 +340,12 @@
                 if (likeCountDiv) likeCountDiv.style.display = 'block';
                 if (captionDiv) captionDiv.style.display = 'block';
                 if (timestampDiv) timestampDiv.style.display = 'block';
-                // Tampilkan verifikasi jika aktif
                 if (isVerified) verifBadgeSpan.style.display = 'inline-flex';
                 else verifBadgeSpan.style.display = 'none';
             } else {
-                // Insta 2: hilangkan like, caption, timestamp
                 if (likeCountDiv) likeCountDiv.style.display = 'none';
                 if (captionDiv) captionDiv.style.display = 'none';
                 if (timestampDiv) timestampDiv.style.display = 'none';
-                // Tetap tampilkan centang verifikasi di samping username (Insta 2 juga boleh ada)
                 if (isVerified) verifBadgeSpan.style.display = 'inline-flex';
                 else verifBadgeSpan.style.display = 'none';
             }
@@ -351,27 +356,17 @@
             let username = usernameInput.value.trim() || 'thekachoo';
             displayUsernameSpan.innerText = username;
             captionUsernameSpan.innerText = username;
-            if(currentVersion === 1) {
-                displayLocation.innerText = locationInput.value.trim() || '';
-            } else {
-                displayLocation.innerText = '';
-            }
+            if(currentVersion === 1) displayLocation.innerText = locationInput.value.trim() || '';
+            else displayLocation.innerText = '';
             let likesRaw = likeCountInput.value;
             let likesText = currentLang === 'id' ? 'suka' : 'likes';
             if (likesRaw === "") likesRaw = "0";
             displayLikes.innerText = likesRaw + ' ' + likesText;
-            if(currentVersion === 1) {
-                displayTimestamp.innerText = timestampInput.value.trim() || (currentLang === 'id' ? 'Baru saja' : 'Just now');
-            } else {
-                displayTimestamp.innerText = '';
-            }
+            if(currentVersion === 1) displayTimestamp.innerText = timestampInput.value.trim() || (currentLang === 'id' ? 'Baru saja' : 'Just now');
+            else displayTimestamp.innerText = '';
             displayCaptionSpan.innerText = captionInput.value || '';
-            // Verifikasi badge: aktif di kedua versi asalkan isVerified true
-            if(isVerified) {
-                verifBadgeSpan.style.display = 'inline-flex';
-            } else {
-                verifBadgeSpan.style.display = 'none';
-            }
+            if(isVerified) verifBadgeSpan.style.display = 'inline-flex';
+            else verifBadgeSpan.style.display = 'none';
         }
 
         function updateLoveColor() {
@@ -469,4 +464,4 @@
         mobileMenuBtn.addEventListener('click', toggleMobileMenu); mobileOverlay.addEventListener('click', closeMobileMenu);
     </script>
 </body>
-                            </html>
+    </html>
