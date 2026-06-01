@@ -19,6 +19,7 @@
         @media (max-width: 1024px) { .container { padding: 0 24px; } }
         @media (max-width: 768px) { .container { padding: 0 16px; } }
 
+        /* Header */
         header { background: rgba(0,0,0,0.95); backdrop-filter: blur(16px); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .header-content { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; position: relative; }
         .logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer; }
@@ -42,88 +43,62 @@
         .mobile-menu-close { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.1); border: none; width: 44px; height: 44px; border-radius: 40px; font-size: 20px; color: white; cursor: pointer; }
         .mobile-menu-link { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: rgba(255,255,255,0.06); border-radius: 60px; text-decoration: none; color: white; font-weight: 600; margin-bottom: 14px; }
 
+        /* Main Content - Layout Utama */
         .main-content { padding: 140px 0 60px; }
-        .page-title { text-align: center; font-size: 42px; font-weight: 800; margin-bottom: 48px; color: #1a1a1a; }
+        .page-title { text-align: center; font-size: 42px; font-weight: 800; margin-bottom: 48px; color: #1a1a1a; letter-spacing: -0.5px; }
         @media (max-width: 768px) { .page-title { font-size: 32px; margin-bottom: 32px; } }
         
+        /* DESKTOP: Layout melebar (flex row) */
         .insta-wrapper { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
+        /* Form Panel - ukuran tetap nyaman di desktop */
         .form-panel { background: white; border-radius: 32px; padding: 28px; width: 360px; box-shadow: 0 12px 28px rgba(0,0,0,0.08); border: 1px solid #eaeaea; flex-shrink: 0; }
+        /* Preview Container - mengambil sisa ruang */
         .preview-container { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 28px; min-width: 280px; }
+        
+        /* MOBILE: Layout vertikal dengan form rapi */
         @media (max-width: 900px) {
             .insta-wrapper { flex-direction: column; align-items: center; gap: 36px; }
             .form-panel { width: 100%; max-width: 500px; margin: 0 auto; }
             .preview-container { width: 100%; }
         }
         
+        /* Form styling lebih modern */
         .lang-buttons { display: flex; gap: 12px; margin-bottom: 28px; }
-        .lang-btn { flex: 1; padding: 10px 0; background: #f0f0f0; border: none; border-radius: 100px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .lang-btn { flex: 1; padding: 10px 0; background: #f0f0f0; border: none; border-radius: 100px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; }
         .lang-btn.active { background: #1a1a1a; color: white; }
         .form-group { margin-bottom: 20px; }
-        label { font-weight: 600; font-size: 13px; display: block; margin-bottom: 8px; color: #333; }
-        input, textarea { width: 100%; padding: 14px 16px; border: 1px solid #e2e2e2; border-radius: 20px; font-size: 14px; outline: none; background: white; }
-        input:focus, textarea:focus { border-color: #0095f6; }
+        label { font-weight: 600; font-size: 13px; display: block; margin-bottom: 8px; color: #333; letter-spacing: -0.2px; }
+        input, textarea { width: 100%; padding: 14px 16px; border: 1px solid #e2e2e2; border-radius: 20px; font-size: 14px; outline: none; background: white; transition: all 0.2s; }
+        input:focus, textarea:focus { border-color: #0095f6; box-shadow: 0 0 0 3px rgba(0,149,246,0.1); }
         textarea { resize: vertical; min-height: 80px; }
-        .file-input-label { background: #f8f8f8; text-align: center; padding: 12px; border-radius: 20px; margin-top: 6px; cursor: pointer; font-size: 13px; border: 1px dashed #ccc; }
+        .file-input-label { background: #f8f8f8; text-align: center; padding: 12px; border-radius: 20px; margin-top: 6px; cursor: pointer; font-size: 13px; border: 1px dashed #ccc; transition: 0.2s; }
         .file-input-label:hover { background: #efefef; }
         .love-option { display: flex; gap: 16px; align-items: center; margin-top: 8px; }
-        .love-color-btn { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .love-color-btn { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.1s; }
         .love-color-btn.black { background: #262626; }
         .love-color-btn.red { background: #ed4956; }
-        .love-color-btn.active { border-color: #0095f6; transform: scale(1.08); }
+        .love-color-btn.active { border-color: #0095f6; transform: scale(1.08); box-shadow: 0 0 0 2px white, 0 0 0 4px #0095f6; }
         .bg-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
-        .bg-option-btn { padding: 8px 18px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; font-weight: 500; }
-        .bg-option-btn.active { background: #1a1a1a; color: white; }
-        .color-picker-input { width: 52px; height: 44px; border-radius: 16px; border: 1px solid #ddd; cursor: pointer; }
+        .bg-option-btn { padding: 8px 18px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; font-weight: 500; transition: 0.2s; }
+        .bg-option-btn.active { background: #1a1a1a; color: white; border-color: #1a1a1a; }
+        .color-picker-input { width: 52px; height: 44px; border-radius: 16px; border: 1px solid #ddd; cursor: pointer; background: white; }
         .ratio-options { display: flex; gap: 12px; margin-top: 12px; }
         .ratio-btn { padding: 6px 18px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; font-weight: 500; }
         .ratio-btn.active { background: #1a1a1a; color: white; }
 
-        /* PREVIEW - Card Instagram TIDAK BERUBAH */
-        .preview-outer { 
-            padding: 28px 24px; 
-            border-radius: 48px; 
-            transition: background 0.2s; 
-            display: inline-block; 
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); 
-            background: transparent;
-        }
-        .instagram-preview { 
-            background: white; 
-            width: 380px; 
-            border-radius: 24px; 
-            overflow: hidden; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12); 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-        @media (max-width: 480px) { 
-            .instagram-preview { width: 100%; max-width: 360px; } 
-            .preview-outer { padding: 16px; } 
-        }
-        
-        /* FRAME FOTO - HANYA INI YANG BERUBAH SESUAI RASIO */
-        .media-container { 
-            width: 100%; 
-            background: #e8e8e8; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            overflow: hidden;
-        }
-        .media-container img { 
-            display: block; 
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .media-container.ratio-1-1 { aspect-ratio: 1 / 1; }
-        .media-container.ratio-4-5 { aspect-ratio: 4 / 5; }
+        /* Preview Styling - tidak mengubah sistem */
+        .preview-outer { padding: 28px 24px; border-radius: 48px; transition: background 0.2s; display: inline-block; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); background: transparent; }
+        .instagram-preview { background: white; width: 380px; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.12); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        @media (max-width: 480px) { .instagram-preview { width: 100%; max-width: 360px; } .preview-outer { padding: 16px; } }
         
         .post-header { display: flex; align-items: center; padding: 12px 14px; gap: 10px; background: white; }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #0095f6; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #0095f6; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
         .username { font-weight: 700; font-size: 13px; color: #262626; }
         .location { font-size: 11px; color: #8e8e8e; margin-top: 2px; }
         .menu-dot { margin-left: auto; font-size: 18px; font-weight: bold; color: #262626; }
+        .media-container { width: 100%; background: #000; display: flex; justify-content: center; align-items: center; background-color: #efefef; min-height: 200px; }
+        .media-container img { width: 100%; height: auto; display: block; object-fit: cover; }
         .action-buttons { padding: 8px 12px 4px 12px; display: flex; gap: 16px; align-items: center; }
         .action-icons { display: flex; gap: 16px; align-items: center; }
         .action-icon { width: 24px; height: 24px; cursor: pointer; }
@@ -134,42 +109,23 @@
         .caption-username { font-weight: 700; margin-right: 6px; }
         .timestamp { padding: 0 12px 14px 12px; font-size: 10px; color: #8e8e8e; }
         .download-area { text-align: center; margin-top: 8px; }
-        .download-btn { background: #1a1a1a; color: white; border: none; padding: 14px 42px; border-radius: 100px; font-weight: 700; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .download-btn { background: #1a1a1a; color: white; border: none; padding: 14px 42px; border-radius: 100px; font-weight: 700; cursor: pointer; font-size: 16px; transition: transform 0.1s, background 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .download-btn:hover { background: #333; transform: scale(0.98); }
 
-        /* CANVAS UNTUK DOWNLOAD - PERSEGI 500x500, CARD DI TENGAH */
-        .download-canvas-wrapper {
-            position: fixed;
-            top: -9999px;
-            left: -9999px;
-            width: 500px;
-            height: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: transparent;
-        }
-        .download-card {
-            width: 380px;
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
+        /* Footer - Hanya satu */
         footer { background: #000000; color: #ddd; padding: 70px 0 40px; margin-top: 60px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 48px; margin-bottom: 55px; }
         .footer-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 24px; color: white; }
         .footer-links { list-style: none; }
         .footer-links li { margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
-        .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; }
+        .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; transition: 0.2s; }
         .footer-links a:hover { color: white; }
         .social-links { display: flex; gap: 16px; margin-top: 26px; }
         .social-link { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(255,255,255,0.08); border-radius: 60px; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); }
         .x-logo { font-weight: 900; font-size: 16px; }
         .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; }
 
+        /* Crop Modal */
         .crop-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 20000; justify-content: center; align-items: center; flex-direction: column; }
         .crop-modal .crop-container { background: #000000; max-width: 90vw; max-height: 85vh; overflow: hidden; border-radius: 24px; }
         .crop-modal .crop-container img { max-width: 100%; max-height: 70vh; display: block; }
@@ -178,7 +134,16 @@
         .crop-modal-btn.cancel { background: #333; color: white; }
         .crop-modal-btn.save { background: #0095f6; color: white; }
         .cropper-view-box { outline: 2px solid white; }
-        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 30000; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+        .cropper-line, .cropper-point { background-color: white; }
+        .cropper-dashed { border-color: rgba(255,255,255,0.5); }
+        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 30000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+        
+        /* Responsive touch */
+        @media (max-width: 600px) {
+            .form-group { margin-bottom: 16px; }
+            .bg-options { gap: 8px; }
+            .bg-option-btn { padding: 6px 14px; font-size: 11px; }
+        }
     </style>
 </head>
 <body>
@@ -191,7 +156,9 @@
             <div class="sub-logo">(Kachoo Update)</div>
             <div class="desktop-nav-container">
                 <button class="desktop-nav-trigger" id="desktopNavTrigger"><span>Menu</span> <i class="fas fa-chevron-down"></i></button>
-                <div class="desktop-nav-dropdown" id="desktopNavDropdown"><a href="#" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a></div>
+                <div class="desktop-nav-dropdown" id="desktopNavDropdown">
+                    <a href="#" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a>
+                </div>
             </div>
             <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
         </div>
@@ -212,47 +179,148 @@
                         <button class="lang-btn active" id="btnIndonesia">Bahasa Indonesia</button>
                         <button class="lang-btn" id="btnInggris">English</button>
                     </div>
-                    <div class="form-group"><label id="labelAvatar">Foto Profil</label><input type="file" id="avatarUpload" accept="image/*" style="display:none;"><div class="file-input-label" id="uploadAvatarLabel" onclick="document.getElementById('avatarUpload').click()">Upload foto profil</div></div>
-                    <div class="form-group"><label id="labelUsername">Username</label><input type="text" id="username" placeholder="thekachoo"></div>
-                    <div class="form-group"><label id="labelLocation">Lokasi</label><input type="text" id="location" placeholder="Jakarta Selatan, Indonesia"></div>
-                    <div class="form-group"><label id="labelMedia">Upload Foto</label><input type="file" id="mediaUpload" accept="image/*" style="display:none;"><div class="file-input-label" id="uploadMediaLabel" onclick="document.getElementById('mediaUpload').click()">Klik untuk pilih</div>
+                    <div class="form-group">
+                        <label id="labelAvatar">Foto Profil</label>
+                        <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
+                        <div class="file-input-label" id="uploadAvatarLabel" onclick="document.getElementById('avatarUpload').click()">Upload foto profil</div>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelUsername">Username</label>
+                        <input type="text" id="username" placeholder="thekachoo">
+                    </div>
+                    <div class="form-group">
+                        <label id="labelLocation">Lokasi</label>
+                        <input type="text" id="location" placeholder="Jakarta Selatan, Indonesia">
+                    </div>
+                    <div class="form-group">
+                        <label id="labelMedia">Upload Foto</label>
+                        <input type="file" id="mediaUpload" accept="image/*" style="display:none;">
+                        <div class="file-input-label" id="uploadMediaLabel" onclick="document.getElementById('mediaUpload').click()">Klik untuk pilih</div>
+                        <!-- PERUBAHAN: opsi crop 1:1 dan 4:5 muncul DARI AWAL (display:flex), tidak hanya pas foto diinput -->
                         <div class="ratio-options" id="ratioOptions" style="display:flex;">
                             <button class="ratio-btn active" data-ratio="1:1">1:1 (Persegi)</button>
                             <button class="ratio-btn" data-ratio="4:5">4:5 (Portrait)</button>
                         </div>
                     </div>
-                    <div class="form-group"><label id="labelCaption">Caption</label><textarea id="caption" placeholder="Tulis caption..."></textarea></div>
-                    <div class="form-group"><label id="labelLikes">Jumlah Like</label><input type="number" id="likeCount" value="0" step="1" placeholder="0"></div>
-                    <div class="form-group"><label id="labelTimestamp">Waktu posting</label><input type="text" id="timestamp" placeholder="Baru saja"></div>
-                    <div class="form-group"><label id="labelLoveColor">Warna</label><div class="love-option"><span id="loveSelectText">Pilih:</span><div class="love-color-btn black active" id="loveBlack"></div><div class="love-color-btn red" id="loveRed"></div></div></div>
-                    <div class="form-group"><label id="labelBgPreview">Background Preview</label><div class="bg-options"><button class="bg-option-btn" data-bg="transparent" id="bgTransparent">Transparan</button><button class="bg-option-btn" data-bg="white" id="bgWhite">Putih</button><button class="bg-option-btn" data-bg="black" id="bgBlack">Hitam</button><input type="color" id="customColorPicker" class="color-picker-input" value="#f5f5f5"></div></div>
+                    <div class="form-group">
+                        <label id="labelCaption">Caption</label>
+                        <textarea id="caption" placeholder="Tulis caption..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelLikes">Jumlah Like</label>
+                        <input type="number" id="likeCount" value="0" step="1" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label id="labelTimestamp">Waktu posting</label>
+                        <input type="text" id="timestamp" placeholder="Baru saja">
+                    </div>
+                    <div class="form-group">
+                        <label id="labelLoveColor">Warna</label>
+                        <div class="love-option">
+                            <span id="loveSelectText">Pilih:</span>
+                            <div class="love-color-btn black active" id="loveBlack"></div>
+                            <div class="love-color-btn red" id="loveRed"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelBgPreview">Background Preview</label>
+                        <div class="bg-options">
+                            <button class="bg-option-btn" data-bg="transparent" id="bgTransparent">Transparan</button>
+                            <button class="bg-option-btn" data-bg="white" id="bgWhite">Putih</button>
+                            <button class="bg-option-btn" data-bg="black" id="bgBlack">Hitam</button>
+                            <input type="color" id="customColorPicker" class="color-picker-input" value="#f5f5f5">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="preview-container">
                     <div class="preview-outer" id="previewOuter">
                         <div class="instagram-preview" id="instagramCard">
-                            <div class="post-header"><div class="avatar" id="avatarContainer"><img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3ETK%3C/text%3E%3C/svg%3E"></div><div><div class="username" id="displayUsername">thekachoo</div><div class="location" id="displayLocation"></div></div><div class="menu-dot">•••</div></div>
-                            <div class="media-container ratio-1-1" id="mediaContainer"><img src="https://placehold.co/380x380/EFEFEF/888888?text=Upload"></div>
-                            <div class="action-buttons"><div class="action-icons"><div class="action-icon" id="likeIcon"><svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div></div><div class="save-icon"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div></div></div>
+                            <div class="post-header">
+                                <div class="avatar" id="avatarContainer">
+                                    <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3ETK%3C/text%3E%3C/svg%3E">
+                                </div>
+                                <div>
+                                    <div class="username" id="displayUsername">thekachoo</div>
+                                    <div class="location" id="displayLocation"></div>
+                                </div>
+                                <div class="menu-dot">•••</div>
+                            </div>
+                            <div class="media-container" id="mediaContainer">
+                                <img src="https://placehold.co/360x360/EFEFEF/888888?text=Upload">
+                            </div>
+                            <div class="action-buttons">
+                                <div class="action-icons">
+                                    <div class="action-icon" id="likeIcon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="action-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="action-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="18" cy="5" r="3"/>
+                                            <circle cx="6" cy="12" r="3"/>
+                                            <circle cx="18" cy="19" r="3"/>
+                                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="save-icon">
+                                    <div class="action-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="like-count" id="displayLikes">0 suka</div>
-                            <div class="caption-text"><span class="caption-username" id="captionUsername">thekachoo</span><span class="caption-message" id="displayCaption"></span></div>
+                            <div class="caption-text">
+                                <span class="caption-username" id="captionUsername">thekachoo</span>
+                                <span class="caption-message" id="displayCaption"></span>
+                            </div>
                             <div class="timestamp" id="displayTimestamp"></div>
                         </div>
                     </div>
-                    <div class="download-area"><button class="download-btn" id="downloadBtn">Unduh</button></div>
+                    <div class="download-area">
+                        <button class="download-btn" id="downloadBtn">Unduh</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Hidden download canvas wrapper -->
-    <div class="download-canvas-wrapper" id="downloadCanvasWrapper">
-        <div class="download-card" id="downloadCard"></div>
-    </div>
-
     <footer>
         <div class="container">
-            <div class="footer-content"><div class="footer-section"><h3>CHODET</h3><p style="color: rgba(255,255,255,0.7); margin-top: 14px;">Social Media Editor System by The Kachoo For Roleplay.</p><div class="social-links"><a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a><a href="#" class="social-link"><span class="x-logo">X</span></a></div></div><div class="footer-section"><h3>Contact</h3><ul class="footer-links"><li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@TheKachoo (Official)</a></li><li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@HaiKachoo (Contact Person)</a></li><li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li></ul></div><div class="footer-section"><h3>Address</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li></ul></div></div>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CHODET</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-top: 14px;">Social Media Editor System by The Kachoo For Roleplay.</p>
+                    <div class="social-links">
+                        <a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+                        <a href="#" class="social-link"><span class="x-logo">X</span></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@TheKachoo (Official)</a></li>
+                        <li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@HaiKachoo (Contact Person)</a></li>
+                        <li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Address</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li>
+                    </ul>
+                </div>
+            </div>
             <div class="copyright">© 2026 CHODET. All rights reserved.</div>
         </div>
     </footer>
@@ -304,6 +372,7 @@
         const likeIcon = document.getElementById('likeIcon');
         let likeSvg = likeIcon.querySelector('svg');
         const previewOuter = document.getElementById('previewOuter');
+        const ratioOptions = document.getElementById('ratioOptions');
         
         const displayUsername = document.getElementById('displayUsername');
         const displayLocation = document.getElementById('displayLocation');
@@ -312,18 +381,11 @@
         const displayTimestamp = document.getElementById('displayTimestamp');
         const captionUsernameSpan = document.getElementById('captionUsername');
         
-        function setFrameRatio(ratio) {
-            mediaContainer.classList.remove('ratio-1-1', 'ratio-4-5');
-            if (ratio === '1:1') mediaContainer.classList.add('ratio-1-1');
-            else mediaContainer.classList.add('ratio-4-5');
-        }
-        
         document.querySelectorAll('.ratio-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentCropRatio = btn.getAttribute('data-ratio');
-                setFrameRatio(currentCropRatio);
             });
         });
         
@@ -403,66 +465,29 @@
             setTimeout(() => { if (postCropper) postCropper.destroy(); postCropper = new Cropper(img, { aspectRatio: aspect, viewMode: 1, autoCropArea: 1 }); }, 100);
         }
         document.getElementById('cancelPostCrop').addEventListener('click', () => { document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; });
-        document.getElementById('savePostCrop').addEventListener('click', () => { if (postCropper) { let width = 1080, height = 1080; if (currentCropRatio === '4:5') { width = 1080; height = 1350; } const canvas = postCropper.getCroppedCanvas({ width, height }); canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const img = document.createElement('img'); img.src = url; img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(img); document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; }, 'image/png'); } });
+        document.getElementById('savePostCrop').addEventListener('click', () => { if (postCropper) { let width = 1080, height = 1080; if (currentCropRatio === '4:5') { width = 1080; height = 1350; } const canvas = postCropper.getCroppedCanvas({ width, height }); canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const img = document.createElement('img'); img.src = url; img.style.width = '100%'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(img); document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; }, 'image/png'); } });
         
         avatarUpload.addEventListener('change', (e) => { if (e.target.files[0] && e.target.files[0].type.startsWith('image/')) showProfileCrop(e.target.files[0]); });
         mediaUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            if (file.type.startsWith('image/')) showPostCrop(file);
+            if (file.type.startsWith('image/')) {
+                showPostCrop(file);
+            }
         });
         
-        function setDefaultMedia() { if (!mediaContainer.querySelector('img')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/380x380/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; defaultImg.style.height = '100%'; defaultImg.style.objectFit = 'cover'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); } }
+        function setDefaultMedia() { if (!mediaContainer.querySelector('img')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/360x360/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); } }
         function showToast(msg) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 2000); }
         
-        // DOWNLOAD: membuat canvas 500x500, card di tengah
         document.getElementById('downloadBtn').addEventListener('click', async () => {
-            const downloadWrapper = document.getElementById('downloadCanvasWrapper');
-            const downloadCard = document.getElementById('downloadCard');
-            const originalCard = document.getElementById('instagramCard');
-            
-            // Clone card untuk di-download
-            downloadCard.innerHTML = '';
-            const cloneCard = originalCard.cloneNode(true);
-            downloadCard.appendChild(cloneCard);
-            
-            // Terapkan background yang dipilih ke wrapper
-            let bgColor = 'transparent';
-            if (currentBg === 'white') bgColor = 'white';
-            else if (currentBg === 'black') bgColor = 'black';
-            else if (currentBg !== 'transparent') bgColor = currentBg;
-            downloadWrapper.style.backgroundColor = bgColor;
-            
-            // Tampilkan wrapper sebentar untuk di-screenshot
-            downloadWrapper.style.position = 'fixed';
-            downloadWrapper.style.top = '0';
-            downloadWrapper.style.left = '0';
-            downloadWrapper.style.opacity = '1';
-            downloadWrapper.style.zIndex = '99999';
-            
-            try {
-                const canvas = await html2canvas(downloadWrapper, {
-                    scale: 3,
-                    backgroundColor: bgColor === 'transparent' ? null : bgColor,
-                    useCORS: true,
-                    logging: false
-                });
-                
+            const element = document.getElementById('previewOuter');
+            html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `instapost_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 showToast('✅ Gambar berhasil diunduh!');
-            } catch (err) {
-                console.error(err);
-                showToast('❌ Gagal mengunduh gambar');
-            }
-            
-            // Sembunyikan lagi
-            downloadWrapper.style.position = 'fixed';
-            downloadWrapper.style.top = '-9999px';
-            downloadWrapper.style.left = '-9999px';
-            downloadWrapper.style.opacity = '0';
+            }).catch(() => showToast('❌ Gagal mengunduh gambar'));
         });
         
         document.getElementById('btnIndonesia').addEventListener('click', () => { currentLang = 'id'; document.getElementById('btnIndonesia').classList.add('active'); document.getElementById('btnInggris').classList.remove('active'); updateLanguage(); });
@@ -497,7 +522,6 @@
         setDefaultMedia();
         updateLoveColor();
         updateBackground();
-        setFrameRatio('1:1');
     </script>
 </body>
-                                                                                                                 </html>
+    </html>
