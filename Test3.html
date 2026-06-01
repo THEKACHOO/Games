@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CHODET | Insta Story Studio</title>
+    <title>CHODET | Insta Post Editor</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -11,116 +11,144 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { font-family: 'Outfit', sans-serif; background-color: #f5f5f5; line-height: 1.6; overflow-x: hidden; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; width: 100%; }
-        @media (max-width: 768px) { .container { padding: 0 20px; } }
+        body, html, div, span, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, li, span, label {
+            font-family: 'Outfit', sans-serif !important;
+        }
+        body { background-color: #f5f5f5; line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 32px; width: 100%; }
+        @media (max-width: 1024px) { .container { padding: 0 24px; } }
+        @media (max-width: 768px) { .container { padding: 0 16px; } }
 
+        /* Header */
         header { background: rgba(0,0,0,0.95); backdrop-filter: blur(16px); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .header-content { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; position: relative; }
         .logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .logo-img { height: 40px; width: auto; }
         .center-logo-text { position: absolute; left: 50%; transform: translateX(-50%); font-size: 24px; font-weight: 800; color: white; white-space: nowrap; }
         .sub-logo { position: absolute; left: 50%; transform: translateX(-50%); top: 48px; font-size: 10px; color: rgba(255,255,255,0.5); white-space: nowrap; }
-        @media (max-width: 640px) { .center-logo-text { font-size: 18px; } .sub-logo { top: 42px; font-size: 8px; } }
+        @media (max-width: 640px) { .center-logo-text { font-size: 18px; } .sub-logo { top: 42px; font-size: 8px; } .logo-img { height: 34px; } }
         .desktop-nav-container { position: relative; display: block; }
         @media (max-width: 768px) { .desktop-nav-container { display: none; } }
         .desktop-nav-trigger { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 10px 24px; border-radius: 100px; font-weight: 600; font-size: 14px; color: white; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
         .desktop-nav-dropdown { position: absolute; top: calc(100% + 12px); right: 0; width: 220px; background: rgba(0,0,0,0.96); border-radius: 28px; padding: 12px 8px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; border: 1px solid rgba(255,255,255,0.15); }
         .desktop-nav-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .mobile-menu-btn { display: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 20px; color: white; width: 42px; height: 42px; border-radius: 60px; cursor: pointer; align-items: center; justify-content: center; }
-        @media (max-width: 768px) { .mobile-menu-btn { display: flex; } }
+        .desktop-nav-dropdown .nav-button { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 18px; border-radius: 22px; font-weight: 500; font-size: 14px; color: rgba(255,255,255,0.9); text-decoration: none; transition: all 0.2s; }
+        .desktop-nav-dropdown .nav-button:hover { background: rgba(255,255,255,0.12); transform: translateX(6px); }
+        .mobile-menu-btn { display: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 20px; color: white; width: 42px; height: 42px; border-radius: 60px; cursor: pointer; }
+        @media (max-width: 768px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } }
         .mobile-menu { position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh; background: rgba(0,0,0,0.98); padding: 110px 28px 40px; transition: right 0.4s; z-index: 999; border-left: 1px solid rgba(255,255,255,0.1); }
         .mobile-menu.active { right: 0; }
         .mobile-menu-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 998; }
         .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
         .mobile-menu-close { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.1); border: none; width: 44px; height: 44px; border-radius: 40px; font-size: 20px; color: white; cursor: pointer; }
+        .mobile-menu-link { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: rgba(255,255,255,0.06); border-radius: 60px; text-decoration: none; color: white; font-weight: 600; margin-bottom: 14px; }
 
+        /* Main Content */
         .main-content { padding: 140px 0 60px; }
-        .page-title { text-align: center; font-size: 42px; font-weight: 800; margin-bottom: 40px; color: #1a1a1a; }
-        .story-studio { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
-
-        .form-panel { background: white; border-radius: 28px; padding: 24px; width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border: 1px solid #e0e0e0; }
-        .lang-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-        .lang-btn { flex: 1; padding: 8px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 100px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .page-title { text-align: center; font-size: 42px; font-weight: 800; margin-bottom: 48px; color: #1a1a1a; }
+        @media (max-width: 768px) { .page-title { font-size: 32px; margin-bottom: 32px; } }
+        
+        .insta-wrapper { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
+        .form-panel { background: white; border-radius: 32px; padding: 28px; width: 360px; box-shadow: 0 12px 28px rgba(0,0,0,0.08); border: 1px solid #eaeaea; flex-shrink: 0; }
+        .preview-container { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 28px; min-width: 280px; }
+        @media (max-width: 900px) {
+            .insta-wrapper { flex-direction: column; align-items: center; gap: 36px; }
+            .form-panel { width: 100%; max-width: 500px; margin: 0 auto; }
+            .preview-container { width: 100%; }
+        }
+        
+        .lang-buttons { display: flex; gap: 12px; margin-bottom: 28px; }
+        .lang-btn { flex: 1; padding: 10px 0; background: #f0f0f0; border: none; border-radius: 100px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; }
         .lang-btn.active { background: #1a1a1a; color: white; }
-        .form-group { margin-bottom: 15px; }
-        label { font-weight: 600; font-size: 12px; display: block; margin-bottom: 6px; color: #555; }
-        input, textarea, select { width: 100%; padding: 12px; border: 1px solid #dbdbdb; border-radius: 16px; font-size: 13px; outline: none; background: white; font-family: 'Outfit', sans-serif; }
-        input:focus, textarea:focus, select:focus { border-color: #0095f6; }
-        textarea { resize: vertical; min-height: 60px; }
-        .file-input-label { background: #f5f5f5; text-align: center; padding: 10px; border-radius: 16px; margin-top: 5px; cursor: pointer; font-size: 12px; border: 1px solid #e0e0e0; }
-        .section-divider { margin: 20px 0 12px; border-top: 1px solid #eee; padding-top: 12px; font-weight: 700; font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px; }
-        .bg-options-row { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
-        .bg-option { width: 42px; height: 42px; border-radius: 16px; cursor: pointer; border: 2px solid transparent; transition: 0.1s; }
-        .bg-black { background: #000000; border: 1px solid #ccc; }
-        .bg-white { background: #ffffff; border: 1px solid #aaa; }
-        .bg-transparent { background: conic-gradient(#ccc 0deg 90deg, #fff 90deg 180deg, #ccc 180deg 270deg, #fff 270deg 360deg); background-size: 12px 12px; border: 1px solid #aaa; }
-        .bg-gradient { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
-        .active-bg-choice { border-color: #000 !important; transform: scale(1.05); }
-        .color-picker-small { width: 42px; height: 42px; border-radius: 16px; border: 1px solid #ccc; cursor: pointer; }
-        
-        .toggle-switch { display: flex; align-items: center; justify-content: space-between; background: #f5f5f5; padding: 10px 14px; border-radius: 60px; cursor: pointer; }
-        .toggle-switch span { font-size: 13px; font-weight: 500; color: #333; }
-        .toggle-slider { width: 44px; height: 24px; background: #ccc; border-radius: 30px; position: relative; transition: 0.2s; }
-        .toggle-slider.active { background: #0095f6; }
-        .toggle-slider::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 3px; transition: 0.2s; }
-        .toggle-slider.active::after { left: 21px; }
+        .form-group { margin-bottom: 20px; }
+        label { font-weight: 600; font-size: 13px; display: block; margin-bottom: 8px; color: #333; }
+        input, textarea { width: 100%; padding: 14px 16px; border: 1px solid #e2e2e2; border-radius: 20px; font-size: 14px; outline: none; background: white; transition: all 0.2s; }
+        input:focus, textarea:focus { border-color: #0095f6; box-shadow: 0 0 0 3px rgba(0,149,246,0.1); }
+        textarea { resize: vertical; min-height: 80px; }
+        .file-input-label { background: #f8f8f8; text-align: center; padding: 12px; border-radius: 20px; margin-top: 6px; cursor: pointer; font-size: 13px; border: 1px dashed #ccc; transition: 0.2s; }
+        .file-input-label:hover { background: #efefef; }
+        .love-option { display: flex; gap: 16px; align-items: center; margin-top: 8px; }
+        .love-color-btn { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.1s; }
+        .love-color-btn.black { background: #262626; }
+        .love-color-btn.red { background: #ed4956; }
+        .love-color-btn.active { border-color: #0095f6; transform: scale(1.08); box-shadow: 0 0 0 2px white, 0 0 0 4px #0095f6; }
+        .bg-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+        .bg-option-btn { padding: 8px 18px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; font-weight: 500; transition: 0.2s; }
+        .bg-option-btn.active { background: #1a1a1a; color: white; border-color: #1a1a1a; }
+        .color-picker-input { width: 52px; height: 44px; border-radius: 16px; border: 1px solid #ddd; cursor: pointer; background: white; }
+        .ratio-options { display: flex; gap: 12px; margin-top: 12px; }
+        .ratio-btn { padding: 6px 18px; border-radius: 100px; background: #f0f0f0; border: 1px solid #ddd; cursor: pointer; font-size: 12px; font-weight: 500; }
+        .ratio-btn.active { background: #1a1a1a; color: white; }
 
-        .dual-story-container { display: flex; flex-wrap: wrap; gap: 35px; justify-content: center; align-items: flex-start; }
-        .story-card-wrapper { width: 360px; background: transparent; }
+        /* Preview Card - Ukuran tetap PERSEGI 1:1 untuk hasil unduhan yang rapi */
+        .preview-outer { 
+            padding: 28px 24px; 
+            border-radius: 48px; 
+            transition: background 0.2s; 
+            display: inline-block; 
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); 
+            background: transparent;
+        }
+        .instagram-preview { 
+            background: white; 
+            width: 500px; 
+            aspect-ratio: 1 / 1; 
+            border-radius: 24px; 
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12); 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 600px) {
+            .instagram-preview { width: 100%; max-width: 380px; }
+            .preview-outer { padding: 16px; }
+        }
         
-        .my-story-card { background: #000; border-radius: 28px; overflow: hidden; aspect-ratio: 9 / 16; position: relative; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 20px 35px rgba(0,0,0,0.2); }
-        .my-story-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent); }
-        .my-header-left { display: flex; align-items: center; gap: 10px; position: relative; }
-        .my-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; background: #0095f6; }
-        .plus-badge { position: absolute; bottom: -2px; right: -4px; background: #fff; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; font-size: 10px; color: #000; }
-        .my-story-info { display: flex; flex-direction: column; }
-        .your-story-label { font-weight: 700; color: white; font-size: 13px; text-shadow: 0 1px 2px black; }
-        .my-time { font-size: 10px; color: rgba(255,255,255,0.8); }
-        .my-header-right { display: flex; gap: 12px; align-items: center; }
-        .menu-icon-left { color: white; font-size: 18px; cursor: pointer; text-shadow: 0 1px 2px black; }
-        .close-icon-right { color: white; font-size: 18px; cursor: pointer; text-shadow: 0 1px 2px black; }
-        .close-friends-badge { position: absolute; top: 60px; right: 16px; background: #2e9b4c; border-radius: 30px; padding: 4px 10px; display: flex; align-items: center; gap: 5px; font-size: 10px; color: white; font-weight: 600; backdrop-filter: blur(4px); z-index: 3; }
-        .close-friends-badge i { font-size: 10px; }
+        /* Media Container - Frame foto mengikuti rasio (1:1 atau 4:5), diposisikan di tengah card persegi */
+        .media-container {
+            width: 100%;
+            background: #e8e8e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .media-inner {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e8e8e8;
+        }
+        .media-container img {
+            display: block;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
         
-        .my-comment-area { position: absolute; bottom: 100px; left: 20px; right: 20px; z-index: 2; }
-        .my-comment-bubble { padding: 8px 14px; border-radius: 24px; display: inline-block; max-width: 90%; background: transparent; text-shadow: 0 1px 2px black; }
-        .my-comment-text { color: white; font-size: 14px; font-weight: 500; }
-        .my-comment-username { font-weight: 700; color: white; margin-right: 6px; font-size: 14px; }
-        
-        .my-bottom-bar { position: absolute; bottom: 16px; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 3; }
-        .activity-item { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); padding: 8px 14px; border-radius: 30px; display: flex; align-items: center; gap: 6px; color: white; font-size: 11px; font-weight: 500; cursor: pointer; }
-        .activity-item i { font-size: 14px; color: white; }
-        .right-actions { display: flex; gap: 12px; }
-        .action-icon-sm { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); width: 34px; height: 34px; border-radius: 30px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; cursor: pointer; }
-        
-        .other-story-card { background: #000; border-radius: 28px; overflow: hidden; aspect-ratio: 9 / 16; position: relative; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 20px 35px rgba(0,0,0,0.2); }
-        .other-story-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent); }
-        .other-header-left { display: flex; align-items: center; gap: 10px; }
-        .other-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
-        .other-name-info { display: flex; flex-direction: column; }
-        .other-username-row { display: flex; align-items: center; gap: 4px; }
-        .other-username { font-weight: 700; color: white; font-size: 13px; text-shadow: 0 1px 2px black; }
-        .verified-badge { color: #0095f6; font-size: 12px; }
-        .other-time { font-size: 10px; color: rgba(255,255,255,0.8); }
-        .follow-button { padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #0095f6; border: none; cursor: pointer; transition: 0.2s; background: transparent; }
-        .follow-button.following { color: #888; }
-        
-        .other-comments-area { position: absolute; bottom: 100px; left: 20px; right: 20px; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
-        .other-comment-bubble { padding: 6px 12px; border-radius: 20px; display: inline-block; width: fit-content; max-width: 90%; background: transparent; text-shadow: 0 1px 2px black; }
-        .other-comment-text { color: white; font-size: 13px; font-weight: 500; }
-        .other-comment-username { font-weight: 700; color: white; margin-right: 6px; font-size: 13px; }
-        
-        .send-message-bar { position: absolute; bottom: 16px; left: 16px; right: 16px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 30px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; z-index: 3; }
-        .send-message-input { background: transparent; border: none; color: white; font-size: 13px; flex: 1; outline: none; }
-        .send-message-input::placeholder { color: rgba(255,255,255,0.7); }
-        .like-button-other { background: transparent; border: none; color: white; font-size: 22px; cursor: pointer; display: flex; align-items: center; }
-        .like-button-other.liked { color: #ff3040; }
-        
-        .download-group { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
-        .download-single { background: #1a1a1a; border: none; padding: 10px 24px; border-radius: 100px; font-weight: 600; color: white; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .download-single:hover { background: #333; }
-        
+        .post-header { display: flex; align-items: center; padding: 12px 16px; gap: 10px; background: white; flex-shrink: 0; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #0095f6; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .username { font-weight: 700; font-size: 13px; color: #262626; }
+        .location { font-size: 11px; color: #8e8e8e; margin-top: 2px; }
+        .menu-dot { margin-left: auto; font-size: 18px; font-weight: bold; color: #262626; }
+        .action-buttons { padding: 6px 12px 2px 12px; display: flex; gap: 16px; align-items: center; flex-shrink: 0; }
+        .action-icons { display: flex; gap: 16px; align-items: center; }
+        .action-icon { width: 24px; height: 24px; cursor: pointer; }
+        .action-icon svg { width: 100%; height: 100%; }
+        .save-icon { margin-left: auto; }
+        .like-count { font-weight: 600; font-size: 13px; padding: 0 12px 4px 12px; color: #262626; flex-shrink: 0; }
+        .caption-text { padding: 0 12px 6px 12px; font-size: 13px; line-height: 1.4; flex-shrink: 0; }
+        .caption-username { font-weight: 700; margin-right: 6px; }
+        .timestamp { padding: 0 12px 12px 12px; font-size: 10px; color: #8e8e8e; flex-shrink: 0; }
+        .download-area { text-align: center; margin-top: 8px; }
+        .download-btn { background: #1a1a1a; color: white; border: none; padding: 14px 42px; border-radius: 100px; font-weight: 700; cursor: pointer; font-size: 16px; transition: transform 0.1s, background 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .download-btn:hover { background: #333; transform: scale(0.98); }
+
         footer { background: #000000; color: #ddd; padding: 70px 0 40px; margin-top: 60px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 48px; margin-bottom: 55px; }
         .footer-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 24px; color: white; }
@@ -129,450 +157,269 @@
         .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; transition: 0.2s; }
         .footer-links a:hover { color: white; }
         .social-links { display: flex; gap: 16px; margin-top: 26px; }
-        .social-link { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(255,255,255,0.08); border-radius: 60px; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s; }
-        .social-link:hover { background: rgba(255,255,255,0.15); }
+        .social-link { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(255,255,255,0.08); border-radius: 60px; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); }
+        .x-logo { font-weight: 900; font-size: 16px; }
         .copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); font-size: 13px; }
-        
-        .crop-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 20000; justify-content: center; align-items: center; flex-direction: column; }
-        .crop-container { max-width: 90vw; max-height: 80vh; overflow: hidden; border-radius: 24px; }
-        .crop-modal-buttons { padding: 20px; display: flex; gap: 16px; }
-        .crop-modal-btn { padding: 12px 32px; border-radius: 100px; font-weight: 700; cursor: pointer; border: none; }
+
+        .crop-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 20000; justify-content: center; align-items: center; flex-direction: column; }
+        .crop-modal .crop-container { background: #000000; max-width: 90vw; max-height: 85vh; overflow: hidden; border-radius: 24px; }
+        .crop-modal .crop-container img { max-width: 100%; max-height: 70vh; display: block; }
+        .crop-modal-buttons { padding: 20px; display: flex; gap: 16px; justify-content: center; background: #000000; }
+        .crop-modal-btn { padding: 12px 32px; border-radius: 100px; border: none; cursor: pointer; font-weight: 700; font-size: 16px; }
         .crop-modal-btn.cancel { background: #333; color: white; }
         .crop-modal-btn.save { background: #0095f6; color: white; }
-        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 30000; opacity: 0; transition: 0.2s; pointer-events: none; }
-        
-        input::placeholder, textarea::placeholder { color: #bbb; font-weight: 400; }
+        .cropper-view-box { outline: 2px solid white; }
+        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e1e1e; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 30000; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
     </style>
 </head>
 <body>
-<header>
-    <div class="container header-content">
-        <div class="logo-container" onclick="window.scrollTo({top:0,behavior:'smooth'})"><img src="logo-thekachoo.png" class="logo-img" onerror="this.style.display='none'"></div>
-        <div class="center-logo-text">CHODET</div>
-        <div class="sub-logo">(Kachoo Update)</div>
-        <div class="desktop-nav-container"><button class="desktop-nav-trigger" id="desktopNavTrigger"><span>Menu</span> <i class="fas fa-chevron-down"></i></button><div class="desktop-nav-dropdown" id="desktopNavDropdown"><a href="#" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a></div></div>
-        <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
-    </div>
-</header>
-<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-<div class="mobile-menu" id="mobileMenu"><button class="mobile-menu-close" id="mobileMenuClose"><i class="fas fa-times"></i></button><a href="#" class="nav-button" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> The Kachoo</a></div>
-
-<div class="main-content">
-    <div class="container">
-        <h1 class="page-title" id="pageTitle">INSTA STORY</h1>
-        <div class="story-studio">
-            <div class="form-panel">
-                <div class="lang-buttons"><button class="lang-btn active" id="btnIndonesia">Bahasa Indonesia</button><button class="lang-btn" id="btnInggris">English</button></div>
-                <div class="section-divider"><i class="fas fa-user-circle"></i> <span id="sectionProfile">Profil & Komentar</span></div>
-                <div class="form-group"><label id="labelAvatar">Foto Profil</label><input type="file" id="storyAvatarUpload" accept="image/*"><div class="file-input-label" id="uploadAvatarLabel">Upload foto profil</div></div>
-                <div class="form-group"><label id="labelUsername">Username (pov orang lain)</label><input type="text" id="otherUsernameInput" placeholder="Thekachoo" value=""></div>
-                
-                <!-- Toggle Verifikasi -->
-                <div class="form-group"><label>Verifikasi Akun</label><div class="toggle-switch" id="verifiedToggle"><span id="verifiedLabel">Tidak Terverifikasi</span><div class="toggle-slider" id="verifiedSlider"></div></div></div>
-                
-                <!-- Toggle Teman Dekat / Close Friends -->
-                <div class="form-group"><label>Teman Dekat (Close Friends)</label><div class="toggle-switch" id="closeFriendsToggle"><span id="closeFriendsLabel">Nonaktif</span><div class="toggle-slider" id="closeFriendsSlider"></div></div></div>
-                
-                <div class="form-group"><label id="labelSelfComment">Komentar Story Sendiri</label><textarea id="selfComment" rows="2" placeholder="Tulis komentar... (kosongkan untuk 'Say something')"></textarea></div>
-                <div class="form-group"><label id="labelOtherComments">Komentar Story Lain (max 3)</label>
-                    <input type="text" id="otherCommentUser1" placeholder="Username komentar 1" value="" style="margin-bottom: 4px;">
-                    <textarea id="otherComment1" rows="1" placeholder="Komentar 1"></textarea>
-                    <input type="text" id="otherCommentUser2" placeholder="Username komentar 2" value="" style="margin-top: 8px; margin-bottom: 4px;">
-                    <textarea id="otherComment2" rows="1" placeholder="Komentar 2"></textarea>
-                    <input type="text" id="otherCommentUser3" placeholder="Username komentar 3" value="" style="margin-top: 8px; margin-bottom: 4px;">
-                    <textarea id="otherComment3" rows="1" placeholder="Komentar 3"></textarea>
-                </div>
-                <div class="section-divider"><i class="fas fa-clock"></i> <span id="sectionTime">Waktu Tayang</span></div>
-                <div class="form-group"><label id="labelTimeOption">Pilih Waktu</label><select id="timeSelect"><option value="Just now">Baru saja</option><option value="Custom">Custom (isi sendiri)</option></select><input type="text" id="customTimeInput" placeholder="Isi waktu..." style="margin-top: 8px; display: none;"></div>
-                <div class="section-divider"><i class="fas fa-image"></i> <span id="sectionBg">Background</span></div>
-                <div class="form-group"><label id="labelBgMedia">Background Story</label><input type="file" id="storyBgUpload" accept="image/*"><div class="file-input-label" id="uploadBgLabel">Upload gambar latar</div></div>
-                <div class="form-group"><label id="labelBgColor">Warna Latar</label><div class="bg-options-row"><div class="bg-option bg-black active-bg-choice" data-bg="black"></div><div class="bg-option bg-white" data-bg="white"></div><div class="bg-option bg-transparent" data-bg="transparent"></div><div class="bg-option bg-gradient" data-bg="gradient"></div><input type="color" id="customColorPicker" class="color-picker-small" value="#2c3e66"></div></div>
+    <header>
+        <div class="container header-content">
+            <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <img src="logo-thekachoo.png" alt="CHODET Logo" class="logo-img" onerror="this.style.display='none'">
             </div>
+            <div class="center-logo-text">CHODET</div>
+            <div class="sub-logo">(Kachoo Update)</div>
+            <div class="desktop-nav-container">
+                <button class="desktop-nav-trigger" id="desktopNavTrigger"><span>Menu</span> <i class="fas fa-chevron-down"></i></button>
+                <div class="desktop-nav-dropdown" id="desktopNavDropdown"><a href="#" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a></div>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
 
-            <div class="dual-story-container">
-                <div class="story-card-wrapper">
-                    <div class="my-story-card" id="myStoryCard">
-                        <div class="my-story-header">
-                            <div class="my-header-left">
-                                <div style="position: relative;">
-                                    <img class="my-avatar" id="myAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%230095f6'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='16' font-weight='bold'%3EY%3C/text%3E%3C/svg%3E">
-                                    <div class="plus-badge"><i class="fas fa-plus"></i></div>
-                                </div>
-                                <div class="my-story-info">
-                                    <div class="your-story-label" id="yourStoryLabel">Your Story</div>
-                                    <div class="my-time" id="myTimeLabel">Just now</div>
-                                </div>
-                            </div>
-                            <div class="my-header-right">
-                                <div class="menu-icon-left"><i class="fas fa-ellipsis-h"></i></div>
-                                <div class="close-icon-right"><i class="fas fa-times"></i></div>
-                            </div>
-                        </div>
-                        <div id="closeFriendsBadgeMy" class="close-friends-badge" style="display: none;"><i class="fas fa-star"></i> <span id="closeFriendsTextMy">Teman Dekat</span></div>
-                        <div class="my-comment-area"><div class="my-comment-bubble"><span class="my-comment-username" id="selfCommentUsername" style="display: none;"></span><span class="my-comment-text" id="selfCommentText">Say something</span></div></div>
-                        <div class="my-bottom-bar">
-                            <div class="activity-item"><i class="far fa-heart"></i><span id="activityText">Activity</span></div>
-                            <div class="right-actions">
-                                <div class="action-icon-sm"><i class="fas fa-chart-line"></i></div>
-                                <div class="action-icon-sm"><i class="fas fa-star"></i></div>
-                                <div class="action-icon-sm"><i class="fas fa-at"></i></div>
-                                <div class="action-icon-sm"><i class="fas fa-ellipsis-h"></i></div>
-                            </div>
-                        </div>
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose"><i class="fas fa-times"></i></button>
+        <a href="#" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i> The Kachoo</a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1 class="page-title">INSTA POST</h1>
+            <div class="insta-wrapper">
+                <div class="form-panel">
+                    <div class="lang-buttons">
+                        <button class="lang-btn active" id="btnIndonesia">Bahasa Indonesia</button>
+                        <button class="lang-btn" id="btnInggris">English</button>
                     </div>
-                    <div class="download-group"><button class="download-single" id="downloadMyStoryBtn"><i class="fas fa-download"></i> <span id="downloadMyText">Unduh Story Saya</span></button></div>
+                    <div class="form-group"><label id="labelAvatar">Foto Profil</label><input type="file" id="avatarUpload" accept="image/*" style="display:none;"><div class="file-input-label" id="uploadAvatarLabel" onclick="document.getElementById('avatarUpload').click()">Upload foto profil</div></div>
+                    <div class="form-group"><label id="labelUsername">Username</label><input type="text" id="username" placeholder="thekachoo"></div>
+                    <div class="form-group"><label id="labelLocation">Lokasi</label><input type="text" id="location" placeholder="Jakarta Selatan, Indonesia"></div>
+                    <div class="form-group"><label id="labelMedia">Upload Foto</label><input type="file" id="mediaUpload" accept="image/*" style="display:none;"><div class="file-input-label" id="uploadMediaLabel" onclick="document.getElementById('mediaUpload').click()">Klik untuk pilih</div>
+                        <div class="ratio-options" id="ratioOptions" style="display:none;"><button class="ratio-btn active" data-ratio="1:1">1:1 (Persegi)</button><button class="ratio-btn" data-ratio="4:5">4:5 (Portrait)</button></div>
+                    </div>
+                    <div class="form-group"><label id="labelCaption">Caption</label><textarea id="caption" placeholder="Tulis caption..."></textarea></div>
+                    <div class="form-group"><label id="labelLikes">Jumlah Like</label><input type="number" id="likeCount" value="0" step="1" placeholder="0"></div>
+                    <div class="form-group"><label id="labelTimestamp">Waktu posting</label><input type="text" id="timestamp" placeholder="Baru saja"></div>
+                    <div class="form-group"><label id="labelLoveColor">Warna</label><div class="love-option"><span id="loveSelectText">Pilih:</span><div class="love-color-btn black active" id="loveBlack"></div><div class="love-color-btn red" id="loveRed"></div></div></div>
+                    <div class="form-group"><label id="labelBgPreview">Background Preview</label><div class="bg-options"><button class="bg-option-btn" data-bg="transparent" id="bgTransparent">Transparan</button><button class="bg-option-btn" data-bg="white" id="bgWhite">Putih</button><button class="bg-option-btn" data-bg="black" id="bgBlack">Hitam</button><input type="color" id="customColorPicker" class="color-picker-input" value="#f5f5f5"></div></div>
                 </div>
 
-                <div class="story-card-wrapper">
-                    <div class="other-story-card" id="otherStoryCard">
-                        <div class="other-story-header">
-                            <div class="other-header-left">
-                                <img class="other-avatar" id="otherAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23e4405f'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='16' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E">
-                                <div class="other-name-info">
-                                    <div class="other-username-row"><span class="other-username" id="otherUsernameLabel">Thekachoo</span><i class="fas fa-check-circle verified-badge" id="verifiedBadge" style="display: none;"></i></div>
-                                    <div class="other-time" id="otherTimeLabel">17h</div>
-                                </div>
-                            </div>
-                            <button class="follow-button" id="followBtn">Follow</button>
-                        </div>
-                        <div id="closeFriendsBadgeOther" class="close-friends-badge" style="display: none;"><i class="fas fa-star"></i> <span id="closeFriendsTextOther">Close friends</span></div>
-                        <div class="other-comments-area" id="otherCommentsArea">
-                            <div class="other-comment-bubble" id="otherComment1Bubble" style="display: none;"><span class="other-comment-username" id="otherComment1User"></span><span class="other-comment-text" id="otherComment1Text"></span></div>
-                            <div class="other-comment-bubble" id="otherComment2Bubble" style="display: none;"><span class="other-comment-username" id="otherComment2User"></span><span class="other-comment-text" id="otherComment2Text"></span></div>
-                            <div class="other-comment-bubble" id="otherComment3Bubble" style="display: none;"><span class="other-comment-username" id="otherComment3User"></span><span class="other-comment-text" id="otherComment3Text"></span></div>
-                        </div>
-                        <div class="send-message-bar">
-                            <input type="text" class="send-message-input" placeholder="Send message..." id="sendMessageInput">
-                            <div class="like-button-other" id="otherLikeBtn"><i class="far fa-heart"></i></div>
+                <div class="preview-container">
+                    <div class="preview-outer" id="previewOuter">
+                        <div class="instagram-preview" id="instagramCard">
+                            <div class="post-header"><div class="avatar" id="avatarContainer"><img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' fill='%230095f6'/%3E%3Ctext x='17' y='22' font-size='14' text-anchor='middle' fill='white' font-weight='bold'%3ETK%3C/text%3E%3C/svg%3E"></div><div><div class="username" id="displayUsername">thekachoo</div><div class="location" id="displayLocation"></div></div><div class="menu-dot">•••</div></div>
+                            <div class="media-container" id="mediaContainer"><div class="media-inner"><img src="https://placehold.co/600x600/EFEFEF/888888?text=Upload"></div></div>
+                            <div class="action-buttons"><div class="action-icons"><div class="action-icon" id="likeIcon"><svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div></div><div class="save-icon"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div></div></div>
+                            <div class="like-count" id="displayLikes">0 suka</div>
+                            <div class="caption-text"><span class="caption-username" id="captionUsername">thekachoo</span><span class="caption-message" id="displayCaption"></span></div>
+                            <div class="timestamp" id="displayTimestamp"></div>
                         </div>
                     </div>
-                    <div class="download-group"><button class="download-single" id="downloadOtherStoryBtn"><i class="fas fa-download"></i> <span id="downloadOtherText">Unduh Story Lain</span></button></div>
+                    <div class="download-area"><button class="download-btn" id="downloadBtn">Unduh</button></div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>CHODET</h3>
-                <p style="color:rgba(255,255,255,0.7); margin-top: 14px;">Social Media Editor System by The Kachoo For Roleplay.</p>
-                <div class="social-links">
-                    <a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
-                    <a href="#" class="social-link"><span class="x-logo">X</span></a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <ul class="footer-links">
-                    <li><span style="background:white; border-radius:6px; padding:2px 8px; font-size:12px; color:#000;">X</span><a href="#">@TheKachoo (Official)</a></li>
-                    <li><span style="background:white; border-radius:6px; padding:2px 8px; font-size:12px; color:#000;">X</span><a href="#">@HaiKachoo (Business Contact)</a></li>
-                    <li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Address</h3>
-                <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li>
-                </ul>
-            </div>
+    <footer>
+        <div class="container">
+            <div class="footer-content"><div class="footer-section"><h3>CHODET</h3><p style="color: rgba(255,255,255,0.7); margin-top: 14px;">Social Media Editor System by The Kachoo For Roleplay.</p><div class="social-links"><a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a><a href="#" class="social-link"><span class="x-logo">X</span></a></div></div><div class="footer-section"><h3>Contact</h3><ul class="footer-links"><li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@TheKachoo (Official)</a></li><li><span style="color:#000; background:white; border-radius:6px; padding:2px 8px; font-size:12px;">X</span><a href="#">@HaiKachoo (Contact Person)</a></li><li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li></ul></div><div class="footer-section"><h3>Address</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li></ul></div></div>
+            <div class="copyright">© 2026 CHODET. All rights reserved.</div>
         </div>
-        <div class="copyright">© 2026 CHODET. All rights reserved.</div>
-    </div>
-</footer>
+    </footer>
 
-<div class="crop-modal" id="cropModalAvatar"><div class="crop-container"><img id="avatarCropImg"></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelAvatarCrop">Batal</button><button class="crop-modal-btn save" id="saveAvatarCrop">Simpan</button></div></div>
-<div class="toast-msg" id="toastMsg"></div>
+    <div class="crop-modal" id="profileCropModal"><div class="crop-container"><img id="profileCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelProfileCrop">Batal</button><button class="crop-modal-btn save" id="saveProfileCrop">Simpan</button></div></div>
+    <div class="crop-modal" id="postCropModal"><div class="crop-container"><img id="postCropImage" src=""></div><div class="crop-modal-buttons"><button class="crop-modal-btn cancel" id="cancelPostCrop">Batal</button><button class="crop-modal-btn save" id="savePostCrop">Simpan</button></div></div>
+    <div class="toast-msg" id="toastMsg"></div>
 
-<script>
-    const otherUsernameInput = document.getElementById('otherUsernameInput');
-    const selfCommentInput = document.getElementById('selfComment');
-    const otherComment1 = document.getElementById('otherComment1');
-    const otherComment2 = document.getElementById('otherComment2');
-    const otherComment3 = document.getElementById('otherComment3');
-    const otherCommentUser1 = document.getElementById('otherCommentUser1');
-    const otherCommentUser2 = document.getElementById('otherCommentUser2');
-    const otherCommentUser3 = document.getElementById('otherCommentUser3');
-    const timeSelect = document.getElementById('timeSelect');
-    const customTimeInput = document.getElementById('customTimeInput');
-    const avatarUpload = document.getElementById('storyAvatarUpload');
-    const bgUpload = document.getElementById('storyBgUpload');
-    
-    const myTimeLabel = document.getElementById('myTimeLabel');
-    const otherTimeLabel = document.getElementById('otherTimeLabel');
-    const otherUsernameLabel = document.getElementById('otherUsernameLabel');
-    const selfCommentText = document.getElementById('selfCommentText');
-    const selfCommentUsername = document.getElementById('selfCommentUsername');
-    const myAvatarImg = document.getElementById('myAvatar');
-    const otherAvatarImg = document.getElementById('otherAvatar');
-    const myStoryCard = document.getElementById('myStoryCard');
-    const otherStoryCard = document.getElementById('otherStoryCard');
-    const otherLikeBtn = document.getElementById('otherLikeBtn');
-    const followBtn = document.getElementById('followBtn');
-    const verifiedBadge = document.getElementById('verifiedBadge');
-    const closeFriendsBadgeMy = document.getElementById('closeFriendsBadgeMy');
-    const closeFriendsBadgeOther = document.getElementById('closeFriendsBadgeOther');
-    
-    // Toggle elements
-    const verifiedSlider = document.getElementById('verifiedSlider');
-    const verifiedLabel = document.getElementById('verifiedLabel');
-    const closeFriendsSlider = document.getElementById('closeFriendsSlider');
-    const closeFriendsLabel = document.getElementById('closeFriendsLabel');
-    
-    let isVerified = false;
-    let isCloseFriends = false;
-    
-    verifiedSlider.addEventListener('click', () => {
-        isVerified = !isVerified;
-        if(isVerified) {
-            verifiedSlider.classList.add('active');
-            verifiedLabel.innerText = currentLang === 'id' ? 'Terverifikasi' : 'Verified';
-        } else {
-            verifiedSlider.classList.remove('active');
-            verifiedLabel.innerText = currentLang === 'id' ? 'Tidak Terverifikasi' : 'Unverified';
+    <script>
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        function openMobileMenu() { mobileMenu.classList.add('active'); mobileMenuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeMobileMenu() { mobileMenu.classList.remove('active'); mobileMenuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+        if(mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+        if(mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        window.closeMobileMenu = closeMobileMenu;
+
+        const desktopNavTrigger = document.getElementById('desktopNavTrigger');
+        const desktopNavDropdown = document.getElementById('desktopNavDropdown');
+        if (desktopNavTrigger && desktopNavDropdown) {
+            desktopNavTrigger.addEventListener('click', function(e) { e.stopPropagation(); desktopNavDropdown.classList.toggle('active'); });
+            document.addEventListener('click', function(e) { if (!desktopNavTrigger.contains(e.target) && !desktopNavDropdown.contains(e.target)) desktopNavDropdown.classList.remove('active'); });
         }
-        updateAllPreviews();
-        showToast(isVerified ? (currentLang === 'id' ? 'Verifikasi aktif' : 'Verified enabled') : (currentLang === 'id' ? 'Verifikasi nonaktif' : 'Verified disabled'));
-    });
-    
-    closeFriendsSlider.addEventListener('click', () => {
-        isCloseFriends = !isCloseFriends;
-        if(isCloseFriends) {
-            closeFriendsSlider.classList.add('active');
-            closeFriendsLabel.innerText = currentLang === 'id' ? 'Aktif' : 'Active';
-        } else {
-            closeFriendsSlider.classList.remove('active');
-            closeFriendsLabel.innerText = currentLang === 'id' ? 'Nonaktif' : 'Inactive';
-        }
-        updateAllPreviews();
-        showToast(isCloseFriends ? (currentLang === 'id' ? 'Teman dekat aktif' : 'Close friends enabled') : (currentLang === 'id' ? 'Teman dekat nonaktif' : 'Close friends disabled'));
-    });
-    
-    const commentBubbles = [
-        { bubble: document.getElementById('otherComment1Bubble'), user: document.getElementById('otherComment1User'), text: document.getElementById('otherComment1Text'), userVal: () => otherCommentUser1.value.trim(), textVal: () => otherComment1.value.trim() },
-        { bubble: document.getElementById('otherComment2Bubble'), user: document.getElementById('otherComment2User'), text: document.getElementById('otherComment2Text'), userVal: () => otherCommentUser2.value.trim(), textVal: () => otherComment2.value.trim() },
-        { bubble: document.getElementById('otherComment3Bubble'), user: document.getElementById('otherComment3User'), text: document.getElementById('otherComment3Text'), userVal: () => otherCommentUser3.value.trim(), textVal: () => otherComment3.value.trim() }
-    ];
-    
-    let currentLang = 'id';
-    let currentBgType = 'black';
-    let customColor = '#2c3e66';
-    let storyAvatarUrl = null;
-    let storyBackgroundUrl = null;
-    let otherLiked = false;
-    let isFollowing = false;
-    let avatarCropper = null;
-    
-    const translations = {
-        id: {
-            pageTitle: 'INSTA STORY', sectionProfile: 'Profil & Komentar', sectionTime: 'Waktu Tayang', sectionBg: 'Background',
-            labelAvatar: 'Foto Profil', uploadAvatarLabel: 'Upload foto profil', labelUsername: 'Username (pov orang lain)',
-            labelSelfComment: 'Komentar Story Sendiri', labelOtherComments: 'Komentar Story Lain (max 3)',
-            labelTimeOption: 'Pilih Waktu', labelBgMedia: 'Background Story', uploadBgLabel: 'Upload gambar latar',
-            labelBgColor: 'Warna Latar', yourStoryLabel: 'Your Story', activityText: 'Activity',
-            downloadMyText: 'Unduh Story Saya', downloadOtherText: 'Unduh Story Lain', sendPlaceholder: 'Kirim pesan...',
-            justNow: 'Baru saja', customPlaceholder: 'Isi waktu...', closeFriendsText: 'Teman Dekat'
-        },
-        en: {
-            pageTitle: 'INSTA STORY', sectionProfile: 'Profile & Comments', sectionTime: 'Post Time', sectionBg: 'Background',
-            labelAvatar: 'Profile Photo', uploadAvatarLabel: 'Upload profile photo', labelUsername: 'Username (other POV)',
-            labelSelfComment: 'My Story Comment', labelOtherComments: 'Other Story Comments (max 3)',
-            labelTimeOption: 'Select Time', labelBgMedia: 'Story Background', uploadBgLabel: 'Upload background image',
-            labelBgColor: 'Background Color', yourStoryLabel: 'Your Story', activityText: 'Activity',
-            downloadMyText: 'Download My Story', downloadOtherText: 'Download Other Story', sendPlaceholder: 'Send message...',
-            justNow: 'Just now', customPlaceholder: 'Enter time...', closeFriendsText: 'Close friends'
-        }
-    };
-    
-    function applyLanguage() {
-        const t = translations[currentLang];
-        document.getElementById('pageTitle').innerText = t.pageTitle;
-        document.getElementById('sectionProfile').innerText = t.sectionProfile;
-        document.getElementById('sectionTime').innerText = t.sectionTime;
-        document.getElementById('sectionBg').innerText = t.sectionBg;
-        document.getElementById('labelAvatar').innerText = t.labelAvatar;
-        document.getElementById('uploadAvatarLabel').innerText = t.uploadAvatarLabel;
-        document.getElementById('labelUsername').innerText = t.labelUsername;
-        document.getElementById('labelSelfComment').innerText = t.labelSelfComment;
-        document.getElementById('labelOtherComments').innerText = t.labelOtherComments;
-        document.getElementById('labelTimeOption').innerText = t.labelTimeOption;
-        document.getElementById('labelBgMedia').innerText = t.labelBgMedia;
-        document.getElementById('uploadBgLabel').innerText = t.uploadBgLabel;
-        document.getElementById('labelBgColor').innerText = t.labelBgColor;
-        document.getElementById('yourStoryLabel').innerText = t.yourStoryLabel;
-        document.getElementById('activityText').innerText = t.activityText;
-        document.getElementById('downloadMyText').innerText = t.downloadMyText;
-        document.getElementById('downloadOtherText').innerText = t.downloadOtherText;
-        document.getElementById('sendMessageInput').placeholder = t.sendPlaceholder;
-        document.getElementById('closeFriendsTextMy').innerText = t.closeFriendsText;
-        document.getElementById('closeFriendsTextOther').innerText = t.closeFriendsText;
-        if(timeSelect.value !== 'Custom') timeSelect.options[0].text = t.justNow;
-        customTimeInput.placeholder = t.customPlaceholder;
+
+        const translations = { id: { labelAvatar: "Foto Profil", uploadAvatarLabel: "Upload foto profil", labelUsername: "Username", labelLocation: "Lokasi", labelMedia: "Upload Foto", uploadMediaLabel: "Klik untuk pilih", labelCaption: "Caption", labelLikes: "Jumlah Like", labelTimestamp: "Waktu posting", likesSuffix: "suka", defaultTimestamp: "Baru saja", loveSelectText:"Pilih:", labelLoveColor:"Warna", labelBgPreview:"Background Preview", bgTransparent:"Transparan", bgWhite:"Putih", bgBlack:"Hitam" }, en: { labelAvatar: "Profile Photo", uploadAvatarLabel: "Upload profile photo", labelUsername: "Username", labelLocation: "Location", labelMedia: "Upload Photo", uploadMediaLabel: "Click to select", labelCaption: "Caption", labelLikes: "Number of Likes", labelTimestamp: "Post time", likesSuffix: "likes", defaultTimestamp: "Just now", loveSelectText:"Choose:", labelLoveColor:"Colors", labelBgPreview:"Background Preview", bgTransparent:"Transparent", bgWhite:"White", bgBlack:"Black" } };
         
-        if(!isVerified) verifiedLabel.innerText = currentLang === 'id' ? 'Tidak Terverifikasi' : 'Unverified';
-        else verifiedLabel.innerText = currentLang === 'id' ? 'Terverifikasi' : 'Verified';
-        if(!isCloseFriends) closeFriendsLabel.innerText = currentLang === 'id' ? 'Nonaktif' : 'Inactive';
-        else closeFriendsLabel.innerText = currentLang === 'id' ? 'Aktif' : 'Active';
+        let currentLang = 'id';
+        let loveColor = 'black';
+        let liked = false;
+        let currentCropRatio = '1:1';
+        let profileCropper = null, postCropper = null;
         
-        otherUsernameInput.placeholder = 'Thekachoo';
-        otherCommentUser1.placeholder = currentLang === 'id' ? 'Username komentar 1' : 'Comment username 1';
-        otherCommentUser2.placeholder = currentLang === 'id' ? 'Username komentar 2' : 'Comment username 2';
-        otherCommentUser3.placeholder = currentLang === 'id' ? 'Username komentar 3' : 'Comment username 3';
-    }
-    
-    document.getElementById('btnIndonesia').onclick = () => { currentLang = 'id'; document.getElementById('btnIndonesia').classList.add('active'); document.getElementById('btnInggris').classList.remove('active'); applyLanguage(); updateAllPreviews(); };
-    document.getElementById('btnInggris').onclick = () => { currentLang = 'en'; document.getElementById('btnInggris').classList.add('active'); document.getElementById('btnIndonesia').classList.remove('active'); applyLanguage(); updateAllPreviews(); };
-    
-    timeSelect.addEventListener('change', () => {
-        if(timeSelect.value === 'Custom') customTimeInput.style.display = 'block';
-        else customTimeInput.style.display = 'none';
-        updateAllPreviews();
-    });
-    
-    function getDisplayTime() {
-        if(timeSelect.value === 'Custom') return customTimeInput.value.trim() || (currentLang === 'id' ? 'Baru saja' : 'Just now');
-        return timeSelect.value;
-    }
-    
-    function updateAllPreviews() {
-        let otherName = otherUsernameInput.value.trim();
-        if(otherName === '') otherName = 'Thekachoo';
-        let displayTime = getDisplayTime();
+        const usernameInput = document.getElementById('username');
+        const locationInput = document.getElementById('location');
+        const captionInput = document.getElementById('caption');
+        const likeCountInput = document.getElementById('likeCount');
+        const timestampInput = document.getElementById('timestamp');
+        const mediaUpload = document.getElementById('mediaUpload');
+        const avatarUpload = document.getElementById('avatarUpload');
+        const mediaContainer = document.getElementById('mediaContainer');
+        const avatarImg = document.getElementById('avatarImg');
+        const likeIcon = document.getElementById('likeIcon');
+        let likeSvg = likeIcon.querySelector('svg');
+        const previewOuter = document.getElementById('previewOuter');
+        const ratioOptions = document.getElementById('ratioOptions');
         
-        otherUsernameLabel.innerText = otherName;
-        myTimeLabel.innerText = displayTime;
-        otherTimeLabel.innerText = displayTime;
+        const displayUsername = document.getElementById('displayUsername');
+        const displayLocation = document.getElementById('displayLocation');
+        const displayCaption = document.getElementById('displayCaption');
+        const displayLikes = document.getElementById('displayLikes');
+        const displayTimestamp = document.getElementById('displayTimestamp');
+        const captionUsernameSpan = document.getElementById('captionUsername');
         
-        // Verified badge
-        if(isVerified) verifiedBadge.style.display = 'inline-block';
-        else verifiedBadge.style.display = 'none';
-        
-        // Close friends badge
-        if(isCloseFriends) {
-            closeFriendsBadgeMy.style.display = 'flex';
-            closeFriendsBadgeOther.style.display = 'flex';
-        } else {
-            closeFriendsBadgeMy.style.display = 'none';
-            closeFriendsBadgeOther.style.display = 'none';
-        }
-        
-        let selfCommentVal = selfCommentInput.value.trim();
-        if(selfCommentVal === '') {
-            selfCommentUsername.style.display = 'none';
-            selfCommentText.innerText = 'Say something';
-        } else {
-            selfCommentUsername.style.display = 'inline';
-            selfCommentUsername.innerText = 'thekachoo';
-            selfCommentText.innerText = selfCommentVal;
-        }
-        
-        for(let i = 0; i < commentBubbles.length; i++) {
-            let userName = commentBubbles[i].userVal();
-            let commentText = commentBubbles[i].textVal();
-            if(commentText === '') {
-                commentBubbles[i].bubble.style.display = 'none';
+        // Fungsi mengatur frame foto di tengah card persegi (rasio 1:1 atau 4:5)
+        function adjustMediaFrame() {
+            const card = document.getElementById('instagramCard');
+            const mediaDiv = document.querySelector('.media-container');
+            if (!card || !mediaDiv) return;
+            const cardWidth = card.clientWidth;
+            let frameHeight;
+            if (currentCropRatio === '1:1') {
+                frameHeight = cardWidth;
             } else {
-                commentBubbles[i].bubble.style.display = 'inline-block';
-                let displayUser = userName === '' ? (currentLang === 'id' ? 'seseorang' : 'someone') : userName;
-                commentBubbles[i].user.innerText = displayUser;
-                commentBubbles[i].text.innerText = commentText;
+                // rasio 4:5 -> tinggi = (5/4) * lebar = 1.25 * lebar
+                frameHeight = cardWidth * 1.25;
+            }
+            mediaDiv.style.height = `${frameHeight}px`;
+            const img = mediaDiv.querySelector('img');
+            if (img) {
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
             }
         }
         
-        if(storyAvatarUrl) { myAvatarImg.src = storyAvatarUrl; otherAvatarImg.src = storyAvatarUrl; }
+        document.querySelectorAll('.ratio-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCropRatio = btn.getAttribute('data-ratio');
+                adjustMediaFrame();
+            });
+        });
         
-        if(otherLiked) otherLikeBtn.innerHTML = '<i class="fas fa-heart" style="color:#ff3040;"></i>'; 
-        else otherLikeBtn.innerHTML = '<i class="far fa-heart"></i>';
-        
-        if(isFollowing) followBtn.classList.add('following');
-        else followBtn.classList.remove('following');
-        
-        applyBackground();
-    }
-    
-    function applyBackground() {
-        if(storyBackgroundUrl) {
-            myStoryCard.style.backgroundImage = `url(${storyBackgroundUrl})`;
-            otherStoryCard.style.backgroundImage = `url(${storyBackgroundUrl})`;
-            myStoryCard.style.backgroundSize = 'cover';
-            otherStoryCard.style.backgroundSize = 'cover';
-            myStoryCard.style.backgroundColor = 'transparent';
-            otherStoryCard.style.backgroundColor = 'transparent';
-        } else {
-            myStoryCard.style.backgroundImage = 'none';
-            otherStoryCard.style.backgroundImage = 'none';
-            let bgVal = '#000000';
-            if(currentBgType === 'white') bgVal = '#ffffff';
-            else if(currentBgType === 'transparent') bgVal = 'transparent';
-            else if(currentBgType === 'gradient') bgVal = 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)';
-            else if(currentBgType === 'custom') bgVal = customColor;
-            else bgVal = '#000000';
-            myStoryCard.style.background = bgVal;
-            otherStoryCard.style.background = bgVal;
+        let currentBg = 'transparent';
+        function updateBackground() {
+            if (currentBg === 'transparent') previewOuter.style.background = 'radial-gradient(circle at 30% 20%, rgba(0,0,0,0.04), rgba(0,0,0,0.01))';
+            else if (currentBg === 'white') previewOuter.style.background = 'white';
+            else if (currentBg === 'black') previewOuter.style.background = 'black';
+            else previewOuter.style.background = currentBg;
         }
-    }
-    
-    const bgBlack = document.querySelector('.bg-black');
-    const bgWhite = document.querySelector('.bg-white');
-    const bgTransparent = document.querySelector('.bg-transparent');
-    const bgGradient = document.querySelector('.bg-gradient');
-    const customPicker = document.getElementById('customColorPicker');
-    function setActiveBg(el) { document.querySelectorAll('.bg-option').forEach(b => b.classList.remove('active-bg-choice')); el.classList.add('active-bg-choice'); }
-    bgBlack.onclick = () => { currentBgType = 'black'; storyBackgroundUrl = null; setActiveBg(bgBlack); updateAllPreviews(); };
-    bgWhite.onclick = () => { currentBgType = 'white'; storyBackgroundUrl = null; setActiveBg(bgWhite); updateAllPreviews(); };
-    bgTransparent.onclick = () => { currentBgType = 'transparent'; storyBackgroundUrl = null; setActiveBg(bgTransparent); updateAllPreviews(); };
-    bgGradient.onclick = () => { currentBgType = 'gradient'; storyBackgroundUrl = null; setActiveBg(bgGradient); updateAllPreviews(); };
-    customPicker.oninput = (e) => { currentBgType = 'custom'; customColor = e.target.value; storyBackgroundUrl = null; setActiveBg(customPicker); updateAllPreviews(); };
-    
-    function showAvatarCrop(file) {
-        const modal = document.getElementById('cropModalAvatar');
-        const img = document.getElementById('avatarCropImg');
-        img.src = URL.createObjectURL(file);
-        modal.style.display = 'flex';
-        setTimeout(() => { if(avatarCropper) avatarCropper.destroy(); avatarCropper = new Cropper(img, { aspectRatio:1, viewMode:1, autoCropArea:1 }); }, 100);
-        document.getElementById('cancelAvatarCrop').onclick = () => { modal.style.display='none'; if(avatarCropper) avatarCropper.destroy(); avatarCropper=null; };
-        document.getElementById('saveAvatarCrop').onclick = () => { if(avatarCropper) { const canvas = avatarCropper.getCroppedCanvas({width:300,height:300}); canvas.toBlob(blob => { storyAvatarUrl = URL.createObjectURL(blob); updateAllPreviews(); modal.style.display='none'; if(avatarCropper) avatarCropper.destroy(); avatarCropper=null; }, 'image/png'); } };
-    }
-    avatarUpload.onchange = (e) => { if(e.target.files[0]) showAvatarCrop(e.target.files[0]); };
-    bgUpload.onchange = (e) => { if(e.target.files[0] && e.target.files[0].type.startsWith('image/')) { const reader = new FileReader(); reader.onload = (ev) => { storyBackgroundUrl = ev.target.result; updateAllPreviews(); }; reader.readAsDataURL(e.target.files[0]); } };
-    
-    otherLikeBtn.onclick = () => { otherLiked = !otherLiked; updateAllPreviews(); showToast(otherLiked ? (currentLang === 'id' ? "Menyukai story" : "Liked story") : (currentLang === 'id' ? "Batal suka" : "Unlike")); };
-    followBtn.onclick = () => { isFollowing = !isFollowing; followBtn.innerText = isFollowing ? "Following" : "Follow"; updateAllPreviews(); showToast(isFollowing ? (currentLang === 'id' ? "Mengikuti" : "Following") : (currentLang === 'id' ? "Berhenti mengikuti" : "Unfollowed")); };
-    
-    otherUsernameInput.addEventListener('input', updateAllPreviews);
-    selfCommentInput.addEventListener('input', updateAllPreviews);
-    otherComment1.addEventListener('input', updateAllPreviews);
-    otherComment2.addEventListener('input', updateAllPreviews);
-    otherComment3.addEventListener('input', updateAllPreviews);
-    otherCommentUser1.addEventListener('input', updateAllPreviews);
-    otherCommentUser2.addEventListener('input', updateAllPreviews);
-    otherCommentUser3.addEventListener('input', updateAllPreviews);
-    customTimeInput.addEventListener('input', updateAllPreviews);
-    
-    async function downloadElement(element, filename) {
-        try {
-            const canvas = await html2canvas(element, { scale: 2.5, backgroundColor: '#ffffff', useCORS: true });
-            const link = document.createElement('a'); link.download = filename; link.href = canvas.toDataURL('image/png'); link.click();
-            showToast(currentLang === 'id' ? `Berhasil diunduh: ${filename}` : `Downloaded: ${filename}`);
-        } catch(e) { showToast(currentLang === 'id' ? 'Gagal mengunduh' : 'Download failed'); }
-    }
-    document.getElementById('downloadMyStoryBtn').onclick = () => { const el = document.querySelector('#myStoryCard').parentElement; downloadElement(el, `mystory_${Date.now()}.png`); };
-    document.getElementById('downloadOtherStoryBtn').onclick = () => { const el = document.querySelector('#otherStoryCard').parentElement; downloadElement(el, `otherstory_${Date.now()}.png`); };
-    
-    function showToast(msg) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 2000); }
-    
-    const mobBtn = document.getElementById('mobileMenuBtn'), mobMenu = document.getElementById('mobileMenu'), mobOverlay = document.getElementById('mobileMenuOverlay'), mobClose = document.getElementById('mobileMenuClose');
-    mobBtn.onclick = () => { mobMenu.classList.add('active'); mobOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; };
-    const closeMob = () => { mobMenu.classList.remove('active'); mobOverlay.classList.remove('active'); document.body.style.overflow = ''; };
-    mobClose.onclick = closeMob; mobOverlay.onclick = closeMob;
-    const deskTrigger = document.getElementById('desktopNavTrigger'), deskDrop = document.getElementById('desktopNavDropdown');
-    deskTrigger.onclick = (e) => { e.stopPropagation(); deskDrop.classList.toggle('active'); };
-    document.onclick = () => deskDrop?.classList.remove('active');
-    
-    applyLanguage();
-    updateAllPreviews();
-</script>
+        
+        const bgTransparentBtn = document.getElementById('bgTransparent');
+        const bgWhiteBtn = document.getElementById('bgWhite');
+        const bgBlackBtn = document.getElementById('bgBlack');
+        const customColorPicker = document.getElementById('customColorPicker');
+        if (bgTransparentBtn) bgTransparentBtn.addEventListener('click', () => { document.querySelectorAll('.bg-option-btn').forEach(b => b.classList.remove('active')); bgTransparentBtn.classList.add('active'); currentBg = 'transparent'; updateBackground(); });
+        if (bgWhiteBtn) bgWhiteBtn.addEventListener('click', () => { document.querySelectorAll('.bg-option-btn').forEach(b => b.classList.remove('active')); bgWhiteBtn.classList.add('active'); currentBg = 'white'; updateBackground(); });
+        if (bgBlackBtn) bgBlackBtn.addEventListener('click', () => { document.querySelectorAll('.bg-option-btn').forEach(b => b.classList.remove('active')); bgBlackBtn.classList.add('active'); currentBg = 'black'; updateBackground(); });
+        if (customColorPicker) customColorPicker.addEventListener('input', (e) => { document.querySelectorAll('.bg-option-btn').forEach(b => b.classList.remove('active')); currentBg = e.target.value; updateBackground(); });
+        
+        function updateLoveColor() {
+            const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956';
+            const fillColor = loveColor === 'black' ? 'none' : '#ed4956';
+            if (!liked) likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`;
+            else likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>`;
+        }
+        
+        function updatePreview() {
+            let username = usernameInput.value.trim() || 'thekachoo';
+            displayUsername.innerText = username;
+            captionUsernameSpan.innerText = username;
+            displayLocation.innerText = locationInput.value.trim() || '';
+            displayCaption.innerText = captionInput.value || '';
+            let likes = parseInt(likeCountInput.value) || 0;
+            let likesText = currentLang === 'id' ? 'suka' : 'likes';
+            displayLikes.innerText = likes.toLocaleString() + ' ' + likesText;
+            displayTimestamp.innerText = timestampInput.value.trim() || (currentLang === 'id' ? 'Baru saja' : 'Just now');
+            adjustMediaFrame();
+        }
+        
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('labelAvatar').innerText = t.labelAvatar;
+            document.getElementById('uploadAvatarLabel').innerText = t.uploadAvatarLabel;
+            document.getElementById('labelUsername').innerText = t.labelUsername;
+            document.getElementById('labelLocation').innerText = t.labelLocation;
+            document.getElementById('labelMedia').innerText = t.labelMedia;
+            document.getElementById('uploadMediaLabel').innerText = t.uploadMediaLabel;
+            document.getElementById('labelCaption').innerText = t.labelCaption;
+            document.getElementById('labelLikes').innerText = t.labelLikes;
+            document.getElementById('labelTimestamp').innerText = t.labelTimestamp;
+            document.getElementById('loveSelectText').innerText = t.loveSelectText;
+            document.getElementById('labelLoveColor').innerText = t.labelLoveColor;
+            document.getElementById('labelBgPreview').innerText = t.labelBgPreview;
+            document.getElementById('bgTransparent').innerText = t.bgTransparent;
+            document.getElementById('bgWhite').innerText = t.bgWhite;
+            document.getElementById('bgBlack').innerText = t.bgBlack;
+            timestampInput.placeholder = t.defaultTimestamp;
+            updatePreview();
+        }
+        
+        function showProfileCrop(file) { const modal = document.getElementById('profileCropModal'); const img = document.getElementById('profileCropImage'); img.src = URL.createObjectURL(file); modal.style.display = 'flex'; setTimeout(() => { if (profileCropper) profileCropper.destroy(); profileCropper = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1 }); }, 100); }
+        document.getElementById('cancelProfileCrop').addEventListener('click', () => { document.getElementById('profileCropModal').style.display = 'none'; if (profileCropper) profileCropper.destroy(); profileCropper = null; });
+        document.getElementById('saveProfileCrop').addEventListener('click', () => { if (profileCropper) { const canvas = profileCropper.getCroppedCanvas({ width: 300, height: 300 }); canvas.toBlob(blob => { avatarImg.src = URL.createObjectURL(blob); document.getElementById('profileCropModal').style.display = 'none'; if (profileCropper) profileCropper.destroy(); profileCropper = null; }, 'image/png'); } });
+        
+        function showPostCrop(file) { const modal = document.getElementById('postCropModal'); const img = document.getElementById('postCropImage'); img.src = URL.createObjectURL(file); modal.style.display = 'flex'; const aspect = currentCropRatio === '1:1' ? 1 : 4/5; setTimeout(() => { if (postCropper) postCropper.destroy(); postCropper = new Cropper(img, { aspectRatio: aspect, viewMode: 1, autoCropArea: 1 }); }, 100); }
+        document.getElementById('cancelPostCrop').addEventListener('click', () => { document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; });
+        document.getElementById('savePostCrop').addEventListener('click', () => { if (postCropper) { let width = 1080, height = 1080; if (currentCropRatio === '4:5') { width = 1080; height = 1350; } const canvas = postCropper.getCroppedCanvas({ width, height }); canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const img = document.createElement('img'); img.src = url; img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(img); document.getElementById('postCropModal').style.display = 'none'; if (postCropper) postCropper.destroy(); postCropper = null; adjustMediaFrame(); }, 'image/png'); } });
+        
+        avatarUpload.addEventListener('change', (e) => { if (e.target.files[0] && e.target.files[0].type.startsWith('image/')) showProfileCrop(e.target.files[0]); });
+        mediaUpload.addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; if (file.type.startsWith('image/')) { ratioOptions.style.display = 'flex'; showPostCrop(file); } });
+        
+        function setDefaultMedia() { if (!mediaContainer.querySelector('img')) { const defaultImg = document.createElement('img'); defaultImg.src = "https://placehold.co/600x600/EFEFEF/888888?text=Upload"; defaultImg.style.width = '100%'; defaultImg.style.height = '100%'; defaultImg.style.objectFit = 'cover'; mediaContainer.innerHTML = ''; mediaContainer.appendChild(defaultImg); adjustMediaFrame(); } }
+        function showToast(msg) { const toast = document.getElementById('toastMsg'); toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 2000); }
+        
+        document.getElementById('downloadBtn').addEventListener('click', async () => { const element = document.getElementById('previewOuter'); html2canvas(element, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = `instapost_${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); showToast('✅ Gambar berhasil diunduh!'); }).catch(() => showToast('❌ Gagal mengunduh gambar')); });
+        
+        document.getElementById('btnIndonesia').addEventListener('click', () => { currentLang = 'id'; document.getElementById('btnIndonesia').classList.add('active'); document.getElementById('btnInggris').classList.remove('active'); updateLanguage(); });
+        document.getElementById('btnInggris').addEventListener('click', () => { currentLang = 'en'; document.getElementById('btnInggris').classList.add('active'); document.getElementById('btnIndonesia').classList.remove('active'); updateLanguage(); });
+        document.getElementById('loveBlack').addEventListener('click', () => { loveColor = 'black'; document.getElementById('loveBlack').classList.add('active'); document.getElementById('loveRed').classList.remove('active'); updateLoveColor(); });
+        document.getElementById('loveRed').addEventListener('click', () => { loveColor = 'red'; document.getElementById('loveRed').classList.add('active'); document.getElementById('loveBlack').classList.remove('active'); updateLoveColor(); });
+        
+        usernameInput.addEventListener('input', updatePreview);
+        locationInput.addEventListener('input', updatePreview);
+        captionInput.addEventListener('input', updatePreview);
+        likeCountInput.addEventListener('input', updatePreview);
+        timestampInput.addEventListener('input', updatePreview);
+        window.addEventListener('resize', () => adjustMediaFrame());
+        
+        likeIcon.addEventListener('click', () => {
+            if (!liked) { likeCountInput.value = (parseInt(likeCountInput.value) || 0) + 1; updatePreview(); liked = true; likeSvg.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ed4956" stroke="#ed4956" stroke-width="1"/>'; }
+            else { let curr = parseInt(likeCountInput.value) || 0; if (curr > 0) likeCountInput.value = curr - 1; updatePreview(); liked = false; const strokeColor = loveColor === 'black' ? '#262626' : '#ed4956'; const fillColor = loveColor === 'black' ? 'none' : '#ed4956'; likeSvg.innerHTML = `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>`; }
+        });
+        
+        updateLanguage();
+        setDefaultMedia();
+        updateLoveColor();
+        updateBackground();
+        setTimeout(() => adjustMediaFrame(), 150);
+    </script>
 </body>
-</html>
+                        </html>
