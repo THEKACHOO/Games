@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KADIO 35° - FOTO DULU YUK</title>
+    <title>CHROMATIC° | Studio Booth & Twibbon</title>
     <!-- Google Fonts: Outfit & Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -22,8 +23,7 @@
             scroll-behavior: smooth;
         }
 
-        /* judul global pakai outfit */
-        .outfit-title, .header-title, .frame-title, .kadio-description h3, .footer .made-by {
+        .outfit-title, .frame-title, .kadio-description h3, .footer .made-by, .hero-title {
             font-family: 'Outfit', sans-serif;
             letter-spacing: -0.02em;
         }
@@ -32,7 +32,7 @@
             transition: all 0.2s ease-out;
         }
 
-        /* HEADER dengan logo tengah dan X */
+        /* HEADER dengan logo kiri Chromatic.png, tengah teks CHROMATIC° */
         .header {
             display: flex;
             justify-content: space-between;
@@ -47,42 +47,31 @@
             backdrop-filter: blur(4px);
         }
 
-        .logo-center-group {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+        /* Logo kiri */
+        .logo-left {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: white;
-            padding: 0 0.8rem;
         }
-
-        .logo-kachoo-center, .logo-studio-center {
+        .logo-left-img {
             height: 42px;
             width: auto;
             object-fit: contain;
-            transition: transform 0.2s;
         }
 
-        .logo-kachoo-center:hover, .logo-studio-center:hover {
-            transform: scale(1.02);
-        }
-
-        .logo-x {
+        /* Teks tengah CHROMATIC° */
+        .center-text {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 1.4rem;
-            color: #111;
-            margin: 0 0.2rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #000000;
+            white-space: nowrap;
         }
 
-        /* spacer kiri kanan agar nav tetap di sisi */
-        .nav-placeholder-left, .nav-placeholder-right {
-            width: 120px;
-            visibility: hidden;
-        }
-        
+        /* Navigasi Desktop di kanan */
         .main-menu {
             display: flex;
             gap: 2rem;
@@ -151,9 +140,33 @@
             border-bottom: none;
         }
 
+        /* Hero Section - sesuai request */
+        .hero-section {
+            text-align: center;
+            padding: 80px 24px 60px;
+            background: #ffffff;
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #000;
+            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .hero-sub {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+
+        /* MAIN CONTAINER - isi dari template twibbon */
         .main-container {
             max-width: 1400px;
-            margin: 2rem auto;
+            margin: 0 auto;
             padding: 1.5rem;
             background: radial-gradient(circle at 30% 20%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.01) 100%);
             border-radius: 2rem;
@@ -315,18 +328,11 @@
             .header {
                 padding: 0.8rem 1.2rem;
             }
-            .logo-center-group {
-                gap: 0.3rem;
+            .center-text {
+                font-size: 1.2rem;
             }
-            .logo-kachoo-center, .logo-studio-center {
+            .logo-left-img {
                 height: 32px;
-            }
-            .logo-x {
-                font-size: 1.1rem;
-            }
-            .nav-placeholder-left, .nav-placeholder-right {
-                width: 40px;
-                visibility: hidden;
             }
             .main-menu {
                 display: none;
@@ -342,6 +348,12 @@
             }
             .frame-card {
                 max-width: 100%;
+            }
+            .hero-section {
+                padding: 60px 20px 40px;
+            }
+            .hero-title {
+                font-size: 1.8rem;
             }
             .kadio-description {
                 padding: 1.5rem 1rem;
@@ -368,15 +380,13 @@
 <body>
 
 <header class="header">
-    <!-- Kiri: spacer kosong untuk menjaga keseimbangan flex (nav tetap di kanan) -->
-    <div class="nav-placeholder-left"></div>
-
-    <!-- Logo tengah: KACHOO + X + Studio35.png -->
-    <div class="logo-center-group">
-        <img src="logo-thekachoo.png" alt="KACHOO" class="logo-kachoo-center" onerror="this.onerror=null; this.src='https://placehold.co/100x40/ffffff/cccccc?text=KACHOO';">
-        <span class="logo-x">✕</span>
-        <img src="Studio35.png" alt="Studio35" class="logo-studio-center" onerror="this.onerror=null; this.src='https://placehold.co/100x40/f5f5f5/999999?text=Studio35';">
+    <!-- Logo kiri: Chromatic.png -->
+    <div class="logo-left">
+        <img src="Chromatic.png" alt="CHROMATIC" class="logo-left-img" onerror="this.src='https://placehold.co/120x42/000000/ffffff?text=CHROMATIC';">
     </div>
+
+    <!-- Teks tengah CHROMATIC° -->
+    <div class="center-text">CHROMATIC°</div>
 
     <!-- Navigasi Desktop di kanan -->
     <div class="main-menu">
@@ -396,10 +406,14 @@
     <a href="#" data-link="howto">How to Booked</a>
 </div>
 
+<!-- Hero Section baru sesuai request -->
+<section class="hero-section">
+    <h1 class="hero-title">One Click Away from Iconic</h1>
+    <p class="hero-sub">The Kachoo × Studio 35°</p>
+</section>
+
 <main class="main-container">
-    <!-- Judul menggunakan font OUTFIT sudah diterapkan via CSS class, kita tambahkan headline kecil di atas? biar sesuai minta judul "KADIO 35°"  -->
     <div style="text-align: center; margin-bottom: 1rem;">
-        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">KADIO 35°</h1>
         <p style="font-family: 'Inter', sans-serif; color: #555; margin-top: 0.2rem;">Pilih frame, unggah foto, sesuaikan & simpan</p>
     </div>
 
@@ -508,7 +522,7 @@
         const CANVAS_W_LANDSCAPE = 1000;
         const CANVAS_H_LANDSCAPE = 800;
 
-        // Frame image sources (asumsi file gambar tersedia di folder yg sama)
+        // Frame image sources
         const frameImgSrc1 = 'Campaign1.png';
         const frameImgSrc2 = 'Campaign2.png';
         const frameImgSrc3 = 'Campaign3.png';
@@ -516,7 +530,7 @@
         const frameImgSrc5 = 'Campaign7.png';
         const frameImgSrc6 = 'Campaign8.png';
 
-        // Kelas editor (sama seperti sebelumnya, dengan sentuhan touch/zoom)
+        // Kelas editor
         class FrameEditor {
             constructor(canvasId, uploadInputId, saveBtnId, frameImage, canvasWidth, canvasHeight) {
                 this.canvas = document.getElementById(canvasId);
@@ -761,7 +775,7 @@
                     return;
                 }
                 const link = document.createElement('a');
-                link.download = `kadio_frame_${Date.now()}.png`;
+                link.download = `chromatic_frame_${Date.now()}.png`;
                 link.href = this.canvas.toDataURL('image/png');
                 link.click();
             }
@@ -813,7 +827,6 @@
         setupCampaign(4, 'twibbonCanvas5', 'uploadInput5', 'saveBtn5', frameImgSrc5, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
         setupCampaign(5, 'twibbonCanvas6', 'uploadInput6', 'saveBtn6', frameImgSrc6, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
         
-        // Trigger upload buttons
         document.getElementById('uploadBtn1')?.addEventListener('click', () => document.getElementById('uploadInput1').click());
         document.getElementById('uploadBtn2')?.addEventListener('click', () => document.getElementById('uploadInput2').click());
         document.getElementById('uploadBtn3')?.addEventListener('click', () => document.getElementById('uploadInput3').click());
@@ -821,10 +834,6 @@
         document.getElementById('uploadBtn5')?.addEventListener('click', () => document.getElementById('uploadInput5').click());
         document.getElementById('uploadBtn6')?.addEventListener('click', () => document.getElementById('uploadInput6').click());
         
-        // Navigasi: Ubah semua navigator menjadi link Twitter! (sesuai request: username td kalau diklik pindah ke twitter)
-        // Untuk Home, About Us, How to Booked -> mengarah ke twitter dengan mention? atau tetap ke halaman? Permintaan: "Yang username td kalau diklik pindah ke twitter. Navigatornya ubah smua Ada 1. Home (ke home.html) 2. About us (About.html) 3. How to Booked (Howto.html)"
-        // namun juga ada permintaan "username td kalau diklik pindah ke twitter." Saya interpretasikan: link navigator home/about/howto mengarah ke file html internal, tapi jika user mengklik "made by Kachoo & Studio35" atau logo? tapi requirement khusus: tombol navigasi tetap ke file yang diminta.
-        // Saya akan buat navigasi ke file2 html tersebut (home.html, about.html, howto.html) yang berada di direktori yang sama. Agar tidak error, akan membuka tab baru.
         function navigatePage(page) {
             window.location.href = page;
         }
@@ -847,7 +856,6 @@
             });
         });
         
-        // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
         const mobileNavDiv = document.getElementById('mobileNav');
         if(menuToggle) {
@@ -858,4 +866,4 @@
     })();
 </script>
 </body>
-</html>
+    </html>
