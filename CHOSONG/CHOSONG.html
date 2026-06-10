@@ -3,739 +3,44 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-        @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "Poppins", "Outfit", sans-serif;
-            background: var(--background-color);
-            color: var(--background-text-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        :root {
-            --background-color: #FFFFFF;
-            --background-text-color: #000000;
-            --surface-bg: #FFFFFF;
-            --surface-border: #E5E5E5;
-            --surface-hover: #F5F5F5;
-            --surface-text-color: #000000;
-            --primary-color: #000000;
-            --primary-text-color: #FFFFFF;
-            --cubic-ease-out: cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            --primary-black: #000000;
-            --primary-white: #FFFFFF;
-            --accent-gray: #F5F5F7;
-            --text-gray: #6E6E73;
-            --border-radius: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --footer-bg: #000000;
-            --footer-text: #FFFFFF;
-            --footer-text-muted: rgba(255, 255, 255, 0.7);
-            --footer-border: rgba(255, 255, 255, 0.1);
-            --footer-icon-bg: rgba(255, 255, 255, 0.1);
-        }
-
-        .dark-mode {
-            --background-color: #000000;
-            --background-text-color: #FFFFFF;
-            --surface-bg: #000000;
-            --surface-border: #222222;
-            --surface-hover: #111111;
-            --surface-text-color: #FFFFFF;
-            --primary-color: #FFFFFF;
-            --primary-text-color: #000000;
-            --primary-black: #FFFFFF;
-            --primary-white: #000000;
-            --accent-gray: #1a1a1a;
-            --text-gray: #aaaaaa;
-            --footer-bg: #FFFFFF;
-            --footer-text: #000000;
-            --footer-text-muted: rgba(0, 0, 0, 0.7);
-            --footer-border: rgba(0, 0, 0, 0.1);
-            --footer-icon-bg: rgba(0, 0, 0, 0.1);
-        }
-
-        *:focus, *:focus-visible, input:focus, textarea:focus, button:focus {
-            outline: none !important;
-            box-shadow: none !important;
-        }
-
-        [contenteditable] {
-            outline: none;
-        }
-
-        .cloneable {
-            display: none !important;
-        }
-
-        main {
-            flex: 1;
-            margin-bottom: 60px;
-        }
-
-        /* ========== GLOBAL HEADER ========== */
-        .global-header {
-            background: var(--surface-bg);
-            border-bottom: 1px solid var(--surface-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 32px;
-        }
-
-        .header-logo {
-            flex: 1;
-            display: flex;
-            justify-content: flex-start;
-        }
-
-        .header-logo img {
-            height: 32px;
-            width: auto;
-            transition: transform 0.2s ease;
-            display: block;
-        }
-
-        .header-logo img:hover {
-            transform: scale(1.05);
-        }
-
-        .header-center {
-            flex: 1;
-            text-align: center;
-        }
-
-        .chosong-brand {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--background-text-color);
-        }
-
-        .generator-by {
-            font-size: 11px;
-            opacity: 0.6;
-            letter-spacing: 1px;
-            color: var(--surface-text-color);
-        }
-
-        .header-right {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        #dark-mode-toggle,
-        [id^="dark-mode-toggle"] {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 44px !important;
-            height: 44px !important;
-            padding: 0 !important;
-            background: var(--surface-bg) !important;
-            border-radius: 60px !important;
-            cursor: pointer !important;
-            border: 1px solid var(--surface-border) !important;
-            transition: all 0.2s var(--cubic-ease-out) !important;
-        }
-
-        #dark-mode-toggle:hover,
-        [id^="dark-mode-toggle"]:hover {
-            transform: scale(1.05) !important;
-            background: var(--surface-hover) !important;
-        }
-
-        #dark-mode-toggle .material-symbols-outlined,
-        [id^="dark-mode-toggle"] .material-symbols-outlined {
-            font-size: 24px !important;
-            color: var(--background-text-color) !important;
-        }
-
-        #dark-mode-toggle .toggle-text,
-        [id^="dark-mode-toggle"] .toggle-text {
-            display: none !important;
-        }
-
-        /* ========== KONTEN UTAMA ========== */
-        .main-title {
-            text-align: center;
-            margin: 48px 0 32px 0;
-        }
-
-        .main-title h1 {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--background-text-color);
-        }
-
-        .search-form .screen-wrapper {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .search-form form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .search-form input {
-            background: var(--surface-bg);
-            border: 1px solid var(--surface-border) !important;
-            padding: 14px 20px;
-            border-radius: 60px;
-            width: 100%;
-            color: var(--background-text-color);
-            font-size: 16px;
-        }
-
-        .search-form input::placeholder {
-            color: var(--surface-text-color);
-        }
-
-        .search-form .primary {
-            background: var(--primary-color);
-            color: var(--primary-text-color);
-            border: none;
-            border-radius: 60px;
-            padding: 14px 24px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
-            transition: transform 0.2s var(--cubic-ease-out);
-        }
-
-        .search-form .primary:hover {
-            transform: translateY(-2px);
-        }
-
-        .lyrics-image-screen {
-            background: transparent !important;
-        }
-
-        .screen-wrapper {
-            background: transparent !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-
-        /* SONG SELECTION - POSISI TENGAH */
-        .song-selection-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .select-song-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-
-        .select-song-header .back-button {
-            background: var(--surface-bg);
-            border: 1px solid var(--surface-border);
-            border-radius: 40px;
-            padding: 8px 16px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            color: var(--background-text-color);
-            font-size: 14px;
-        }
-
-        .select-song-header .back-button:hover {
-            background: var(--surface-hover);
-            transform: scale(1.02);
-        }
-
-        .select-song-header .back-button span {
-            font-size: 20px;
-        }
-
-        .select-song-header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--background-text-color);
-            margin: 0;
-        }
-
-        .song-selection {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .select-song {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: var(--surface-bg);
-            border: 1px solid var(--surface-border);
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .select-song:hover {
-            background: var(--surface-hover);
-            transform: translateX(4px);
-        }
-
-        .select-song img {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
-
-        .select-song .name {
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--background-text-color);
-        }
-
-        .select-song .authors {
-            font-size: 13px;
-            color: var(--surface-text-color);
-            opacity: 0.7;
-        }
-
-        /* ========== FOOTER (PERTAHANKAN SAMA PERSIS) ========== */
-        footer {
-            background: var(--footer-bg);
-            color: var(--footer-text);
-            padding: 48px 0 32px;
-            margin-top: 0;
-            border-top: 1px solid var(--footer-border);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 48px;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 32px;
-        }
-
-        .footer-col strong {
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 16px;
-            font-size: 20px;
-            color: var(--footer-text);
-            position: relative;
-        }
-
-        .footer-col strong::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 36px;
-            height: 2px;
-            background: var(--footer-text);
-        }
-
-        .footer-col p {
-            margin: 0;
-            line-height: 1.5;
-            font-size: 15px;
-            color: var(--footer-text-muted);
-        }
-
-        .footer-col a {
-            color: var(--footer-text-muted);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-col a:hover {
-            color: var(--footer-text);
-            text-decoration: underline;
-        }
-
-        .social-links-footer {
-            display: flex;
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .social-link-footer {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: var(--footer-icon-bg);
-            border-radius: 50%;
-            color: var(--footer-text);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-link-footer:hover {
-            background: var(--footer-text);
-            color: var(--footer-bg);
-            transform: translateY(-3px);
-        }
-
-        .x-logo {
-            font-weight: 900;
-            font-size: 14px;
-        }
-
-        .footer-links-list {
-            list-style: none;
-        }
-
-        .footer-links-list li {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            color: var(--footer-text-muted);
-        }
-
-        .footer-links-list li a {
-            color: var(--footer-text-muted);
-        }
-
-        .footer-links-list li a:hover {
-            color: var(--footer-text);
-        }
-
-        .roleplay-text {
-            font-size: 12px;
-            opacity: 0.5;
-            border-top: 1px solid var(--footer-border);
-            padding-top: 20px;
-            margin-top: 0;
-            text-align: center;
-            color: var(--footer-text-muted);
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 32px;
-            padding-right: 32px;
-        }
-
-        /* ========== RESPONSIVE MOBILE ========== */
-        @media (max-width: 768px) {
-            .global-header {
-                padding: 12px 16px;
-            }
-            
-            .header-logo img {
-                height: 28px;
-            }
-            
-            .chosong-brand {
-                font-size: 14px;
-                letter-spacing: 2px;
-            }
-            
-            .generator-by {
-                font-size: 8px;
-            }
-            
-            .main-title {
-                margin: 24px 0 20px 0;
-            }
-            
-            .main-title h1 {
-                font-size: 20px;
-            }
-            
-            .search-form .screen-wrapper {
-                padding: 0 16px;
-            }
-            
-            .search-form input {
-                padding: 10px 16px;
-                font-size: 14px;
-            }
-            
-            .search-form .primary {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-            
-            .song-selection-wrapper {
-                padding: 0 16px;
-            }
-
-            .select-song-header h1 {
-                font-size: 18px;
-            }
-
-            .select-song-header .back-button {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            .select-song-header .back-button span {
-                font-size: 16px;
-            }
-            
-            main {
-                margin-bottom: 40px;
-            }
-            
-            .footer-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-                padding: 0 12px;
-            }
-            
-            .footer-col strong {
-                font-size: 11px;
-                margin-bottom: 8px;
-            }
-            
-            .footer-col strong::after {
-                width: 20px;
-                height: 2px;
-                bottom: -5px;
-            }
-            
-            .footer-col p {
-                font-size: 8px;
-                line-height: 1.3;
-            }
-            
-            .footer-links-list li {
-                font-size: 8px;
-                gap: 4px;
-                margin-bottom: 6px;
-            }
-            
-            .footer-links-list li a {
-                font-size: 8px;
-            }
-            
-            .footer-links-list li span.x-logo {
-                font-size: 7px !important;
-                padding: 1px 3px !important;
-                min-width: 12px !important;
-            }
-            
-            .footer-links-list li i {
-                font-size: 8px;
-            }
-            
-            .social-links-footer {
-                margin-top: 8px;
-                gap: 8px;
-            }
-            
-            .social-link-footer {
-                width: 22px;
-                height: 22px;
-            }
-            
-            .social-link-footer i,
-            .social-link-footer .x-logo {
-                font-size: 9px;
-            }
-            
-            .roleplay-text {
-                font-size: 7px;
-                padding-top: 12px;
-                margin-top: 16px;
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .footer-grid {
-                padding: 0 24px;
-                gap: 32px;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .global-header {
-                padding: 16px 32px;
-            }
-            
-            .search-form .screen-wrapper {
-                padding: 0 24px;
-            }
-        }
-
-        .material-symbols-outlined {
-            color: var(--background-text-color);
-        }
-
-        .go-to-screen, #last-go-back, #download {
-            background: var(--surface-bg);
-            border: 1px solid var(--surface-border);
-            border-radius: 40px;
-            padding: 8px 16px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            color: var(--background-text-color);
-        }
-        
-        .go-to-screen:hover, #last-go-back:hover, #download:hover {
-            background: var(--surface-hover);
-            transform: scale(1.02);
-        }
-        
-        .fab {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 100;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .lines-selection {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-        
-        .song-image {
-            max-width: 400px;
-            margin: 0 auto;
-            background: var(--surface-bg);
-            border-radius: 24px;
-            padding: 20px;
-        }
-        
-        .color-selection {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .switch-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin: 12px 0;
-        }
-        
-        .width-control {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .song-info-display {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 16px;
-            background: var(--surface-bg);
-            border: 1px solid var(--surface-border);
-            border-radius: 16px;
-        }
-
-        .song-info-cover {
-            width: 64px;
-            height: 64px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
-
-        .song-info-name {
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .song-info-artist {
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        .back-icon-only {
-            background: var(--surface-bg);
-            border: 1px solid var(--surface-border);
-            border-radius: 40px;
-            padding: 8px 12px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            transition: all 0.2s ease;
-            color: var(--background-text-color);
-        }
-    </style>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="wizard.css">
+    <link rel="stylesheet" href="song-image.css">
     <title>CHOSONG</title>
 </head>
 
 <body>
-    <!-- GLOBAL HEADER - Terpisah dari konten -->
-    <div class="global-header">
-        <div class="header-logo">
-            <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-        </div>
-        <div class="header-center">
-            <div class="chosong-brand">CHOSONG</div>
-            <div class="generator-by">by the Kachoo</div>
-        </div>
-        <div class="header-right">
-            <div id="dark-mode-toggle">
-                <span class="material-symbols-outlined">light_mode</span>
-                <span class="toggle-text">Light</span>
-            </div>
-        </div>
-    </div>
-
     <main>
-        <!-- SCREEN 1: What's your mood today? -->
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
+                <div class="main-header">
+                    <div class="header-logo">
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
+                    </div>
+                    <div class="header-center">
+                        <div class="chosong-brand">CHOSONG</div>
+                        <div class="generator-by">by the Kachoo</div>
+                    </div>
+                    <div class="header-right">
+                        <div id="dark-mode-toggle">
+                            <span class="material-symbols-outlined">light_mode</span>
+                            <span class="toggle-text">Light</span>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="main-title">
                     <h1>What's your mood today?</h1>
+                </div>
+                
+                <div class="input-tabs" style="display: none;">
+                    <button class="tab-button active" data-tab="search">Search</button>
+                    <button class="tab-button" data-tab="link">Paste Link</button>
                 </div>
                 
                 <div class="tab-content active" id="search-tab">
@@ -745,39 +50,68 @@
                     </form>
                 </div>
                 
+                <div class="tab-content" id="link-tab">
+                    <form>
+                        <input class="surface" type="text" id="spotify-link" placeholder="https://open.spotify.com/track/...">
+                        <button class="primary" id="load-link">Load song!</button>
+                    </form>
+                </div>
+                
                 <div class="searching hidden"></div>
                 <div class="error hidden"></div>
             </div>
         </section>
 
-        <!-- SCREEN 2: Select a song dengan tombol back di samping -->
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
-                <div class="song-selection-wrapper">
-                    <div class="select-song-header">
-                        <button class="back-button" id="back-to-search">
-                            <span class="material-symbols-outlined">chevron_left</span>
-                            Back
-                        </button>
-                        <h1>Select a song</h1>
+                <div class="main-header">
+                    <div class="header-logo">
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
                     </div>
-                    
-                    <div class="song-selection">
-                        <div class="select-song cloneable">
-                            <img src="" alt="album-cover">
-                            <div>
-                                <div class="name"></div>
-                                <div class="authors"></div>
-                            </div>
+                    <div class="header-center">
+                        <div class="chosong-brand">CHOSONG</div>
+                        <div class="generator-by">by the Kachoo</div>
+                    </div>
+                    <div class="header-right">
+                        <div id="dark-mode-toggle2">
+                            <span class="material-symbols-outlined">light_mode</span>
                         </div>
+                    </div>
+                </div>
+                
+                <button class="go-to-screen material-symbols-outlined" data-number="1">chevron_left</button>
+                
+                <div class="main-title">
+                    <h1>Select a song</h1>
+                </div>
+                
+                <div class="song-selection">
+                    <div class="select-song cloneable">
+                        <img src="" alt="album-cover">
+                        <div class="name"></div>
+                        <div class="authors"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SCREEN 3: Select lines -->
         <section class="lyrics-image-screen hidden lyrics-results" data-number="3">
             <div class="screen-wrapper">
+                <div class="main-header">
+                    <div class="header-logo">
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
+                    </div>
+                    <div class="header-center">
+                        <div class="chosong-brand">CHOSONG</div>
+                        <div class="generator-by">by the Kachoo</div>
+                    </div>
+                    <div class="header-right">
+                        <div id="dark-mode-toggle3">
+                            <span class="material-symbols-outlined">light_mode</span>
+                        </div>
+                    </div>
+                </div>
+                
                 <button class="go-to-screen material-symbols-outlined" data-number="2">chevron_left</button>
                 
                 <div class="main-title">
@@ -802,9 +136,23 @@
             </button>
         </section>
 
-        <!-- SCREEN 4: Final options -->
         <section class="lyrics-image-screen hidden final-options" data-number="4">
             <div class="screen-wrapper">
+                <div class="main-header">
+                    <div class="header-logo">
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
+                    </div>
+                    <div class="header-center">
+                        <div class="chosong-brand">CHOSONG</div>
+                        <div class="generator-by">by the Kachoo</div>
+                    </div>
+                    <div class="header-right">
+                        <div id="dark-mode-toggle4">
+                            <span class="material-symbols-outlined">light_mode</span>
+                        </div>
+                    </div>
+                </div>
+                
                 <button class="material-symbols-outlined" id="last-go-back">chevron_left</button>
                 
                 <div class="main-title">
@@ -862,37 +210,23 @@
         </section>
     </main>
     
-    <!-- FOOTER - PERTAHANKAN SAMA PERSIS TIDAK DIUBAH -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
                 <strong>The Kachoo</strong>
                 <p>Digital media company turning ideas into attention through innovative publications.</p>
-                <div class="social-links-footer">
-                    <a href="mailto:ohkachoo@gmail.com" class="social-link-footer"><i class="fas fa-envelope"></i></a>
-                    <a href="https://twitter.com/thekachoo" target="_blank" class="social-link-footer"><span class="x-logo">X</span></a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <strong>Contact</strong>
-                <ul class="footer-links-list">
-                    <li>
-                        <span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span>
-                        <a href="https://twitter.com/TheKachoo" target="_blank">@TheKachoo (Official)</a>
-                    </li>
-                    <li>
-                        <span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span>
-                        <a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo (Business)</a>
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a>
-                    </li>
-                </ul>
             </div>
             <div class="footer-col">
                 <strong>Address</strong>
-                <p>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta 12930,<br>Indonesia</p>
+                <p>Jenderal Sudirman Avenue, Lots 61–62, South Jakarta, Indonesia</p>
+            </div>
+            <div class="footer-col">
+                <strong>Contact</strong>
+                <p>
+                    Official Account : <a href="https://twitter.com/thekachoo" target="_blank">@thekachoo</a><br>
+                    Business : <a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo</a><br>
+                    Email : <a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a>
+                </p>
             </div>
         </div>
         <div class="roleplay-text">
@@ -900,8 +234,13 @@
         </div>
     </footer>
     
+    <script src="Artist.js"></script>
+    <script src="Lyric.js"></script>
+    <script src="Song.js"></script>
+    <script src="DataFetcher.js"></script>
+    <script src="DOMHandler.js"></script>
+    <script src="index.js"></script>
     <script>
-        // ========== DARK MODE TOGGLE ==========
         document.addEventListener('DOMContentLoaded', function() {
             const toggles = document.querySelectorAll('[id^="dark-mode-toggle"]');
             const body = document.body;
@@ -926,64 +265,6 @@
                     updateAllToggles();
                 });
             });
-        });
-
-        // ========== NAVIGATION ANTAR SCREEN ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            // Screen elements
-            const screen1 = document.querySelector('[data-number="1"]');
-            const screen2 = document.querySelector('[data-number="2"]');
-            const screen3 = document.querySelector('[data-number="3"]');
-            const screen4 = document.querySelector('[data-number="4"]');
-            
-            const searchBtn = document.getElementById('search');
-            const backToSearchBtn = document.getElementById('back-to-search');
-            const goToScreenButtons = document.querySelectorAll('.go-to-screen');
-            const lastGoBack = document.getElementById('last-go-back');
-            
-            // Function to show screen and hide others
-            function showScreen(screenNumber) {
-                const screens = [screen1, screen2, screen3, screen4];
-                screens.forEach(screen => {
-                    if (screen) screen.classList.add('hidden');
-                });
-                
-                const targetScreen = document.querySelector(`[data-number="${screenNumber}"]`);
-                if (targetScreen) targetScreen.classList.remove('hidden');
-            }
-            
-            // Search button - go to screen 2
-            if (searchBtn) {
-                searchBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showScreen(2);
-                });
-            }
-            
-            // Back button di samping Select a song - SUDAH BERFUNGSI
-            if (backToSearchBtn) {
-                backToSearchBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showScreen(1);
-                });
-            }
-            
-            // Other go-to-screen buttons
-            if (goToScreenButtons) {
-                goToScreenButtons.forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        const targetNum = this.getAttribute('data-number');
-                        if (targetNum) showScreen(parseInt(targetNum));
-                    });
-                });
-            }
-            
-            // Last go back button
-            if (lastGoBack) {
-                lastGoBack.addEventListener('click', function() {
-                    showScreen(3);
-                });
-            }
         });
     </script>
 </body>
