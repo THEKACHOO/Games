@@ -10,7 +10,7 @@
     --surface-bg: #FFFFFF;
     --surface-border: #E5E5E5;
     --surface-hover: #F5F5F5;
-    --surface-text-color: #333333;
+    --surface-text-color: #000000;
     --primary-color: #000000;
     --primary-text-color: #FFFFFF;
     
@@ -23,7 +23,7 @@
     --surface-bg: #000000;
     --surface-border: #222222;
     --surface-hover: #111111;
-    --surface-text-color: #CCCCCC;
+    --surface-text-color: #FFFFFF;
     --primary-color: #FFFFFF;
     --primary-text-color: #000000;
 }
@@ -63,10 +63,7 @@ body {
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, var(--background-text-color) 0%, var(--surface-text-color) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--background-text-color);
 }
 
 @keyframes titleFloat {
@@ -124,6 +121,7 @@ body {
     font-size: 0.65rem;
     opacity: 0.6;
     letter-spacing: 1px;
+    color: var(--surface-text-color);
 }
 
 /* Tombol light/dark mode: HANYA ICON (bukan emoticon) via SVG */
@@ -166,12 +164,12 @@ body {
     background-position: center;
 }
 
-/* Light mode icon (matahari - pure icon) */
+/* Light mode icon (matahari - hitam karena bg putih) */
 body:not(.dark-mode) #dark-mode-toggle .toggle-icon {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23000000' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z' /%3E%3C/svg%3E");
 }
 
-/* Dark mode icon (bulan - pure icon) */
+/* Dark mode icon (bulan - putih karena bg hitam) */
 body.dark-mode #dark-mode-toggle .toggle-icon {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23FFFFFF' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z' /%3E%3C/svg%3E");
 }
@@ -214,38 +212,6 @@ body.dark-mode #dark-mode-toggle .toggle-icon {
     transform: translateY(-2px);
 }
 
-/* hapus efek header lama, diganti dengan main-header */
-header {
-    /* diabaikan, struktur baru pakai .main-header */
-    display: none;
-}
-
-header > .go-to-screen, #download, #last-go-back {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    border: 1px solid var(--surface-border);
-    border-radius: 40px;
-    padding: 0.5rem 1rem;
-    background: var(--surface-bg);
-    cursor: pointer;
-    transition: all 0.2s var(--cubic-ease-out);
-}
-
-header > .go-to-screen {
-    left: 10px;
-}
-
-header > .go-to-screen.right, #download {
-    right: 10px;
-    left: auto;
-}
-
-header > .go-to-screen:hover, #download:hover {
-    background: var(--surface-hover);
-    transform: translateY(-50%) scale(1.05);
-}
-
 /* Footer - versi desktop tetap ok, versi mobile lebih rapi */
 footer {
     text-align: center;
@@ -276,6 +242,7 @@ footer {
     display: block;
     margin-bottom: 8px;
     font-size: 0.95rem;
+    color: var(--background-text-color);
 }
 
 .footer-col p {
@@ -285,12 +252,22 @@ footer {
     color: var(--surface-text-color);
 }
 
+.footer-col a {
+    color: var(--background-text-color);
+    text-decoration: none;
+}
+
+.footer-col a:hover {
+    text-decoration: underline;
+}
+
 .roleplay-text {
     font-size: 0.65rem;
     opacity: 0.6;
     border-top: 1px solid var(--surface-border);
     padding-top: 0.8rem;
     margin-top: 0.5rem;
+    color: var(--surface-text-color);
 }
 
 input, textarea, select {
@@ -300,6 +277,11 @@ input, textarea, select {
     border-radius: 60px;
     width: 100%;
     margin-bottom: 12px;
+    color: var(--background-text-color);
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--surface-text-color);
 }
 
 button:not(#dark-mode-toggle):not(.fab) {
@@ -309,6 +291,7 @@ button:not(#dark-mode-toggle):not(.fab) {
     border-radius: 60px;
     cursor: pointer;
     transition: all 0.2s var(--cubic-ease-out);
+    color: var(--background-text-color);
 }
 
 button:not(#dark-mode-toggle):not(.fab):hover {
@@ -348,11 +331,27 @@ button:not(#dark-mode-toggle):not(.fab):hover {
     margin-bottom: 8px;
     transition: all 0.2s var(--cubic-ease-out);
     cursor: pointer;
+    color: var(--background-text-color);
 }
 
 .song-selection > div:hover, .lines-selection > div:hover {
     transform: translateY(-2px);
     border-color: var(--primary-color);
+}
+
+.go-to-screen, #download, #last-go-back {
+    border: 1px solid var(--surface-border);
+    border-radius: 40px;
+    padding: 0.5rem 1rem;
+    background: var(--surface-bg);
+    cursor: pointer;
+    transition: all 0.2s var(--cubic-ease-out);
+    color: var(--background-text-color);
+}
+
+.go-to-screen:hover, #download:hover, #last-go-back:hover {
+    background: var(--surface-hover);
+    transform: scale(1.05);
 }
 
 /* RESPONSIVE: FOOTER MOBILE LEBIH RAPI, TIDAK MENURUN KE BAWAH */
@@ -392,7 +391,7 @@ button:not(#dark-mode-toggle):not(.fab):hover {
     }
 }
 
-/* tambahan untuk memastikan background polos & motion hanya di logo + title */
+/* background polos */
 body {
     background: var(--background-color);
 }
@@ -401,7 +400,20 @@ body {
     background: transparent;
 }
 
-/* efek tambahan logo motion */
-.logo-motion {
-    display: inline-block;
+/* icon material-symbols-outlined ikut warna teks */
+.material-symbols-outlined {
+    color: var(--background-text-color);
+}
+
+/* switch container dll */
+.switch-container {
+    color: var(--background-text-color);
+}
+
+.song-info-name, .song-info-artist {
+    color: var(--background-text-color);
+}
+
+.song-image .name, .song-image .authors, .song-image .lyrics {
+    color: var(--background-text-color);
 }
