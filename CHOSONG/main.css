@@ -102,7 +102,7 @@ main {
     align-items: flex-start;
 }
 
-/* HEADER STICKY DENGAN LOGO TENGAH */
+/* ========== HEADER DENGAN LOGO TENGAH ATAS & CHOSONG ========== */
 header {
     position: sticky;
     top: 0;
@@ -113,12 +113,46 @@ header {
     border-bottom: 1px solid var(--surface-color);
 }
 
-header img {
-    height: 60px;
-    width: auto;
-    display: inline-block;
+/* Wrapper untuk logo dan chosong */
+.header-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
 }
 
+/* Logo thekachoo.png */
+.header-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6px;
+}
+
+.header-logo img {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Tulisan CHOSONG */
+.chosong-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--background-text-color);
+    margin-bottom: 4px;
+}
+
+/* Subtext "Lyrics Generator by The Kachoo" */
+.generator-by {
+    font-size: 0.8rem;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+
+/* Tombol navigasi di header tetap berfungsi */
 header > .go-to-screen, #download, #last-go-back {
     position: absolute;
     top: calc(50% + 0.2rem);
@@ -143,78 +177,161 @@ header > .go-to-screen:hover, #download:hover, #last-go-back:hover {
     background-color: var(--surface-color);
 }
 
-/* FOOTER BARU */
+/* ========== TOMBOL SWITCH DARK/LIGHT DI POJOK KANAN ATAS ========== */
+#dark-mode-toggle {
+    position: fixed !important;
+    top: 16px !important;
+    right: 16px !important;
+    left: auto !important;
+    bottom: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 18px !important;
+    background: var(--surface-color) !important;
+    backdrop-filter: blur(8px);
+    border-radius: 40px !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    cursor: pointer !important;
+    z-index: 9999 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.2s ease !important;
+}
+
+#dark-mode-toggle:hover {
+    transform: scale(1.02);
+    background: var(--surface-light-color) !important;
+}
+
+/* Teks tombol */
+#dark-mode-toggle::before {
+    content: "Dark";
+}
+
+.dark-mode #dark-mode-toggle::before {
+    content: "Light";
+}
+
+/* Sembunyikan ikon material yang lama jika ada */
+#dark-mode-toggle > span {
+    display: none;
+}
+
+/* ========== FOOTER BARU (The Kachoo, Address, Contact, Roleplay) ========== */
 footer {
     text-align: center;
-    padding: 2rem;
+    padding: 2rem 1.5rem 1.5rem;
     background: var(--surface-light-color);
     border-top: 1px solid var(--surface-color);
+    margin-top: 2rem;
 }
 
-.footer-links {
+/* Grid footer 3 kolom */
+.footer-grid {
     display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 1.5rem auto;
+    text-align: left;
 }
 
-.footer-brand a {
-    font-size: 1.3rem;
+.footer-col {
+    flex: 1;
+    min-width: 180px;
+}
+
+.footer-col strong {
     font-weight: 700;
+    display: block;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
     color: var(--background-text-color);
-    text-decoration: none;
 }
 
-.footer-brand a:hover {
-    text-decoration: underline;
-}
-
-.footer-address {
+.footer-col p {
+    margin: 0 0 8px 0;
+    line-height: 1.5;
     font-size: 0.9rem;
     color: var(--surface-text-color);
 }
 
-.footer-contact {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.9rem;
+.footer-col a {
+    color: var(--background-text-color);
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
 }
 
-.footer-contact a {
-    color: var(--background-text-color);
+.footer-col a:hover {
+    opacity: 0.7;
     text-decoration: none;
 }
 
-.footer-contact a:hover {
-    text-decoration: underline;
+/* Roleplay text */
+.roleplay-text {
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.6;
+    border-top: 1px solid var(--surface-color);
+    padding-top: 1.2rem;
+    margin-top: 0.5rem;
+    letter-spacing: 0.5px;
 }
 
-#dark-mode-toggle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.3rem;
-    font-weight: 600;
-    padding-top: 0.5rem;
-    margin-top: 1rem;
-    cursor: pointer;
+/* ========== RESPONSIVE MOBILE ========== */
+@media (max-width: 768px) {
+    .footer-grid {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .footer-col {
+        text-align: center;
+    }
+    
+    #dark-mode-toggle {
+        top: 12px !important;
+        right: 12px !important;
+        padding: 6px 14px !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .header-logo img {
+        height: 45px;
+    }
+    
+    .chosong-title {
+        font-size: 0.95rem;
+        letter-spacing: 2px;
+    }
+    
+    .generator-by {
+        font-size: 0.7rem;
+    }
+    
+    h1, h2 {
+        font-size: 1.3rem;
+        padding: 1rem 0 0.8rem;
+    }
 }
 
-#dark-mode-toggle::before {
-    content: "Switch to dark";
-}
-
-.dark-mode #dark-mode-toggle::before {
-    content: "Switch to light";
-}
-
-#dark-mode-toggle > span::after {
-    content: "dark_mode";
-}
-
-.dark-mode #dark-mode-toggle > span::after {
-    content: "light_mode";
+@media (max-width: 480px) {
+    .header-logo img {
+        height: 38px;
+    }
+    
+    .chosong-title {
+        font-size: 0.85rem;
+    }
+    
+    #dark-mode-toggle {
+        padding: 5px 12px !important;
+        font-size: 0.7rem !important;
+    }
 }
 
 /* Floating Action Button */
