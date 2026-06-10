@@ -130,12 +130,10 @@
                     </div>
                     <div class="lyrics" contenteditable="true"></div>
                     <div class="spotify">
-                        <svg width="100" height="30" viewBox="0 0 100 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14.5 8.2C10.5 10.5 5.5 11.5 0.5 12.5V9.5C5.5 8.5 10.5 7.5 14.5 5.2V8.2Z" fill="#1DB954"/>
-                            <path d="M16.5 12.5C12 14.5 6 15.5 0 16.5V13.5C6 12.5 12 11.5 16.5 9.5V12.5Z" fill="#1DB954"/>
-                            <path d="M14.5 16.8C10 18.5 4 19.5 0 20.5V17.5C4 16.5 10 15.5 14.5 13.8V16.8Z" fill="#1DB954"/>
-                            <text x="25" y="20" font-family="Arial" font-size="14" font-weight="bold" fill="#1DB954">SPOTIFY</text>
+                        <svg class="spotify-icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.59 14.44c-.24.39-.73.53-1.12.29-3.07-1.88-6.94-2.31-10.48-1.26-.44.13-.9-.12-1.03-.56-.13-.44.12-.9.56-1.03 4.01-1.18 8.3-.7 11.78 1.43.39.24.53.73.29 1.13zm1.18-2.72c-.29.46-.88.6-1.34.31-3.52-2.16-8.88-2.78-13.04-1.52-.5.15-1.03-.13-1.18-.63-.15-.5.13-1.03.63-1.18 4.74-1.43 10.64-.74 14.64 1.72.46.29.6.88.29 1.3zm.1-2.77c-4.23-2.51-11.18-2.74-15.2-1.51-.6.18-1.22-.16-1.4-.76-.18-.6.16-1.22.76-1.4 4.6-1.39 12.26-1.12 17.08 1.75.54.32.73.99.41 1.53-.31.52-.99.73-1.53.39z"/>
                         </svg>
+                        <span class="spotify-text">SPOTIFY</span>
                     </div>
                 </div>
                 <div class="color-selection">
@@ -228,8 +226,21 @@
                     e.stopPropagation();
                     body.classList.toggle('dark-mode');
                     updateAllToggles();
+                    updateSpotifyIconColor();
                 });
             });
+
+            // Update warna icon Spotify
+            function updateSpotifyIconColor() {
+                const spotifyIcon = document.querySelector('.spotify-icon');
+                const spotifyText = document.querySelector('.spotify-text');
+                if (spotifyIcon) {
+                    const isDark = body.classList.contains('dark-mode');
+                    spotifyIcon.style.color = isDark ? '#ffffff' : '#000000';
+                    if (spotifyText) spotifyText.style.color = isDark ? '#ffffff' : '#000000';
+                }
+            }
+            updateSpotifyIconColor();
 
             // ========== VARIABEL UNTUK MENYIMPAN DATA SONG ==========
             let currentSongData = {
@@ -265,43 +276,30 @@
                     e.preventDefault();
                     const selectedLines = document.querySelectorAll('.select-line.selected');
                     if (selectedLines.length > 0) {
-                        // Ambil data dari screen 2/3
                         const albumCoverSrc = document.querySelector('.song-info-cover') ? document.querySelector('.song-info-cover').src : '';
                         const songName = document.querySelector('.song-info-name') ? document.querySelector('.song-info-name').textContent : '';
                         const artistName = document.querySelector('.song-info-artist') ? document.querySelector('.song-info-artist').textContent : '';
                         
-                        // Simpan ke variable global
                         currentSongData = {
                             albumCover: albumCoverSrc,
                             songName: songName,
                             artistName: artistName
                         };
                         
-                        // Pindah screen
                         document.querySelector('[data-number="4"]').classList.remove('hidden');
                         document.querySelector('[data-number="3"]').classList.add('hidden');
                         
-                        // Salin lirik yang dipilih - HAPUS SPASI ENTER YANG GA PERLU
-                        let lyricsText = Array.from(selectedLines).map(line => {
-                            // Ambil teks, trim, hapus spasi berlebih
-                            let text = line.textContent.trim();
-                            return text;
-                        }).join(' ');
-                        
-                        // Ganti multiple spaces jadi single space
+                        let lyricsText = Array.from(selectedLines).map(line => line.textContent.trim()).join(' ');
                         lyricsText = lyricsText.replace(/\s+/g, ' ');
                         document.querySelector('.song-image > .lyrics').innerHTML = lyricsText;
                         
-                        // Salin judul lagu dan artis ke screen 4
                         document.querySelector('.song-image > .header .name').textContent = songName;
                         document.querySelector('.song-image > .header .authors').textContent = artistName;
                         
-                        // SALIN FOTO ALBUM KE SCREEN 4 - PAKAI URL ASLI
                         const screen4AlbumImg = document.querySelector('.song-image > .header .screen4-album-img');
                         if (screen4AlbumImg && albumCoverSrc) {
                             screen4AlbumImg.src = albumCoverSrc;
                             screen4AlbumImg.alt = songName + ' album cover';
-                            screen4AlbumImg.style.display = 'block';
                         }
                     } else {
                         alert('Please select at least one line first!');
@@ -322,10 +320,18 @@
             // ========== COLOR PICKER ==========
             const colorPicker = document.getElementById('custom-color-input');
             const songImageContainer = document.getElementById('song-image-container');
+            let currentColor = '#000000';
             
             if (colorPicker && songImageContainer) {
                 colorPicker.addEventListener('input', function(e) {
-                    songImageContainer.style.backgroundColor = e.target.value;
+                    currentColor = e.target.value;
+                    const bgToggle = document.getElementById('additional-bg');
+                    if (bgToggle && bgToggle.classList.contains('active')) {
+                        songImageContainer.style.background = `linear-gradient(135deg, #ffffff, ${currentColor})`;
+                    } else {
+                        songImageContainer.style.backgroundColor = currentColor;
+                        songImageContainer.style.backgroundImage = '';
+                    }
                 });
             }
 
@@ -338,6 +344,8 @@
                     const nameDiv = document.querySelector('.song-image .header .name');
                     const authorsDiv = document.querySelector('.song-image .header .authors');
                     const lyricsDiv = document.querySelector('.song-image .lyrics');
+                    const spotifyText = document.querySelector('.spotify-text');
+                    const spotifyIcon = document.querySelector('.spotify-icon');
                     
                     if (songImage) {
                         if (this.classList.contains('active')) {
@@ -345,11 +353,16 @@
                             if (nameDiv) nameDiv.style.color = '#ffffff';
                             if (authorsDiv) authorsDiv.style.color = '#ffffff';
                             if (lyricsDiv) lyricsDiv.style.color = '#ffffff';
+                            if (spotifyText) spotifyText.style.color = '#ffffff';
+                            if (spotifyIcon) spotifyIcon.style.color = '#ffffff';
                         } else {
                             songImage.style.color = '';
                             if (nameDiv) nameDiv.style.color = '';
                             if (authorsDiv) authorsDiv.style.color = '';
                             if (lyricsDiv) lyricsDiv.style.color = '';
+                            if (spotifyText) spotifyText.style.color = '';
+                            if (spotifyIcon) spotifyIcon.style.color = '';
+                            updateSpotifyIconColor();
                         }
                     }
                 });
@@ -362,14 +375,9 @@
                     this.classList.toggle('active');
                     const spotifyDiv = document.querySelector('.song-image .spotify');
                     if (spotifyDiv) {
-                        if (this.classList.contains('active')) {
-                            spotifyDiv.style.display = 'flex';
-                        } else {
-                            spotifyDiv.style.display = 'none';
-                        }
+                        spotifyDiv.style.display = this.classList.contains('active') ? 'flex' : 'none';
                     }
                 });
-                // Default: spotify logo visible
                 const spotifyDiv = document.querySelector('.song-image .spotify');
                 if (spotifyDiv) {
                     spotifyDiv.style.display = 'flex';
@@ -377,17 +385,19 @@
                 }
             }
 
-            // ========== ADDITIONAL BG TOGGLE ==========
+            // ========== ADDITIONAL BG TOGGLE (gradasi putih ke warna pilihan) ==========
             const additionalBgToggle = document.getElementById('additional-bg');
             if (additionalBgToggle) {
                 additionalBgToggle.addEventListener('click', function() {
                     this.classList.toggle('active');
-                    const songImage = document.querySelector('.song-image');
+                    const songImage = document.getElementById('song-image-container');
                     if (songImage) {
                         if (this.classList.contains('active')) {
-                            songImage.style.backgroundImage = 'radial-gradient(circle at 10% 20%, rgba(91, 173, 254, 0.46) 0%, rgba(91, 224, 254, 0.46) 47.2%, rgba(170, 254, 235, 0.43) 90%)';
+                            songImage.style.background = `linear-gradient(135deg, #ffffff, ${currentColor})`;
+                            songImage.style.backgroundColor = '';
                         } else {
-                            songImage.style.backgroundImage = '';
+                            songImage.style.background = '';
+                            songImage.style.backgroundColor = currentColor;
                         }
                     }
                 });
@@ -430,7 +440,6 @@
                 });
             }
 
-            // ========== FUNGSI UNTUK SCRIPT LAIN ==========
             window.updateSongDataForScreen4 = function(albumCover, songName, artistName) {
                 currentSongData = {
                     albumCover: albumCover,
