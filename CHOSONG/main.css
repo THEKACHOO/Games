@@ -472,17 +472,16 @@ main {
 .song-image {
     max-width: 400px;
     margin: 0 auto;
-    background: var(--surface-bg);
+    background: #000000;
     border-radius: 24px;
     padding: 20px;
     transition: all 0.3s ease;
 }
 
-/* Album image di screen 4 - ukuran asli dari API, CSS hanya tampilkan */
 .song-image .header {
     display: flex;
     gap: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     align-items: center;
 }
 
@@ -505,8 +504,8 @@ main {
 
 .song-image .lyrics {
     font-size: 14px;
-    line-height: 1.6;
-    margin: 20px 0;
+    line-height: 1.4;
+    margin: 8px 0;
     white-space: normal;
     word-wrap: break-word;
 }
@@ -514,13 +513,20 @@ main {
 .song-image .spotify {
     display: flex;
     justify-content: center;
-    margin-top: 16px;
     align-items: center;
+    gap: 8px;
+    margin-top: 8px;
 }
 
-.song-image .spotify svg {
-    width: 100px;
-    height: auto;
+.song-image .spotify .spotify-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.song-image .spotify .spotify-text {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .color-selection {
