@@ -15,25 +15,27 @@
 </head>
 
 <body>
+    <!-- GLOBAL HEADER - sesuai CSS .global-header -->
+    <div class="global-header">
+        <div class="header-logo">
+            <img src="logo-thekachoo.png" alt="The Kachoo Logo">
+        </div>
+        <div class="header-center">
+            <div class="chosong-brand">CHOSONG</div>
+            <div class="generator-by">by the Kachoo</div>
+        </div>
+        <div class="header-right">
+            <div id="dark-mode-toggle">
+                <span class="material-symbols-outlined">light_mode</span>
+                <span class="toggle-text">Light</span>
+            </div>
+        </div>
+    </div>
+
     <main>
+        <!-- SCREEN 1: What's your mood today? -->
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
-                <div class="main-header">
-                    <div class="header-logo">
-                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-                    </div>
-                    <div class="header-center">
-                        <div class="chosong-brand">CHOSONG</div>
-                        <div class="generator-by">by the Kachoo</div>
-                    </div>
-                    <div class="header-right">
-                        <div id="dark-mode-toggle">
-                            <span class="material-symbols-outlined">light_mode</span>
-                            <span class="toggle-text">Light</span>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="main-title">
                     <h1>What's your mood today?</h1>
                 </div>
@@ -62,56 +64,32 @@
             </div>
         </section>
 
+        <!-- SCREEN 2: Select a song - sesuai CSS dengan song-selection-wrapper dan select-song-header -->
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
-                <div class="main-header">
-                    <div class="header-logo">
-                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
+                <div class="song-selection-wrapper">
+                    <div class="select-song-header">
+                        <button class="back-button" id="back-to-search">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                            Back
+                        </button>
+                        <h1>Select a song</h1>
                     </div>
-                    <div class="header-center">
-                        <div class="chosong-brand">CHOSONG</div>
-                        <div class="generator-by">by the Kachoo</div>
-                    </div>
-                    <div class="header-right">
-                        <div id="dark-mode-toggle2">
-                            <span class="material-symbols-outlined">light_mode</span>
+                    
+                    <div class="song-selection">
+                        <div class="select-song cloneable">
+                            <img src="" alt="album-cover">
+                            <div class="name"></div>
+                            <div class="authors"></div>
                         </div>
-                    </div>
-                </div>
-                
-                <button class="go-to-screen material-symbols-outlined" data-number="1">chevron_left</button>
-                
-                <div class="main-title">
-                    <h1>Select a song</h1>
-                </div>
-                
-                <div class="song-selection">
-                    <div class="select-song cloneable">
-                        <img src="" alt="album-cover">
-                        <div class="name"></div>
-                        <div class="authors"></div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- SCREEN 3: Select lines -->
         <section class="lyrics-image-screen hidden lyrics-results" data-number="3">
             <div class="screen-wrapper">
-                <div class="main-header">
-                    <div class="header-logo">
-                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-                    </div>
-                    <div class="header-center">
-                        <div class="chosong-brand">CHOSONG</div>
-                        <div class="generator-by">by the Kachoo</div>
-                    </div>
-                    <div class="header-right">
-                        <div id="dark-mode-toggle3">
-                            <span class="material-symbols-outlined">light_mode</span>
-                        </div>
-                    </div>
-                </div>
-                
                 <button class="go-to-screen material-symbols-outlined" data-number="2">chevron_left</button>
                 
                 <div class="main-title">
@@ -136,23 +114,9 @@
             </button>
         </section>
 
+        <!-- SCREEN 4: Final options -->
         <section class="lyrics-image-screen hidden final-options" data-number="4">
             <div class="screen-wrapper">
-                <div class="main-header">
-                    <div class="header-logo">
-                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-                    </div>
-                    <div class="header-center">
-                        <div class="chosong-brand">CHOSONG</div>
-                        <div class="generator-by">by the Kachoo</div>
-                    </div>
-                    <div class="header-right">
-                        <div id="dark-mode-toggle4">
-                            <span class="material-symbols-outlined">light_mode</span>
-                        </div>
-                    </div>
-                </div>
-                
                 <button class="material-symbols-outlined" id="last-go-back">chevron_left</button>
                 
                 <div class="main-title">
@@ -209,31 +173,48 @@
             </div>
         </section>
     </main>
-    
+
+    <!-- FOOTER - sesuai CSS main.css -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
                 <strong>The Kachoo</strong>
                 <p>Digital media company turning ideas into attention through innovative publications.</p>
-            </div>
-            <div class="footer-col">
-                <strong>Address</strong>
-                <p>Jenderal Sudirman Avenue, Lots 61–62, South Jakarta, Indonesia</p>
+                <div class="social-links-footer">
+                    <a href="mailto:ohkachoo@gmail.com" class="social-link-footer"><i class="fas fa-envelope"></i></a>
+                    <a href="https://twitter.com/thekachoo" target="_blank" class="social-link-footer"><span class="x-logo">X</span></a>
+                </div>
             </div>
             <div class="footer-col">
                 <strong>Contact</strong>
-                <p>
-                    Official Account : <a href="https://twitter.com/thekachoo" target="_blank">@thekachoo</a><br>
-                    Business : <a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo</a><br>
-                    Email : <a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a>
-                </p>
+                <ul class="footer-links-list">
+                    <li>
+                        <span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span>
+                        <a href="https://twitter.com/TheKachoo" target="_blank">@TheKachoo (Official)</a>
+                    </li>
+                    <li>
+                        <span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span>
+                        <a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo (Business)</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <strong>Address</strong>
+                <p>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta 12930,<br>Indonesia</p>
             </div>
         </div>
         <div class="roleplay-text">
             For Roleplay Purpose Only, made by The Kachoo in 2026.
         </div>
     </footer>
-    
+
+    <!-- Font Awesome untuk icon footer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="Artist.js"></script>
     <script src="Lyric.js"></script>
     <script src="Song.js"></script>
@@ -265,6 +246,16 @@
                     updateAllToggles();
                 });
             });
+
+            // Navigasi back button dari screen 2 ke screen 1
+            const backToSearch = document.getElementById('back-to-search');
+            if (backToSearch) {
+                backToSearch.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector('[data-number="1"]').classList.remove('hidden');
+                    document.querySelector('[data-number="2"]').classList.add('hidden');
+                });
+            }
         });
     </script>
 </body>
