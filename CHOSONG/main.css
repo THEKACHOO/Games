@@ -556,49 +556,17 @@ footer {
     margin-top: 20px;
 }
 
-.social-link-footer {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: var(--footer-icon-bg);
-    border-radius: 50%;
-    color: var(--footer-text);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.social-link-footer:hover {
-    background: var(--footer-text);
-    color: var(--footer-bg);
-    transform: translateY(-3px);
-}
-
-.x-logo {
-    font-weight: 900;
-    font-size: 14px;
-}
-
-.footer-links-list {
-    list-style: none;
-}
-
-.footer-links-list li {
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    color: var(--footer-text-muted);
-}
-
-.footer-links-list li a {
-    color: var(--footer-text-muted);
-}
-
-.footer-links-list li a:hover {
-    color: var(--footer-text);
+/* X logo (Twitter) dan email di footer dihapus */
+.social-link-footer.x-link,
+.social-link-footer[href*="x.com"],
+.social-link-footer[href*="twitter"],
+.footer-col:has(.social-link-footer.x-link),
+.footer-links-list li:has(a[href*="x.com"]),
+.footer-links-list li:has(a[href*="twitter"]),
+.footer-links-list li:has(a[href*="email"]),
+.footer-links-list li:has(a[href*="mailto"]),
+.social-link-footer:has(.x-logo) {
+    display: none !important;
 }
 
 .roleplay-text {
@@ -810,6 +778,17 @@ footer {
     .social-link-footer {
         width: 22px;
         height: 22px;
+    }
+    
+    /* Sembunyikan X dan email di mobile juga */
+    .social-link-footer.x-link,
+    .social-link-footer[href*="x.com"],
+    .social-link-footer[href*="twitter"],
+    .footer-links-list li:has(a[href*="x.com"]),
+    .footer-links-list li:has(a[href*="twitter"]),
+    .footer-links-list li:has(a[href*="email"]),
+    .footer-links-list li:has(a[href*="mailto"]) {
+        display: none !important;
     }
     
     .roleplay-text {
