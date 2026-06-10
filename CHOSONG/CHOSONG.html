@@ -245,7 +245,7 @@
                 });
             }
 
-            // NEXT screen 3 ke screen 4 - DENGAN MEMBAWA LIRIK
+            // NEXT screen 3 ke screen 4 - DENGAN MEMBAWA LIRIK + JUDUL + ARTIS
             const nextLine = document.getElementById('next-line');
             if (nextLine) {
                 nextLine.addEventListener('click', function(e) {
@@ -259,6 +259,10 @@
                         // Salin lirik yang dipilih ke screen 4
                         const lyricsText = Array.from(selectedLines).map(line => line.textContent).join('<br>');
                         document.querySelector('.song-image > .lyrics').innerHTML = lyricsText;
+                        
+                        // Salin judul lagu dan artis ke screen 4
+                        document.querySelector('.song-image > .header .name').textContent = document.querySelector('.song-info-name').textContent;
+                        document.querySelector('.song-image > .header .authors').textContent = document.querySelector('.song-info-artist').textContent;
                     } else {
                         alert('Please select at least one line first!');
                     }
