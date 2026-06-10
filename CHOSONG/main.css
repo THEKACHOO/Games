@@ -2,9 +2,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", "Outfit", sans-serif;
+}
 
+body {
+    font-family: "Poppins", "Outfit", sans-serif;
+    background: var(--background-color);
+    color: var(--background-text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+:root {
     --background-color: #FFFFFF;
     --background-text-color: #000000;
     --surface-bg: #FFFFFF;
@@ -13,11 +25,10 @@
     --surface-text-color: #000000;
     --primary-color: #000000;
     --primary-text-color: #FFFFFF;
-    
     --cubic-ease-out: cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-.dark-mode, .dark-mode * {
+.dark-mode {
     --background-color: #000000;
     --background-text-color: #FFFFFF;
     --surface-bg: #000000;
@@ -41,33 +52,21 @@
     display: none !important;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    margin: 0;
-    background: var(--background-color);
-    color: var(--background-text-color);
-}
-
 main {
-    flex: 0 1 auto;
+    flex: 1;
 }
 
-/* ========== HEADER BARU ========== */
+/* ========== HEADER - IKUT SCROLL (BUKAN FIXED) ========== */
 .main-header {
-    position: sticky;
-    top: 0;
     background: var(--surface-bg);
-    z-index: 1000;
     border-bottom: 1px solid var(--surface-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.8rem 1rem;
+    padding: 16px 24px;
 }
 
-/* KIRI: LOGO - DIPERKECIL */
+/* LOGO KIRI - UKURAN NORMAL */
 .header-logo {
     flex: 1;
     display: flex;
@@ -75,24 +74,25 @@ main {
 }
 
 .header-logo img {
-    height: 12px;
+    height: 32px;
     width: auto;
     animation: logoPulse 2s ease-in-out infinite;
     transition: transform 0.2s ease;
+    display: block;
 }
 
 .header-logo img:hover {
     transform: scale(1.05);
 }
 
-/* TENGAH: CHOSONG by The Kachoo */
+/* TENGAH */
 .header-center {
     flex: 1;
     text-align: center;
 }
 
 .chosong-brand {
-    font-size: 1rem;
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -100,28 +100,26 @@ main {
 }
 
 .generator-by {
-    font-size: 0.65rem;
+    font-size: 11px;
     opacity: 0.6;
     letter-spacing: 1px;
     color: var(--surface-text-color);
 }
 
-/* KANAN: TOMBOL DARK MODE */
+/* KANAN - DARK MODE */
 .header-right {
     flex: 1;
     display: flex;
     justify-content: flex-end;
 }
 
-#dark-mode-toggle {
-    position: relative !important;
-    top: auto !important;
-    right: auto !important;
+#dark-mode-toggle,
+[id^="dark-mode-toggle"] {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 40px !important;
-    height: 40px !important;
+    width: 44px !important;
+    height: 44px !important;
     padding: 0 !important;
     background: var(--surface-bg) !important;
     border-radius: 60px !important;
@@ -130,48 +128,42 @@ main {
     transition: all 0.2s var(--cubic-ease-out) !important;
 }
 
-#dark-mode-toggle:hover {
+#dark-mode-toggle:hover,
+[id^="dark-mode-toggle"]:hover {
     transform: scale(1.05) !important;
     background: var(--surface-hover) !important;
 }
 
-#dark-mode-toggle .material-symbols-outlined {
-    font-size: 22px !important;
+#dark-mode-toggle .material-symbols-outlined,
+[id^="dark-mode-toggle"] .material-symbols-outlined {
+    font-size: 24px !important;
     color: var(--background-text-color) !important;
 }
 
-#dark-mode-toggle .toggle-text {
+#dark-mode-toggle .toggle-text,
+[id^="dark-mode-toggle"] .toggle-text {
     display: none !important;
 }
 
-/* Animasi logo */
 @keyframes logoPulse {
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.05); opacity: 0.95; }
 }
 
-/* ========== TITLE & FORM ========== */
+/* ========== TITLE ========== */
 .main-title {
     text-align: center;
-    margin: 1rem 0 1rem 0;
-    animation: titleFloat 2s ease-in-out infinite;
+    margin: 48px 0 32px 0;
 }
 
 .main-title h1 {
-    margin: 0;
-    padding: 0;
-    font-size: 2rem;
+    font-size: 32px;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--background-text-color);
 }
 
-@keyframes titleFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
-}
-
-/* FORM - RAPIKAN MARGIN */
+/* ========== FORM ========== */
 .search-form .screen-wrapper {
     max-width: 500px;
     margin: 0 auto;
@@ -181,17 +173,17 @@ main {
 .search-form form {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 16px;
 }
 
 .search-form input {
     background: var(--surface-bg);
-    border: 1px solid var(--surface-border);
-    padding: 12px 20px;
+    border: 1px solid var(--surface-border) !important;
+    padding: 14px 20px;
     border-radius: 60px;
     width: 100%;
     color: var(--background-text-color);
-    font-size: 1rem;
+    font-size: 16px;
 }
 
 .search-form input::placeholder {
@@ -203,10 +195,10 @@ main {
     color: var(--primary-text-color);
     border: none;
     border-radius: 60px;
-    padding: 12px 24px;
+    padding: 14px 24px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 16px;
     transition: transform 0.2s var(--cubic-ease-out);
 }
 
@@ -214,12 +206,9 @@ main {
     transform: translateY(-2px);
 }
 
-/* ========== HAPUS KOTAK PUTIH ========== */
+/* ========== HAPUS BACKGROUND KOTAK PUTIH ========== */
 .lyrics-image-screen {
     background: transparent !important;
-    width: 100%;
-    padding: 0;
-    margin: 0;
 }
 
 .screen-wrapper {
@@ -228,43 +217,42 @@ main {
     border: none !important;
 }
 
-/* ========== FOOTER - DEKETIN BANGET ========== */
+/* ========== FOOTER - DEKET DARI ISI ========== */
 footer {
     text-align: center;
-    padding: 0.8rem 1.5rem 0.6rem;
+    padding: 32px 24px 24px;
     background: var(--surface-bg);
     border-top: 1px solid var(--surface-border);
     margin-top: 0;
-    border-radius: 20px 20px 0 0;
 }
 
 .footer-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 32px;
     max-width: 1000px;
-    margin: 0 auto 0.3rem auto;
+    margin: 0 auto 24px auto;
     text-align: left;
 }
 
 .footer-col {
     flex: 1;
-    min-width: 140px;
+    min-width: 180px;
 }
 
 .footer-col strong {
-    font-weight: 800;
+    font-weight: 700;
     display: block;
-    margin-bottom: 6px;
-    font-size: 0.9rem;
+    margin-bottom: 12px;
+    font-size: 16px;
     color: var(--background-text-color);
 }
 
 .footer-col p {
     margin: 0;
-    line-height: 1.3;
-    font-size: 0.8rem;
+    line-height: 1.5;
+    font-size: 14px;
     color: var(--surface-text-color);
 }
 
@@ -278,91 +266,64 @@ footer {
 }
 
 .roleplay-text {
-    font-size: 0.6rem;
-    opacity: 0.6;
+    font-size: 12px;
+    opacity: 0.5;
     border-top: 1px solid var(--surface-border);
-    padding-top: 0.4rem;
-    margin-top: 0.2rem;
+    padding-top: 20px;
+    margin-top: 0;
     color: var(--surface-text-color);
 }
 
 /* ========== RESPONSIVE MOBILE ========== */
 @media (max-width: 768px) {
-    body {
-        margin: 0;
-        padding: 0;
-    }
-    
     .main-header {
-        padding: 0.6rem 1rem;
-    }
-    
-    .footer-grid {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.8rem;
-    }
-    
-    .footer-col {
-        min-width: 110px;
-        flex: 0 1 auto;
-        text-align: center;
-    }
-    
-    footer {
-        padding: 0.6rem 0.8rem 0.4rem;
-        margin-top: 0;
-    }
-    
-    .main-title {
-        margin: 0.8rem 0 0.8rem 0;
-    }
-    
-    .main-title h1 {
-        font-size: 1.5rem;
-    }
-    
-    .chosong-brand {
-        font-size: 0.8rem;
-    }
-    
-    .generator-by {
-        font-size: 0.5rem;
+        padding: 12px 16px;
     }
     
     .header-logo img {
-        height: 10px;
+        height: 28px;
     }
     
-    #dark-mode-toggle {
-        width: 36px !important;
-        height: 36px !important;
+    .chosong-brand {
+        font-size: 16px;
+    }
+    
+    .generator-by {
+        font-size: 9px;
+    }
+    
+    .main-title {
+        margin: 32px 0 24px 0;
+    }
+    
+    .main-title h1 {
+        font-size: 24px;
     }
     
     .search-form .screen-wrapper {
         padding: 0 20px;
     }
     
-    .search-form form {
-        gap: 0.6rem;
+    .footer-grid {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
     }
     
-    .search-form input,
-    .search-form .primary {
-        padding: 10px 20px;
+    .footer-col {
+        min-width: auto;
+        text-align: center;
+    }
+    
+    footer {
+        padding: 24px 20px 20px;
     }
 }
 
-/* ========== RESPONSIVE DESKTOP ========== */
+/* Desktop */
 @media (min-width: 769px) {
-    body {
-        margin: 0;
-        padding: 0;
-    }
-    
     .main-header {
-        padding: 0.8rem 2rem;
+        padding: 16px 32px;
     }
     
     .search-form .screen-wrapper {
@@ -370,18 +331,8 @@ footer {
     }
     
     footer {
-        padding: 0.8rem 2rem 0.6rem;
+        padding: 32px 32px 24px;
     }
-}
-
-/* ========== SEMBUNYIKAN ELEMEN GA PERLU ========== */
-.input-tabs, .tab-content, .searching, .error {
-    /* biarkan sesuai fungsi JS nanti */
-}
-
-/* background polos */
-body {
-    background: var(--background-color);
 }
 
 .material-symbols-outlined {
