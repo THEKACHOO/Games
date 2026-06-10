@@ -5,39 +5,35 @@
     box-sizing: border-box;
     font-family: "Poppins", "Outfit", sans-serif;
 
-    * {
-    /* LIGHT MODE (default) */
-    --background-color: rgba(245, 245, 250, 1);
-    --background-text-color: rgba(0, 0, 0, 0.9);
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.8);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    --surface-light-color: rgba(0, 0, 0, 0.03);
-    --surface-color: rgba(0, 0, 0, 0.06);
-    --surface-text-color: rgba(0, 0, 0, 0.7);
-    --primary-color: rgba(0, 0, 0, 0.9);
-    --primary-text-color: rgba(255, 255, 255, 1);
-    --error-color: rgba(240, 40, 30, 0.15);
-    --error-text-color: rgba(240, 40, 30, 1);
-    --blur-amount: blur(12px);
+    /* LIGHT MODE (default) - TANPA GLASS */
+    --background-color: #f5f5fa;
+    --background-text-color: #1a1a2e;
+    --surface-bg: #ffffff;
+    --surface-border: #e2e8f0;
+    --surface-hover: #f1f5f9;
+    --surface-text-color: #475569;
+    --primary-color: #1a1a2e;
+    --primary-text-color: #ffffff;
+    --error-color: #fee2e2;
+    --error-text-color: #dc2626;
     
     --cubic-ease-out: cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-/* DARK MODE - override variables */
+/* DARK MODE - TANPA GLASS */
 .dark-mode, .dark-mode * {
-    --background-color: rgba(10, 10, 15, 1);
-    --background-text-color: rgba(255, 255, 255, 0.95);
-    --glass-bg: rgba(20, 20, 30, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --surface-light-color: rgba(255, 255, 255, 0.03);
-    --surface-color: rgba(255, 255, 255, 0.08);
-    --surface-text-color: rgba(255, 255, 255, 0.65);
-    --primary-color: rgba(255, 255, 255, 0.95);
-    --primary-text-color: rgba(0, 0, 0, 0.9);
+    --background-color: #1a1a2e;
+    --background-text-color: #e2e8f0;
+    --surface-bg: #2d2d44;
+    --surface-border: #3d3d5c;
+    --surface-hover: #3d3d5c;
+    --surface-text-color: #a0aec0;
+    --primary-color: #e2e8f0;
+    --primary-text-color: #1a1a2e;
+    --error-color: #3d1a1a;
+    --error-text-color: #f87171;
 }
-    
+
 [contenteditable] {
     outline: none;
 }
@@ -65,15 +61,13 @@ h1, h2 {
     letter-spacing: -0.3px;
 }
 
-/* GLASS SURFACE */
+/* SURFACE - SOLID, TANPA GLASS */
 .surface {
-    background: var(--glass-bg);
-    backdrop-filter: var(--blur-amount);
-    -webkit-backdrop-filter: var(--blur-amount);
+    background: var(--surface-bg);
     color: var(--surface-text-color);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    border: 1px solid var(--surface-border);
     border-radius: 20px;
+    transition: all 0.2s var(--cubic-ease-out);
 }
 
 .primary {
@@ -81,16 +75,19 @@ h1, h2 {
     color: var(--primary-text-color);
     border: none;
     border-radius: 40px;
-    transition: transform 0.15s ease, opacity 0.2s;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.2s var(--cubic-ease-out);
 }
 
 .primary:hover {
-    transform: scale(1.02);
+    transform: translateY(-2px);
     opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .primary:active {
-    transform: scale(0.98);
+    transform: translateY(0);
 }
 
 a {
@@ -98,7 +95,7 @@ a {
     font-weight: 600;
     color: inherit;
     border-bottom: 1.5px solid currentColor;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s ease;
 }
 
 a:hover {
@@ -112,18 +109,17 @@ main {
     align-items: flex-start;
 }
 
-/* ========== HEADER GLASSMORPHISM ========== */
+/* ========== HEADER - TANPA GLASS ========== */
 header {
     position: sticky;
     top: 0;
-    background: var(--glass-bg);
-    backdrop-filter: var(--blur-amount);
-    -webkit-backdrop-filter: var(--blur-amount);
+    background: var(--surface-bg);
     z-index: 1000;
     text-align: center;
     padding: 1rem 0;
-    border-bottom: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    border-bottom: 1px solid var(--surface-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 }
 
 .header-top {
@@ -144,11 +140,11 @@ header {
     height: 55px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease;
 }
 
-.dark-mode .header-logo img {
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.2));
+.header-logo img:hover {
+    transform: scale(1.05);
 }
 
 .chosong-title {
@@ -168,23 +164,20 @@ header {
     margin-bottom: 4px;
 }
 
-/* Tombol navigasi glass */
+/* Tombol navigasi */
 header > .go-to-screen, #download, #last-go-back {
     position: absolute;
     top: calc(50% + 0.2rem);
     left: -0.5rem;
     transform: translate(-100%, -50%);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--surface-border);
     border-radius: 40px;
     padding: 0.6rem 1.2rem;
-    background: var(--glass-bg);
-    backdrop-filter: var(--blur-amount);
-    -webkit-backdrop-filter: var(--blur-amount);
+    background: var(--surface-bg);
     color: var(--background-text-color);
     font-weight: 600;
     font-size: 0.85rem;
-    transition: 200ms var(--cubic-ease-out);
-    box-shadow: var(--glass-shadow);
+    transition: all 0.2s var(--cubic-ease-out);
     cursor: pointer;
 }
 
@@ -196,7 +189,7 @@ header > .go-to-screen.right, #download {
 
 header > .go-to-screen:hover, #download:hover, #last-go-back:hover {
     cursor: pointer;
-    background: var(--surface-color);
+    background: var(--surface-hover);
     transform: translate(-100%, -50%) scale(1.05);
 }
 
@@ -204,7 +197,7 @@ header > .go-to-screen.right:hover {
     transform: translate(100%, -50%) scale(1.05);
 }
 
-/* TOMBOL DARK/LIGHT GLASS */
+/* TOMBOL DARK/LIGHT - TANPA GLASS */
 #dark-mode-toggle {
     position: fixed !important;
     top: 20px !important;
@@ -216,46 +209,42 @@ header > .go-to-screen.right:hover {
     align-items: center !important;
     gap: 8px !important;
     padding: 10px 20px !important;
-    background: var(--glass-bg) !important;
-    backdrop-filter: var(--blur-amount) !important;
-    -webkit-backdrop-filter: var(--blur-amount) !important;
-    border-radius: 60px !important;
+    background: var(--surface-bg) !important;
+    border-radius: 40px !important;
     font-weight: 700 !important;
     font-size: 0.85rem !important;
     cursor: pointer !important;
     z-index: 9999 !important;
-    box-shadow: var(--glass-shadow) !important;
-    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
-    border: 1px solid var(--glass-border) !important;
-    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.2s var(--cubic-ease-out) !important;
+    border: 1px solid var(--surface-border) !important;
     color: var(--background-text-color) !important;
 }
 
 #dark-mode-toggle:hover {
-    transform: scale(1.05) !important;
-    background: var(--surface-color) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+    background: var(--surface-hover) !important;
 }
 
-/* Tampilkan icon */
 #dark-mode-toggle span {
     display: inline-block !important;
     font-size: 1.2rem;
 }
 
-/* Sembunyikan pseudo-element */
 #dark-mode-toggle::before {
     content: none;
 }
 
-/* ========== FOOTER GLASS ========== */
+/* ========== FOOTER - ROUNDED TAPI GA TERLALU ========== */
 footer {
     text-align: center;
     padding: 2rem 1.5rem 1.5rem;
-    background: var(--glass-bg);
-    backdrop-filter: var(--blur-amount);
-    -webkit-backdrop-filter: var(--blur-amount);
-    border-top: 1px solid var(--glass-border);
+    background: var(--surface-bg);
+    border-top: 1px solid var(--surface-border);
     margin-top: 2rem;
+    border-radius: 24px 24px 0 0;
+    transition: all 0.3s ease;
 }
 
 .footer-grid {
@@ -294,6 +283,7 @@ footer {
     text-decoration: none;
     border-bottom: 1px dotted currentColor;
     font-weight: 500;
+    transition: opacity 0.2s ease;
 }
 
 .footer-col a:hover {
@@ -304,28 +294,85 @@ footer {
     text-align: center;
     font-size: 0.7rem;
     opacity: 0.6;
-    border-top: 1px solid var(--glass-border);
+    border-top: 1px solid var(--surface-border);
     padding-top: 1.2rem;
     margin-top: 0.5rem;
     letter-spacing: 0.5px;
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== FORM INPUT ROUNDED ========== */
+input, textarea, select {
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
+    padding: 12px 16px;
+    color: var(--background-text-color);
+    border-radius: 60px;
+    transition: all 0.2s var(--cubic-ease-out);
+    font-size: 0.9rem;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.1);
+    transform: translateY(-1px);
+}
+
+button:not(#dark-mode-toggle):not(.fab) {
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
+    padding: 12px 24px;
+    color: var(--background-text-color);
+    border-radius: 60px;
+    transition: all 0.2s var(--cubic-ease-out);
+    cursor: pointer;
+}
+
+button:not(#dark-mode-toggle):not(.fab):hover {
+    background: var(--surface-hover);
+    transform: translateY(-1px);
+}
+
+/* ========== RESPONSIVE MOBILE ========== */
 @media (max-width: 768px) {
     .footer-grid {
-        flex-direction: column;
-        gap: 1.5rem;
-        text-align: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+        text-align: left;
     }
     
     .footer-col {
-        text-align: center;
+        flex: 1;
+        min-width: 140px;
+        text-align: left;
+    }
+    
+    .footer-col strong {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+    }
+    
+    .footer-col p {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+    
+    footer {
+        padding: 1rem 1rem 0.8rem;
+        border-radius: 20px 20px 0 0;
+    }
+    
+    .roleplay-text {
+        font-size: 0.6rem;
+        padding-top: 0.8rem;
+        margin-top: 0.3rem;
     }
     
     #dark-mode-toggle {
         top: 12px !important;
         right: 12px !important;
-        padding: 8px 18px !important;
+        padding: 8px 16px !important;
         font-size: 0.75rem !important;
     }
     
@@ -354,6 +401,27 @@ footer {
 }
 
 @media (max-width: 480px) {
+    .footer-grid {
+        gap: 0.8rem;
+    }
+    
+    .footer-col {
+        min-width: 120px;
+    }
+    
+    .footer-col strong {
+        font-size: 0.8rem;
+    }
+    
+    .footer-col p {
+        font-size: 0.7rem;
+    }
+    
+    footer {
+        padding: 0.8rem 0.8rem 0.6rem;
+        border-radius: 16px 16px 0 0;
+    }
+    
     .header-logo img {
         height: 38px;
     }
@@ -364,14 +432,19 @@ footer {
     }
     
     #dark-mode-toggle {
-        padding: 6px 14px !important;
+        padding: 6px 12px !important;
         font-size: 0.7rem !important;
         top: 10px !important;
         right: 10px !important;
     }
+    
+    input, textarea, select, button:not(#dark-mode-toggle):not(.fab) {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
 }
 
-/* Floating Action Button Glass */
+/* Floating Action Button */
 .fab {
     position: fixed;
     bottom: 2rem;
@@ -381,19 +454,19 @@ footer {
     border-radius: 60px;
     background: var(--primary-color);
     color: var(--primary-text-color);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all 250ms var(--cubic-ease-out);
+    transition: all 0.2s var(--cubic-ease-out);
     z-index: 100;
-    backdrop-filter: var(--blur-amount);
 }
 
 .fab:hover {
     transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .fab.hidden {
@@ -411,44 +484,45 @@ title {
     display: none;
 }
 
-/* Input & Button Glass Style */
-input, textarea, select, button:not(#dark-mode-toggle):not(.fab) {
-    background: var(--glass-bg);
-    backdrop-filter: var(--blur-amount);
-    border: 1px solid var(--glass-border);
-    padding: 0.7rem 1rem;
-    color: var(--background-text-color);
-    border-radius: 60px;
-    transition: 0.2s;
-}
-
-input:focus, textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
-}
-
 hr {
     border: none;
     height: 1px;
-    background: var(--glass-border);
+    background: var(--surface-border);
     margin: 1rem 0;
 }
 
 .btn-neu {
     display: inline-block;
-    background: var(--glass-bg);
-    backdrop-filter: var(--blur-amount);
-    border: 1px solid var(--glass-border);
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
     padding: 0.6rem 1.5rem;
     font-weight: 600;
     color: var(--background-text-color);
     border-radius: 60px;
-    transition: 0.2s;
+    transition: all 0.2s var(--cubic-ease-out);
     cursor: pointer;
 }
 
 .btn-neu:hover {
-    transform: scale(1.02);
-    background: var(--surface-color);
+    transform: translateY(-2px);
+    background: var(--surface-hover);
+}
+
+/* Card/Song selection motion */
+.song-selection > div:not(.cloneable),
+.lines-selection > div:not(.cloneable) {
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s var(--cubic-ease-out);
+    cursor: pointer;
+}
+
+.song-selection > div:not(.cloneable):hover,
+.lines-selection > div:not(.cloneable):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
 }
