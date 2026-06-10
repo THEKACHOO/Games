@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CHOSONG - What's Your Mood Today</title>
+    <title>CHOSONG - Lyrics Image Generator with Spotify</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -306,17 +306,18 @@
             font-weight: 400;
         }
         
-        .kachoo-logo {
+        .spotify-tag {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-top: 16px;
             font-size: 0.85rem;
             font-weight: 500;
-            color: #1a1a1a;
+            color: #1DB954;
+            font-family: monospace;
         }
         
-        .kachoo-logo svg {
+        .spotify-tag svg {
             width: 28px;
             height: 28px;
         }
@@ -478,13 +479,22 @@
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
                 <header>
-                    <h1>CHOSONG!</h1>
+                    <h1>CHOSONG! with Spotify</h1>
                 </header>
-                <div class="input-tabs" style="display: none;"></div>
+                <div class="input-tabs">
+                    <button class="tab-button active" data-tab="search">Cari Lagu</button>
+                    <button class="tab-button" data-tab="link">Paste Spotify Link</button>
+                </div>
                 <div class="tab-content active" id="search-tab">
                     <form id="search-form">
                         <input class="surface" type="text" id="song-name" placeholder="Cari lagu apa saja... contoh: Halu, Rungkad, Blinding Lights">
                         <button class="primary" id="search" type="submit">Cari Lagu</button>
+                    </form>
+                </div>
+                <div class="tab-content" id="link-tab">
+                    <form id="link-form">
+                        <input class="surface" type="text" id="spotify-link" placeholder="https://open.spotify.com/track/...">
+                        <button class="primary" id="load-link" type="submit">Load from Spotify!</button>
                     </form>
                 </div>
                 <div id="search-status" class="hidden"></div>
@@ -537,19 +547,17 @@
                         </div>
                     </div>
                     <div class="lyrics" id="preview-lyrics" contenteditable="true"></div>
-                    <div class="kachoo-logo" id="kachoo-tag-img">
-                        <svg viewBox="0 0 100 100" fill="currentColor">
-                            <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2" fill="none"/>
-                            <path d="M35 35 L65 35 L65 65 L35 65 Z" fill="currentColor" opacity="0.8"/>
-                            <path d="M50 30 L70 50 L50 70 L30 50 Z" fill="#ffffff"/>
+                    <div class="spotify-tag" id="spotify-tag-img" style="display: none;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#1DB954">
+                            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.479-1.021.24-2.82-1.74-6.36-2.1-10.56-1.14-.42.12-.78-.18-.9-.6-.12-.42.18-.78.6-.9 4.56-1.02 8.4-.6 11.52 1.32.36.18.48.66.24 1.02zm1.44-3.3c-.3.42-.78.6-1.2.3-3.24-1.98-8.16-2.52-11.94-1.38-.48.12-.96-.18-1.08-.66-.12-.48.18-.96.66-1.08 4.26-1.26 9.54-.66 13.2 1.56.42.24.6.78.36 1.26zm.12-3.36c-3.9-2.28-10.02-2.52-13.62-1.38-.54.18-1.08-.12-1.26-.66-.18-.54.12-1.08.66-1.26 4.14-1.32 10.92-1.02 15.36 1.62.48.3.66.9.36 1.38-.3.42-.9.6-1.5.3z"/>
                         </svg>
-                        <span>The Kachoo</span>
+                        <span>Spotify</span>
                     </div>
                 </div>
                 <div class="color-selection">
                     <div id="custom-color">
                         <input type="color" id="custom-color-input" value="#ff6b6b">
-                        <label>🎨 Pilih warna teks (bebas!)</label>
+                        <label>Pilih warna teks (bebas!)</label>
                     </div>
                 </div>
                 <div class="switch-container" id="light-text">
@@ -560,9 +568,9 @@
                     <div class="switch"></div>
                     <div>Background solid</div>
                 </div>
-                <div class="switch-container" id="kachoo-tag">
+                <div class="switch-container" id="spotify-tag">
                     <div class="switch"></div>
-                    <div>Tampilkan logo The Kachoo</div>
+                    <div>Spotify tag</div>
                 </div>
                 <div class="width-control">
                     <label for="width-slider">Lebar gambar (px)</label>
@@ -584,28 +592,136 @@
         </section>
     </main>
     <footer class="surface">
-        <div>2026 — CHOSONG, Made by The Kachoo</div>
+        <div>CHOSONG — Lyrics Image Generator | Made with Spotify</div>
         <div>What's Your Mood Today?</div>
     </footer>
 
     <script>
-        // iTunes API + Lyrics.ovh
+        // ========== SPOTIFY INTEGRATION ==========
+        // Langkah menghubungkan ke Spotify API:
+        // 1. Daftar di https://developer.spotify.com/dashboard
+        // 2. Buat aplikasi baru, dapatkan Client ID
+        // 3. Ganti CLIENT_ID di bawah dengan Client ID Anda
+        // 4. Pada aplikasi Spotify, tambahkan http://localhost/callback ke Redirect URIs untuk testing lokal
+        // 5. Untuk production, deploy ke HTTPS dan update Redirect URI
+        
+        const CLIENT_ID = '8c5c96c528c449fab9a7b9d71d2d8798'; // GANTI DENGAN CLIENT ID ANDA!
+        const REDIRECT_URI = window.location.origin + '/callback.html'; // Sesuaikan dengan URL Anda
+        
         let currentSongData = null;
         let selectedLines = [];
         let allLyricsArray = [];
-
-        async function searchSongs(query) {
-            const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=20&media=music`);
+        let spotifyAccessToken = null;
+        
+        // Helper: Get Spotify Access Token (PKCE flow simplified)
+        async function getSpotifyToken() {
+            // Cek apakah ada token di localStorage
+            const token = localStorage.getItem('spotify_token');
+            const expiry = localStorage.getItem('spotify_token_expiry');
+            if(token && expiry && Date.now() < parseInt(expiry)) {
+                return token;
+            }
+            
+            // Redirect ke auth jika tidak ada
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            if(code) {
+                // Tukar code dengan token
+                const verifier = localStorage.getItem('code_verifier');
+                const response = await fetch('https://accounts.spotify.com/api/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        client_id: CLIENT_ID,
+                        grant_type: 'authorization_code',
+                        code: code,
+                        redirect_uri: REDIRECT_URI,
+                        code_verifier: verifier || ''
+                    })
+                });
+                const data = await response.json();
+                if(data.access_token) {
+                    localStorage.setItem('spotify_token', data.access_token);
+                    localStorage.setItem('spotify_token_expiry', Date.now() + (data.expires_in * 1000));
+                    window.history.pushState({}, document.title, window.location.pathname);
+                    return data.access_token;
+                }
+            } else {
+                // Generate code verifier & challenge
+                const generateRandomString = (length) => {
+                    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                    const values = crypto.getRandomValues(new Uint8Array(length));
+                    return Array.from(values).map(x => possible[x % possible.length]).join('');
+                };
+                const codeVerifier = generateRandomString(64);
+                localStorage.setItem('code_verifier', codeVerifier);
+                
+                const sha256 = async (plain) => {
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(plain);
+                    const hash = await crypto.subtle.digest('SHA-256', data);
+                    return btoa(String.fromCharCode(...new Uint8Array(hash)))
+                        .replace(/=/g, '')
+                        .replace(/\+/g, '-')
+                        .replace(/\//g, '_');
+                };
+                const codeChallenge = await sha256(codeVerifier);
+                
+                const authUrl = 'https://accounts.spotify.com/authorize?' + new URLSearchParams({
+                    client_id: CLIENT_ID,
+                    response_type: 'code',
+                    redirect_uri: REDIRECT_URI,
+                    code_challenge_method: 'S256',
+                    code_challenge: codeChallenge,
+                    scope: 'user-read-private'
+                });
+                window.location.href = authUrl;
+            }
+            return null;
+        }
+        
+        // Search tracks via Spotify API
+        async function searchSpotifyTracks(query) {
+            if(!CLIENT_ID || CLIENT_ID === '8c5c96c528c449fab9a7b9d71d2d8798') {
+                throw new Error('Spotify Client ID not configured. Please follow the setup guide in code comments.');
+            }
+            let token = await getSpotifyToken();
+            if(!token) return [];
+            
+            const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=20`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(!response.ok) throw new Error('Spotify API error');
             const data = await response.json();
-            if (!data.results || data.results.length === 0) return [];
-            return data.results.map(track => ({
-                name: track.trackName,
-                artist: track.artistName,
-                cover: track.artworkUrl100?.replace('100x100', '600x600') || '',
-                id: track.trackId
+            if(!data.tracks || !data.tracks.items) return [];
+            
+            return data.tracks.items.map(track => ({
+                name: track.name,
+                artist: track.artists.map(a => a.name).join(', '),
+                cover: track.album.images[0]?.url || 'https://placehold.co/600x600?text=No+Cover',
+                spotifyId: track.id,
+                album: track.album.name
             }));
         }
-
+        
+        // Fetch track by ID (for link paste)
+        async function getSpotifyTrackById(trackId) {
+            let token = await getSpotifyToken();
+            if(!token) return null;
+            const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(!response.ok) return null;
+            const track = await response.json();
+            return {
+                name: track.name,
+                artist: track.artists.map(a => a.name).join(', '),
+                cover: track.album.images[0]?.url || 'https://placehold.co/600x600?text=No+Cover',
+                spotifyId: track.id,
+                album: track.album.name
+            };
+        }
+        
         async function fetchLyrics(artist, title) {
             try {
                 const cleanArtist = artist.split(' feat')[0].split(' &')[0].trim();
@@ -618,11 +734,11 @@
             } catch(e) { console.warn('Lyrics fetch error'); }
             return null;
         }
-
+        
         function getFallbackLyrics(songName, artist) {
             return `✨ ${songName} - ${artist} ✨\n\nKetik atau tempel lirik di sini.\n\n🎵 What's Your Mood Today? 🎵`;
         }
-
+        
         const screens = {
             1: document.querySelector('.search-form'),
             2: document.querySelector('.search-results'),
@@ -634,25 +750,37 @@
             Object.values(screens).forEach(s => s?.classList.add('hidden'));
             if(screens[num]) screens[num].classList.remove('hidden');
         }
-
-        document.getElementById('search-form').addEventListener('submit', async (e) => {
+        
+        // Tab switching
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                document.getElementById('search-tab').classList.toggle('active', tabId === 'search');
+                document.getElementById('link-tab').classList.toggle('active', tabId === 'link');
+            });
+        });
+        
+        // Handle form search
+        document.getElementById('search-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const query = document.getElementById('song-name').value.trim();
             if(!query) return;
             
             const statusDiv = document.getElementById('search-status');
             statusDiv.className = 'searching';
-            statusDiv.innerHTML = '<span class="loading-spinner"></span> Mencari lagu...';
+            statusDiv.innerHTML = '<span class="loading-spinner"></span> Mencari lagu di Spotify...';
             statusDiv.classList.remove('hidden');
             
             try {
-                const results = await searchSongs(query);
+                const results = await searchSpotifyTracks(query);
                 statusDiv.classList.add('hidden');
                 const container = document.getElementById('song-selection-list');
                 container.innerHTML = '';
                 
                 if(results.length === 0) {
-                    container.innerHTML = '<div class="error">❌ Tidak ditemukan. Coba kata kunci lain.</div>';
+                    container.innerHTML = '<div class="error">❌ Tidak ditemukan di Spotify. Coba kata kunci lain.</div>';
                     showScreen(2);
                     return;
                 }
@@ -695,11 +823,62 @@
                 showScreen(2);
             } catch(err) {
                 statusDiv.className = 'error';
-                statusDiv.innerHTML = `⚠️ Error: ${err.message}`;
+                statusDiv.innerHTML = `⚠️ Error Spotify: ${err.message}<br>Pastikan Anda sudah mengatur CLIENT_ID Spotify di kode.`;
                 console.error(err);
             }
         });
-
+        
+        // Handle Spotify link paste
+        document.getElementById('link-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const link = document.getElementById('spotify-link').value.trim();
+            const trackIdMatch = link.match(/track\/([a-zA-Z0-9]+)/);
+            if(!trackIdMatch) {
+                alert('Link Spotify tidak valid. Pastikan URL track Spotify.');
+                return;
+            }
+            const trackId = trackIdMatch[1];
+            const statusDiv = document.getElementById('search-status');
+            statusDiv.className = 'searching';
+            statusDiv.innerHTML = '<span class="loading-spinner"></span> Memuat dari Spotify...';
+            statusDiv.classList.remove('hidden');
+            
+            try {
+                const song = await getSpotifyTrackById(trackId);
+                if(!song) throw new Error('Tidak dapat mengambil data track');
+                statusDiv.classList.add('hidden');
+                currentSongData = song;
+                
+                // Langsung ke screen 3
+                const lyricsLoading = document.getElementById('lyrics-loading');
+                const linesContainer = document.getElementById('lines-container');
+                lyricsLoading.classList.remove('hidden');
+                linesContainer.innerHTML = '';
+                showScreen(3);
+                
+                document.getElementById('song-info-mini').querySelector('img').src = song.cover || 'https://placehold.co/200x200?text=No+Cover';
+                document.querySelector('.song-info-name').innerText = song.name;
+                document.querySelector('.song-info-artist').innerText = song.artist;
+                
+                let lyricsText = await fetchLyrics(song.artist, song.name);
+                if(!lyricsText) lyricsText = getFallbackLyrics(song.name, song.artist);
+                
+                allLyricsArray = lyricsText.split('\n').filter(l => l.trim().length > 0);
+                linesContainer.innerHTML = '';
+                allLyricsArray.forEach((line, idx) => {
+                    const lineDiv = document.createElement('div');
+                    lineDiv.className = 'line-item';
+                    lineDiv.innerText = line;
+                    lineDiv.addEventListener('click', () => { lineDiv.classList.toggle('selected'); });
+                    linesContainer.appendChild(lineDiv);
+                });
+                lyricsLoading.classList.add('hidden');
+            } catch(err) {
+                statusDiv.className = 'error';
+                statusDiv.innerHTML = `❌ Gagal load dari Spotify: ${err.message}`;
+            }
+        });
+        
         function escapeHtml(str) { 
             return str.replace(/[&<>]/g, function(m) { 
                 if(m === '&') return '&amp;'; 
@@ -708,7 +887,7 @@
                 return m;
             }); 
         }
-
+        
         function goToFinal() {
             const selected = Array.from(document.querySelectorAll('.line-item.selected')).map(el => el.innerText);
             if(selected.length === 0) { alert("Pilih minimal satu baris lirik."); return; }
@@ -719,7 +898,7 @@
             document.getElementById('preview-lyrics').innerHTML = selectedLines.join('<br>');
             showScreen(4);
         }
-
+        
         document.querySelector('.go-to-screen[data-number="4"]')?.addEventListener('click', goToFinal);
         document.getElementById('lyrics-fab')?.addEventListener('click', goToFinal);
         document.querySelectorAll('.go-to-screen').forEach(btn => {
@@ -729,7 +908,7 @@
             });
         });
         document.getElementById('last-go-back')?.addEventListener('click', () => showScreen(3));
-
+        
         document.getElementById('download')?.addEventListener('click', () => {
             const previewDiv = document.getElementById('song-image-preview');
             const originalWidth = previewDiv.style.width;
@@ -744,19 +923,21 @@
             const lightTextSwitch = document.getElementById('light-text');
             if(lightTextSwitch.classList.contains('active')) {
                 previewDiv.style.color = '#1a1a1a';
+            } else {
+                previewDiv.style.color = '#ffffff';
             }
             
-            const kachooTag = document.getElementById('kachoo-tag');
-            const kachooElem = document.getElementById('kachoo-tag-img');
-            if(kachooTag.classList.contains('active')) kachooElem.classList.remove('hidden');
-            else kachooElem.classList.add('hidden');
+            const spotifyTagSwitch = document.getElementById('spotify-tag');
+            const spotifyElem = document.getElementById('spotify-tag-img');
+            if(spotifyTagSwitch.classList.contains('active')) spotifyElem.style.display = 'flex';
+            else spotifyElem.style.display = 'none';
             
             html2canvas(previewDiv, { scale: 2, backgroundColor: bgColor, useCORS: true, logging: false }).then(canvas => {
                 canvas.toBlob(blob => { saveAs(blob, `chosong_${currentSongData?.name || 'image'}.png`); });
                 previewDiv.style.width = originalWidth;
             }).catch(() => { alert("Gagal generate"); previewDiv.style.width = originalWidth; });
         });
-
+        
         const slider = document.getElementById('width-slider');
         const widthValSpan = document.getElementById('width-value');
         slider.addEventListener('input', () => {
@@ -764,7 +945,7 @@
             widthValSpan.innerText = val + 'px';
             document.getElementById('song-image-preview').style.width = val + 'px';
         });
-
+        
         function initSwitch(containerId, onToggle) {
             const cont = document.getElementById(containerId);
             if(!cont) return;
@@ -777,6 +958,7 @@
         initSwitch('light-text', (active) => {
             const preview = document.getElementById('song-image-preview');
             if(active) preview.style.color = '#1a1a1a';
+            else preview.style.color = '#ffffff';
         });
         
         initSwitch('additional-bg', (active) => {
@@ -785,21 +967,20 @@
             else preview.style.backgroundColor = '#f8f8f8';
         });
         
-        initSwitch('kachoo-tag', (active) => {
-            const tag = document.getElementById('kachoo-tag-img');
-            if(active) tag.classList.remove('hidden');
-            else tag.classList.add('hidden');
+        initSwitch('spotify-tag', (active) => {
+            const tag = document.getElementById('spotify-tag-img');
+            if(active) tag.style.display = 'flex';
+            else tag.style.display = 'none';
         });
         
         const colorPicker = document.getElementById('custom-color-input');
         colorPicker.addEventListener('input', (e) => {
-            const colorVal = e.target.value;
-            document.getElementById('song-image-preview').style.color = colorVal;
+            document.getElementById('song-image-preview').style.color = e.target.value;
         });
         
         // Inisialisasi default
-        document.getElementById('kachoo-tag').classList.add('active');
-        document.getElementById('kachoo-tag-img').classList.remove('hidden');
+        document.getElementById('spotify-tag').classList.add('active');
+        document.getElementById('spotify-tag-img').style.display = 'flex';
         document.getElementById('additional-bg').classList.remove('active');
         document.getElementById('light-text').classList.add('active');
         document.getElementById('song-image-preview').style.backgroundColor = '#f8f8f8';
@@ -807,5 +988,18 @@
         
         showScreen(1);
     </script>
+    <!-- LANGKAH MENGHUBUNGKAN KE SPOTIFY:
+    
+    1. Buka https://developer.spotify.com/dashboard dan login
+    2. Klik "Create App", isi nama "CHOSONG Lyrics Generator"
+    3. Pada bagian Redirect URIs, masukkan: http://localhost:5500/callback.html (untuk testing lokal)
+       Atau jika deploy, masukkan URL lengkap Anda, contoh: https://username.github.io/repo/callback.html
+    4. Simpan, lalu copy Client ID
+    5. Pada kode di atas, ganti 'YOUR_SPOTIFY_CLIENT_ID' dengan Client ID tersebut
+    6. Buat file kosong bernama 'callback.html' di folder yang sama (isi minimal: <script>window.close()</script>)
+    7. Jalankan aplikasi, fitur pencarian Spotify dan paste link akan berfungsi!
+    
+    CATATAN: Untuk production, aplikasi harus dijalankan di HTTPS (GitHub Pages, Vercel, dll)
+    -->
 </body>
 </html>
