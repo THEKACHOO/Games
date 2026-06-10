@@ -1,4 +1,4 @@
-/* main.css */
+/* main.css - FINAL VERSION */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
@@ -408,13 +408,6 @@ main {
     width: 100%;
 }
 
-.lines-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
 .line-item {
     padding: 16px;
     background: var(--surface-bg);
@@ -423,6 +416,7 @@ main {
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--background-text-color);
+    margin-bottom: 12px;
 }
 
 .line-item:hover {
@@ -727,8 +721,9 @@ footer {
         font-size: 16px;
     }
     
+    /* TEKS BACK & NEXT TETAP MUNCUL DI MOBILE */
     .line-nav-button .button-text {
-        display: none;
+        display: inline-block;
     }
     
     .line-title {
@@ -757,6 +752,7 @@ footer {
     .line-item {
         padding: 12px;
         font-size: 14px;
+        margin-bottom: 10px;
     }
     
     /* SCREEN 4 MOBILE */
@@ -773,7 +769,7 @@ footer {
         height: 36px;
     }
     
-    /* FOOTER MOBILE */
+    /* FOOTER MOBILE - TETAP 3 KOLOM */
     .footer-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
