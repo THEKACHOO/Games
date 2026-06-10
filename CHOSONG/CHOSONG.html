@@ -130,7 +130,7 @@
                     </div>
                     <div class="lyrics" contenteditable="true"></div>
                     <div class="spotify">
-                        <img src="" />
+                        <img src="spotify-logo.png" />
                     </div>
                 </div>
                 <div class="color-selection">
@@ -284,7 +284,7 @@
                         document.querySelector('.song-image > .header .name').textContent = songName;
                         document.querySelector('.song-image > .header .authors').textContent = artistName;
                         
-                        // SALIN FOTO ALBUM KE SCREEN 4 (YANG PENTING INI!)
+                        // SALIN FOTO ALBUM KE SCREEN 4
                         const screen4AlbumImg = document.querySelector('.song-image > .header .screen4-album-img');
                         if (screen4AlbumImg && albumCoverSrc) {
                             screen4AlbumImg.src = albumCoverSrc;
@@ -316,17 +316,29 @@
                 });
             }
 
-            // ========== LIGHT TEXT TOGGLE ==========
+            // ========== LIGHT TEXT TOGGLE (MENGUBAH WARNA TEKS JUDUL, ARTIS, LIRIK) ==========
             const lightTextToggle = document.getElementById('light-text');
             if (lightTextToggle) {
                 lightTextToggle.addEventListener('click', function() {
                     this.classList.toggle('active');
                     const songImage = document.querySelector('.song-image');
+                    const nameDiv = document.querySelector('.song-image .header .name');
+                    const authorsDiv = document.querySelector('.song-image .header .authors');
+                    const lyricsDiv = document.querySelector('.song-image .lyrics');
+                    
                     if (songImage) {
                         if (this.classList.contains('active')) {
+                            // Mode teks putih
                             songImage.style.color = '#ffffff';
+                            if (nameDiv) nameDiv.style.color = '#ffffff';
+                            if (authorsDiv) authorsDiv.style.color = '#ffffff';
+                            if (lyricsDiv) lyricsDiv.style.color = '#ffffff';
                         } else {
+                            // Mode teks hitam (default)
                             songImage.style.color = '';
+                            if (nameDiv) nameDiv.style.color = '';
+                            if (authorsDiv) authorsDiv.style.color = '';
+                            if (lyricsDiv) lyricsDiv.style.color = '';
                         }
                     }
                 });
@@ -340,15 +352,18 @@
                     const spotifyDiv = document.querySelector('.song-image .spotify');
                     if (spotifyDiv) {
                         if (this.classList.contains('active')) {
-                            spotifyDiv.style.display = 'block';
+                            spotifyDiv.style.display = 'flex';
                         } else {
                             spotifyDiv.style.display = 'none';
                         }
                     }
                 });
-                // Default: spotify logo hidden
+                // Default: spotify logo visible (aktif)
                 const spotifyDiv = document.querySelector('.song-image .spotify');
-                if (spotifyDiv) spotifyDiv.style.display = 'none';
+                if (spotifyDiv) {
+                    spotifyDiv.style.display = 'flex';
+                    spotifyToggle.classList.add('active');
+                }
             }
 
             // ========== ADDITIONAL BG TOGGLE ==========
@@ -381,15 +396,23 @@
                 });
             }
 
-            // ========== DOWNLOAD BUTTON ==========
+            // ========== DOWNLOAD BUTTON (DENGAN LATAR TRANSPARAN) ==========
             const downloadBtn = document.getElementById('download');
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', function() {
                     const element = document.querySelector('.song-image');
                     if (element) {
+                        // Simpan style asli
+                        const originalBgColor = element.style.backgroundColor;
+                        const originalBoxShadow = element.style.boxShadow;
+                        
+                        // Untuk download, kita tetap pakai background color yang dipilih
+                        // Tapi background card tetap warna pilihan, tidak transparan
                         html2canvas(element, {
                             scale: 2,
-                            backgroundColor: null
+                            backgroundColor: null,
+                            useCORS: true,
+                            allowTaint: false
                         }).then(canvas => {
                             canvas.toBlob(function(blob) {
                                 saveAs(blob, 'chosong-image.png');
@@ -403,8 +426,6 @@
             }
 
             // ========== SIMULASI PENGISIAN DATA DARI SCRIPT LAIN ==========
-            // Fungsi ini akan dipanggil oleh script eksternal (index.js, dll)
-            // Ketika song dipilih di screen 2, data akan tersimpan
             window.updateSongDataForScreen4 = function(albumCover, songName, artistName) {
                 currentSongData = {
                     albumCover: albumCover,
