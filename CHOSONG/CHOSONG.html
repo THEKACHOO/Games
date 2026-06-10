@@ -189,10 +189,11 @@
         </div>
     </footer>
     
-    <!-- TOMBOL DARK MODE DIPINDAH KE SINI (POJOK KANAN) -->
-    <div id="dark-mode-toggle">
-        <span class="material-symbols-outlined"></span>
-    </div>
+    <!-- TOMBOL DARK MODE -->
+<div id="dark-mode-toggle">
+    <span class="material-symbols-outlined">light_mode</span>
+    <span class="toggle-text">Light</span>
+</div>
     
     <script src="Artist.js"></script>
     <script src="Lyric.js"></script>
@@ -200,6 +201,35 @@
     <script src="DataFetcher.js"></script>
     <script src="DOMHandler.js"></script>
     <script src="index.js"></script>
+    <script>
+// Dark/Light Mode Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.getElementById('dark-mode-toggle');
+    const body = document.body;
+    const toggleIcon = toggleButton.querySelector('.material-symbols-outlined');
+    const toggleText = toggleButton.querySelector('.toggle-text');
+    
+    // Pastikan light mode di awal
+    body.classList.remove('dark-mode');
+    
+    function updateToggleButton() {
+        if (body.classList.contains('dark-mode')) {
+            toggleIcon.textContent = 'dark_mode';
+            toggleText.textContent = 'Dark';
+        } else {
+            toggleIcon.textContent = 'light_mode';
+            toggleText.textContent = 'Light';
+        }
+    }
+    
+    updateToggleButton();
+    
+    toggleButton.addEventListener('click', function() {
+        body.classList.toggle('dark-mode');
+        updateToggleButton();
+    });
+});
+</script>
 </body>
 
 </html>
