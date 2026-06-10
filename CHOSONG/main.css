@@ -927,11 +927,11 @@ footer {
     }
     
     .song-image .header {
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
     
     .song-image .lyrics {
-        margin-top: 4px;
+        margin-top: 0px;
         margin-bottom: 6px;
         font-size: 12px;
     }
