@@ -450,6 +450,7 @@ main {
     margin: 0;
 }
 
+/* Tombol tidak item semua - style asli dipertahankan */
 #last-go-back, #download {
     background: var(--surface-bg);
     border: 1px solid var(--surface-border);
@@ -479,11 +480,47 @@ main {
 }
 
 /* Album image di screen 4 */
+.song-image .header {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
 .song-image .header .screen4-album-img {
     width: 60px;
     height: 60px;
     border-radius: 12px;
     object-fit: cover;
+}
+
+.song-image .header .name {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.song-image .header .authors {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.song-image .lyrics {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 20px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.song-image .spotify {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.song-image .spotify img {
+    width: 100px;
+    height: auto;
 }
 
 .color-selection {
