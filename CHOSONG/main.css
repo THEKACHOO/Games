@@ -450,7 +450,6 @@ main {
     margin: 0;
 }
 
-/* Tombol tidak item semua - style asli dipertahankan */
 #last-go-back, #download {
     background: var(--surface-bg);
     border: 1px solid var(--surface-border);
@@ -479,7 +478,7 @@ main {
     transition: all 0.3s ease;
 }
 
-/* Album image di screen 4 */
+/* Album image di screen 4 - ukuran asli dari API, CSS hanya tampilkan */
 .song-image .header {
     display: flex;
     gap: 16px;
@@ -489,9 +488,9 @@ main {
 
 .song-image .header .screen4-album-img {
     width: 60px;
-    height: 60px;
+    height: auto;
     border-radius: 12px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .song-image .header .name {
@@ -508,7 +507,7 @@ main {
     font-size: 14px;
     line-height: 1.6;
     margin: 20px 0;
-    white-space: pre-wrap;
+    white-space: normal;
     word-wrap: break-word;
 }
 
@@ -516,9 +515,10 @@ main {
     display: flex;
     justify-content: center;
     margin-top: 16px;
+    align-items: center;
 }
 
-.song-image .spotify img {
+.song-image .spotify svg {
     width: 100px;
     height: auto;
 }
