@@ -130,7 +130,12 @@
                     </div>
                     <div class="lyrics" contenteditable="true"></div>
                     <div class="spotify">
-                        <img src="spotify-logo.png" />
+                        <svg width="100" height="30" viewBox="0 0 100 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.5 8.2C10.5 10.5 5.5 11.5 0.5 12.5V9.5C5.5 8.5 10.5 7.5 14.5 5.2V8.2Z" fill="#1DB954"/>
+                            <path d="M16.5 12.5C12 14.5 6 15.5 0 16.5V13.5C6 12.5 12 11.5 16.5 9.5V12.5Z" fill="#1DB954"/>
+                            <path d="M14.5 16.8C10 18.5 4 19.5 0 20.5V17.5C4 16.5 10 15.5 14.5 13.8V16.8Z" fill="#1DB954"/>
+                            <text x="25" y="20" font-family="Arial" font-size="14" font-weight="bold" fill="#1DB954">SPOTIFY</text>
+                        </svg>
                     </div>
                 </div>
                 <div class="color-selection">
@@ -253,7 +258,7 @@
                 });
             }
 
-            // ========== NEXT SCREEN 3 KE SCREEN 4 DENGAN MEMBAWA SEMUA DATA ==========
+            // ========== NEXT SCREEN 3 KE SCREEN 4 ==========
             const nextLine = document.getElementById('next-line');
             if (nextLine) {
                 nextLine.addEventListener('click', function(e) {
@@ -276,19 +281,27 @@
                         document.querySelector('[data-number="4"]').classList.remove('hidden');
                         document.querySelector('[data-number="3"]').classList.add('hidden');
                         
-                        // Salin lirik yang dipilih ke screen 4
-                        const lyricsText = Array.from(selectedLines).map(line => line.textContent).join('<br>');
+                        // Salin lirik yang dipilih - HAPUS SPASI ENTER YANG GA PERLU
+                        let lyricsText = Array.from(selectedLines).map(line => {
+                            // Ambil teks, trim, hapus spasi berlebih
+                            let text = line.textContent.trim();
+                            return text;
+                        }).join(' ');
+                        
+                        // Ganti multiple spaces jadi single space
+                        lyricsText = lyricsText.replace(/\s+/g, ' ');
                         document.querySelector('.song-image > .lyrics').innerHTML = lyricsText;
                         
                         // Salin judul lagu dan artis ke screen 4
                         document.querySelector('.song-image > .header .name').textContent = songName;
                         document.querySelector('.song-image > .header .authors').textContent = artistName;
                         
-                        // SALIN FOTO ALBUM KE SCREEN 4
+                        // SALIN FOTO ALBUM KE SCREEN 4 - PAKAI URL ASLI
                         const screen4AlbumImg = document.querySelector('.song-image > .header .screen4-album-img');
                         if (screen4AlbumImg && albumCoverSrc) {
                             screen4AlbumImg.src = albumCoverSrc;
                             screen4AlbumImg.alt = songName + ' album cover';
+                            screen4AlbumImg.style.display = 'block';
                         }
                     } else {
                         alert('Please select at least one line first!');
@@ -296,7 +309,7 @@
                 });
             }
 
-            // ========== BACK BUTTON DI SCREEN 4 (last-go-back) ==========
+            // ========== BACK BUTTON DI SCREEN 4 ==========
             const lastGoBack = document.getElementById('last-go-back');
             if (lastGoBack) {
                 lastGoBack.addEventListener('click', function(e) {
@@ -306,7 +319,7 @@
                 });
             }
 
-            // ========== COLOR PICKER BERFUNGSI ==========
+            // ========== COLOR PICKER ==========
             const colorPicker = document.getElementById('custom-color-input');
             const songImageContainer = document.getElementById('song-image-container');
             
@@ -316,7 +329,7 @@
                 });
             }
 
-            // ========== LIGHT TEXT TOGGLE (MENGUBAH WARNA TEKS JUDUL, ARTIS, LIRIK) ==========
+            // ========== LIGHT TEXT TOGGLE ==========
             const lightTextToggle = document.getElementById('light-text');
             if (lightTextToggle) {
                 lightTextToggle.addEventListener('click', function() {
@@ -328,13 +341,11 @@
                     
                     if (songImage) {
                         if (this.classList.contains('active')) {
-                            // Mode teks putih
                             songImage.style.color = '#ffffff';
                             if (nameDiv) nameDiv.style.color = '#ffffff';
                             if (authorsDiv) authorsDiv.style.color = '#ffffff';
                             if (lyricsDiv) lyricsDiv.style.color = '#ffffff';
                         } else {
-                            // Mode teks hitam (default)
                             songImage.style.color = '';
                             if (nameDiv) nameDiv.style.color = '';
                             if (authorsDiv) authorsDiv.style.color = '';
@@ -358,7 +369,7 @@
                         }
                     }
                 });
-                // Default: spotify logo visible (aktif)
+                // Default: spotify logo visible
                 const spotifyDiv = document.querySelector('.song-image .spotify');
                 if (spotifyDiv) {
                     spotifyDiv.style.display = 'flex';
@@ -396,18 +407,12 @@
                 });
             }
 
-            // ========== DOWNLOAD BUTTON (DENGAN LATAR TRANSPARAN) ==========
+            // ========== DOWNLOAD BUTTON ==========
             const downloadBtn = document.getElementById('download');
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', function() {
                     const element = document.querySelector('.song-image');
                     if (element) {
-                        // Simpan style asli
-                        const originalBgColor = element.style.backgroundColor;
-                        const originalBoxShadow = element.style.boxShadow;
-                        
-                        // Untuk download, kita tetap pakai background color yang dipilih
-                        // Tapi background card tetap warna pilihan, tidak transparan
                         html2canvas(element, {
                             scale: 2,
                             backgroundColor: null,
@@ -425,7 +430,7 @@
                 });
             }
 
-            // ========== SIMULASI PENGISIAN DATA DARI SCRIPT LAIN ==========
+            // ========== FUNGSI UNTUK SCRIPT LAIN ==========
             window.updateSongDataForScreen4 = function(albumCover, songName, artistName) {
                 currentSongData = {
                     albumCover: albumCover,
@@ -433,7 +438,6 @@
                     artistName: artistName
                 };
                 
-                // Update tampilan di screen 3
                 const screen3Img = document.querySelector('.song-info-cover');
                 const screen3Name = document.querySelector('.song-info-name');
                 const screen3Artist = document.querySelector('.song-info-artist');
