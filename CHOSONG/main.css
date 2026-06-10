@@ -967,6 +967,26 @@ footer {
     }
 }
 
+/* ========== FIX SCREEN 4 MOBILE (TAMBAHAN) ========== */
+@media (max-width: 768px) {
+    .final-options .screen-wrapper {
+        padding: 0 12px;
+    }
+    
+    .song-image {
+        padding: 12px;
+    }
+    
+    .song-image .header {
+        margin-bottom: 6px;
+    }
+    
+    .song-image .lyrics {
+        margin-top: 4px;
+        margin-bottom: 6px;
+    }
+}
+
 /* ========== UTILITY CLASSES ========== */
 .hidden {
     display: none !important;
