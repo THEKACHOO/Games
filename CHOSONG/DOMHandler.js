@@ -507,12 +507,15 @@ class DOMHandler {
 
     /**
      * Prepares song image DOM element
+     * FIXED: Langsung pakai URL, tidak melalui base64 (menghindari CORS)
      */
     setSongImage() {
-        this.setBase64Image(
-            this.songs[this.selectedSongIndex].albumCoverUrl,
-            ".song-image > .header > img"
-        );
+        // Langsung pakai URL cover seperti di screen 2 & 3
+        const coverUrl = this.songs[this.selectedSongIndex].albumCoverUrl;
+        const imgElement = document.querySelector(".song-image > .header > img");
+        if (imgElement && coverUrl) {
+            imgElement.setAttribute("src", coverUrl);
+        }
         this.setSongInfo();
         this.setSongLyrics(
             Array.from(document.querySelectorAll(".select-line.selected")).map(
