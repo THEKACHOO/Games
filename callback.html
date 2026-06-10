@@ -1,46 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Spotify Login Callback</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Authentication Callback</title>
     <style>
         body {
-            font-family: system-ui;
+            font-family: system-ui, -apple-system, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #1a1a1a;
+            margin: 0;
+            background: #121212;
             color: white;
         }
-        .success {
+        .container {
             text-align: center;
-            background: #1DB954;
-            padding: 30px;
+            padding: 40px;
+            background: #1e1e1e;
             border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .success {
+            color: #1DB954;
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #333;
+            border-top-color: #1DB954;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="success">
-        <h2>✅ Login Spotify Berhasil!</h2>
+    <div class="container">
+        <div class="success">✓</div>
+        <h2>Spotify Authentication</h2>
+        <div class="loading"></div>
         <p>Redirecting back to app...</p>
     </div>
+
     <script>
-        // Ambil parameter dari URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        
-        if (code) {
-            // Redirect balik ke halaman utama dengan parameter code
-            window.location.href = `index.html?code=${code}`;
-        } else {
-            // Jika tidak ada code, cek error
+        (function() {
+            // Ambil semua parameter dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
             const error = urlParams.get('error');
+            
             if (error) {
-                alert(`Error: ${error}`);
-                window.location.href = 'index.html';
+                // Jika ada error, kasih tahu user
+                alert('Spotify Auth Error: ' + error);
+                window.location.href = window.location.origin + window.location.pathname.replace('callback.html', 'CHOSONG.html');
+            } else if (code) {
+                // Redirect BALIK ke halaman utama DENGAN kode
+                // Hapus 'callback.html' dari path, ganti dengan nama file HTML utama Anda
+                let mainPage = window.location.origin + window.location.pathname.replace('callback.html', '');
+                
+                // Coba deteksi nama file utama (bisa index.html atau nama lain)
+                if (!mainPage.endsWith('/')) {
+                    mainPage = mainPage + '/';
+                }
+                
+                // Cek file apa yang ada (coba index.html dulu, atau file yang sedang digunakan)
+                const currentFile = window.location.pathname.split('/').pop();
+                if (currentFile === 'callback.html') {
+                    // Asumsikan file utama adalah file HTML yang memanggil callback ini
+                    // Bisa cari dari document.referrer atau pakai localStorage
+                    const mainFile = localStorage.getItem('main_page') || 'index.html';
+                    window.location.href = `${mainPage}${mainFile}?code=${code}`;
+                } else {
+                    window.location.href = `${mainPage}?code=${code}`;
+                }
+            } else {
+                // Tidak ada code, balik ke halaman utama
+                window.location.href = window.location.origin + window.location.pathname.replace('callback.html', 'CHOSONG.html');
             }
-        }
+        })();
     </script>
 </body>
 </html>
