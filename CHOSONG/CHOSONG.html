@@ -15,7 +15,6 @@
 </head>
 
 <body>
-    <!-- GLOBAL HEADER -->
     <div class="global-header">
         <div class="header-logo">
             <img src="logo-thekachoo.png" alt="The Kachoo Logo">
@@ -33,38 +32,32 @@
     </div>
 
     <main>
-        <!-- SCREEN 1: What's your mood today? -->
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
                 <div class="main-title">
                     <h1>What's your mood today?</h1>
                 </div>
-                
                 <div class="input-tabs" style="display: none;">
                     <button class="tab-button active" data-tab="search">Search</button>
                     <button class="tab-button" data-tab="link">Paste Link</button>
                 </div>
-                
                 <div class="tab-content active" id="search-tab">
                     <form>
                         <input class="surface" type="text" id="song-name" placeholder="Song name or Singer name">
                         <button class="primary" id="search">Find the song!</button>
                     </form>
                 </div>
-                
                 <div class="tab-content" id="link-tab">
                     <form>
                         <input class="surface" type="text" id="spotify-link" placeholder="https://open.spotify.com/track/...">
                         <button class="primary" id="load-link">Load song!</button>
                     </form>
                 </div>
-                
                 <div class="searching hidden"></div>
                 <div class="error hidden"></div>
             </div>
         </section>
 
-        <!-- SCREEN 2: Select a song -->
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
                 <div class="song-selection-wrapper">
@@ -75,7 +68,6 @@
                         <h1>Select a song</h1>
                         <div class="header-spacer"></div>
                     </div>
-                    
                     <div class="song-selection">
                         <div class="select-song cloneable">
                             <img src="" alt="album-cover">
@@ -87,7 +79,6 @@
             </div>
         </section>
 
-               <!-- SCREEN 3: Select lines -->
         <section class="lyrics-image-screen hidden lyrics-results" data-number="3">
             <div class="screen-wrapper">
                 <div class="song-info-display">
@@ -98,7 +89,6 @@
                     </div>
                 </div>
                 
-                <!-- TOMBOL - DI LUAR lines-selection -->
                 <div class="line-navigation">
                     <button class="line-nav-button" id="back-line">
                         <span class="material-symbols-outlined">arrow_back</span>
@@ -119,8 +109,7 @@
                 <span class="material-symbols-outlined">arrow_forward</span>
             </button>
         </section>
-        
-        <!-- SCREEN 4: Final options -->
+
         <section class="lyrics-image-screen hidden final-options" data-number="4">
             <div class="screen-wrapper">
                 <div class="nav-buttons">
@@ -128,9 +117,7 @@
                     <h1>Song image</h1>
                     <button class="material-symbols-outlined" id="download">download</button>
                 </div>
-                
                 <div class="searching hidden"></div>
-                
                 <div class="song-image">
                     <div class="header">
                         <img src="" alt="album-cover">
@@ -144,29 +131,24 @@
                         <img src="" />
                     </div>
                 </div>
-                
                 <div class="color-selection">
                     <div id="custom-color">
                         <input type="color" id="custom-color-input">
                         <label class="material-symbols-outlined" for="custom-color-input">palette</label>
                     </div>
                 </div>
-                
                 <div class="switch-container" id="light-text">
                     <div class="switch"></div>
                     <div>Light text</div>
                 </div>
-                
                 <div class="switch-container" id="spotify-tag">
                     <div class="switch"></div>
                     <div>Spotify Logo</div>
                 </div>
-                
                 <div class="switch-container" id="additional-bg">
                     <div class="switch"></div>
                     <div>Background</div>
                 </div>
-                
                 <div class="width-control">
                     <div>
                         <label for="width-slider">Width</label>
@@ -178,7 +160,6 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
@@ -192,18 +173,9 @@
             <div class="footer-col">
                 <strong>Contact</strong>
                 <ul class="footer-links-list">
-                    <li>
-                        <span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span>
-                        <a href="https://twitter.com/TheKachoo" target="_blank">@TheKachoo (Official)</a>
-                    </li>
-                    <li>
-                        <span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span>
-                        <a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo (Business)</a>
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a>
-                    </li>
+                    <li><span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span><a href="https://twitter.com/TheKachoo" target="_blank">@TheKachoo (Official)</a></li>
+                    <li><span class="x-logo" style="color: #000; background: white; border-radius: 3px; padding: 2px 5px; font-size: 11px; display: inline-block;">X</span><a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo (Business)</a></li>
+                    <li><i class="fas fa-envelope"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -233,9 +205,7 @@
                 const isDark = body.classList.contains('dark-mode');
                 toggles.forEach(toggle => {
                     const icon = toggle.querySelector('.material-symbols-outlined');
-                    if (icon) {
-                        icon.textContent = isDark ? 'dark_mode' : 'light_mode';
-                    }
+                    if (icon) icon.textContent = isDark ? 'dark_mode' : 'light_mode';
                 });
             }
             
@@ -250,7 +220,6 @@
                 });
             });
 
-            // Navigasi back button screen 2 ke screen 1
             const backToSearch = document.getElementById('back-to-search');
             if (backToSearch) {
                 backToSearch.addEventListener('click', function(e) {
@@ -260,7 +229,6 @@
                 });
             }
 
-            // Navigasi back button screen 3 ke screen 2
             const backLine = document.getElementById('back-line');
             if (backLine) {
                 backLine.addEventListener('click', function(e) {
@@ -270,13 +238,17 @@
                 });
             }
 
-            // Navigasi next button screen 3 ke screen 4
             const nextLine = document.getElementById('next-line');
             if (nextLine) {
                 nextLine.addEventListener('click', function(e) {
                     e.preventDefault();
-                    document.querySelector('[data-number="4"]').classList.remove('hidden');
-                    document.querySelector('[data-number="3"]').classList.add('hidden');
+                    const selectedLines = document.querySelectorAll('.select-line.selected');
+                    if (selectedLines.length > 0) {
+                        document.querySelector('[data-number="4"]').classList.remove('hidden');
+                        document.querySelector('[data-number="3"]').classList.add('hidden');
+                    } else {
+                        alert('Please select at least one line first!');
+                    }
                 });
             }
         });
