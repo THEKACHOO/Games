@@ -130,7 +130,7 @@
                     </div>
                     <div class="lyrics" contenteditable="true"></div>
                     <div class="spotify">
-                        <svg class="spotify-icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <svg class="spotify-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.59 14.44c-.24.39-.73.53-1.12.29-3.07-1.88-6.94-2.31-10.48-1.26-.44.13-.9-.12-1.03-.56-.13-.44.12-.9.56-1.03 4.01-1.18 8.3-.7 11.78 1.43.39.24.53.73.29 1.13zm1.18-2.72c-.29.46-.88.6-1.34.31-3.52-2.16-8.88-2.78-13.04-1.52-.5.15-1.03-.13-1.18-.63-.15-.5.13-1.03.63-1.18 4.74-1.43 10.64-.74 14.64 1.72.46.29.6.88.29 1.3zm.1-2.77c-4.23-2.51-11.18-2.74-15.2-1.51-.6.18-1.22-.16-1.4-.76-.18-.6.16-1.22.76-1.4 4.6-1.39 12.26-1.12 17.08 1.75.54.32.73.99.41 1.53-.31.52-.99.73-1.53.39z"/>
                         </svg>
                         <span class="spotify-text">SPOTIFY</span>
@@ -226,30 +226,35 @@
                     e.stopPropagation();
                     body.classList.toggle('dark-mode');
                     updateAllToggles();
-                    updateSpotifyIconColor();
+                    updateSpotifyColor();
                 });
             });
 
-            // Update warna icon Spotify
-            function updateSpotifyIconColor() {
-                const spotifyIcon = document.querySelector('.spotify-icon');
-                const spotifyText = document.querySelector('.spotify-text');
-                if (spotifyIcon) {
-                    const isDark = body.classList.contains('dark-mode');
-                    spotifyIcon.style.color = isDark ? '#ffffff' : '#000000';
+            function updateSpotifyColor() {
+                const isDark = body.classList.contains('dark-mode');
+                const spotifyIcon = document.querySelector('.song-image .spotify-icon');
+                const spotifyText = document.querySelector('.song-image .spotify-text');
+                const lightTextToggle = document.getElementById('light-text');
+                const isLightText = lightTextToggle && lightTextToggle.classList.contains('active');
+                
+                if (isLightText) {
+                    if (spotifyIcon) spotifyIcon.style.color = '#ffffff';
+                    if (spotifyText) spotifyText.style.color = '#ffffff';
+                } else {
+                    if (spotifyIcon) spotifyIcon.style.color = isDark ? '#ffffff' : '#000000';
                     if (spotifyText) spotifyText.style.color = isDark ? '#ffffff' : '#000000';
                 }
             }
-            updateSpotifyIconColor();
 
-            // ========== VARIABEL UNTUK MENYIMPAN DATA SONG ==========
+            // ========== VARIABEL ==========
             let currentSongData = {
                 albumCover: '',
                 songName: '',
                 artistName: ''
             };
+            let currentColor = '#000000';
 
-            // ========== BACK SCREEN 2 KE SCREEN 1 ==========
+            // ========== BACK BUTTONS ==========
             const backToSearch = document.getElementById('back-to-search');
             if (backToSearch) {
                 backToSearch.addEventListener('click', function(e) {
@@ -259,7 +264,6 @@
                 });
             }
 
-            // ========== BACK SCREEN 3 KE SCREEN 2 ==========
             const backLine = document.getElementById('back-line');
             if (backLine) {
                 backLine.addEventListener('click', function(e) {
@@ -269,7 +273,7 @@
                 });
             }
 
-            // ========== NEXT SCREEN 3 KE SCREEN 4 ==========
+            // ========== NEXT SCREEN ==========
             const nextLine = document.getElementById('next-line');
             if (nextLine) {
                 nextLine.addEventListener('click', function(e) {
@@ -280,11 +284,7 @@
                         const songName = document.querySelector('.song-info-name') ? document.querySelector('.song-info-name').textContent : '';
                         const artistName = document.querySelector('.song-info-artist') ? document.querySelector('.song-info-artist').textContent : '';
                         
-                        currentSongData = {
-                            albumCover: albumCoverSrc,
-                            songName: songName,
-                            artistName: artistName
-                        };
+                        currentSongData = { albumCover: albumCoverSrc, songName: songName, artistName: artistName };
                         
                         document.querySelector('[data-number="4"]').classList.remove('hidden');
                         document.querySelector('[data-number="3"]').classList.add('hidden');
@@ -299,15 +299,20 @@
                         const screen4AlbumImg = document.querySelector('.song-image > .header .screen4-album-img');
                         if (screen4AlbumImg && albumCoverSrc) {
                             screen4AlbumImg.src = albumCoverSrc;
-                            screen4AlbumImg.alt = songName + ' album cover';
                         }
+                        
+                        // Tampilkan spotify logo
+                        const spotifyDiv = document.querySelector('.song-image .spotify');
+                        if (spotifyDiv) spotifyDiv.style.display = 'flex';
+                        
+                        updateSpotifyColor();
                     } else {
                         alert('Please select at least one line first!');
                     }
                 });
             }
 
-            // ========== BACK BUTTON DI SCREEN 4 ==========
+            // ========== BACK SCREEN 4 ==========
             const lastGoBack = document.getElementById('last-go-back');
             if (lastGoBack) {
                 lastGoBack.addEventListener('click', function(e) {
@@ -320,14 +325,13 @@
             // ========== COLOR PICKER ==========
             const colorPicker = document.getElementById('custom-color-input');
             const songImageContainer = document.getElementById('song-image-container');
-            let currentColor = '#000000';
             
             if (colorPicker && songImageContainer) {
                 colorPicker.addEventListener('input', function(e) {
                     currentColor = e.target.value;
                     const bgToggle = document.getElementById('additional-bg');
                     if (bgToggle && bgToggle.classList.contains('active')) {
-                        songImageContainer.style.background = `linear-gradient(135deg, #ffffff, ${currentColor})`;
+                        songImageContainer.style.background = `linear-gradient(135deg, ${currentColor}, #ffffff)`;
                     } else {
                         songImageContainer.style.backgroundColor = currentColor;
                         songImageContainer.style.backgroundImage = '';
@@ -344,8 +348,6 @@
                     const nameDiv = document.querySelector('.song-image .header .name');
                     const authorsDiv = document.querySelector('.song-image .header .authors');
                     const lyricsDiv = document.querySelector('.song-image .lyrics');
-                    const spotifyText = document.querySelector('.spotify-text');
-                    const spotifyIcon = document.querySelector('.spotify-icon');
                     
                     if (songImage) {
                         if (this.classList.contains('active')) {
@@ -353,18 +355,14 @@
                             if (nameDiv) nameDiv.style.color = '#ffffff';
                             if (authorsDiv) authorsDiv.style.color = '#ffffff';
                             if (lyricsDiv) lyricsDiv.style.color = '#ffffff';
-                            if (spotifyText) spotifyText.style.color = '#ffffff';
-                            if (spotifyIcon) spotifyIcon.style.color = '#ffffff';
                         } else {
                             songImage.style.color = '';
                             if (nameDiv) nameDiv.style.color = '';
                             if (authorsDiv) authorsDiv.style.color = '';
                             if (lyricsDiv) lyricsDiv.style.color = '';
-                            if (spotifyText) spotifyText.style.color = '';
-                            if (spotifyIcon) spotifyIcon.style.color = '';
-                            updateSpotifyIconColor();
                         }
                     }
+                    updateSpotifyColor();
                 });
             }
 
@@ -385,7 +383,7 @@
                 }
             }
 
-            // ========== ADDITIONAL BG TOGGLE (gradasi putih ke warna pilihan) ==========
+            // ========== ADDITIONAL BG (gradasi dari bawah kanan) ==========
             const additionalBgToggle = document.getElementById('additional-bg');
             if (additionalBgToggle) {
                 additionalBgToggle.addEventListener('click', function() {
@@ -393,7 +391,7 @@
                     const songImage = document.getElementById('song-image-container');
                     if (songImage) {
                         if (this.classList.contains('active')) {
-                            songImage.style.background = `linear-gradient(135deg, #ffffff, ${currentColor})`;
+                            songImage.style.background = `linear-gradient(135deg, ${currentColor}, #ffffff)`;
                             songImage.style.backgroundColor = '';
                         } else {
                             songImage.style.background = '';
@@ -411,13 +409,11 @@
                     const width = e.target.value + 'px';
                     widthValue.textContent = width;
                     const songImage = document.querySelector('.song-image');
-                    if (songImage) {
-                        songImage.style.width = width;
-                    }
+                    if (songImage) songImage.style.width = width;
                 });
             }
 
-            // ========== DOWNLOAD BUTTON ==========
+            // ========== DOWNLOAD ==========
             const downloadBtn = document.getElementById('download');
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', function() {
@@ -441,16 +437,10 @@
             }
 
             window.updateSongDataForScreen4 = function(albumCover, songName, artistName) {
-                currentSongData = {
-                    albumCover: albumCover,
-                    songName: songName,
-                    artistName: artistName
-                };
-                
+                currentSongData = { albumCover: albumCover, songName: songName, artistName: artistName };
                 const screen3Img = document.querySelector('.song-info-cover');
                 const screen3Name = document.querySelector('.song-info-name');
                 const screen3Artist = document.querySelector('.song-info-artist');
-                
                 if (screen3Img) screen3Img.src = albumCover;
                 if (screen3Name) screen3Name.textContent = songName;
                 if (screen3Artist) screen3Artist.textContent = artistName;
