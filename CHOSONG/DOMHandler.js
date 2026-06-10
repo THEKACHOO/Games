@@ -1,23 +1,11 @@
 const SONGS_TO_FETCH = 6;
-const DOWNLOAD_SCALING_FACTOR = 4;
 const SELECTION_ANIMATION_DELAY = 300;
 const NEXT_LINE_ANIMATION_DELAY = 30;
 const SEARCHING_FOR_SONG = "Searching for your song...";
 const SEARCHING_FOR_LYRICS = "Searching for song's lyrics...";
 const DOWNLOADING = "Downloading lyrics image...";
-const NO_LYRICS_FOUND =
-    "No lyrics found<br>You can still type your own lyrics by clicking here :)";
-const NO_LYRICS_SELECTED =
-    "No lyrics selected<br>You can still type your own lyrics by clicking here :)";
-const SPOTIFY_LOGO =
-    "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg";
-
-const BACKGROUND_SHADOW_COLOR = "rgba(0, 0, 0, 0.25)";
-const BACKGROUND_SHADOW_BORDER_RADIUS = 24;
-const BACKGROUND_SHADOW_BLUR = 12;
-const BACKGROUND_SHADOW_OFFSET_X = 0;
-const BACKGROUND_SHADOW_OFFSET_Y = 4;
-const BACKGROUND_TO_SHADOW_FACTOR = 4;
+const NO_LYRICS_FOUND = "No lyrics found<br>You can still type your own lyrics by clicking here :)";
+const NO_LYRICS_SELECTED = "No lyrics selected<br>You can still type your own lyrics by clicking here :)";
 
 const COLORS = [
     "#008fd1",
@@ -30,108 +18,47 @@ const COLORS = [
 ];
 
 class DOMHandler {
-    /**
-     * @param {DataFetcher} fetcher
-     */
     constructor(fetcher) {
-        /** @type {DataFetcher} */
         this.fetcher = fetcher;
-
-        /** @type {Song[]} */
         this.songs = [];
-
-        /** @type {number?} */
         this.selectedSongIndex = null;
-
-        /** @type {boolean} */
         this.usedDirectLink = false;
 
-        /**
-         * Below all are DOM elements
-         */
-        /** @type {NodeListOf<Element>} */
+        // DOM Elements
         this.errorTexts = document.querySelectorAll(".error");
-        /** @type {NodeListOf<Element>} */
         this.searchingTexts = document.querySelectorAll(".searching");
-        /** @type {NodeListOf<Element>} */
         this.screens = document.querySelectorAll(".lyrics-image-screen");
 
-        /** @type {Element} */
         this.searchInput = document.querySelector("#song-name");
-        /** @type {Element} */
-        this.artistInput = document.querySelector("#song-artist");
-        /** @type {Element} */
         this.searchButton = document.querySelector("#search");
-        /** @type {Element} */
         this.spotifyLinkInput = document.querySelector("#spotify-link");
-        /** @type {Element} */
         this.loadLinkButton = document.querySelector("#load-link");
-        /** @type {NodeListOf<Element>} */
-        this.tabButtons = document.querySelectorAll(".tab-button");
 
-        /** @type {Element} */
-        this.cloneableSelectSong = document.querySelector(
-            ".select-song.cloneable"
-        );
-        /** @type {Element} */
+        this.cloneableSelectSong = document.querySelector(".select-song.cloneable");
         this.songSelection = document.querySelector(".song-selection");
-        /** @type {Element} */
         this.lineSelection = document.querySelector(".lines-selection");
-        /** @type {Element} */
         this.songInfoCover = document.querySelector(".song-info-cover");
-        /** @type {Element} */
         this.songInfoName = document.querySelector(".song-info-name");
-        /** @type {Element} */
         this.songInfoArtist = document.querySelector(".song-info-artist");
-        /** @type {Element} */
-        this.goToFinal = document.querySelector(
-            ".lyrics-image-screen .go-to-screen.right"
-        );
-        /** @type {Element} */
-        this.lyricsFab = document.querySelector("#lyrics-fab");
 
-        /** @type {Element} */
+        // Screen 4 Elements
         this.lastGoBack = document.querySelector("#last-go-back");
-        /** @type {Element} */
         this.downloadButton = document.querySelector("#download");
-        /** @type {Element} */
         this.colorSelection = document.querySelector(".color-selection");
-        /** @type {Element} */
-        this.customColorInput = document.querySelector("#custom-color input");
-        /** @type {Element} */
+        this.customColorInput = document.querySelector("#custom-color-input");
         this.lightTextSwitch = document.querySelector("#light-text");
-        /** @type {Element} */
         this.spotifyTagSwitch = document.querySelector("#spotify-tag");
-        /** @type {Element} */
         this.additionalBgSwitch = document.querySelector("#additional-bg");
-        /** @type {Element} */
-        this.fontLangSelect = document.querySelector("#font-lang");
-        /** @type {Element} */
         this.songImage = document.querySelector(".song-image");
-
-        /** @type {Element} */
         this.widthSlider = document.querySelector("#width-slider");
-        /** @type {Element} */
         this.widthValue = document.querySelector("#width-value");
 
-        /** @type {Element} */
-        this.toggleDarkMode = document.querySelector("#dark-mode-toggle");
-
-        this.populateColorSelection();
         this.setListeners();
-        this.setBase64Image(SPOTIFY_LOGO, ".song-image > .spotify > img", 0);
-        this.setTheme(
-            localStorage.getItem("theme") ??
-            (window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light")
-        );
+        this.populateColorSelection();
     }
 
-    /**
-     * Sets static elements' listeners
-     */
     setListeners() {
+        // Screen 1
         this.searchButton.addEventListener("click", (e) => {
             e.preventDefault();
             this.findSong();
@@ -142,107 +69,100 @@ class DOMHandler {
             this.loadFromSpotifyLink();
         });
 
-        this.tabButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                const tab = button.dataset.tab;
-                this.switchTab(tab);
+        // Screen 2 - back button
+        const backToSearch = document.querySelector("#back-to-search");
+        if (backToSearch) {
+            backToSearch.addEventListener("click", () => {
+                this.displayScreen(1);
             });
-        });
+        }
 
-        this.lastGoBack.addEventListener("click", () => {
-            this.displayScreen(
-                this.songs[this.selectedSongIndex].lyrics === undefined ? 2 : 3
-            );
-        });
+        // Screen 3 - back and next
+        const backLine = document.querySelector("#back-line");
+        if (backLine) {
+            backLine.addEventListener("click", () => {
+                this.displayScreen(2);
+            });
+        }
 
-        document.querySelectorAll(".go-to-screen").forEach((button) => {
-            button.addEventListener("click", () => {
-                const targetScreen = Number(button.dataset.number);
-
-                // If going back from lyrics screen and used direct link, go to screen 1
-                if (targetScreen === 2 && this.usedDirectLink) {
-                    this.displayScreen(1);
-                    this.usedDirectLink = false;
+        const nextLine = document.querySelector("#next-line");
+        if (nextLine) {
+            nextLine.addEventListener("click", () => {
+                const selectedLines = document.querySelectorAll(".select-line.selected");
+                if (selectedLines.length > 0) {
+                    this.displaySongImage();
                 } else {
-                    this.displayScreen(targetScreen);
+                    alert("Please select at least one line first!");
                 }
             });
-        });
+        }
 
-        this.goToFinal.addEventListener("click", () => {
-            this.displaySongImage();
-        });
-
-        this.lyricsFab.addEventListener("click", () => {
-            this.displaySongImage();
-        });
-
-        this.customColorInput.addEventListener("input", () => {
-            this.setSongImageColor(this.customColorInput.value);
-        });
-
-        this.lightTextSwitch.addEventListener("click", () => {
-            const parent = this.lightTextSwitch.parentElement;
-            parent.classList.toggle("light-text");
-
-            this.setBase64Image(
-                SPOTIFY_LOGO,
-                ".song-image > .spotify > img",
-                parent.classList.contains("light-text") ? 255 : 0
-            );
-        });
-
-        this.spotifyTagSwitch.addEventListener("click", () => {
-            this.spotifyTagSwitch.parentElement.classList.toggle("spotify-tag");
-        });
-
-        this.additionalBgSwitch.addEventListener("click", () => {
-            this.additionalBgSwitch.parentElement.classList.toggle(
-                "additional-bg"
-            );
-        });
-
-        this.downloadButton.addEventListener("click", () => {
-            this.downloadSongImage();
-        });
-
-        // Paste into contenteditable as plain text
-        document.querySelectorAll("[contenteditable]").forEach((field) => {
-            field.addEventListener("paste", function (event) {
-                event.preventDefault();
-                document.execCommand(
-                    "inserttext",
-                    false,
-                    event.clipboardData.getData("text/plain")
-                );
+        // Screen 4
+        if (this.lastGoBack) {
+            this.lastGoBack.addEventListener("click", () => {
+                this.displayScreen(3);
             });
-        });
+        }
 
-        this.widthSlider.addEventListener("input", () => {
-            const width = this.widthSlider.value;
-            this.setSongImageWidth(width);
-            this.widthValue.textContent = `${width}px`;
-        });
+        if (this.customColorInput) {
+            this.customColorInput.addEventListener("input", (e) => {
+                this.setSongImageColor(e.target.value);
+            });
+        }
 
-        window.addEventListener("resize", () => {
-            this.setSongImageWidth(this.widthSlider.value);
-        });
+        if (this.lightTextSwitch) {
+            this.lightTextSwitch.addEventListener("click", () => {
+                this.lightTextSwitch.classList.toggle("active");
+                this.toggleLightText();
+            });
+        }
 
-        this.fontLangSelect.addEventListener("change", (e) => {
-            document.documentElement.lang = e.target.value;
-        });
+        if (this.spotifyTagSwitch) {
+            this.spotifyTagSwitch.addEventListener("click", () => {
+                this.spotifyTagSwitch.classList.toggle("active");
+                this.toggleSpotifyLogo();
+            });
+            // Default active
+            this.spotifyTagSwitch.classList.add("active");
+            this.toggleSpotifyLogo();
+        }
 
-        this.toggleDarkMode.addEventListener("click", () => {
-            this.setTheme(
-                document.body.classList.contains("dark-mode") ? "light" : "dark"
-            );
+        if (this.additionalBgSwitch) {
+            this.additionalBgSwitch.addEventListener("click", () => {
+                this.additionalBgSwitch.classList.toggle("active");
+                this.toggleAdditionalBg();
+            });
+        }
+
+        if (this.downloadButton) {
+            this.downloadButton.addEventListener("click", () => {
+                this.downloadSongImage();
+            });
+        }
+
+        if (this.widthSlider) {
+            this.widthSlider.addEventListener("input", (e) => {
+                const width = e.target.value;
+                this.setSongImageWidth(width);
+                if (this.widthValue) {
+                    this.widthValue.textContent = `${width}px`;
+                }
+            });
+        }
+
+        // Contenteditable paste as plain text
+        document.querySelectorAll("[contenteditable]").forEach((field) => {
+            field.addEventListener("paste", function(e) {
+                e.preventDefault();
+                const text = e.clipboardData.getData("text/plain");
+                document.execCommand("insertText", false, text);
+            });
         });
     }
 
-    /**
-     * Creates color selection DOM elements
-     */
     populateColorSelection() {
+        if (!this.colorSelection) return;
+
         COLORS.forEach((color) => {
             const element = document.createElement("div");
             element.classList.add("select-color");
@@ -251,6 +171,9 @@ class DOMHandler {
 
             element.addEventListener("click", () => {
                 this.setSongImageColor(color);
+                if (this.customColorInput) {
+                    this.customColorInput.value = color;
+                }
             });
 
             this.colorSelection.insertBefore(
@@ -260,40 +183,19 @@ class DOMHandler {
         });
     }
 
-    /**
-     * Switches between search and link input tabs
-     * @param {string} tab
-     */
-    switchTab(tab) {
-        this.tabButtons.forEach((btn) => {
-            btn.classList.toggle("active", btn.dataset.tab === tab);
-        });
-
-        document.querySelectorAll(".tab-content").forEach((content) => {
-            content.classList.toggle("active", content.id === `${tab}-tab`);
-        });
-    }
-
-    /**
-     * Loads a song directly from Spotify link
-     */
     async loadFromSpotifyLink() {
         const url = this.spotifyLinkInput.value.trim();
-
         if (url === "") {
             return this.throwError("Please paste a Spotify link!");
         }
 
         const trackId = this.fetcher.parseSpotifyUrl(url);
-
         if (!trackId) {
-            return this.throwError(
-                "Invalid Spotify link. Try the Search tab instead!"
-            );
+            return this.throwError("Invalid Spotify link. Try the Search tab instead!");
         }
 
-        this.spotifyLinkInput.setAttribute("disabled", "true");
-        this.loadLinkButton.setAttribute("disabled", "true");
+        this.spotifyLinkInput.disabled = true;
+        this.loadLinkButton.disabled = true;
 
         this.hideError();
         this.displaySearching("Loading song from Spotify...");
@@ -303,40 +205,25 @@ class DOMHandler {
             this.songs = [song];
             this.selectedSongIndex = 0;
             this.usedDirectLink = true;
-
-            // Go directly to lyrics
             await this.findLyrics();
         } catch (error) {
             console.error(error);
-
-            this.throwError(
-                "Couldn't load that song. Check the link and try again!"
-            );
+            this.throwError("Couldn't load that song. Check the link and try again!");
         }
 
         this.hideSearching();
-        this.spotifyLinkInput.removeAttribute("disabled");
-        this.loadLinkButton.removeAttribute("disabled");
+        this.spotifyLinkInput.disabled = false;
+        this.loadLinkButton.disabled = false;
     }
 
-    /**
-     * Searches for a song and prepares song selection list
-     * @param {string} name
-     */
     async findSong() {
-        const name = this.searchInput.value
-            .replaceAll("\\", "")
-            .replaceAll("/", "")
-            .trim();
-
+        const name = this.searchInput.value.trim();
         if (name === "") {
-            return this.throwError(
-                `Hold on! Haven't you forgotten about something?`
-            );
+            return this.throwError("Hold on! Haven't you forgotten about something?");
         }
 
-        this.searchInput.setAttribute("disabled", "true");
-        this.searchButton.setAttribute("disabled", "true");
+        this.searchInput.disabled = true;
+        this.searchButton.disabled = true;
 
         this.hideError();
         this.displaySearching(SEARCHING_FOR_SONG);
@@ -344,40 +231,28 @@ class DOMHandler {
         try {
             this.songs = await this.fetcher.getSongInfos(name, SONGS_TO_FETCH);
             this.usedDirectLink = false;
-
             this.populateSongSelection();
             this.displayScreen(2);
         } catch (error) {
             console.error(error);
-
-            this.throwError(
-                `Oops! Looks like we couldn't find any songs for \"${name}\".`
-            );
+            this.throwError(`Oops! Looks like we couldn't find any songs for "${name}".`);
         }
 
         this.hideSearching();
-        this.searchInput.removeAttribute("disabled");
-        this.searchButton.removeAttribute("disabled");
+        this.searchInput.disabled = false;
+        this.searchButton.disabled = false;
     }
 
-    /**
-     * Creates song selection DOM elements from Song objects stored in songs variable
-     */
     populateSongSelection() {
-        this.songSelection
-            .querySelectorAll(".select-song:not(.cloneable)")
-            .forEach((el) => el.remove());
+        if (!this.songSelection) return;
 
-        this.songSelection.classList.add("hidden");
+        this.songSelection.querySelectorAll(".select-song:not(.cloneable)").forEach(el => el.remove());
 
         this.songs.forEach((song, index) => {
             const clone = this.cloneableSelectSong.cloneNode(true);
-
-            clone.querySelector("img").setAttribute("src", song.albumCoverUrl);
+            clone.querySelector("img").src = song.albumCoverUrl;
             clone.querySelector(".name").textContent = song.name;
-            clone.querySelector(".authors").textContent = song.artists
-                .map((artist) => artist.name)
-                .join(", ");
+            clone.querySelector(".authors").textContent = song.artists.map(a => a.name).join(", ");
 
             clone.addEventListener("click", () => {
                 this.selectedSongIndex = index;
@@ -385,7 +260,6 @@ class DOMHandler {
             });
 
             clone.classList.remove("cloneable");
-
             this.songSelection.append(clone);
         });
 
@@ -394,46 +268,28 @@ class DOMHandler {
         }, SELECTION_ANIMATION_DELAY);
     }
 
-    /**
-     * Searches for song lyrics and prepares lines selection list
-     */
     async findLyrics() {
         this.lineSelection.innerHTML = "";
-
         this.displayScreen(3);
         this.displaySongInfo();
         this.displaySearching(SEARCHING_FOR_LYRICS);
 
-        /** @type {Song} */
         const song = this.songs[this.selectedSongIndex];
-
-        const artists = song.artists.map((artist) => artist.name);
+        const artists = song.artists.map(a => a.name);
         let lyrics = null;
         let currentArtist = 0;
 
         try {
             while (lyrics === null && artists.length > currentArtist) {
-                lyrics = await this.fetcher.getSongLyrics(
-                    artists[currentArtist],
-                    song.name
-                );
+                lyrics = await this.fetcher.getSongLyrics(artists[currentArtist], song.name);
                 currentArtist++;
             }
-
-            if (lyrics === null) {
-                throw Error("Lyrics not found");
-            }
+            if (lyrics === null) throw Error("Lyrics not found");
         } catch (error) {
             this.hideSearching();
-
-            if (
-                document
-                    .querySelector(".final-options")
-                    .classList.contains("hidden")
-            ) {
+            if (document.querySelector(".final-options").classList.contains("hidden")) {
                 this.displaySongImage();
             }
-
             return console.error(error);
         }
 
@@ -442,26 +298,18 @@ class DOMHandler {
         this.populateLineSelection();
     }
 
-    /**
-     * Displays song information (cover, name, artist) on the lyrics screen
-     */
     displaySongInfo() {
         const song = this.songs[this.selectedSongIndex];
-
-        this.songInfoCover.setAttribute("src", song.albumCoverUrl);
-        this.songInfoName.textContent = song.name;
-        this.songInfoArtist.textContent = song.artists
-            .map((artist) => artist.name)
-            .join(", ");
+        if (this.songInfoCover) this.songInfoCover.src = song.albumCoverUrl;
+        if (this.songInfoName) this.songInfoName.textContent = song.name;
+        if (this.songInfoArtist) this.songInfoArtist.textContent = song.artists.map(a => a.name).join(", ");
     }
 
-    /**
-     * Creates line selection DOM elements from Lyric objects stored in the selected song's object
-     */
     populateLineSelection() {
         let animationDelay = SELECTION_ANIMATION_DELAY;
+        const lyrics = this.songs[this.selectedSongIndex].lyrics;
 
-        this.songs[this.selectedSongIndex].lyrics.forEach((line, index) => {
+        lyrics.forEach((line, index) => {
             const element = document.createElement("div");
             element.classList.add("select-line", "hidden");
             element.textContent = line.text;
@@ -469,7 +317,6 @@ class DOMHandler {
 
             element.addEventListener("click", () => {
                 element.classList.toggle("selected");
-                this.updateFabVisibility();
             });
 
             setTimeout(() => {
@@ -477,373 +324,165 @@ class DOMHandler {
             }, animationDelay);
 
             animationDelay += NEXT_LINE_ANIMATION_DELAY;
-
             this.lineSelection.append(element);
         });
     }
 
-    /**
-     * Updates FAB visibility based on selected lines
-     */
-    updateFabVisibility() {
-        const selectedLines = document.querySelectorAll(".select-line.selected");
-        if (selectedLines.length > 0) {
-            this.lyricsFab.classList.remove("hidden");
-        } else {
-            this.lyricsFab.classList.add("hidden");
-        }
-    }
-
-    /**
-     * Displays song image final screen
-     */
     displaySongImage() {
         this.setSongImage();
         this.displayScreen(4);
-        this.setSongImageWidth(this.widthSlider.value);
-        this.widthValue.textContent = `${this.widthSlider.value}px`;
-        this.lyricsFab.classList.add("hidden");
-    }
-
-    /**
-     * Prepares song image DOM element
-     */
-    setSongImage() {
-        this.setBase64Image(
-            this.songs[this.selectedSongIndex].albumCoverUrl,
-            ".song-image > .header > img"
-        );
-        this.setSongInfo();
-        this.setSongLyrics(
-            Array.from(document.querySelectorAll(".select-line.selected")).map(
-                (selectLine) => Number(selectLine.dataset.index)
-            )
-        );
-        this.setSongImageColor(
-            COLORS[Math.floor(Math.random() * COLORS.length)]
-        );
-    }
-
-    /**
-     * Set's song image's colors
-     * @param {string} background
-     * @param {string} text
-     */
-    setSongImageColor(background) {
-        this.songImage.style.backgroundColor = background;
-    }
-
-    /**
-     * Sets song image's width
-     * @param {number} width - Width in pixels
-     */
-    setSongImageWidth(width) {
-        const numericWidth = Number(width);
-        this.songImage.style.setProperty("--song-image-width", `${numericWidth}px`);
-
-        const fullHeight = this.songImage.offsetHeight;
-        const screen = this.songImage.closest(".lyrics-image-screen");
-
-        if (!screen) {
-            this.songImage.style.setProperty("--song-image-scale", 1);
-            this.songImage.style.marginBottom = "0px";
-            return;
+        if (this.widthSlider) {
+            this.setSongImageWidth(this.widthSlider.value);
+            if (this.widthValue) {
+                this.widthValue.textContent = `${this.widthSlider.value}px`;
+            }
         }
-
-        const screenWidth = screen.clientWidth;
-        const horizontalMargin = 32;
-        const maxVisualWidth = Math.max(screenWidth - horizontalMargin, 0);
-
-        const scale =
-            numericWidth > 0 && maxVisualWidth > 0
-                ? Math.min(1, maxVisualWidth / numericWidth)
-                : 1;
-
-        this.songImage.style.setProperty("--song-image-scale", scale);
-
-        const marginBottom = fullHeight * (scale - 1);
-        this.songImage.style.marginBottom = `${marginBottom}px`;
     }
 
-    /**
-     * Sets song image's name and author to the name of the fetched song
-     */
-    setSongInfo() {
-        document.querySelector(".song-image > .header .name").textContent =
-            this.songs[this.selectedSongIndex].name;
-        document.querySelector(".song-image > .header .authors").textContent =
-            this.songs[this.selectedSongIndex].artists
-                .map((artist) => artist.name)
-                .join(", ");
+    setSongImage() {
+        const song = this.songs[this.selectedSongIndex];
+        
+        // Set album cover di screen 4
+        const screen4Img = document.querySelector(".song-image .header .screen4-album-img");
+        if (screen4Img && song.albumCoverUrl) {
+            screen4Img.src = song.albumCoverUrl;
+        }
+        
+        // Set name dan artist
+        const nameDiv = document.querySelector(".song-image .header .name");
+        const authorsDiv = document.querySelector(".song-image .header .authors");
+        if (nameDiv) nameDiv.textContent = song.name;
+        if (authorsDiv) authorsDiv.textContent = song.artists.map(a => a.name).join(", ");
+        
+        // Set lyrics dari yang dipilih
+        const selectedLines = document.querySelectorAll(".select-line.selected");
+        let lyricsText = Array.from(selectedLines).map(line => line.textContent.trim()).join(" ");
+        lyricsText = lyricsText.replace(/\s+/g, " ");
+        const lyricsDiv = document.querySelector(".song-image .lyrics");
+        if (lyricsDiv) lyricsDiv.innerHTML = lyricsText || NO_LYRICS_SELECTED;
+        
+        // Random color
+        const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+        this.setSongImageColor(randomColor);
+        if (this.customColorInput) {
+            this.customColorInput.value = randomColor;
+        }
     }
 
-    /**
-     * Sets song image's lyric section to the specified lyrics lines
-     * @param {number[]} indexes
-     */
-    setSongLyrics(indexes) {
-        const lyrics =
-            this.songs[this.selectedSongIndex].lyrics
-                ?.filter((_, index) => indexes.includes(index))
-                ?.map((lyric) => lyric.text)
-                ?.join("<br>") ?? NO_LYRICS_FOUND;
-        document.querySelector(".song-image > .lyrics").innerHTML =
-            lyrics !== "" ? lyrics : NO_LYRICS_SELECTED;
+    setSongImageColor(color) {
+        if (this.songImage) {
+            const bgToggle = document.getElementById("additional-bg");
+            if (bgToggle && bgToggle.classList.contains("active")) {
+                this.songImage.style.background = `linear-gradient(135deg, ${color}, #ffffff)`;
+                this.songImage.style.backgroundColor = "";
+            } else {
+                this.songImage.style.backgroundColor = color;
+                this.songImage.style.backgroundImage = "";
+            }
+        }
     }
 
-    /**
-     * Downloads song image by generating canvas from its DOM elements
-     */
+    setSongImageWidth(width) {
+        if (this.songImage) {
+            this.songImage.style.width = `${width}px`;
+        }
+    }
+
+    toggleLightText() {
+        const isActive = this.lightTextSwitch.classList.contains("active");
+        const nameDiv = document.querySelector(".song-image .header .name");
+        const authorsDiv = document.querySelector(".song-image .header .authors");
+        const lyricsDiv = document.querySelector(".song-image .lyrics");
+        const spotifyText = document.querySelector(".spotify-text");
+        const spotifyIcon = document.querySelector(".spotify-icon");
+
+        if (isActive) {
+            if (nameDiv) nameDiv.style.color = "#ffffff";
+            if (authorsDiv) authorsDiv.style.color = "#ffffff";
+            if (lyricsDiv) lyricsDiv.style.color = "#ffffff";
+            if (spotifyText) spotifyText.style.color = "#ffffff";
+            if (spotifyIcon) spotifyIcon.style.color = "#ffffff";
+        } else {
+            if (nameDiv) nameDiv.style.color = "";
+            if (authorsDiv) authorsDiv.style.color = "";
+            if (lyricsDiv) lyricsDiv.style.color = "";
+            if (spotifyText) spotifyText.style.color = "";
+            if (spotifyIcon) spotifyIcon.style.color = "";
+        }
+    }
+
+    toggleSpotifyLogo() {
+        const spotifyDiv = document.querySelector(".song-image .spotify");
+        if (spotifyDiv) {
+            spotifyDiv.style.display = this.spotifyTagSwitch.classList.contains("active") ? "flex" : "none";
+        }
+    }
+
+    toggleAdditionalBg() {
+        const currentColor = this.customColorInput ? this.customColorInput.value : "#000000";
+        if (this.additionalBgSwitch.classList.contains("active")) {
+            this.songImage.style.background = `linear-gradient(135deg, ${currentColor}, #ffffff)`;
+            this.songImage.style.backgroundColor = "";
+        } else {
+            this.songImage.style.backgroundColor = currentColor;
+            this.songImage.style.backgroundImage = "";
+        }
+    }
+
     async downloadSongImage() {
         this.displaySearching(DOWNLOADING);
-
         const song = this.songs[this.selectedSongIndex];
-        const downloadName = `${song.artists
-            .map((artist) => artist.name)
-            .join(", ")} - ${song.name}.png`;
+        const downloadName = `${song.artists.map(a => a.name).join(", ")} - ${song.name}.png`;
 
-        let canvas = await html2canvas(this.songImage, {
-            backgroundColor: null,
-            scale: window.devicePixelRatio * DOWNLOAD_SCALING_FACTOR,
-        });
-
-        if (
-            this.additionalBgSwitch.parentElement.classList.contains(
-                "additional-bg"
-            )
-        ) {
-            canvas = this.addBgToDownloadCanvas(canvas);
-        }
-
-        canvas.toBlob((blob) => {
-            window.saveAs(blob, downloadName);
+        try {
+            const canvas = await html2canvas(this.songImage, {
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true,
+                allowTaint: false
+            });
+            
+            canvas.toBlob((blob) => {
+                saveAs(blob, downloadName);
+                this.hideSearching();
+            });
+        } catch (error) {
+            console.error(error);
             this.hideSearching();
-        });
+            alert("Failed to download image");
+        }
     }
 
-    /**
-     * Adds background with shadow to the canvas
-     * @param {HTMLCanvasElement} canvas
-     * @returns {HTMLCanvasElement} canvas with background and shadow
-     */
-    addBgToDownloadCanvas(canvas) {
-        const backgroundColor = this.songImage.style.backgroundColor;
-
-        const borderRadius =
-            BACKGROUND_SHADOW_BORDER_RADIUS *
-            window.devicePixelRatio *
-            DOWNLOAD_SCALING_FACTOR;
-
-        const shadowBlur =
-            BACKGROUND_SHADOW_BLUR *
-            window.devicePixelRatio *
-            DOWNLOAD_SCALING_FACTOR;
-
-        const margin = shadowBlur * BACKGROUND_TO_SHADOW_FACTOR;
-
-        const shadowOffsetX =
-            BACKGROUND_SHADOW_OFFSET_X *
-            window.devicePixelRatio *
-            DOWNLOAD_SCALING_FACTOR;
-
-        const shadowOffsetY =
-            BACKGROUND_SHADOW_OFFSET_Y *
-            window.devicePixelRatio *
-            DOWNLOAD_SCALING_FACTOR;
-
-        const shadowCanvas = document.createElement("canvas");
-        shadowCanvas.width = canvas.width + margin * 2;
-        shadowCanvas.height = canvas.height + margin * 2;
-        const shadowContext = shadowCanvas.getContext("2d");
-
-        shadowContext.fillStyle = backgroundColor;
-        shadowContext.fillRect(0, 0, shadowCanvas.width, shadowCanvas.height);
-
-        shadowContext.fillStyle = BACKGROUND_SHADOW_COLOR;
-        shadowContext.filter = `blur(${shadowBlur}px)`;
-        shadowContext.beginPath();
-        shadowContext.moveTo(
-            margin + shadowOffsetX + borderRadius,
-            margin + shadowOffsetY
-        );
-        shadowContext.lineTo(
-            margin + shadowOffsetX + canvas.width - borderRadius,
-            margin + shadowOffsetY
-        );
-        shadowContext.quadraticCurveTo(
-            margin + shadowOffsetX + canvas.width,
-            margin + shadowOffsetY,
-            margin + shadowOffsetX + canvas.width,
-            margin + shadowOffsetY + borderRadius
-        );
-        shadowContext.lineTo(
-            margin + shadowOffsetX + canvas.width,
-            margin + shadowOffsetY + canvas.height - borderRadius
-        );
-        shadowContext.quadraticCurveTo(
-            margin + shadowOffsetX + canvas.width,
-            margin + shadowOffsetY + canvas.height,
-            margin + shadowOffsetX + canvas.width - borderRadius,
-            margin + shadowOffsetY + canvas.height
-        );
-        shadowContext.lineTo(
-            margin + shadowOffsetX + borderRadius,
-            margin + shadowOffsetY + canvas.height
-        );
-        shadowContext.quadraticCurveTo(
-            margin + shadowOffsetX,
-            margin + shadowOffsetY + canvas.height,
-            margin + shadowOffsetX,
-            margin + shadowOffsetY + canvas.height - borderRadius
-        );
-        shadowContext.lineTo(
-            margin + shadowOffsetX,
-            margin + shadowOffsetY + borderRadius
-        );
-        shadowContext.quadraticCurveTo(
-            margin + shadowOffsetX,
-            margin + shadowOffsetY,
-            margin + shadowOffsetX + borderRadius,
-            margin + shadowOffsetY
-        );
-        shadowContext.closePath();
-        shadowContext.fill();
-
-        shadowContext.filter = "none";
-        shadowContext.drawImage(canvas, margin, margin);
-
-        return shadowCanvas;
-    }
-
-    /**
-     * Converts cover image to base64 and sets it as image's source in order to avoid canvas CORS policy
-     * @param {string} url
-     * @param {string} imgSelector
-     */
-    async setBase64Image(url, imgSelector, newColor = null) {
-        const response = await fetch(url);
-        const blob = await response.blob();
-
-        const base64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-
-        if (newColor === null)
-            return document
-                .querySelector(imgSelector)
-                .setAttribute("src", base64);
-
-        const img = new Image();
-        img.src = base64;
-
-        img.onload = () => {
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-
-            const imageData = ctx.getImageData(
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-            const data = imageData.data;
-
-            for (let i = 0; i < data.length; i += 4) {
-                if (data[i + 3] > 0) {
-                    data[i] = data[i + 1] = data[i + 2] = newColor; // Set RGB (0 = black, 255 = white)
-                }
-            }
-
-            ctx.putImageData(imageData, 0, 0);
-            document
-                .querySelector(imgSelector)
-                .setAttribute("src", canvas.toDataURL());
-        };
-    }
-
-    /**
-     * Displays an error message with provided html
-     * @param {string} html
-     */
     throwError(html) {
-        this.errorTexts.forEach((element) => {
-            element.innerHTML = html;
-            element.classList.remove("hidden");
+        this.errorTexts.forEach(el => {
+            el.innerHTML = html;
+            el.classList.remove("hidden");
         });
     }
 
-    /**
-     * Hides the error message
-     */
     hideError() {
-        this.errorTexts.forEach((element) => {
-            element.classList.add("hidden");
-        });
+        this.errorTexts.forEach(el => el.classList.add("hidden"));
     }
 
-    /**
-     * Displays a searching text
-     * @param {string} text
-     */
     displaySearching(text) {
-        this.searchingTexts.forEach((element) => {
-            element.textContent = text;
-            element.classList.remove("hidden");
+        this.searchingTexts.forEach(el => {
+            el.textContent = text;
+            el.classList.remove("hidden");
         });
     }
 
-    /**
-     * Hides the searching text
-     */
     hideSearching() {
-        this.searchingTexts.forEach((element) => {
-            element.classList.add("hidden");
-        });
+        this.searchingTexts.forEach(el => el.classList.add("hidden"));
     }
 
-    /**
-     * Displays a searching text
-     * @param {number} number
-     */
     displayScreen(number) {
-        this.screens.forEach((screen) => {
-            if (Number(screen.dataset.number) < number) {
-                screen.classList.add("hidden");
-                screen.classList.add("left");
-            } else if (Number(screen.dataset.number) === number) {
+        this.screens.forEach(screen => {
+            const screenNumber = Number(screen.dataset.number);
+            if (screenNumber === number) {
                 screen.classList.remove("hidden");
-                screen.classList.remove("left");
             } else {
                 screen.classList.add("hidden");
-                screen.classList.remove("left");
             }
         });
-
-        // Update FAB visibility when returning to lyrics selection screen
-        if (number === 3) {
-            this.updateFabVisibility();
-        } else {
-            this.lyricsFab.classList.add("hidden");
-        }
-    }
-
-    /**
-     * Sets color theme
-     * @param {string} theme
-     */
-    setTheme(theme) {
-        if (theme === "dark") {
-            document.body.classList.add("dark-mode");
-            localStorage.setItem("theme", "dark");
-        } else {
-            document.body.classList.remove("dark-mode");
-            localStorage.setItem("theme", "light");
-        }
     }
 }
