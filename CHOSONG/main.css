@@ -5,7 +5,7 @@
     box-sizing: border-box;
     font-family: "Poppins", "Outfit", sans-serif;
 
-    /* LIGHT MODE (default) - TANPA GLASS */
+    /* LIGHT MODE (default) */
     --background-color: #f5f5fa;
     --background-text-color: #1a1a2e;
     --surface-bg: #ffffff;
@@ -20,7 +20,7 @@
     --cubic-ease-out: cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-/* DARK MODE - TANPA GLASS */
+/* DARK MODE */
 .dark-mode, .dark-mode * {
     --background-color: #1a1a2e;
     --background-text-color: #e2e8f0;
@@ -55,18 +55,18 @@ body {
 
 h1, h2 {
     margin: 0;
-    padding: 1.5rem 0 1.1rem;
+    padding: 1rem 0 1rem;
     font-size: 1.6rem;
     font-weight: 600;
     letter-spacing: -0.3px;
 }
 
-/* SURFACE - SOLID, TANPA GLASS */
 .surface {
     background: var(--surface-bg);
     color: var(--surface-text-color);
     border: 1px solid var(--surface-border);
     border-radius: 20px;
+    box-shadow: none;
     transition: all 0.2s var(--cubic-ease-out);
 }
 
@@ -74,16 +74,18 @@ h1, h2 {
     background: var(--primary-color);
     color: var(--primary-text-color);
     border: none;
-    border-radius: 40px;
+    border-radius: 60px;
     padding: 12px 24px;
     cursor: pointer;
+    font-weight: 600;
     transition: all 0.2s var(--cubic-ease-out);
+    box-shadow: none;
 }
 
 .primary:hover {
     transform: translateY(-2px);
     opacity: 0.9;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: none;
 }
 
 .primary:active {
@@ -109,7 +111,7 @@ main {
     align-items: flex-start;
 }
 
-/* ========== HEADER - TANPA GLASS ========== */
+/* ========== HEADER ========== */
 header {
     position: sticky;
     top: 0;
@@ -118,8 +120,8 @@ header {
     text-align: center;
     padding: 1rem 0;
     border-bottom: 1px solid var(--surface-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
+    box-shadow: none;
 }
 
 .header-top {
@@ -179,6 +181,7 @@ header > .go-to-screen, #download, #last-go-back {
     font-size: 0.85rem;
     transition: all 0.2s var(--cubic-ease-out);
     cursor: pointer;
+    box-shadow: none;
 }
 
 header > .go-to-screen.right, #download {
@@ -191,13 +194,14 @@ header > .go-to-screen:hover, #download:hover, #last-go-back:hover {
     cursor: pointer;
     background: var(--surface-hover);
     transform: translate(-100%, -50%) scale(1.05);
+    box-shadow: none;
 }
 
 header > .go-to-screen.right:hover {
     transform: translate(100%, -50%) scale(1.05);
 }
 
-/* TOMBOL DARK/LIGHT - TANPA GLASS */
+/* TOMBOL DARK/LIGHT */
 #dark-mode-toggle {
     position: fixed !important;
     top: 20px !important;
@@ -210,21 +214,21 @@ header > .go-to-screen.right:hover {
     gap: 8px !important;
     padding: 10px 20px !important;
     background: var(--surface-bg) !important;
-    border-radius: 40px !important;
+    border-radius: 60px !important;
     font-weight: 700 !important;
     font-size: 0.85rem !important;
     cursor: pointer !important;
     z-index: 9999 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.2s var(--cubic-ease-out) !important;
     border: 1px solid var(--surface-border) !important;
     color: var(--background-text-color) !important;
+    box-shadow: none !important;
 }
 
 #dark-mode-toggle:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
     background: var(--surface-hover) !important;
+    box-shadow: none !important;
 }
 
 #dark-mode-toggle span {
@@ -236,15 +240,16 @@ header > .go-to-screen.right:hover {
     content: none;
 }
 
-/* ========== FOOTER - ROUNDED TAPI GA TERLALU ========== */
+/* ========== FOOTER ========== */
 footer {
     text-align: center;
     padding: 2rem 1.5rem 1.5rem;
     background: var(--surface-bg);
     border-top: 1px solid var(--surface-border);
     margin-top: 2rem;
-    border-radius: 24px 24px 0 0;
+    border-radius: 20px 20px 0 0;
     transition: all 0.3s ease;
+    box-shadow: none;
 }
 
 .footer-grid {
@@ -268,7 +273,6 @@ footer {
     margin-bottom: 12px;
     font-size: 1.1rem;
     color: var(--background-text-color);
-    padding-left: 0;
 }
 
 .footer-col p {
@@ -304,18 +308,20 @@ footer {
 input, textarea, select {
     background: var(--surface-bg);
     border: 1px solid var(--surface-border);
-    padding: 12px 16px;
+    padding: 12px 20px;
     color: var(--background-text-color);
     border-radius: 60px;
     transition: all 0.2s var(--cubic-ease-out);
     font-size: 0.9rem;
+    width: 100%;
+    box-shadow: none;
 }
 
 input:focus, textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.1);
     transform: translateY(-1px);
+    box-shadow: none;
 }
 
 button:not(#dark-mode-toggle):not(.fab) {
@@ -326,11 +332,13 @@ button:not(#dark-mode-toggle):not(.fab) {
     border-radius: 60px;
     transition: all 0.2s var(--cubic-ease-out);
     cursor: pointer;
+    box-shadow: none;
 }
 
 button:not(#dark-mode-toggle):not(.fab):hover {
     background: var(--surface-hover);
     transform: translateY(-1px);
+    box-shadow: none;
 }
 
 /* ========== RESPONSIVE MOBILE ========== */
@@ -345,26 +353,25 @@ button:not(#dark-mode-toggle):not(.fab):hover {
     .footer-col {
         flex: 1;
         min-width: 140px;
-        text-align: left;
     }
     
     .footer-col strong {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         margin-bottom: 6px;
     }
     
     .footer-col p {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         line-height: 1.4;
     }
     
     footer {
         padding: 1rem 1rem 0.8rem;
-        border-radius: 20px 20px 0 0;
+        border-radius: 16px 16px 0 0;
     }
     
     .roleplay-text {
-        font-size: 0.6rem;
+        font-size: 0.55rem;
         padding-top: 0.8rem;
         margin-top: 0.3rem;
     }
@@ -391,7 +398,7 @@ button:not(#dark-mode-toggle):not(.fab):hover {
     
     h1, h2 {
         font-size: 1.3rem;
-        padding: 1rem 0 0.8rem;
+        padding: 0.8rem 0;
     }
 
     header > .go-to-screen, #download, #last-go-back {
@@ -406,20 +413,20 @@ button:not(#dark-mode-toggle):not(.fab):hover {
     }
     
     .footer-col {
-        min-width: 120px;
+        min-width: 110px;
     }
     
     .footer-col strong {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
     
     .footer-col p {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     
     footer {
         padding: 0.8rem 0.8rem 0.6rem;
-        border-radius: 16px 16px 0 0;
+        border-radius: 12px 12px 0 0;
     }
     
     .header-logo img {
@@ -439,7 +446,7 @@ button:not(#dark-mode-toggle):not(.fab):hover {
     }
     
     input, textarea, select, button:not(#dark-mode-toggle):not(.fab) {
-        padding: 10px 14px;
+        padding: 10px 16px;
         font-size: 0.85rem;
     }
 }
@@ -455,18 +462,18 @@ button:not(#dark-mode-toggle):not(.fab):hover {
     background: var(--primary-color);
     color: var(--primary-text-color);
     border: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all 0.2s var(--cubic-ease-out);
     z-index: 100;
+    box-shadow: none;
 }
 
 .fab:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: none;
 }
 
 .fab.hidden {
@@ -501,11 +508,13 @@ hr {
     border-radius: 60px;
     transition: all 0.2s var(--cubic-ease-out);
     cursor: pointer;
+    box-shadow: none;
 }
 
 .btn-neu:hover {
     transform: translateY(-2px);
     background: var(--surface-hover);
+    box-shadow: none;
 }
 
 /* Card/Song selection motion */
@@ -518,11 +527,12 @@ hr {
     margin-bottom: 8px;
     transition: all 0.2s var(--cubic-ease-out);
     cursor: pointer;
+    box-shadow: none;
 }
 
 .song-selection > div:not(.cloneable):hover,
 .lines-selection > div:not(.cloneable):hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-color: var(--primary-color);
+    box-shadow: none;
 }
