@@ -19,6 +19,14 @@
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
                 <header>
+                    <!-- TAMBAHAN HEADER: LOGO + CHOSONG -->
+                    <div class="header-top">
+                        <div class="header-logo">
+                            <img src="thekachoo.png" alt="The Kachoo Logo">
+                        </div>
+                        <div class="chosong-title">CHOSONG</div>
+                        <div class="generator-by">Lyrics Generator by The Kachoo</div>
+                    </div>
                     <h1>Lyrics Image Generator</h1>
                 </header>
                 <div class="input-tabs" style="display: none;">
@@ -49,6 +57,14 @@
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
                 <header>
+                    <!-- TAMBAHAN HEADER: LOGO + CHOSONG -->
+                    <div class="header-top">
+                        <div class="header-logo">
+                            <img src="thekachoo.png" alt="The Kachoo Logo">
+                        </div>
+                        <div class="chosong-title">CHOSONG</div>
+                        <div class="generator-by">Lyrics Generator by The Kachoo</div>
+                    </div>
                     <button class="go-to-screen material-symbols-outlined" data-number="1">chevron_left</button>
                     <h2>Select a song</h2>
                 </header>
@@ -64,6 +80,14 @@
         <section class="lyrics-image-screen hidden lyrics-results" data-number="3">
             <div class="screen-wrapper">
                 <header>
+                    <!-- TAMBAHAN HEADER: LOGO + CHOSONG -->
+                    <div class="header-top">
+                        <div class="header-logo">
+                            <img src="thekachoo.png" alt="The Kachoo Logo">
+                        </div>
+                        <div class="chosong-title">CHOSONG</div>
+                        <div class="generator-by">Lyrics Generator by The Kachoo</div>
+                    </div>
                     <button class="go-to-screen material-symbols-outlined" data-number="2">chevron_left</button>
                     <h2>Select lines</h2>
                     <button class="go-to-screen right material-symbols-outlined" data-number="4">chevron_right</button>
@@ -85,6 +109,14 @@
         <section class="lyrics-image-screen hidden final-options" data-number="4">
             <div class="screen-wrapper">
                 <header>
+                    <!-- TAMBAHAN HEADER: LOGO + CHOSONG -->
+                    <div class="header-top">
+                        <div class="header-logo">
+                            <img src="thekachoo.png" alt="The Kachoo Logo">
+                        </div>
+                        <div class="chosong-title">CHOSONG</div>
+                        <div class="generator-by">Lyrics Generator by The Kachoo</div>
+                    </div>
                     <button class="material-symbols-outlined" id="last-go-back">chevron_left</button>
                     <h2>Song image</h2>
                     <button class="material-symbols-outlined" id="download">download</button>
@@ -128,31 +160,40 @@
                     </div>
                     <input type="range" id="width-slider" min="200" max="600" value="320" step="10">
                 </div>
-                <div class="control-group font-selection-container">
-                    <div class="font-label">Chinese Glyph Standards</div>
-                    <select id="font-lang" class="surface">
-                        <option value="en">Auto</option>
-                        <option value="zh-TW">TW</option>
-                        <option value="zh-CN">CN</option>
-                        <option value="zh-HK">HK</option>
-                        <option value="ja">JP</option>
-                        <option value="ko">KR</option>
-                    </select>
-                </div>
             </div>
         </section>
     </main>
+    
+    <!-- FOOTER BARU -->
     <footer class="surface">
-        <div>
-            Made by
-            <a href="https://github.com/palinkiewicz" target="_blank">The Kachoo</a>
-            |
-            <a href="https://thekachoo.github.io/Home">Kachoo</a>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <strong>The Kachoo</strong>
+                <p>Digital media company turning ideas into attention through innovative publications.</p>
+            </div>
+            <div class="footer-col">
+                <strong>Address</strong>
+                <p>Jenderal Sudirman Avenue, Lots 61–62, South Jakarta, Indonesia</p>
+            </div>
+            <div class="footer-col">
+                <strong>Contact</strong>
+                <p>
+                    Official Account : <a href="https://twitter.com/thekachoo" target="_blank" rel="noopener noreferrer">@thekachoo</a><br>
+                    Business : <a href="https://twitter.com/HaiKachoo" target="_blank" rel="noopener noreferrer">@HaiKachoo</a><br>
+                    Email : <a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a>
+                </p>
+            </div>
         </div>
-        <div id="dark-mode-toggle">
-            <span class="material-symbols-outlined"></span>
+        <div class="roleplay-text">
+            For Roleplay Purpose Only, made by The Kachoo in 2026.
         </div>
     </footer>
+    
+    <!-- TOMBOL DARK MODE DIPINDAH KE SINI (POJOK KANAN) -->
+    <div id="dark-mode-toggle">
+        <span class="material-symbols-outlined"></span>
+    </div>
+    
     <script src="Artist.js"></script>
     <script src="Lyric.js"></script>
     <script src="Song.js"></script>
