@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     <link rel="stylesheet"
@@ -12,183 +12,21 @@
     <link rel="stylesheet" href="wizard.css">
     <link rel="stylesheet" href="song-image.css">
     <title>Lyrics Image Generator</title>
-    <style>
-        /* Tambahan minimal untuk dark/light toggle posisi kanan & footer baru */
-        /* Hanya hitam & putih - tidak ada warna lain */
-        
-        .theme-toggle-corner {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1000;
-            display: flex;
-            gap: 0.5rem;
-            background: rgba(255,255,255,0.95);
-            padding: 0.3rem 0.6rem;
-            border-radius: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid #ccc;
-        }
-        body.dark-mode .theme-toggle-corner {
-            background: rgba(0,0,0,0.85);
-            border-color: #444;
-        }
-        .theme-btn {
-            background: transparent;
-            border: none;
-            font-size: 0.8rem;
-            font-weight: 500;
-            padding: 0.3rem 0.8rem;
-            border-radius: 30px;
-            cursor: pointer;
-            font-family: inherit;
-            color: #000;
-        }
-        body.dark-mode .theme-btn {
-            color: #fff;
-        }
-        .theme-btn.active {
-            background: #000;
-            color: #fff;
-        }
-        body.dark-mode .theme-btn.active {
-            background: #fff;
-            color: #000;
-        }
-        
-        /* Header baru dengan logo tengah & CHOSONG */
-        .custom-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            margin-top: 0.5rem;
-        }
-        .logo-center img {
-            max-width: 140px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        .chosong-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin-top: 0.25rem;
-            color: #000;
-        }
-        body.dark-mode .chosong-text {
-            color: #fff;
-        }
-        .generator-sub {
-            font-size: 0.85rem;
-            margin-top: 0.2rem;
-            color: #555;
-        }
-        body.dark-mode .generator-sub {
-            color: #aaa;
-        }
-        
-        /* Footer baru 3 kolom */
-        .custom-footer {
-            margin-top: 3rem;
-            padding: 2rem 1.5rem 1rem;
-            border-top: 1px solid #ddd;
-            background: #fff;
-        }
-        body.dark-mode .custom-footer {
-            background: #000;
-            border-top-color: #333;
-        }
-        .footer-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .footer-col {
-            flex: 1;
-            min-width: 180px;
-        }
-        .footer-col h4 {
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
-            color: #000;
-        }
-        body.dark-mode .footer-col h4 {
-            color: #fff;
-        }
-        .footer-col p, .footer-col a {
-            font-size: 0.85rem;
-            line-height: 1.5;
-            color: #333;
-            text-decoration: none;
-            display: block;
-            margin: 0.3rem 0;
-        }
-        body.dark-mode .footer-col p, body.dark-mode .footer-col a {
-            color: #ccc;
-        }
-        .footer-col a:hover {
-            text-decoration: underline;
-        }
-        .roleplay-line {
-            text-align: center;
-            font-size: 0.7rem;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #ddd;
-            color: #666;
-        }
-        body.dark-mode .roleplay-line {
-            border-top-color: #333;
-            color: #888;
-        }
-        
-        /* Mobile */
-        @media (max-width: 680px) {
-            .footer-grid { flex-direction: column; gap: 1.5rem; }
-            .theme-toggle-corner { top: 0.6rem; right: 0.6rem; }
-            .logo-center img { max-width: 100px; }
-        }
-        
-        /* Pastikan konten utama tetap rapi */
-        main {
-            padding-top: 0.5rem;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
 </head>
 
 <body class="dark-mode">
-    <!-- Tombol Switch ke pojok kanan -->
-    <div class="theme-toggle-corner">
-        <button class="theme-btn" id="light-mode-btn">Light</button>
-        <button class="theme-btn" id="dark-mode-btn">Dark</button>
-    </div>
-
     <main>
-        <!-- Header: Logo tengah atas + CHOSONG di atas Lyrics Generator -->
-        <div class="custom-header">
-            <div class="logo-center">
-                <img src="thekachoo.png" alt="The Kachoo Logo" onerror="this.src='https://placehold.co/200x60?text=Logo'">
-            </div>
-            <div class="chosong-text">CHOSONG</div>
-            <div class="generator-sub">Lyrics Generator by The Kachoo</div>
-        </div>
-
-        <!-- WIZARD SECTION (sama seperti punya Anda) -->
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
+                <header>
+                    <h1>Lyrics Image Generator</h1>
+                </header>
                 <div class="input-tabs" style="display: none;">
                     <button class="tab-button active" data-tab="search">Search</button>
                     <button class="tab-button" data-tab="link">Paste Link</button>
                 </div>
                 <div class="tab-content active" id="search-tab">
-                    <form id="search-form">
+                    <form>
                         <input class="surface" type="text" id="song-name" placeholder="Song name and author here">
                         <button class="primary" id="search">
                             Find that song!
@@ -196,7 +34,7 @@
                     </form>
                 </div>
                 <div class="tab-content" id="link-tab">
-                    <form id="link-form">
+                    <form>
                         <input class="surface" type="text" id="spotify-link"
                             placeholder="https://open.spotify.com/track/...">
                         <button class="primary" id="load-link">
@@ -208,17 +46,21 @@
                 <div class="error hidden"></div>
             </div>
         </section>
-
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
                 <header>
                     <button class="go-to-screen material-symbols-outlined" data-number="1">chevron_left</button>
                     <h2>Select a song</h2>
                 </header>
-                <div class="song-selection"></div>
+                <div class="song-selection">
+                    <div class="select-song cloneable">
+                        <img src="" alt="album-cover">
+                        <div class="name"></div>
+                        <div class="authors"></div>
+                    </div>
+                </div>
             </div>
         </section>
-
         <section class="lyrics-image-screen hidden lyrics-results" data-number="3">
             <div class="screen-wrapper">
                 <header>
@@ -240,7 +82,6 @@
                 <span class="material-symbols-outlined">arrow_forward</span>
             </button>
         </section>
-
         <section class="lyrics-image-screen hidden final-options" data-number="4">
             <div class="screen-wrapper">
                 <header>
@@ -248,7 +89,8 @@
                     <h2>Song image</h2>
                     <button class="material-symbols-outlined" id="download">download</button>
                 </header>
-                <div class="song-image" id="song-image-preview">
+                <div class="searching hidden"></div>
+                <div class="song-image">
                     <div class="header">
                         <img src="" alt="album-cover">
                         <div>
@@ -262,7 +104,7 @@
                     </div>
                 </div>
                 <div class="color-selection">
-                    <div id="custom-color">
+                    <div class="" id="custom-color">
                         <input type="color" id="custom-color-input">
                         <label class="material-symbols-outlined" for="custom-color-input">palette</label>
                     </div>
@@ -286,169 +128,31 @@
                     </div>
                     <input type="range" id="width-slider" min="200" max="600" value="320" step="10">
                 </div>
+                <div class="control-group font-selection-container">
+                    <div class="font-label">Chinese Glyph Standards</div>
+                    <select id="font-lang" class="surface">
+                        <option value="en">Auto</option>
+                        <option value="zh-TW">TW</option>
+                        <option value="zh-CN">CN</option>
+                        <option value="zh-HK">HK</option>
+                        <option value="ja">JP</option>
+                        <option value="ko">KR</option>
+                    </select>
+                </div>
             </div>
         </section>
     </main>
-
-    <!-- FOOTER baru (The Kachoo, Address, Contact + roleplay) -->
-    <footer class="custom-footer">
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>The Kachoo</h4>
-                <p>Digital media company turning ideas into attention through innovative publications.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Address</h4>
-                <p>Jenderal Sudirman Avenue, Lots 61–62, South Jakarta, Indonesia</p>
-            </div>
-            <div class="footer-col">
-                <h4>Contact</h4>
-                <a href="#" onclick="window.open('https://twitter.com/thekachoo', '_blank'); return false;">Official Account : @thekachoo</a>
-                <a href="#" onclick="window.open('https://twitter.com/HaiKachoo', '_blank'); return false;">Business : @HaiKachoo</a>
-                <a href="mailto:ohkachoo@gmail.com">Email : ohkachoo@gmail.com</a>
-            </div>
+    <footer class="surface">
+        <div>
+            Made by
+            <a href="https://github.com/palinkiewicz" target="_blank">The Kachoo</a>
+            |
+            <a href="https://thekachoo.github.io/Home">Kachoo</a>
         </div>
-        <div class="roleplay-line">
-            For Roleplay Purpose Only, made by The Kachoo in 2026.
+        <div id="dark-mode-toggle">
+            <span class="material-symbols-outlined"></span>
         </div>
     </footer>
-
-    <script>
-        // Minimal JavaScript untuk mock data dan fungsi agar wizard tetap berjalan
-        // (karena file JS asli Anda tetap dipanggil, ini hanya fallback)
-        
-        // TEMA Dark/Light (hanya hitam putih)
-        const darkBtn = document.getElementById('dark-mode-btn');
-        const lightBtn = document.getElementById('light-mode-btn');
-        
-        function setTheme(theme) {
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                darkBtn.classList.add('active');
-                lightBtn.classList.remove('active');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                lightBtn.classList.add('active');
-                darkBtn.classList.remove('active');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-        
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') setTheme('light');
-        else setTheme('dark');
-        
-        darkBtn?.addEventListener('click', () => setTheme('dark'));
-        lightBtn?.addEventListener('click', () => setTheme('light'));
-        
-        // MOCK untuk demo (karena file asli Artist.js dll tetap akan override, 
-        // tapi ini prevent error jika ada fungsi kosong)
-        if (typeof window.DOMHandler === 'undefined') {
-            // fallback sederhana agar wizard bisa navigasi
-            document.querySelectorAll('.go-to-screen').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    const num = this.getAttribute('data-number');
-                    if (num) {
-                        document.querySelectorAll('.lyrics-image-screen').forEach(s => s.classList.add('hidden'));
-                        const target = document.querySelector(`.lyrics-image-screen[data-number="${num}"]`);
-                        if (target) target.classList.remove('hidden');
-                    }
-                });
-            });
-            
-            const lastGoBack = document.getElementById('last-go-back');
-            if (lastGoBack) {
-                lastGoBack.addEventListener('click', () => {
-                    document.querySelectorAll('.lyrics-image-screen').forEach(s => s.classList.add('hidden'));
-                    document.querySelector('.lyrics-results').classList.remove('hidden');
-                });
-            }
-            
-            // simple search mock
-            const searchBtn = document.getElementById('search');
-            if (searchBtn) {
-                searchBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const query = document.getElementById('song-name').value;
-                    if (!query) return;
-                    // mock results
-                    const mockResults = [
-                        { name: 'Blinding Lights', artist: 'The Weeknd', cover: 'https://via.placeholder.com/100?text=Album' },
-                        { name: 'Shape of You', artist: 'Ed Sheeran', cover: 'https://via.placeholder.com/100?text=Album' }
-                    ];
-                    const container = document.querySelector('.song-selection');
-                    if (container) {
-                        container.innerHTML = '';
-                        mockResults.forEach(song => {
-                            const div = document.createElement('div');
-                            div.className = 'select-song';
-                            div.innerHTML = `<img src="${song.cover}"><div class="name">${song.name}</div><div class="authors">${song.artist}</div>`;
-                            div.onclick = () => {
-                                window.currentSong = song;
-                                document.querySelectorAll('.lyrics-image-screen').forEach(s => s.classList.add('hidden'));
-                                document.querySelector('.lyrics-results').classList.remove('hidden');
-                                document.querySelector('.song-info-name').innerText = song.name;
-                                document.querySelector('.song-info-artist').innerText = song.artist;
-                            };
-                            container.appendChild(div);
-                        });
-                        document.querySelectorAll('.lyrics-image-screen').forEach(s => s.classList.add('hidden'));
-                        document.querySelector('.search-results').classList.remove('hidden');
-                    }
-                });
-            }
-        }
-        
-        // tambahan untuk switch container (light text dll) biar functional
-        document.querySelectorAll('.switch-container .switch').forEach(sw => {
-            sw.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const preview = document.getElementById('song-image-preview');
-                if (!preview) return;
-                if (this.closest('#light-text')) {
-                    if (this.classList.contains('active')) preview.style.color = '#fff';
-                    else preview.style.color = '';
-                }
-                if (this.closest('#additional-bg')) {
-                    if (this.classList.contains('active')) preview.style.backgroundColor = '#222';
-                    else preview.style.backgroundColor = '';
-                }
-                if (this.closest('#spotify-tag')) {
-                    const spotifyDiv = preview?.querySelector('.spotify');
-                    if (spotifyDiv) spotifyDiv.style.display = this.classList.contains('active') ? 'block' : 'none';
-                }
-            });
-        });
-        
-        // download button mock
-        const downloadBtn = document.getElementById('download');
-        if (downloadBtn && typeof html2canvas !== 'undefined') {
-            downloadBtn.addEventListener('click', () => {
-                const element = document.getElementById('song-image-preview');
-                if (element) {
-                    html2canvas(element, { scale: 2 }).then(canvas => {
-                        canvas.toBlob(blob => {
-                            saveAs(blob, 'lyrics_image.png');
-                        });
-                    });
-                }
-            });
-        }
-        
-        // slider width
-        const slider = document.getElementById('width-slider');
-        if (slider) {
-            slider.addEventListener('input', (e) => {
-                const val = e.target.value;
-                document.getElementById('width-value').innerText = val + 'px';
-                const preview = document.getElementById('song-image-preview');
-                if (preview) preview.style.width = val + 'px';
-            });
-        }
-    </script>
-    
-    <!-- JS asli Anda tetap dipanggil (tidak dihapus) -->
     <script src="Artist.js"></script>
     <script src="Lyric.js"></script>
     <script src="Song.js"></script>
