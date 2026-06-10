@@ -18,12 +18,10 @@
     <main>
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
-                <!-- HEADER HORIZONTAL: LOGO KIRI | CHOSONG TENGAH | TOMBOL KANAN -->
+                <!-- HEADER - PASTIIN STRUCTURNYA SESUAI CSS -->
                 <div class="main-header">
                     <div class="header-logo">
-                        <div class="logo-motion">
-                            <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-                        </div>
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
                     </div>
                     <div class="header-center">
                         <div class="chosong-brand">CHOSONG</div>
@@ -36,57 +34,58 @@
                         </div>
                     </div>
                 </div>
-                <!-- TITLE HANYA "What's your mood today?" DI TENGAH -->
+                
                 <div class="main-title">
                     <h1>What's your mood today?</h1>
                 </div>
+                
                 <div class="input-tabs" style="display: none;">
                     <button class="tab-button active" data-tab="search">Search</button>
                     <button class="tab-button" data-tab="link">Paste Link</button>
                 </div>
+                
                 <div class="tab-content active" id="search-tab">
                     <form>
                         <input class="surface" type="text" id="song-name" placeholder="Song name or Singer">
-                        <button class="primary" id="search">
-                            Find the song!
-                        </button>
+                        <button class="primary" id="search">Find the song!</button>
                     </form>
                 </div>
+                
                 <div class="tab-content" id="link-tab">
                     <form>
-                        <input class="surface" type="text" id="spotify-link"
-                            placeholder="https://open.spotify.com/track/...">
-                        <button class="primary" id="load-link">
-                            Load song!
-                        </button>
+                        <input class="surface" type="text" id="spotify-link" placeholder="https://open.spotify.com/track/...">
+                        <button class="primary" id="load-link">Load song!</button>
                     </form>
                 </div>
+                
                 <div class="searching hidden"></div>
                 <div class="error hidden"></div>
             </div>
         </section>
+
         <section class="lyrics-image-screen hidden search-results" data-number="2">
             <div class="screen-wrapper">
                 <div class="main-header">
                     <div class="header-logo">
-                        <div class="logo-motion">
-                            <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-                        </div>
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
                     </div>
                     <div class="header-center">
                         <div class="chosong-brand">CHOSONG</div>
                         <div class="generator-by">by the Kachoo</div>
                     </div>
                     <div class="header-right">
-                        <div id="dark-mode-toggle2" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;">
+                        <div id="dark-mode-toggle2">
                             <span class="material-symbols-outlined">light_mode</span>
                         </div>
                     </div>
                 </div>
+                
                 <button class="go-to-screen material-symbols-outlined" data-number="1">chevron_left</button>
+                
                 <div class="main-title">
                     <h1>Select a song</h1>
                 </div>
+                
                 <div class="song-selection">
                     <div class="select-song cloneable">
                         <img src="" alt="album-cover">
@@ -96,29 +95,32 @@
                 </div>
             </div>
         </section>
+
         <section class="lyrics-image-screen hidden lyrics-results" data-number="3">
             <div class="screen-wrapper">
                 <div class="main-header">
                     <div class="header-logo">
-                        <div class="logo-motion">
-                            <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-                        </div>
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
                     </div>
                     <div class="header-center">
                         <div class="chosong-brand">CHOSONG</div>
                         <div class="generator-by">by the Kachoo</div>
                     </div>
                     <div class="header-right">
-                        <div id="dark-mode-toggle3" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;">
+                        <div id="dark-mode-toggle3">
                             <span class="material-symbols-outlined">light_mode</span>
                         </div>
                     </div>
                 </div>
+                
                 <button class="go-to-screen material-symbols-outlined" data-number="2">chevron_left</button>
+                
                 <div class="main-title">
                     <h1>Select lines</h1>
                 </div>
+                
                 <button class="go-to-screen right material-symbols-outlined" data-number="4">chevron_right</button>
+                
                 <div class="song-info-display">
                     <img src="" alt="album cover" class="song-info-cover">
                     <div class="song-info-text">
@@ -126,6 +128,7 @@
                         <div class="song-info-artist"></div>
                     </div>
                 </div>
+                
                 <div class="searching hidden"></div>
                 <div class="lines-selection"></div>
             </div>
@@ -133,30 +136,34 @@
                 <span class="material-symbols-outlined">arrow_forward</span>
             </button>
         </section>
+
         <section class="lyrics-image-screen hidden final-options" data-number="4">
             <div class="screen-wrapper">
                 <div class="main-header">
                     <div class="header-logo">
-                        <div class="logo-motion">
-                            <img src="logo-thekachoo.png" alt="The Kachoo Logo">
-                        </div>
+                        <img src="logo-thekachoo.png" alt="The Kachoo Logo">
                     </div>
                     <div class="header-center">
                         <div class="chosong-brand">CHOSONG</div>
                         <div class="generator-by">by the Kachoo</div>
                     </div>
                     <div class="header-right">
-                        <div id="dark-mode-toggle4" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;">
+                        <div id="dark-mode-toggle4">
                             <span class="material-symbols-outlined">light_mode</span>
                         </div>
                     </div>
                 </div>
+                
                 <button class="material-symbols-outlined" id="last-go-back">chevron_left</button>
+                
                 <div class="main-title">
                     <h1>Song image</h1>
                 </div>
+                
                 <button class="material-symbols-outlined" id="download">download</button>
+                
                 <div class="searching hidden"></div>
+                
                 <div class="song-image">
                     <div class="header">
                         <img src="" alt="album-cover">
@@ -170,24 +177,29 @@
                         <img src="" />
                     </div>
                 </div>
+                
                 <div class="color-selection">
-                    <div class="" id="custom-color">
+                    <div id="custom-color">
                         <input type="color" id="custom-color-input">
                         <label class="material-symbols-outlined" for="custom-color-input">palette</label>
                     </div>
                 </div>
+                
                 <div class="switch-container" id="light-text">
                     <div class="switch"></div>
                     <div>Light text</div>
                 </div>
+                
                 <div class="switch-container" id="spotify-tag">
                     <div class="switch"></div>
                     <div>Spotify Logo</div>
                 </div>
+                
                 <div class="switch-container" id="additional-bg">
                     <div class="switch"></div>
                     <div>Background</div>
                 </div>
+                
                 <div class="width-control">
                     <div>
                         <label for="width-slider">Width</label>
@@ -213,8 +225,8 @@
             <div class="footer-col">
                 <strong>Contact</strong>
                 <p>
-                    Official Account : <a href="https://twitter.com/thekachoo" target="_blank" rel="noopener noreferrer">@thekachoo</a><br>
-                    Business : <a href="https://twitter.com/HaiKachoo" target="_blank" rel="noopener noreferrer">@HaiKachoo</a><br>
+                    Official Account : <a href="https://twitter.com/thekachoo" target="_blank">@thekachoo</a><br>
+                    Business : <a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo</a><br>
                     Email : <a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a>
                 </p>
             </div>
