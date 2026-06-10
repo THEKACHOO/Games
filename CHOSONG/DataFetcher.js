@@ -13,7 +13,7 @@ class DataFetcher {
     async getSongInfos(name, limit = 1) {
         const query = name;
 
-        const apiKey = 'b362b9a7f5f0c5a7f749d568b68bc32a';
+        const apiKey = '2b9803b8aca22fbb5ae178eef31b9b02';
         const searchUrl = `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(query)}&api_key=${apiKey}&format=json&limit=${limit}`;
 
         const response = await fetch(searchUrl);
@@ -26,7 +26,7 @@ class DataFetcher {
                 const infoUrl = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${apiKey}&artist=${encodeURIComponent(searchTrack.artist)}&track=${encodeURIComponent(searchTrack.name)}&format=json`;
                 const infoResponse = await fetch(infoUrl, {
                     headers: {
-                        'User-Agent': 'Application LyricPost/1.0 (pogromca.ap@gmail.com)',
+                        'User-Agent': 'Application LyricPost/1.0 (ohkachoo@gmail.com)',
                     },
                 });
                 const infoResult = await infoResponse.json();
@@ -51,12 +51,12 @@ class DataFetcher {
      * @returns {Song|null} a Song object
      */
     async getTrackById(mbid) {
-        const apiKey = 'b362b9a7f5f0c5a7f749d568b68bc32a';
+        const apiKey = '2b9803b8aca22fbb5ae178eef31b9b02';
         const requestUrl = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${apiKey}&mbid=${mbid}&format=json`;
 
         const response = await fetch(requestUrl, {
             headers: {
-                'User-Agent': 'Application LyricPost/1.0 (pogromca.ap@gmail.com)',
+                'User-Agent': 'Application LyricPost/1.0 (ohkachoo@gmail.com)',
             },
         });
 
