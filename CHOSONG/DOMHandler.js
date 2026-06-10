@@ -122,9 +122,6 @@ class DOMHandler {
                 this.spotifyTagSwitch.classList.toggle("active");
                 this.toggleSpotifyLogo();
             });
-            // Default active
-            this.spotifyTagSwitch.classList.add("active");
-            this.toggleSpotifyLogo();
         }
 
         if (this.additionalBgSwitch) {
@@ -158,6 +155,36 @@ class DOMHandler {
                 document.execCommand("insertText", false, text);
             });
         });
+
+        // Dark mode toggle
+        const darkModeToggle = document.querySelector("#dark-mode-toggle");
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+                const isDark = document.body.classList.contains("dark-mode");
+                const icon = darkModeToggle.querySelector(".material-symbols-outlined");
+                if (icon) {
+                    icon.textContent = isDark ? "dark_mode" : "light_mode";
+                }
+                this.updateSpotifyColor();
+            });
+        }
+    }
+
+    updateSpotifyColor() {
+        const isDark = document.body.classList.contains("dark-mode");
+        const isLightTextActive = this.lightTextSwitch && this.lightTextSwitch.classList.contains("active");
+        const spotifyIcon = document.querySelector(".song-image .spotify-icon");
+        const spotifyText = document.querySelector(".song-image .spotify-text");
+        
+        if (isLightTextActive) {
+            if (spotifyIcon) spotifyIcon.style.color = "#ffffff";
+            if (spotifyText) spotifyText.style.color = "#ffffff";
+        } else {
+            const color = isDark ? "#ffffff" : "#000000";
+            if (spotifyIcon) spotifyIcon.style.color = color;
+            if (spotifyText) spotifyText.style.color = color;
+        }
     }
 
     populateColorSelection() {
@@ -331,6 +358,24 @@ class DOMHandler {
     displaySongImage() {
         this.setSongImage();
         this.displayScreen(4);
+        
+        // PASTIKAN SPOTIFY LOGO MUNCUL
+        if (this.spotifyTagSwitch) {
+            if (this.spotifyTagSwitch.classList.contains("active")) {
+                const spotifyDiv = document.querySelector(".song-image .spotify");
+                if (spotifyDiv) spotifyDiv.style.display = "flex";
+            } else {
+                const spotifyDiv = document.querySelector(".song-image .spotify");
+                if (spotifyDiv) spotifyDiv.style.display = "none";
+            }
+        } else {
+            // Default: tampilkan
+            const spotifyDiv = document.querySelector(".song-image .spotify");
+            if (spotifyDiv) spotifyDiv.style.display = "flex";
+        }
+        
+        this.updateSpotifyColor();
+        
         if (this.widthSlider) {
             this.setSongImageWidth(this.widthSlider.value);
             if (this.widthValue) {
@@ -367,6 +412,11 @@ class DOMHandler {
         if (this.customColorInput) {
             this.customColorInput.value = randomColor;
         }
+        
+        // Set spotify tag switch default active
+        if (this.spotifyTagSwitch && !this.spotifyTagSwitch.classList.contains("active")) {
+            this.spotifyTagSwitch.classList.add("active");
+        }
     }
 
     setSongImageColor(color) {
@@ -393,29 +443,29 @@ class DOMHandler {
         const nameDiv = document.querySelector(".song-image .header .name");
         const authorsDiv = document.querySelector(".song-image .header .authors");
         const lyricsDiv = document.querySelector(".song-image .lyrics");
-        const spotifyText = document.querySelector(".spotify-text");
-        const spotifyIcon = document.querySelector(".spotify-icon");
-
+        
         if (isActive) {
             if (nameDiv) nameDiv.style.color = "#ffffff";
             if (authorsDiv) authorsDiv.style.color = "#ffffff";
             if (lyricsDiv) lyricsDiv.style.color = "#ffffff";
-            if (spotifyText) spotifyText.style.color = "#ffffff";
-            if (spotifyIcon) spotifyIcon.style.color = "#ffffff";
         } else {
             if (nameDiv) nameDiv.style.color = "";
             if (authorsDiv) authorsDiv.style.color = "";
             if (lyricsDiv) lyricsDiv.style.color = "";
-            if (spotifyText) spotifyText.style.color = "";
-            if (spotifyIcon) spotifyIcon.style.color = "";
         }
+        this.updateSpotifyColor();
     }
 
     toggleSpotifyLogo() {
         const spotifyDiv = document.querySelector(".song-image .spotify");
         if (spotifyDiv) {
-            spotifyDiv.style.display = this.spotifyTagSwitch.classList.contains("active") ? "flex" : "none";
+            if (this.spotifyTagSwitch.classList.contains("active")) {
+                spotifyDiv.style.display = "flex";
+            } else {
+                spotifyDiv.style.display = "none";
+            }
         }
+        this.updateSpotifyColor();
     }
 
     toggleAdditionalBg() {
