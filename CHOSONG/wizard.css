@@ -178,10 +178,10 @@
     width: 100%;
 }
 
-/* PERBAIKAN 2: Input search sekarang punya border hitam */
+/* PERBAIKAN 3: BORDER HITAM UNTUK KOLOM PENCARIAN */
 .search-form form>input {
     padding: 1rem;
-    border: 1px solid #000000;
+    border: 2px solid #000000;
     border-radius: 0.5rem;
     outline: none;
     width: 80%;
@@ -270,16 +270,19 @@
 
 .search-results .song-selection {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     row-gap: 2rem;
-    width: 50rem;
+    column-gap: 1.5rem;
+    width: 100%;
     max-width: 100%;
-    padding: 2rem;
+    padding: 2rem 1rem;
     flex-wrap: wrap;
 }
 
 .select-song {
     width: 30%;
+    min-width: 140px;
+    max-width: 160px;
     padding: 1rem;
     background-color: var(--surface-light-color);
     border-radius: 0.5rem;
@@ -293,9 +296,18 @@
     scale: 1.05;
 }
 
+/* PERBAIKAN 5: TAMPILAN SELECT SONG DI MOBILE TIDAK KELUAR LAYAR */
 @media screen and (max-width: 450px) {
+    .search-results .song-selection {
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
     .select-song {
-        width: 45%;
+        width: calc(50% - 0.5rem);
+        min-width: unset;
+        max-width: none;
+        padding: 0.75rem;
     }
 }
 
@@ -330,7 +342,22 @@
 .select-song .name {
     font-weight: 700;
     padding-top: 0.5rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition: 300ms var(--cubic-ease-out);
+}
+
+@media screen and (max-width: 450px) {
+    .select-song .name {
+        font-size: 0.75rem;
+        padding-top: 0.35rem;
+    }
+    
+    .select-song .authors {
+        font-size: 0.65rem;
+    }
 }
 
 .hidden .select-song .name {
@@ -341,7 +368,10 @@
 
 .select-song .authors {
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition: 300ms var(--cubic-ease-out);
 }
 
@@ -643,15 +673,16 @@
     transition: 200ms var(--cubic-ease-out);
 }
 
-.light-text #light-text .switch::after {
+/* PERBAIKAN 1: Tombol switch bergerak saat aktif */
+.light-text .switch::after {
     left: calc(100% - 1.75rem);
 }
 
-.spotify-tag #spotify-tag .switch::after {
+.spotify-tag .switch::after {
     left: calc(100% - 1.75rem);
 }
 
-.additional-bg #additional-bg .switch::after {
+.additional-bg .switch::after {
     left: calc(100% - 1.75rem);
 }
 
@@ -889,4 +920,4 @@
         width: 90%;
         max-width: 13rem;
     }
-    }
+}
