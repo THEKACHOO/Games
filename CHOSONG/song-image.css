@@ -58,9 +58,9 @@
 .song-image > .lyrics {
     font-size: 1.2rem;
     font-weight: 700;
-    line-height: 1.8rem;
+    line-height: 1rem;
     padding-bottom: 0.2rem;
-    margin-top: 0.5rem;
+    margin-top: 0.2rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
