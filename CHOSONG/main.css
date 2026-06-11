@@ -481,7 +481,7 @@ main {
 .song-image .header {
     display: flex;
     gap: 12px;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     align-items: center;
 }
 
@@ -504,8 +504,8 @@ main {
 
 .song-image .lyrics {
     font-size: 13px;
-    line-height: 1.2;
-    margin: 2px 0;
+    line-height: 1.3;
+    margin: 0;
     white-space: normal;
     word-wrap: break-word;
 }
@@ -521,6 +521,7 @@ main {
 .song-image .spotify .spotify-icon {
     width: 16px;
     height: 16px;
+    display: inline-block;
 }
 
 .song-image .spotify .spotify-text {
@@ -618,11 +619,12 @@ main {
 }
 
 .switch-container.active .switch {
-    background: var(--primary-color);
+    background: var(--surface-border);
 }
 
 .switch-container.active .switch::after {
     left: 26px;
+    background: var(--primary-color);
 }
 
 .width-control {
@@ -906,6 +908,10 @@ footer {
         height: 36px;
     }
     
+    .color-selection {
+        gap: 12px;
+    }
+    
     .select-color, #custom-color label {
         width: 32px;
         height: 32px;
@@ -914,6 +920,14 @@ footer {
     #custom-color input {
         width: 32px;
         height: 32px;
+    }
+    
+    .song-image .header {
+        margin-bottom: 2px;
+    }
+    
+    .song-image .lyrics {
+        margin: 0;
     }
     
     .footer-grid {
@@ -974,4 +988,4 @@ footer {
 
 .material-symbols-outlined {
     color: var(--background-text-color);
-                    }
+    }
