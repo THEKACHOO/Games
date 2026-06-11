@@ -7,14 +7,13 @@
     width: var(--song-image-width, 20rem);
     transform: scale(var(--song-image-scale, 1));
     transform-origin: top center;
-    background: linear-gradient(135deg, #FFFFFF 0%, var(--bg-color, #E0E0E0) 100%);
+    background-color: var(--bg-color, #E0E0E0);
     color: rgba(0, 0, 0, 0.95);
     border-radius: 1.5rem;
     transition: 200ms var(--cubic-ease-out);
 }
 
 .light-text .song-image {
-    background: linear-gradient(135deg, #1a1a1a 0%, var(--bg-color, #333333) 100%);
     color: rgba(255, 255, 255, 0.95);
 }
 
@@ -81,4 +80,4 @@
 
 .light-text .song-image > .spotify {
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%);
-}
+    }
