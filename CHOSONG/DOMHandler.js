@@ -399,12 +399,14 @@ class DOMHandler {
         if (nameDiv) nameDiv.textContent = song.name;
         if (authorsDiv) authorsDiv.textContent = song.artists.map(a => a.name).join(", ");
         
-        // Set lyrics dari yang dipilih
-        const selectedLines = document.querySelectorAll(".select-line.selected");
-        let lyricsText = Array.from(selectedLines).map(line => line.textContent.trim()).join(" ");
-        lyricsText = lyricsText.replace(/\s+/g, " ");
-        const lyricsDiv = document.querySelector(".song-image .lyrics");
-        if (lyricsDiv) lyricsDiv.innerHTML = lyricsText || NO_LYRICS_SELECTED;
+        // YANG BENAR - PER BARIS PAKE <div>
+const selectedLines = document.querySelectorAll(".select-line.selected");
+let lyricsHtml = '';
+Array.from(selectedLines).forEach(line => {
+    lyricsHtml += `<div class="lyric-line">${line.textContent.trim()}</div>`;
+});
+const lyricsDiv = document.querySelector(".song-image .lyrics");
+if (lyricsDiv) lyricsDiv.innerHTML = lyricsHtml || NO_LYRICS_SELECTED;
         
         // Random color
         const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
