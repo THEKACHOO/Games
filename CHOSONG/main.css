@@ -169,7 +169,7 @@ main {
 footer {
     background: var(--footer-bg);
     color: var(--footer-text);
-    padding: 48px 0 32px;
+    padding: 20px 0 15px;
     margin-top: 0;
     border-top: 1px solid var(--footer-border);
 }
@@ -317,7 +317,7 @@ footer {
     
     .footer-col strong {
         font-size: 11px;
-        margin-bottom: 8px;
+        margin-bottom: 5px;
     }
     
     .footer-col strong::after {
