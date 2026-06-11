@@ -130,14 +130,15 @@ main {
     flex: 1;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
 }
 
 /* ========== TOGGLE SWITCH ========== */
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 52px;
-    height: 28px;
+    width: 44px;
+    height: 24px;
 }
 
 .toggle-switch input {
@@ -154,19 +155,19 @@ main {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    transition: 0.3s;
-    border-radius: 34px;
+    transition: 0.2s;
+    border-radius: 24px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 22px;
-    width: 22px;
+    height: 18px;
+    width: 18px;
     left: 3px;
     bottom: 3px;
     background-color: white;
-    transition: 0.3s;
+    transition: 0.2s;
     border-radius: 50%;
 }
 
@@ -175,25 +176,34 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(24px);
+    transform: translateX(20px);
 }
 
 .dark-mode .slider {
     background-color: #555;
 }
 
-/* Reset style lama dan pakai style baru */
+/* Reset style lama dan pakai style baru - UKURAN KECIL */
 #dark-mode-toggle,
 [id^="dark-mode-toggle"] {
     all: unset !important;
 }
 
 #dark-mode-toggle {
-    position: relative;
+    position: relative !important;
     display: inline-block !important;
-    width: 52px !important;
-    height: 28px !important;
+    width: 44px !important;
+    height: 24px !important;
     cursor: pointer !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#dark-mode-toggle:hover {
+    transform: none !important;
+    background: transparent !important;
 }
 
 /* ========== FOOTER ========== */
