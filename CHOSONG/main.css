@@ -140,8 +140,8 @@ main {
 }
 
 .mood-logo {
-    width: auto;
-    height: 50px;
+    width: 100px; /* bebas atur sesuai mau */
+    height: auto;
     display: inline-block;
     object-fit: contain;
 }
