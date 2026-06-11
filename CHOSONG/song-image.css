@@ -54,16 +54,16 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* PERUBAHAN: Lirik jadi ke bawah (column) bukan ke samping */
+/* Lirik jadi ke bawah (column) bukan ke samping */
 .song-image > .lyrics {
     font-size: 1.2rem;
     font-weight: 700;
-    line-height: 1.8rem; /* Tambah line-height biar ada jarak antar baris */
+    line-height: 1.8rem;
     padding-bottom: 0.2rem;
     margin-top: 0.5rem;
     display: flex;
-    flex-direction: column; /* Bikin ke bawah */
-    gap: 0.25rem; /* Jarak antar baris lirik */
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 /* Style untuk setiap baris lirik */
@@ -73,7 +73,27 @@
     word-break: break-word;
 }
 
-/* PERUBAHAN: Logo Spotify dengan gambar berbeda untuk light/dark mode */
+/* PERBAIKAN 3: Logo Spotify dengan gambar yang benar */
+/* Light mode / default - pakai spolight.png (logo putih untuk background terang) */
+.song-image > .spotify > img {
+    content: url('spolight.png');
+}
+
+/* Dark mode - pakai spodark.png (logo hitam untuk background gelap) */
+.dark-mode .song-image > .spotify > img {
+    content: url('spodark.png');
+}
+
+/* Light text mode (background gelap) - pakai spodark.png */
+.light-text .song-image > .spotify > img {
+    content: url('spodark.png');
+}
+
+/* Hapus filter yang lama */
+.song-image > .spotify {
+    filter: none;
+}
+
 .song-image > .spotify {
     height: 0;
     padding: 0;
@@ -82,7 +102,7 @@
 }
 
 .spotify-tag .song-image > .spotify {
-    height: 2.5rem; /* Ukuran sedang agak kecil */
+    height: 2.5rem;
     padding: 1rem 0 0.3rem;
 }
 
@@ -90,20 +110,4 @@
     height: 100%;
     width: auto;
     object-fit: contain;
-}
-
-/* Default (light mode) - pakai spolight.png */
-.song-image > .spotify > img {
-    content: url('spolight.png');
-}
-
-/* Dark mode - pakai spodark.png */
-.dark-mode .song-image > .spotify > img,
-.light-text .song-image > .spotify > img {
-    content: url('spodark.png');
-}
-
-/* Hapus filter yang lama */
-.song-image > .spotify {
-    filter: none;
 }
