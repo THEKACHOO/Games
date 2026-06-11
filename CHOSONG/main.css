@@ -96,7 +96,7 @@ main {
 }
 
 .header-logo img {
-    height: 32px;
+    height: 35px;
     width: auto;
     transition: transform 0.2s ease;
     display: block;
@@ -112,7 +112,7 @@ main {
 }
 
 .chosong-brand {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 800;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -200,7 +200,7 @@ input:checked + .slider:before {
 footer {
     background: var(--footer-bg);
     color: var(--footer-text);
-    padding: 22px 0 15px;
+    padding: 20px 0 15px;
     margin-top: 3px;
     border-top: 1px solid var(--footer-border);
 }
@@ -217,7 +217,7 @@ footer {
 .footer-col strong {
     font-weight: 700;
     display: inline-block;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     font-size: 20px;
     color: var(--footer-text);
     position: relative;
@@ -289,7 +289,7 @@ footer {
     margin-bottom: 4px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     flex-wrap: wrap;
     color: var(--footer-text-muted);
 }
@@ -348,7 +348,7 @@ footer {
     
     .footer-col strong {
         font-size: 11px;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
     
     .footer-col strong::after {
