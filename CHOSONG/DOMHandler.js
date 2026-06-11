@@ -47,7 +47,6 @@ class DOMHandler {
         this.colorSelection = document.querySelector(".color-selection");
         this.customColorInput = document.querySelector("#custom-color-input");
         this.lightTextSwitch = document.querySelector("#light-text");
-        this.spotifyTagSwitch = document.querySelector("#spotify-tag");
         this.additionalBgSwitch = document.querySelector("#additional-bg");
         this.songImage = document.querySelector(".song-image");
         this.widthSlider = document.querySelector("#width-slider");
@@ -110,17 +109,11 @@ class DOMHandler {
             });
         }
 
+        // PERBAIKAN 1: TOMBOL SWITCH BISA GERAK
         if (this.lightTextSwitch) {
             this.lightTextSwitch.addEventListener("click", () => {
                 this.lightTextSwitch.classList.toggle("active");
                 this.toggleLightText();
-            });
-        }
-
-        if (this.spotifyTagSwitch) {
-            this.spotifyTagSwitch.addEventListener("click", () => {
-                this.spotifyTagSwitch.classList.toggle("active");
-                this.toggleSpotifyLogo();
             });
         }
 
@@ -166,24 +159,7 @@ class DOMHandler {
                 if (icon) {
                     icon.textContent = isDark ? "dark_mode" : "light_mode";
                 }
-                this.updateSpotifyColor();
             });
-        }
-    }
-
-    updateSpotifyColor() {
-        const isDark = document.body.classList.contains("dark-mode");
-        const isLightTextActive = this.lightTextSwitch && this.lightTextSwitch.classList.contains("active");
-        const spotifyIcon = document.querySelector(".song-image .spotify-icon");
-        const spotifyText = document.querySelector(".song-image .spotify-text");
-        
-        if (isLightTextActive) {
-            if (spotifyIcon) spotifyIcon.style.color = "#ffffff";
-            if (spotifyText) spotifyText.style.color = "#ffffff";
-        } else {
-            const color = isDark ? "#ffffff" : "#000000";
-            if (spotifyIcon) spotifyIcon.style.color = color;
-            if (spotifyText) spotifyText.style.color = color;
         }
     }
 
@@ -359,23 +335,6 @@ class DOMHandler {
         this.setSongImage();
         this.displayScreen(4);
         
-        // PASTIKAN SPOTIFY LOGO MUNCUL
-        if (this.spotifyTagSwitch) {
-            if (this.spotifyTagSwitch.classList.contains("active")) {
-                const spotifyDiv = document.querySelector(".song-image .spotify");
-                if (spotifyDiv) spotifyDiv.style.display = "flex";
-            } else {
-                const spotifyDiv = document.querySelector(".song-image .spotify");
-                if (spotifyDiv) spotifyDiv.style.display = "none";
-            }
-        } else {
-            // Default: tampilkan
-            const spotifyDiv = document.querySelector(".song-image .spotify");
-            if (spotifyDiv) spotifyDiv.style.display = "flex";
-        }
-        
-        this.updateSpotifyColor();
-        
         if (this.widthSlider) {
             this.setSongImageWidth(this.widthSlider.value);
             if (this.widthValue) {
@@ -384,40 +343,36 @@ class DOMHandler {
         }
     }
 
+    // PERBAIKAN 2: LIRIK KE BAWAH PER BARIS
     setSongImage() {
         const song = this.songs[this.selectedSongIndex];
         
-        // Set album cover di screen 4
         const screen4Img = document.querySelector(".song-image .header .screen4-album-img");
         if (screen4Img && song.albumCoverUrl) {
             screen4Img.src = song.albumCoverUrl;
         }
         
-        // Set name dan artist
         const nameDiv = document.querySelector(".song-image .header .name");
         const authorsDiv = document.querySelector(".song-image .header .authors");
         if (nameDiv) nameDiv.textContent = song.name;
         if (authorsDiv) authorsDiv.textContent = song.artists.map(a => a.name).join(", ");
         
-        // YANG BENAR - PER BARIS PAKE <div>
-const selectedLines = document.querySelectorAll(".select-line.selected");
-let lyricsHtml = '';
-Array.from(selectedLines).forEach(line => {
-    lyricsHtml += `<div class="lyric-line">${line.textContent.trim()}</div>`;
-});
-const lyricsDiv = document.querySelector(".song-image .lyrics");
-if (lyricsDiv) lyricsDiv.innerHTML = lyricsHtml || NO_LYRICS_SELECTED;
+        // INI YANG DIUBAH - LIRIK PER BARIS KE BAWAH
+        const selectedLines = document.querySelectorAll(".select-line.selected");
+        let lyricsHtml = '';
+        Array.from(selectedLines).forEach(line => {
+            let lineText = line.textContent.trim();
+            if (lineText) {
+                lyricsHtml += `<div class="lyric-line">${lineText}</div>`;
+            }
+        });
+        const lyricsDiv = document.querySelector(".song-image .lyrics");
+        if (lyricsDiv) lyricsDiv.innerHTML = lyricsHtml || NO_LYRICS_SELECTED;
         
-        // Random color
         const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
         this.setSongImageColor(randomColor);
         if (this.customColorInput) {
             this.customColorInput.value = randomColor;
-        }
-        
-        // Set spotify tag switch default active
-        if (this.spotifyTagSwitch && !this.spotifyTagSwitch.classList.contains("active")) {
-            this.spotifyTagSwitch.classList.add("active");
         }
     }
 
@@ -455,19 +410,6 @@ if (lyricsDiv) lyricsDiv.innerHTML = lyricsHtml || NO_LYRICS_SELECTED;
             if (authorsDiv) authorsDiv.style.color = "";
             if (lyricsDiv) lyricsDiv.style.color = "";
         }
-        this.updateSpotifyColor();
-    }
-
-    toggleSpotifyLogo() {
-        const spotifyDiv = document.querySelector(".song-image .spotify");
-        if (spotifyDiv) {
-            if (this.spotifyTagSwitch.classList.contains("active")) {
-                spotifyDiv.style.display = "flex";
-            } else {
-                spotifyDiv.style.display = "none";
-            }
-        }
-        this.updateSpotifyColor();
     }
 
     toggleAdditionalBg() {
@@ -537,4 +479,4 @@ if (lyricsDiv) lyricsDiv.innerHTML = lyricsHtml || NO_LYRICS_SELECTED;
             }
         });
     }
-}
+                                                 }
