@@ -17,7 +17,7 @@
 <body>
     <div class="global-header">
         <div class="header-logo">
-            <img src="logo-thekachoo.png" alt="The Kachoo Logo">
+            <img id="header-logo-img" src="Chosong1.png" alt="Chosong Logo">
         </div>
         <div class="header-center">
             <div class="chosong-brand">CHOSONG</div>
@@ -35,6 +35,9 @@
         <!-- SCREEN 1 -->
         <section class="lyrics-image-screen search-form" data-number="1">
             <div class="screen-wrapper">
+                <div class="mood-logo-container">
+                    <img id="mood-logo-img" src="Chosong1.2.png" alt="Chosong Mood Logo" class="mood-logo">
+                </div>
                 <div class="main-title">
                     <h1>What's your mood today?</h1>
                 </div>
@@ -194,10 +197,26 @@
     <script src="DOMHandler.js"></script>
     <script src="index.js"></script>
 
-    <!-- THEME TOGGLE SCRIPT -->
+    <!-- THEME TOGGLE SCRIPT + LOGO UPDATER -->
     <script>
     (function() {
         const checkbox = document.getElementById('theme-toggle-checkbox');
+        const headerLogo = document.getElementById('header-logo-img');
+        const moodLogo = document.getElementById('mood-logo-img');
+        
+        function updateLogos(isDark) {
+            if (isDark) {
+                // Header logo dark
+                if (headerLogo) headerLogo.src = 'Chosong2.png';
+                // Mood logo dark (di atas title)
+                if (moodLogo) moodLogo.src = 'Chosong2.1.png';
+            } else {
+                // Header logo light
+                if (headerLogo) headerLogo.src = 'Chosong1.png';
+                // Mood logo light
+                if (moodLogo) moodLogo.src = 'Chosong1.2.png';
+            }
+        }
         
         function applyTheme(isDark) {
             if (isDark) {
@@ -207,6 +226,7 @@
                 document.body.classList.remove('dark-mode');
                 if (checkbox) checkbox.checked = false;
             }
+            updateLogos(isDark);
         }
         
         function getInitialTheme() {
@@ -217,13 +237,17 @@
         }
         
         if (checkbox) {
-            applyTheme(getInitialTheme());
+            const isDark = getInitialTheme();
+            applyTheme(isDark);
             
             checkbox.addEventListener('change', function() {
                 const isDark = this.checked;
                 applyTheme(isDark);
                 localStorage.setItem('theme', isDark ? 'dark' : 'light');
             });
+        } else {
+            // Fallback kalau checkbox gak ada
+            updateLogos(getInitialTheme());
         }
     })();
     </script>
