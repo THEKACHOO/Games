@@ -1,3 +1,5 @@
+/* main.css */
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
@@ -471,18 +473,19 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     margin: 20px 0;
     flex-wrap: wrap;
 }
 
 .select-color {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     cursor: pointer;
     transition: transform 0.2s ease;
     border: 2px solid transparent;
+    flex-shrink: 0;
 }
 
 .select-color:hover {
@@ -499,19 +502,20 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 #custom-color input {
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     opacity: 0;
     cursor: pointer;
 }
 
 #custom-color label {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: var(--surface-border);
     display: flex;
@@ -846,17 +850,17 @@ footer {
     }
     
     .color-selection {
-        gap: 12px;
+        gap: 14px;
     }
     
     .select-color, #custom-color label {
-        width: 32px;
-        height: 32px;
+        width: 38px;
+        height: 38px;
     }
     
     #custom-color input {
-        width: 32px;
-        height: 32px;
+        width: 38px;
+        height: 38px;
     }
     
     .footer-grid {
@@ -917,4 +921,4 @@ footer {
 
 .material-symbols-outlined {
     color: var(--background-text-color);
-}
+    }
