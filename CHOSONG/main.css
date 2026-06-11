@@ -82,7 +82,7 @@ main {
 /* ========== GLOBAL HEADER ========== */
 .global-header {
     background: var(--surface-bg);
-    border-bottom: 1px solid var(--surface-border);
+    border-bottom: 2px solid var(--surface-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -343,7 +343,7 @@ footer {
 /* ========== RESPONSIVE MOBILE ========== */
 @media (max-width: 768px) {
     .global-header {
-        padding: 12px 16px;
+        padding: 16px 18px;
     }
     
     .header-logo img {
