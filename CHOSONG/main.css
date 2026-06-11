@@ -141,7 +141,7 @@ main {
 
 .mood-logo {
     width: auto; /* bebas atur sesuai mau */
-    height: 70px;
+    height: 85px;
     display: inline-block;
     object-fit: contain;
 }
@@ -360,7 +360,7 @@ footer {
     }
     
     .mood-logo {
-        height: 70px;
+        height: 85px;
     }
     
     main {
