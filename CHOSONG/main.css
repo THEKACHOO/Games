@@ -159,9 +159,13 @@ main {
     color: var(--background-text-color) !important;
 }
 
+/* PERBAIKAN 1: Toggle text sekarang muncul */
 #dark-mode-toggle .toggle-text,
 [id^="dark-mode-toggle"] .toggle-text {
-    display: none !important;
+    display: inline-block !important;
+    margin-left: 8px !important;
+    font-size: 14px !important;
+    color: var(--background-text-color) !important;
 }
 
 /* ========== FOOTER ========== */
