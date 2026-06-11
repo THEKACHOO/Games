@@ -178,13 +178,16 @@
     width: 100%;
 }
 
+/* PERBAIKAN 2: Input search sekarang punya border hitam */
 .search-form form>input {
     padding: 1rem;
-    border: none;
+    border: 1px solid #000000;
     border-radius: 0.5rem;
     outline: none;
     width: 80%;
     max-width: 25rem;
+    background: var(--surface-bg);
+    color: var(--background-text-color);
 }
 
 .search-form form>button {
