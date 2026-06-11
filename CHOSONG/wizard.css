@@ -1,3 +1,5 @@
+/* wizard.css - Khusus untuk komponen wizard dan screens */
+
 @keyframes search-indicator {
     0% {
         width: 20%;
@@ -100,9 +102,35 @@
     transform: translate(-100%, 0);
 }
 
-/* Screen 1: Search form */
+/* ========== SCREEN 1 - SEARCH ========== */
 .search-form header {
     text-align: center;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 300px);
+}
+
+.search-form .screen-wrapper {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.main-title {
+    text-align: center;
+    margin: 0 0 32px 0;
+}
+
+.main-title h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--background-text-color);
 }
 
 .input-tabs {
@@ -181,7 +209,62 @@
     opacity: 0;
 }
 
-/* Screen 2: Song selection */
+/* ========== SCREEN 2 - SELECT SONG ========== */
+.song-selection-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.select-song-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.select-song-header .back-button {
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
+    border-radius: 40px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: var(--background-text-color);
+}
+
+.select-song-header .back-button:hover {
+    background: var(--surface-hover);
+    transform: scale(1.02);
+}
+
+.select-song-header .back-button span {
+    font-size: 24px;
+}
+
+.select-song-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--background-text-color);
+    margin: 0;
+}
+
+.header-spacer {
+    width: 40px;
+    visibility: hidden;
+}
+
 .search-results .song-selection {
     display: flex;
     justify-content: space-between;
@@ -264,7 +347,55 @@
     transition: 300ms var(--cubic-ease-out) 100ms;
 }
 
-/* Screen 3: Lines selection */
+/* ========== SCREEN 3 - SELECT LINES ========== */
+.lyrics-results .screen-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.line-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.line-nav-button {
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
+    border-radius: 40px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    color: var(--background-text-color);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.line-nav-button:hover {
+    background: var(--surface-hover);
+    transform: scale(1.02);
+}
+
+.line-nav-button span {
+    font-size: 20px;
+}
+
+.line-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--background-text-color);
+    margin: 0;
+    flex: 1;
+}
+
 .song-info-display {
     display: flex;
     align-items: center;
@@ -356,7 +487,13 @@
     color: var(--primary-text-color);
 }
 
-/* Screen 4: Final options and download */
+/* ========== SCREEN 4 - FINAL OPTIONS ========== */
+.final-options .screen-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
 .final-options header {
     margin-bottom: 1rem;
 }
@@ -367,6 +504,43 @@
 
 .final-options .searching.hidden {
     margin-bottom: 0;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    margin-top: 16px;
+    gap: 16px;
+}
+
+.nav-buttons h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+    flex: 1;
+}
+
+#last-go-back, #download {
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
+    border-radius: 40px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: var(--background-text-color);
+    flex-shrink: 0;
+}
+
+#last-go-back:hover, #download:hover {
+    background: var(--surface-hover);
+    transform: scale(1.02);
 }
 
 .color-selection {
@@ -549,12 +723,6 @@
     color: var(--primary-color);
 }
 
-@media screen and (max-width: 450px) {
-    .select-song {
-        width: 45%;
-    }
-}
-
 .font-selection-container {
     display: flex;
     align-items: center;
@@ -583,3 +751,139 @@
     background: transparent;
     transition: 200ms var(--cubic-ease-out);
 }
+
+/* ========== RESPONSIVE MOBILE UNTUK WIZARD ========== */
+@media (max-width: 768px) {
+    .search-form {
+        min-height: calc(100vh - 160px);
+        align-items: center;
+    }
+    
+    .main-title {
+        margin: 0 0 20px 0;
+    }
+    
+    .main-title h1 {
+        font-size: 24px;
+    }
+    
+    .search-form .screen-wrapper {
+        padding: 0 16px;
+    }
+    
+    .song-selection-wrapper {
+        padding: 0 16px;
+    }
+    
+    .select-song-header {
+        margin-bottom: 20px;
+    }
+    
+    .select-song-header .back-button {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .select-song-header .back-button span {
+        font-size: 20px;
+    }
+    
+    .select-song-header h1 {
+        font-size: 20px;
+    }
+    
+    .header-spacer {
+        width: 36px;
+    }
+    
+    .lyrics-results .screen-wrapper {
+        padding: 0 16px;
+    }
+    
+    .line-navigation {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .line-nav-button {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+    
+    .line-nav-button span {
+        font-size: 16px;
+    }
+    
+    .line-title {
+        font-size: 14px;
+    }
+    
+    .song-info-display {
+        padding: 12px;
+        margin-bottom: 20px;
+        gap: 12px;
+        width: 90%;
+    }
+    
+    .song-info-cover {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .song-info-name {
+        font-size: 0.9rem;
+    }
+    
+    .song-info-artist {
+        font-size: 0.75rem;
+    }
+    
+    .lines-selection {
+        width: 90%;
+    }
+    
+    .select-line {
+        padding: 12px;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    
+    .final-options .screen-wrapper {
+        padding: 0 16px;
+    }
+    
+    .nav-buttons {
+        margin-top: 8px;
+        margin-bottom: 20px;
+        gap: 12px;
+    }
+    
+    .nav-buttons h1 {
+        font-size: 18px;
+    }
+    
+    #last-go-back, #download {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .color-selection {
+        width: 90%;
+        max-width: 13rem;
+    }
+    
+    .switch-container {
+        width: 90%;
+        max-width: 13rem;
+    }
+    
+    .width-control {
+        width: 90%;
+        max-width: 13rem;
+    }
+    
+    .font-selection-container {
+        width: 90%;
+        max-width: 13rem;
+    }
+    }
