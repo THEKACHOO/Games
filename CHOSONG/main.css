@@ -159,13 +159,10 @@ main {
     color: var(--background-text-color) !important;
 }
 
-/* PERBAIKAN 1: Toggle text sekarang muncul */
+/* Teks toggle TETAP DISEMBUNYIKAN - HANYA ICON SAJA */
 #dark-mode-toggle .toggle-text,
 [id^="dark-mode-toggle"] .toggle-text {
-    display: inline-block !important;
-    margin-left: 8px !important;
-    font-size: 14px !important;
-    color: var(--background-text-color) !important;
+    display: none !important;
 }
 
 /* ========== FOOTER ========== */
