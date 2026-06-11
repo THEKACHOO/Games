@@ -112,55 +112,47 @@
         </section>
 
         <!-- SCREEN 4: Final options -->
-        <section class="lyrics-image-screen hidden final-options" data-number="4">
-            <div class="screen-wrapper">
-                <div class="nav-buttons">
-                    <button class="material-symbols-outlined" id="last-go-back">chevron_left</button>
-                    <h1>Song image</h1>
-                    <button class="material-symbols-outlined" id="download">download</button>
-                </div>
-                <div class="searching hidden"></div>
-                <div class="song-image" id="song-image-container">
-                    <div class="header">
-                        <img class="screen4-album-img" src="" alt="album-cover">
-                        <div>
-                            <div class="name" contenteditable></div>
-                            <div class="authors" contenteditable></div>
-                        </div>
-                    </div>
-                    <div class="lyrics" contenteditable="true"></div>
-                    <div class="spotify">
-                        <!-- PERUBAHAN: Pakai img dengan spolight.png untuk light mode -->
-                        <img src="spolight.png" alt="Spotify" class="spotify-img">
-                    </div>
-                </div>
-                <div class="color-selection">
-                    <div id="custom-color">
-                        <input type="color" id="custom-color-input" value="#000000">
-                        <label class="material-symbols-outlined" for="custom-color-input">palette</label>
-                    </div>
-                </div>
-                <div class="switch-container light-text" id="light-text">
-                    <div class="switch"></div>
-                    <div>Light text</div>
-                </div>
-                <div class="switch-container spotify-tag" id="spotify-tag">
-                    <div class="switch"></div>
-                    <div>Spotify Logo</div>
-                </div>
-                <div class="switch-container additional-bg" id="additional-bg">
-                    <div class="switch"></div>
-                    <div>Background</div>
-                </div>
-                <div class="width-control">
-                    <div>
-                        <label for="width-slider">Width</label>
-                        <span id="width-value">320px</span>
-                    </div>
-                    <input type="range" id="width-slider" min="200" max="600" value="320" step="10">
+<section class="lyrics-image-screen hidden final-options" data-number="4">
+    <div class="screen-wrapper">
+        <div class="nav-buttons">
+            <button class="material-symbols-outlined" id="last-go-back">chevron_left</button>
+            <h1>Song image</h1>
+            <button class="material-symbols-outlined" id="download">download</button>
+        </div>
+        <div class="searching hidden"></div>
+        <div class="song-image" id="song-image-container">
+            <div class="header">
+                <img class="screen4-album-img" src="" alt="album-cover">
+                <div>
+                    <div class="name" contenteditable></div>
+                    <div class="authors" contenteditable></div>
                 </div>
             </div>
-        </section>
+            <div class="lyrics" contenteditable="true"></div>
+        </div>
+        <div class="color-selection">
+            <div id="custom-color">
+                <input type="color" id="custom-color-input" value="#000000">
+                <label class="material-symbols-outlined" for="custom-color-input">palette</label>
+            </div>
+        </div>
+        <div class="switch-container light-text" id="light-text">
+            <div class="switch"></div>
+            <div>Light text</div>
+        </div>
+        <div class="switch-container additional-bg" id="additional-bg">
+            <div class="switch"></div>
+            <div>Background</div>
+        </div>
+        <div class="width-control">
+            <div>
+                <label for="width-slider">Width</label>
+                <span id="width-value">320px</span>
+            </div>
+            <input type="range" id="width-slider" min="200" max="600" value="320" step="10">
+        </div>
+    </div>
+                </section>
     </main>
 
     <!-- FOOTER -->
