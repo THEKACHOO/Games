@@ -178,7 +178,6 @@
     width: 100%;
 }
 
-/* PERBAIKAN 3: BORDER HITAM UNTUK KOLOM PENCARIAN */
 .search-form form>input {
     padding: 1rem;
     border: 2px solid #000000;
@@ -296,7 +295,6 @@
     scale: 1.05;
 }
 
-/* PERBAIKAN 5: TAMPILAN SELECT SONG DI MOBILE TIDAK KELUAR LAYAR */
 @media screen and (max-width: 450px) {
     .search-results .song-selection {
         gap: 1rem;
@@ -673,15 +671,17 @@
     transition: 200ms var(--cubic-ease-out);
 }
 
-/* PERBAIKAN 1: Tombol switch bergerak saat aktif */
+/* PERBAIKAN: SWITCH BISA GERAK KETIKA DIKLIK */
+.switch-container.active .switch::after {
+    left: calc(100% - 1.75rem);
+}
+
+/* Juga support untuk class light-text */
 .light-text .switch::after {
     left: calc(100% - 1.75rem);
 }
 
-.spotify-tag .switch::after {
-    left: calc(100% - 1.75rem);
-}
-
+/* Support untuk additional-bg */
 .additional-bg .switch::after {
     left: calc(100% - 1.75rem);
 }
@@ -920,4 +920,4 @@
         width: 90%;
         max-width: 13rem;
     }
-}
+    }
