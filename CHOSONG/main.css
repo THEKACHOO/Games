@@ -132,45 +132,76 @@ main {
     justify-content: flex-end;
 }
 
+/* ========== TOGGLE SWITCH ========== */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+.dark-mode .slider {
+    background-color: #555;
+}
+
+/* Reset style lama dan pakai style baru */
 #dark-mode-toggle,
 [id^="dark-mode-toggle"] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 44px !important;
-    height: 44px !important;
-    padding: 0 !important;
-    background: var(--surface-bg) !important;
-    border-radius: 60px !important;
+    all: unset !important;
+}
+
+#dark-mode-toggle {
+    position: relative;
+    display: inline-block !important;
+    width: 52px !important;
+    height: 28px !important;
     cursor: pointer !important;
-    border: 1px solid var(--surface-border) !important;
-    transition: all 0.2s var(--cubic-ease-out) !important;
-}
-
-#dark-mode-toggle:hover,
-[id^="dark-mode-toggle"]:hover {
-    transform: scale(1.05) !important;
-    background: var(--surface-hover) !important;
-}
-
-#dark-mode-toggle .material-symbols-outlined,
-[id^="dark-mode-toggle"] .material-symbols-outlined {
-    font-size: 24px !important;
-    color: var(--background-text-color) !important;
-}
-
-/* Teks toggle TETAP DISEMBUNYIKAN - HANYA ICON SAJA */
-#dark-mode-toggle .toggle-text,
-[id^="dark-mode-toggle"] .toggle-text {
-    display: none !important;
 }
 
 /* ========== FOOTER ========== */
 footer {
     background: var(--footer-bg);
     color: var(--footer-text);
-    padding: 20px 0 15px;
-    margin-top: 0;
+    padding: 22px 0 15px;
+    margin-top: 3px;
     border-top: 1px solid var(--footer-border);
 }
 
