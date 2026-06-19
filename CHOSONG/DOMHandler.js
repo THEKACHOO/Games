@@ -23,6 +23,7 @@ class DOMHandler {
         this.songs = [];
         this.selectedSongIndex = null;
         this.usedDirectLink = false;
+        this.isLoadingLyrics = false; // Untuk mencegah multiple request
 
         // DOM Elements
         this.errorTexts = document.querySelectorAll(".error");
@@ -51,6 +52,9 @@ class DOMHandler {
         this.songImage = document.querySelector(".song-image");
         this.widthSlider = document.querySelector("#width-slider");
         this.widthValue = document.querySelector("#width-value");
+        this.fileInput = document.querySelector(".song-image .file-input");
+        this.albumImageWrapper = document.querySelector(".song-image .album-image-wrapper");
+        this.screen4AlbumImg = document.querySelector(".song-image .screen4-album-img");
 
         this.setListeners();
         this.populateColorSelection();
@@ -109,7 +113,6 @@ class DOMHandler {
             });
         }
 
-        // PERBAIKAN 1: TOMBOL SWITCH BISA GERAK
         if (this.lightTextSwitch) {
             this.lightTextSwitch.addEventListener("click", () => {
                 this.lightTextSwitch.classList.toggle("active");
@@ -140,6 +143,16 @@ class DOMHandler {
             });
         }
 
+        // PERBAIKAN 1: UPLOAD FOTO DENGAN CROP 1:1
+        if (this.fileInput) {
+            this.fileInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    this.uploadAlbumImage(file);
+                }
+            });
+        }
+
         // Contenteditable paste as plain text
         document.querySelectorAll("[contenteditable]").forEach((field) => {
             field.addEventListener("paste", function(e) {
@@ -161,6 +174,42 @@ class DOMHandler {
                 }
             });
         }
+    }
+
+    // PERBAIKAN 1: FUNGSI UPLOAD FOTO DENGAN CROP 1:1
+    uploadAlbumImage(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                // Crop 1:1 menggunakan canvas
+                const canvas = document.createElement('canvas');
+                const size = Math.min(img.width, img.height);
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const sx = (img.width - size) / 2;
+                const sy = (img.height - size) / 2;
+                ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size);
+                
+                // Set image ke elemen
+                const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                if (this.screen4AlbumImg) {
+                    this.screen4AlbumImg.src = croppedDataUrl;
+                    this.screen4AlbumImg.style.display = 'block';
+                }
+                // Update background juga
+                if (this.albumImageWrapper) {
+                    this.albumImageWrapper.style.backgroundImage = `url(${croppedDataUrl})`;
+                    this.albumImageWrapper.style.backgroundSize = 'cover';
+                    this.albumImageWrapper.style.backgroundPosition = 'center';
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        // Reset input agar bisa upload ulang file yang sama
+        this.fileInput.value = '';
     }
 
     populateColorSelection() {
@@ -271,7 +320,12 @@ class DOMHandler {
         }, SELECTION_ANIMATION_DELAY);
     }
 
+    // PERBAIKAN 2: OPTIMASI PENCARIAN LIRIK
     async findLyrics() {
+        // Cegah multiple request
+        if (this.isLoadingLyrics) return;
+        this.isLoadingLyrics = true;
+
         this.lineSelection.innerHTML = "";
         this.displayScreen(3);
         this.displaySongInfo();
@@ -283,13 +337,24 @@ class DOMHandler {
         let currentArtist = 0;
 
         try {
-            while (lyrics === null && artists.length > currentArtist) {
-                lyrics = await this.fetcher.getSongLyrics(artists[currentArtist], song.name);
-                currentArtist++;
+            // Coba cari dengan semua artist secara paralel untuk mempercepat
+            const promises = artists.map(artist => 
+                this.fetcher.getSongLyrics(artist, song.name)
+            );
+            const results = await Promise.all(promises);
+            
+            // Ambil yang pertama ditemukan
+            for (const result of results) {
+                if (result && result.plainLyrics) {
+                    lyrics = result;
+                    break;
+                }
             }
+            
             if (lyrics === null) throw Error("Lyrics not found");
         } catch (error) {
             this.hideSearching();
+            this.isLoadingLyrics = false;
             if (document.querySelector(".final-options").classList.contains("hidden")) {
                 this.displaySongImage();
             }
@@ -297,6 +362,7 @@ class DOMHandler {
         }
 
         this.hideSearching();
+        this.isLoadingLyrics = false;
         song.loadLyrics(lyrics);
         this.populateLineSelection();
     }
@@ -311,6 +377,18 @@ class DOMHandler {
     populateLineSelection() {
         let animationDelay = SELECTION_ANIMATION_DELAY;
         const lyrics = this.songs[this.selectedSongIndex].lyrics;
+
+        if (!lyrics || lyrics.length === 0) {
+            const noLyricsMsg = document.createElement("div");
+            noLyricsMsg.classList.add("no-lyrics-message");
+            noLyricsMsg.textContent = "No lyrics found. You can still proceed to customize your image.";
+            noLyricsMsg.style.padding = "20px";
+            noLyricsMsg.style.textAlign = "center";
+            noLyricsMsg.style.fontSize = "0.9rem";
+            noLyricsMsg.style.color = "var(--text-gray)";
+            this.lineSelection.append(noLyricsMsg);
+            return;
+        }
 
         lyrics.forEach((line, index) => {
             const element = document.createElement("div");
@@ -343,13 +421,18 @@ class DOMHandler {
         }
     }
 
-    // PERBAIKAN 2: LIRIK KE BAWAH PER BARIS
     setSongImage() {
         const song = this.songs[this.selectedSongIndex];
         
-        const screen4Img = document.querySelector(".song-image .header .screen4-album-img");
-        if (screen4Img && song.albumCoverUrl) {
-            screen4Img.src = song.albumCoverUrl;
+        // Set album image
+        if (this.screen4AlbumImg && song.albumCoverUrl) {
+            this.screen4AlbumImg.src = song.albumCoverUrl;
+            this.screen4AlbumImg.style.display = 'block';
+            if (this.albumImageWrapper) {
+                this.albumImageWrapper.style.backgroundImage = `url(${song.albumCoverUrl})`;
+                this.albumImageWrapper.style.backgroundSize = 'cover';
+                this.albumImageWrapper.style.backgroundPosition = 'center';
+            }
         }
         
         const nameDiv = document.querySelector(".song-image .header .name");
@@ -357,15 +440,27 @@ class DOMHandler {
         if (nameDiv) nameDiv.textContent = song.name;
         if (authorsDiv) authorsDiv.textContent = song.artists.map(a => a.name).join(", ");
         
-        // INI YANG DIUBAH - LIRIK PER BARIS KE BAWAH
         const selectedLines = document.querySelectorAll(".select-line.selected");
         let lyricsHtml = '';
-        Array.from(selectedLines).forEach(line => {
-            let lineText = line.textContent.trim();
-            if (lineText) {
-                lyricsHtml += `<div class="lyric-line">${lineText}</div>`;
+        if (selectedLines.length > 0) {
+            Array.from(selectedLines).forEach(line => {
+                let lineText = line.textContent.trim();
+                if (lineText) {
+                    lyricsHtml += `<div class="lyric-line">${lineText}</div>`;
+                }
+            });
+        } else {
+            // Jika tidak ada yang dipilih, ambil semua lirik
+            const song = this.songs[this.selectedSongIndex];
+            if (song.lyrics && song.lyrics.length > 0) {
+                song.lyrics.forEach(lyric => {
+                    if (lyric.text.trim()) {
+                        lyricsHtml += `<div class="lyric-line">${lyric.text}</div>`;
+                    }
+                });
             }
-        });
+        }
+        
         const lyricsDiv = document.querySelector(".song-image .lyrics");
         if (lyricsDiv) lyricsDiv.innerHTML = lyricsHtml || NO_LYRICS_SELECTED;
         
@@ -479,4 +574,4 @@ class DOMHandler {
             }
         });
     }
-                                                 }
+}
