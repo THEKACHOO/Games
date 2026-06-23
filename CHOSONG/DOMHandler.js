@@ -1,4 +1,4 @@
-const SONGS_TO_FETCH = 12; // Diubah dari 6 menjadi 12
+const SONGS_TO_FETCH = 12;
 const SELECTION_ANIMATION_DELAY = 300;
 const NEXT_LINE_ANIMATION_DELAY = 30;
 const SEARCHING_FOR_SONG = "Searching for your song...";
@@ -24,7 +24,7 @@ class DOMHandler {
         this.songs = [];
         this.selectedSongIndex = null;
         this.usedDirectLink = false;
-        this.allUniqueTracks = []; // Untuk menyimpan semua lagu unik
+        this.allUniqueTracks = [];
 
         // DOM Elements
         this.errorTexts = document.querySelectorAll(".error");
@@ -159,7 +159,6 @@ class DOMHandler {
                 if (this.widthValue) {
                     this.widthValue.textContent = `${width}px`;
                 }
-                // Sync ke modal jika terbuka
                 if (this.bgModal && this.bgModal.classList.contains('open')) {
                     this.updateBgOverlay();
                 }
@@ -184,19 +183,6 @@ class DOMHandler {
                 document.execCommand("insertText", false, text);
             });
         });
-
-        // Dark mode toggle
-        const darkModeToggle = document.querySelector("#dark-mode-toggle");
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener("click", () => {
-                document.body.classList.toggle("dark-mode");
-                const isDark = document.body.classList.contains("dark-mode");
-                const icon = darkModeToggle.querySelector(".material-symbols-outlined");
-                if (icon) {
-                    icon.textContent = isDark ? "dark_mode" : "light_mode";
-                }
-            });
-        }
 
         // ========== BACKGROUND MODAL LISTENERS ==========
         if (this.bgOpenBtn) {
@@ -235,7 +221,7 @@ class DOMHandler {
             });
         });
 
-        // ZOOM SLIDER - track value untuk download
+        // ZOOM SLIDER
         if (this.bgZoomSlider) {
             this.bgZoomSlider.addEventListener('input', () => {
                 const val = this.bgZoomSlider.value;
@@ -246,7 +232,7 @@ class DOMHandler {
             });
         }
 
-        // UPLOAD BACKGROUND - CROP 1:1
+        // UPLOAD BACKGROUND
         if (this.bgUploadInput) {
             this.bgUploadInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
@@ -256,7 +242,6 @@ class DOMHandler {
                 reader.onload = (ev) => {
                     const img = new Image();
                     img.onload = () => {
-                        // CROP 1:1
                         const canvas = document.createElement('canvas');
                         const size = Math.min(img.width, img.height);
                         canvas.width = size;
@@ -299,13 +284,11 @@ class DOMHandler {
     showAllSongs() {
         if (!this.songSelection) return;
         
-        // Tampilkan semua lagu yang tersembunyi
         const hiddenSongs = this.songSelection.querySelectorAll('.select-song.hidden-song');
         hiddenSongs.forEach(el => {
             el.classList.remove('hidden-song');
         });
         
-        // Sembunyikan tombol See More
         if (this.seeMoreBtn) {
             this.seeMoreBtn.style.display = 'none';
         }
@@ -442,7 +425,7 @@ class DOMHandler {
         }
     }
 
-    // ========== DOWNLOAD BACKGROUND (800x800) - DENGAN ZOOM ==========
+    // ========== DOWNLOAD BACKGROUND ==========
     async downloadBackground() {
         if (!this.bgDownloadBtn) return;
         const btn = this.bgDownloadBtn;
@@ -452,66 +435,22 @@ class DOMHandler {
         
         try {
             const container = this.bgCanvasContainer;
-            const targetSize = 800;
-            const rect = container.getBoundingClientRect();
             
-            // Ambil nilai zoom saat ini
-            const zoomValue = this.bgZoomSlider ? parseFloat(this.bgZoomSlider.value) / 100 : 1;
-            
-            // Clone container
+            // Clone container untuk di-render
             const clone = container.cloneNode(true);
             clone.style.position = 'fixed';
             clone.style.left = '-9999px';
             clone.style.top = '0';
-            clone.style.width = rect.width + 'px';
-            clone.style.height = rect.height + 'px';
+            clone.style.width = '400px';
+            clone.style.height = '400px';
             clone.style.zIndex = '-9999';
             clone.style.transform = 'none';
             clone.style.borderRadius = '0';
             clone.style.overflow = 'hidden';
             document.body.appendChild(clone);
             
-            // Pastikan background image terlihat
-            const cloneImage = clone.querySelector('#bg-canvas-image');
-            if (cloneImage) {
-                cloneImage.style.display = 'block';
-                cloneImage.style.position = 'absolute';
-                cloneImage.style.top = '0';
-                cloneImage.style.left = '0';
-                cloneImage.style.width = '100%';
-                cloneImage.style.height = '100%';
-                cloneImage.style.objectFit = 'cover';
-                cloneImage.style.zIndex = '1';
-            }
-            
-            // Pastikan overlay card dengan ZOOM yang sama
-            const cloneOverlay = clone.querySelector('.bg-song-overlay');
-            if (cloneOverlay) {
-                cloneOverlay.style.position = 'absolute';
-                cloneOverlay.style.top = '50%';
-                cloneOverlay.style.left = '50%';
-                // TERAPKAN ZOOM YANG SAMA
-                cloneOverlay.style.transform = `translate(-50%, -50%) scale(${zoomValue})`;
-                cloneOverlay.style.zIndex = '2';
-                cloneOverlay.style.padding = '0';
-                cloneOverlay.style.background = 'transparent';
-                cloneOverlay.style.width = 'auto';
-                cloneOverlay.style.maxWidth = '90%';
-                cloneOverlay.style.pointerEvents = 'none';
-                
-                const songImg = cloneOverlay.querySelector('.song-image');
-                if (songImg) {
-                    const screen4Width = this.widthSlider ? this.widthSlider.value : 320;
-                    songImg.style.width = screen4Width + 'px';
-                    songImg.style.maxWidth = '100%';
-                    songImg.style.margin = '0 auto';
-                }
-            }
-            
             const canvas = await html2canvas(clone, {
-                scale: targetSize / rect.width,
-                width: rect.width,
-                height: rect.height,
+                scale: 2,
                 backgroundColor: null,
                 useCORS: true,
                 allowTaint: false,
@@ -520,15 +459,7 @@ class DOMHandler {
             
             document.body.removeChild(clone);
             
-            const finalCanvas = document.createElement('canvas');
-            finalCanvas.width = targetSize;
-            finalCanvas.height = targetSize;
-            const ctx = finalCanvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(canvas, 0, 0, targetSize, targetSize);
-            
-            finalCanvas.toBlob((blob) => {
+            canvas.toBlob((blob) => {
                 saveAs(blob, 'chosong-background.png');
                 btn.innerHTML = originalText;
                 btn.disabled = false;
@@ -593,7 +524,6 @@ class DOMHandler {
             this.songs = await this.fetcher.getSongInfos(name, SONGS_TO_FETCH);
             this.usedDirectLink = false;
             
-            // **HILANGKAN DUPLIKASI LAGU**
             this.allUniqueTracks = this.removeDuplicateSongs(this.songs);
             
             this.populateSongSelection();
@@ -614,7 +544,6 @@ class DOMHandler {
         const unique = [];
         
         songs.forEach(song => {
-            // Buat key unik berdasarkan nama lagu + artist pertama
             const artistName = song.artists && song.artists.length > 0 ? song.artists[0].name : '';
             const key = `${song.name.toLowerCase()}|${artistName.toLowerCase()}`;
             
@@ -632,37 +561,27 @@ class DOMHandler {
         if (!this.songSelection) return;
         this.songSelection.querySelectorAll(".select-song:not(.cloneable)").forEach(el => el.remove());
 
-        // Gunakan allUniqueTracks yang sudah unik
         const tracks = this.allUniqueTracks.length > 0 ? this.allUniqueTracks : this.songs;
-        
-        // Batasi maksimal 12 lagu
         const limitedTracks = tracks.slice(0, 12);
-        
-        // Pisahkan 6 pertama dan sisanya
         const firstSix = limitedTracks.slice(0, 6);
         const remaining = limitedTracks.slice(6);
 
-        // Tampilkan 6 lagu pertama
-        firstSix.forEach((song, index) => {
-            const clone = this.createSongElement(song, index);
+        firstSix.forEach((song) => {
+            const clone = this.createSongElement(song);
             this.songSelection.append(clone);
         });
 
-        // Buat elemen untuk lagu sisanya (disembunyikan)
         const hiddenElements = [];
-        remaining.forEach((song, index) => {
-            const clone = this.createSongElement(song, index + 6);
+        remaining.forEach((song) => {
+            const clone = this.createSongElement(song);
             clone.classList.add('hidden-song');
             hiddenElements.push(clone);
             this.songSelection.append(clone);
         });
 
-        // Tampilkan atau sembunyikan tombol See More
         if (this.seeMoreBtn) {
             if (hiddenElements.length > 0) {
                 this.seeMoreBtn.style.display = 'flex';
-                // Simpan referensi elemen tersembunyi di atribut tombol
-                this.seeMoreBtn._hiddenCount = hiddenElements.length;
             } else {
                 this.seeMoreBtn.style.display = 'none';
             }
@@ -674,7 +593,7 @@ class DOMHandler {
     }
 
     // ========== CREATE SONG ELEMENT ==========
-    createSongElement(song, index) {
+    createSongElement(song) {
         const clone = this.cloneableSelectSong.cloneNode(true);
         clone.classList.remove('cloneable');
         clone.style.display = 'flex';
@@ -696,7 +615,6 @@ class DOMHandler {
         }
 
         clone.addEventListener("click", () => {
-            // Cari index lagu di array asli
             const originalIndex = this.songs.findIndex(s => {
                 const sArtist = s.artists && s.artists.length > 0 ? s.artists[0].name : '';
                 const songArtist = song.artists && song.artists.length > 0 ? song.artists[0].name : '';
@@ -706,7 +624,6 @@ class DOMHandler {
             if (originalIndex !== -1) {
                 this.selectedSongIndex = originalIndex;
             } else {
-                // Fallback: cari berdasarkan nama
                 const fallbackIndex = this.songs.findIndex(s => s.name === song.name);
                 this.selectedSongIndex = fallbackIndex !== -1 ? fallbackIndex : 0;
             }
@@ -938,4 +855,4 @@ class DOMHandler {
             }
         });
     }
-            }
+                                                 }
