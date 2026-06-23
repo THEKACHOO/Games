@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>DIMENSIONS : The Deadline</title>
+    <link href="https://fonts.cdnfonts.com/css/who-asks-satan" rel="stylesheet">
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/who-asks-satan');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0b0b0b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+        }
+
+        .phone-frame {
+            max-width: 400px;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: #1a1a1a;
+            border-radius: 36px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 2px #2a2a2a inset;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 18px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            background-size: cover;
+            background-position: center;
+            background-color: #0f0f0f;
+            color: #eee;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+        }
+
+        .section.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .text-box {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 18px 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+            margin: 12px 0;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #f0f0f0;
+            min-height: 80px;
+        }
+
+        .text-box p {
+            margin-bottom: 8px;
+        }
+
+        .text-box .highlight {
+            color: #b3d9ff;
+            font-weight: 500;
+        }
+
+        .text-box .danger {
+            color: #ff5e6b;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .btn {
+            background: white;
+            border: none;
+            border-radius: 60px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #111;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transition: all 0.15s;
+            cursor: pointer;
+            margin: 6px 4px;
+            min-width: 80px;
+            text-align: center;
+            background: #f5f5f5;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            background: #ddd;
+        }
+
+        .btn-dark {
+            background: #2a2a2a;
+            color: #eee;
+            border: 1px solid #444;
+        }
+
+        .btn-dark:active {
+            background: #3a3a3a;
+        }
+
+        .btn-danger {
+            background: #a02b2b;
+            color: white;
+            border: 1px solid #b33;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-lift {
+            min-width: 45px;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            background: rgba(40, 40, 40, 0.8);
+            color: #ccc;
+            border: 1px solid #444;
+        }
+
+        .btn-lift.active-lift {
+            background: #4a7a9c;
+            color: white;
+            border-color: #6a9ac4;
+            box-shadow: 0 0 15px rgba(74, 122, 156, 0.4);
+        }
+
+        .btn-lift:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .input-name {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(2px);
+            border: 1px solid #555;
+            border-radius: 60px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            color: white;
+            width: 100%;
+            max-width: 240px;
+            text-align: center;
+            outline: none;
+        }
+
+        .input-name::placeholder {
+            color: #aaa;
+        }
+
+        .input-name:focus {
+            border-color: #aaa;
+        }
+
+        .typing-cursor::after {
+            content: "▌";
+            color: #b3d9ff;
+            animation: blink 0.8s step-end infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .blink-text {
+            animation: blink 1.2s step-end infinite;
+        }
+
+        .bg-home { background-image: url('Home.png'); background-color: #141414; }
+        .bg-l1 { background-image: url('L1.png'); background-color: #1e1e1e; }
+        .bg-lift1 { background-image: url('lift1.png'); background-color: #1a1a1a; }
+        .bg-lift2 { background-image: url('lift2.png'); background-color: #1a1a1a; }
+        .bg-l13 { background-image: url('L13.1.png'); background-color: #1f1f1f; }
+        .bg-monster1 { background-image: url('Monster1.png'); background-color: #0d0d0d; }
+        .bg-monster2 { background-image: url('Monster2.png'); background-color: #0d0d0d; }
+
+        .mt-2 { margin-top: 8px; }
+        .text-center { text-align: center; }
+        .small-text { font-size: 0.85rem; opacity: 0.8; }
+
+        #bg-audio {
+            position: absolute;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .emergency-msg {
+            background: rgba(100, 10, 10, 0.5);
+            border-left: 3px solid #ff4d4d;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .game-over-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff5e6b;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .dialog-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .btn-next-dialog {
+            min-width: 70px;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-next-dialog:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .lift-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            max-width: 200px;
+            margin: 10px auto;
+        }
+
+        .speaker-name {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .separate-container {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .title-font {
+            font-family: 'Who asks Satan', 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .subtitle-font {
+            font-family: 'Who asks Satan', 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame" id="app">
+        <audio id="bg-audio" autoplay loop>
+            <source src="Audio1.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- SECTION 1: HOME -->
+        <div id="section1" class="section bg-home active">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%;">
+                <h1 style="font-size:4.3rem; font-weight:400; letter-spacing:4px; margin-bottom:34px; color:#a60e00; text-shadow:0 0 35px rgba(0,0,0,0.20); text-align:center; line-height:0.66;" class="title-font">DIMENSIONS<br><span style="font-size:2.5rem;" class="subtitle-font">The Deadline</span></h1>
+                <input type="text" id="playerNameInput" class="input-name" placeholder="Enter your name..." maxlength="20">
+                <button id="btnNextSection1" class="btn" style="margin-top:20px; background-color:#a60e00; color:#ffffff; border:2px solid #a60e00;">Start</button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: L1 (Aicho) -->
+        <div id="section2" class="section bg-l1">
+            <div class="text-box" id="textBox2">
+                <div id="dialogContainer2">
+                    <div id="speaker2" class="speaker-name"></div>
+                    <p id="line2_current"></p>
+                </div>
+                <div class="dialog-controls">
+                    <button id="btnNextDialog2" class="btn btn-next-dialog">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Lift1 -->
+        <div id="section3" class="section bg-lift1">
+            <div class="text-box text-center" style="background:rgba(0,0,0,0.6);">
+                <p style="font-weight:300; letter-spacing:2px; font-size:0.9rem;">Select Floor</p>
+                <div class="lift-grid" id="liftButtons">
+                    <button class="btn btn-lift" data-floor="G">G</button>
+                    <button class="btn btn-lift" data-floor="L1">L1</button>
+                    <button class="btn btn-lift" data-floor="L2">L2</button>
+                    <button class="btn btn-lift" data-floor="L3">L3</button>
+                    <button class="btn btn-lift" data-floor="L4">L4</button>
+                    <button class="btn btn-lift" data-floor="L5">L5</button>
+                    <button class="btn btn-lift" data-floor="L6">L6</button>
+                    <button class="btn btn-lift" data-floor="L7">L7</button>
+                    <button class="btn btn-lift" data-floor="L8">L8</button>
+                    <button class="btn btn-lift" data-floor="L9">L9</button>
+                    <button class="btn btn-lift" data-floor="L10">L10</button>
+                    <button class="btn btn-lift" data-floor="L11">L11</button>
+                    <button class="btn btn-lift" data-floor="L12">L12</button>
+                </div>
+                <p id="liftMessage" style="font-size:0.75rem; opacity:0.6; margin-top:8px; min-height:20px;"></p>
+            </div>
+        </div>
+
+        <!-- SECTION 4: Lift2 -->
+        <div id="section4" class="section bg-lift2">
+            <div class="text-box" id="textBox4">
+                <div id="dialogContainer4">
+                    <div id="speaker4" class="speaker-name">You</div>
+                    <p id="line4_current"></p>
+                </div>
+                <div class="dialog-controls" id="dialogControls4">
+                    <button id="btnNextDialog4" class="btn btn-next-dialog">Next</button>
+                </div>
+            </div>
+            
+            <div id="errorMsg4" class="emergency-msg hidden">
+                <span class="danger">Ups! The door can't be closed</span>
+            </div>
+            
+            <div class="text-box hidden" id="buttonContainer4" style="margin-top:0;">
+                <div class="btn-group">
+                    <button id="btnCloseDoor" class="btn btn-dark">Close the elevator door</button>
+                    <button id="btnEmergencyStairs" class="btn btn-danger">Use the emergency stairs</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5: L13.1 -->
+        <div id="section5" class="section bg-l13">
+            <div class="text-box" id="textBox5">
+                <div id="dialogContainer5">
+                    <div id="speaker5" class="speaker-name">You</div>
+                    <p id="line5_current"></p>
+                </div>
+                <div class="dialog-controls" id="dialogControls5">
+                    <button id="btnNextDialog5" class="btn btn-next-dialog">Next</button>
+                </div>
+                <div class="btn-group hidden" id="btnGroup5">
+                    <button id="btnOpenDoor" class="btn btn-dark">Open the door</button>
+                    <button id="btnDownstairs" class="btn">Downstairs</button>
+                    <button id="btnBackToL13" class="btn btn-danger">Back to L13</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 6: Monster1 (death) -->
+        <div id="section6" class="section bg-monster1">
+            <div class="text-box text-center">
+                <p class="game-over-title">☠️ YOU DIED</p>
+                <p style="margin-top:8px;">You died because you fell from the highest floor. Rest in Peace.</p>
+                <button id="btnReset" class="btn" style="margin-top:16px;">↺ Back</button>
+            </div>
+        </div>
+
+        <!-- SECTION 7: Monster2 (death) -->
+        <div id="section7" class="section bg-monster2">
+            <div class="text-box text-center">
+                <p class="game-over-title">☠️ YOU DIED</p>
+                <p>When you return to the 13th floor, there is a monster with a wide smile and sharp teeth welcoming you and you are swallowed by it! Rest in Peace.</p>
+                <button id="btnReset2" class="btn" style="margin-top:16px;">Revive</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- DOM refs -----
+            const sections = {
+                s1: document.getElementById('section1'),
+                s2: document.getElementById('section2'),
+                s3: document.getElementById('section3'),
+                s4: document.getElementById('section4'),
+                s5: document.getElementById('section5'),
+                s6: document.getElementById('section6'),
+                s7: document.getElementById('section7'),
+            };
+
+            const playerNameInput = document.getElementById('playerNameInput');
+            const btnNext1 = document.getElementById('btnNextSection1');
+
+            // section2
+            const line2_current = document.getElementById('line2_current');
+            const speaker2 = document.getElementById('speaker2');
+            const btnNextDialog2 = document.getElementById('btnNextDialog2');
+
+            // section3 - lift
+            const liftButtons = document.querySelectorAll('.btn-lift');
+            const liftMessage = document.getElementById('liftMessage');
+
+            // section4
+            const line4_current = document.getElementById('line4_current');
+            const speaker4 = document.getElementById('speaker4');
+            const btnNextDialog4 = document.getElementById('btnNextDialog4');
+            const dialogControls4 = document.getElementById('dialogControls4');
+            const buttonContainer4 = document.getElementById('buttonContainer4');
+            const errorMsg4 = document.getElementById('errorMsg4');
+            const btnCloseDoor = document.getElementById('btnCloseDoor');
+            const btnEmergencyStairs = document.getElementById('btnEmergencyStairs');
+
+            // section5
+            const line5_current = document.getElementById('line5_current');
+            const speaker5 = document.getElementById('speaker5');
+            const btnNextDialog5 = document.getElementById('btnNextDialog5');
+            const dialogControls5 = document.getElementById('dialogControls5');
+            const btnGroup5 = document.getElementById('btnGroup5');
+            const btnOpenDoor = document.getElementById('btnOpenDoor');
+            const btnDownstairs = document.getElementById('btnDownstairs');
+            const btnBackToL13 = document.getElementById('btnBackToL13');
+
+            // reset buttons
+            const btnReset = document.getElementById('btnReset');
+            const btnReset2 = document.getElementById('btnReset2');
+
+            // audio
+            const bgAudio = document.getElementById('bg-audio');
+
+            // state
+            let playerName = '';
+            let typingTimeouts = [];
+            let dialogIndex2 = 0;
+            let dialogIndex4 = 0;
+            let dialogIndex5 = 0;
+            let isDialogActive = false;
+            let dialogData2 = [];
+            let dialogData4 = [];
+            let dialogData5 = [];
+
+            // ----- utility: switch section -----
+            function switchSection(sectionId) {
+                Object.keys(sections).forEach(key => {
+                    sections[key].classList.remove('active');
+                });
+                if (sections[sectionId]) {
+                    sections[sectionId].classList.add('active');
+                }
+                if (sectionId === 's3') {
+                    bgAudio.src = 'Audio2.mp3';
+                    bgAudio.load();
+                    bgAudio.play().catch(() => {});
+                }
+                if (sectionId === 's1') {
+                    bgAudio.src = 'Audio1.mp3';
+                    bgAudio.load();
+                    bgAudio.play().catch(() => {});
+                }
+            }
+
+            // ----- typing effect -----
+            function typeText(element, text, callback, speed = 30) {
+                if (!element) return;
+                element.textContent = '';
+                element.classList.add('typing-cursor');
+                let idx = 0;
+                const interval = setInterval(() => {
+                    if (idx < text.length) {
+                        element.textContent += text.charAt(idx);
+                        idx++;
+                    } else {
+                        clearInterval(interval);
+                        element.classList.remove('typing-cursor');
+                        if (callback) callback();
+                    }
+                }, speed);
+                typingTimeouts.push(interval);
+                return interval;
+            }
+
+            function clearTypingEffects() {
+                typingTimeouts.forEach(t => clearTimeout(t));
+                typingTimeouts = [];
+                document.querySelectorAll('.typing-cursor').forEach(el => el.classList.remove('typing-cursor'));
+            }
+
+            // ----- SECTION 2: Dialog with Next button -----
+            function setupDialog2() {
+                const name = playerName || 'Employee';
+                dialogData2 = [
+                    { speaker: 'Aicho', text: `Eeeeh? ${name}? Oh, you're the intern, right?` },
+                    { speaker: 'You', text: `Y-yess...` },
+                    { speaker: 'Aicho', text: `Hello, ${name}! Welcome to the Kachoo office building, there are many tasks that you have to complete before the deadline.` },
+                    { speaker: 'Aicho', text: `You're late, it's already work hours. We've been busy lately... the campaign for Kazine is about to start. But, well... you can take this elevator. The work space is on the 6th floor. Have a good work!` }
+                ];
+                dialogIndex2 = 0;
+                btnNextDialog2.classList.remove('hidden');
+                showDialog2();
+            }
+
+            function showDialog2() {
+                if (dialogIndex2 >= dialogData2.length) {
+                    btnNextDialog2.classList.add('hidden');
+                    setTimeout(() => {
+                        switchSection('s3');
+                    }, 600);
+                    return;
+                }
+                clearTypingEffects();
+                const entry = dialogData2[dialogIndex2];
+                speaker2.textContent = entry.speaker + ' :';
+                line2_current.textContent = '';
+                typeText(line2_current, entry.text, () => {
+                    isDialogActive = false;
+                }, 30);
+                isDialogActive = true;
+            }
+
+            btnNextDialog2.addEventListener('click', function() {
+                if (isDialogActive) {
+                    clearTypingEffects();
+                    const entry = dialogData2[dialogIndex2];
+                    line2_current.textContent = entry.text;
+                    line2_current.classList.remove('typing-cursor');
+                    isDialogActive = false;
+                    return;
+                }
+                dialogIndex2++;
+                showDialog2();
+            });
+
+            // ----- SECTION 3: Lift buttons -----
+            liftButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const floor = this.dataset.floor;
+                    if (floor === 'L6') {
+                        liftMessage.textContent = 'Floor 6 selected...';
+                        liftMessage.style.color = '#6a9ac4';
+                        setTimeout(() => {
+                            switchSection('s4');
+                        }, 800);
+                    } else {
+                        liftMessage.textContent = '';
+                    }
+                });
+            });
+
+            // ----- SECTION 4: Dialog then buttons in separate container -----
+            function setupDialog4() {
+                dialogData4 = [
+                    { text: `Emm.. I pressed the 6th floor button but why did the elevator door open on the 13th floor? Is it an error?` }
+                ];
+                dialogIndex4 = 0;
+                btnNextDialog4.classList.remove('hidden');
+                dialogControls4.classList.remove('hidden');
+                buttonContainer4.classList.add('hidden');
+                errorMsg4.classList.add('hidden');
+                showDialog4();
+            }
+
+            function showDialog4() {
+                if (dialogIndex4 >= dialogData4.length) {
+                    btnNextDialog4.classList.add('hidden');
+                    dialogControls4.classList.add('hidden');
+                    buttonContainer4.classList.remove('hidden');
+                    return;
+                }
+                clearTypingEffects();
+                const entry = dialogData4[dialogIndex4];
+                speaker4.textContent = 'You :';
+                line4_current.textContent = '';
+                typeText(line4_current, entry.text, () => {
+                    isDialogActive = false;
+                }, 28);
+                isDialogActive = true;
+            }
+
+            btnNextDialog4.addEventListener('click', function() {
+                if (isDialogActive) {
+                    clearTypingEffects();
+                    const entry = dialogData4[dialogIndex4];
+                    line4_current.textContent = entry.text;
+                    line4_current.classList.remove('typing-cursor');
+                    isDialogActive = false;
+                    return;
+                }
+                dialogIndex4++;
+                showDialog4();
+            });
+
+            btnCloseDoor.addEventListener('click', function() {
+                errorMsg4.classList.remove('hidden');
+                setTimeout(() => {
+                    errorMsg4.classList.add('hidden');
+                }, 1500);
+            });
+
+            btnEmergencyStairs.addEventListener('click', function() {
+                switchSection('s5');
+                setTimeout(setupDialog5, 400);
+            });
+
+            // ----- SECTION 5: Dialog with Next button -----
+            function setupDialog5() {
+                dialogData5 = [
+                    { text: `I've already gone down the stairs once, why do I keep going back to the 13th floor?` },
+                    { text: `Wait, the 13th floor again?! Oh come on! I'm in a rush right now! What's going on?!` },
+                    { text: `Huuuuft.. finally, there is a door... Maybe, I can use this.` }
+                ];
+                dialogIndex5 = 0;
+                btnNextDialog5.classList.remove('hidden');
+                dialogControls5.classList.remove('hidden');
+                btnGroup5.classList.add('hidden');
+                showDialog5();
+            }
+
+            function showDialog5() {
+                if (dialogIndex5 >= dialogData5.length) {
+                    btnNextDialog5.classList.add('hidden');
+                    dialogControls5.classList.add('hidden');
+                    btnGroup5.classList.remove('hidden');
+                    return;
+                }
+                clearTypingEffects();
+                const entry = dialogData5[dialogIndex5];
+                speaker5.textContent = 'You :';
+                line5_current.textContent = '';
+                const delay = dialogIndex5 === 1 ? 500 : (dialogIndex5 === 2 ? 800 : 0);
+                setTimeout(() => {
+                    typeText(line5_current, entry.text, () => {
+                        isDialogActive = false;
+                    }, 28);
+                    isDialogActive = true;
+                }, delay);
+            }
+
+            btnNextDialog5.addEventListener('click', function() {
+                if (isDialogActive) {
+                    clearTypingEffects();
+                    const entry = dialogData5[dialogIndex5];
+                    line5_current.textContent = entry.text;
+                    line5_current.classList.remove('typing-cursor');
+                    isDialogActive = false;
+                    return;
+                }
+                dialogIndex5++;
+                showDialog5();
+            });
+
+            btnOpenDoor.addEventListener('click', function() {
+                switchSection('s6');
+            });
+
+            btnDownstairs.addEventListener('click', function() {
+                window.location.href = 'Maingame.html';
+            });
+
+            btnBackToL13.addEventListener('click', function() {
+                switchSection('s7');
+            });
+
+            // ----- reset ke section1 -----
+            function resetToHome() {
+                clearTypingEffects();
+                switchSection('s1');
+                bgAudio.src = 'Audio1.mp3';
+                bgAudio.load();
+                bgAudio.play().catch(() => {});
+                playerNameInput.value = playerName || '';
+                dialogIndex2 = 0;
+                dialogIndex4 = 0;
+                dialogIndex5 = 0;
+                btnNextDialog2.classList.remove('hidden');
+                btnNextDialog4.classList.remove('hidden');
+                btnNextDialog5.classList.remove('hidden');
+                dialogControls4.classList.remove('hidden');
+                dialogControls5.classList.remove('hidden');
+                buttonContainer4.classList.add('hidden');
+                btnGroup5.classList.add('hidden');
+                line2_current.textContent = '';
+                line4_current.textContent = '';
+                line5_current.textContent = '';
+                errorMsg4.classList.add('hidden');
+                liftMessage.textContent = '';
+                isDialogActive = false;
+            }
+
+            // ----- event listeners -----
+            btnNext1.addEventListener('click', function() {
+                const name = playerNameInput.value.trim();
+                if (name === '') {
+                    alert('Please enter your name first!');
+                    return;
+                }
+                playerName = name;
+                switchSection('s2');
+                setTimeout(setupDialog2, 400);
+            });
+
+            btnReset.addEventListener('click', resetToHome);
+            btnReset2.addEventListener('click', resetToHome);
+
+            // inisialisasi
+            switchSection('s1');
+            bgAudio.volume = 0.6;
+            bgAudio.play().catch(() => {});
+
+            playerNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    btnNext1.click();
+                }
+            });
+
+            // patch untuk section4
+            const originalSwitch = switchSection;
+            switchSection = function(sectionId) {
+                originalSwitch(sectionId);
+                if (sectionId === 's4') {
+                    setTimeout(setupDialog4, 300);
+                }
+                if (sectionId === 's1') {
+                    clearTypingEffects();
+                }
+            };
+            window.switchSection = switchSection;
+
+            console.log('DIMENSIONS : The Deadline loaded');
+        })();
+    </script>
+</body>
+</html>
