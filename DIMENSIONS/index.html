@@ -15,26 +15,55 @@
             font-family: 'Poppins', system-ui, -apple-system, sans-serif;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background: #0b0b0b;
-            min-height: 100vh;
+        }
+
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8px;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
         }
 
         .phone-frame {
-            max-width: 400px;
             width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
             aspect-ratio: 9 / 16;
             background: #1a1a1a;
-            border-radius: 36px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 2px #2a2a2a inset;
+            box-shadow: 0 0 0 2px #2a2a2a inset;
             overflow: hidden;
             position: relative;
             display: flex;
             flex-direction: column;
+            border-radius: 0;
+        }
+
+        @media (min-aspect-ratio: 9/16) {
+            .phone-frame {
+                max-width: 100vw;
+                max-height: 100vh;
+                width: auto;
+                height: 100vh;
+                aspect-ratio: 9 / 16;
+            }
+        }
+
+        @media (max-aspect-ratio: 9/16) {
+            .phone-frame {
+                width: 100vw;
+                height: auto;
+                aspect-ratio: 9 / 16;
+                max-height: 100vh;
+            }
         }
 
         .section {
@@ -56,6 +85,7 @@
             background-color: #0f0f0f;
             color: #eee;
             text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+            background-repeat: no-repeat;
         }
 
         .section.active {
@@ -118,7 +148,6 @@
             background: rgba(255, 255, 255, 0.25);
         }
 
-        /* HANYA SECTION 1 YANG MERAH */
         .btn-red {
             background: #a60e00;
             color: #ffffff;
@@ -612,7 +641,6 @@
                 if (dialogIndex4 >= dialogData4.length) {
                     btnNextDialog4.classList.add('hidden');
                     dialogControls4.classList.add('hidden');
-                    // SEMBUNYIKAN textBox4
                     textBox4.classList.add('hidden');
                     buttonContainer4.classList.remove('hidden');
                     return;
@@ -781,4 +809,4 @@
         })();
     </script>
 </body>
-</html>
+                        </html>
