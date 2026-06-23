@@ -233,12 +233,12 @@
         }
 
         .bg-home { background-image: url('Home1.jpg'); background-color: #141414; }
-        .bg-l1 { background-image: url('L1.png'); background-color: #1e1e1e; }
+        .bg-l1 { background-image: url('L1.1.png'); background-color: #1e1e1e; }
         .bg-lift1 { background-image: url('lift1.jpg'); background-color: #1a1a1a; }
         .bg-lift2 { background-image: url('lift2.jpg'); background-color: #1a1a1a; }
         .bg-l13 { background-image: url('L13.jpg'); background-color: #1f1f1f; }
-        .bg-monster1 { background-image: url('Monster1.jpg'); background-color: #0d0d0d; }
-        .bg-monster2 { background-image: url('Monster2.jpg'); background-color: #0d0d0d; }
+        .bg-monster1 { background-image: url('Gameover1.jpg'); background-color: #0d0d0d; }
+        .bg-monster2 { background-image: url('Gameover2.jpg'); background-color: #0d0d0d; }
 
         .mt-2 { margin-top: 8px; }
         .text-center { text-align: center; }
@@ -566,10 +566,10 @@
             function setupDialog2() {
                 const name = playerName || 'Employee';
                 dialogData2 = [
-                    { speaker: 'Aicho', text: `Eeeeh? ${name}? Oh, you're the intern, right?` },
+                    { speaker: '???', text: `Eeeeh? ${name}? Oh, you're the intern, right?` },
                     { speaker: 'You', text: `Y-yess...` },
-                    { speaker: 'Aicho', text: `Hello, ${name}! Welcome to the Kachoo office building, there are many tasks that you have to complete before the deadline.` },
-                    { speaker: 'Aicho', text: `You're late, it's already work hours. We've been busy lately... the campaign for Kazine is about to start. But, well... you can take this elevator. The work space is on the 6th floor. Have a good work!` }
+                    { speaker: '???', text: `Hello, ${name}! Welcome to the office building, there are many tasks that you have to complete before the deadline.` },
+                    { speaker: '???', text: `You're late, it's already work hours. We've been busy lately... the campaign for Kazine is about to start. But, well... you can take this elevator. The work space is on the 6th floor. Have a good work!` }
                 ];
                 dialogIndex2 = 0;
                 btnNextDialog2.classList.remove('hidden');
@@ -685,7 +685,7 @@
                 dialogData5 = [
                     { text: `I've already gone down the stairs once, why do I keep going back to the 13th floor?` },
                     { text: `Wait, the 13th floor again?! Oh come on! I'm in a rush right now! What's going on?!` },
-                    { text: `Huuuuft.. finally, there is a door... Maybe, I can use this.` }
+                    { text: `Huuuft.. finally, there is a door... Maybe, I can use this.` }
                 ];
                 dialogIndex5 = 0;
                 btnNextDialog5.classList.remove('hidden');
