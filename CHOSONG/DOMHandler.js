@@ -1,4 +1,4 @@
-const SONGS_TO_FETCH = 12;
+const SONGS_TO_FETCH = 30; // Diubah dari 12 menjadi 30
 const SELECTION_ANIMATION_DELAY = 300;
 const NEXT_LINE_ANIMATION_DELAY = 30;
 const SEARCHING_FOR_SONG = "Searching for your song...";
@@ -436,7 +436,6 @@ class DOMHandler {
         try {
             const container = this.bgCanvasContainer;
             
-            // Clone container untuk di-render
             const clone = container.cloneNode(true);
             clone.style.position = 'fixed';
             clone.style.left = '-9999px';
@@ -521,9 +520,11 @@ class DOMHandler {
         this.displaySearching(SEARCHING_FOR_SONG);
 
         try {
+            // Fetch hingga 30 lagu
             this.songs = await this.fetcher.getSongInfos(name, SONGS_TO_FETCH);
             this.usedDirectLink = false;
             
+            // Hilangkan duplikasi
             this.allUniqueTracks = this.removeDuplicateSongs(this.songs);
             
             this.populateSongSelection();
@@ -562,26 +563,31 @@ class DOMHandler {
         this.songSelection.querySelectorAll(".select-song:not(.cloneable)").forEach(el => el.remove());
 
         const tracks = this.allUniqueTracks.length > 0 ? this.allUniqueTracks : this.songs;
-        const limitedTracks = tracks.slice(0, 12);
-        const firstSix = limitedTracks.slice(0, 6);
-        const remaining = limitedTracks.slice(6);
+        
+        // Tampilkan SEMUA lagu (maksimal 30), tapi 6 pertama terlihat, sisanya disembunyikan
+        const totalTracks = tracks.length;
+        const firstSix = tracks.slice(0, 6);
+        const remaining = tracks.slice(6);
 
+        // Tampilkan 6 lagu pertama
         firstSix.forEach((song) => {
             const clone = this.createSongElement(song);
             this.songSelection.append(clone);
         });
 
-        const hiddenElements = [];
+        // Tampilkan sisa lagu dengan class hidden-song
         remaining.forEach((song) => {
             const clone = this.createSongElement(song);
             clone.classList.add('hidden-song');
-            hiddenElements.push(clone);
             this.songSelection.append(clone);
         });
 
+        // Tampilkan atau sembunyikan tombol See More
         if (this.seeMoreBtn) {
-            if (hiddenElements.length > 0) {
+            if (remaining.length > 0) {
                 this.seeMoreBtn.style.display = 'flex';
+                // Update teks tombol dengan jumlah lagu tersembunyi
+                this.seeMoreBtn.innerHTML = `See more (${remaining.length}) <span class="material-symbols-outlined">expand_more</span>`;
             } else {
                 this.seeMoreBtn.style.display = 'none';
             }
@@ -855,4 +861,4 @@ class DOMHandler {
             }
         });
     }
-                                                 }
+                                           }
