@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DIMENSIONS: The Deadline</title>
+    <title>DIMENSIONS : The Deadline</title>
     <link href="https://fonts.cdnfonts.com/css/who-asks-satan" rel="stylesheet">
     <style>
         @import url('https://fonts.cdnfonts.com/css/who-asks-satan');
@@ -97,43 +97,35 @@
         }
 
         .btn {
-            background: white;
-            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 60px;
             padding: 12px 28px;
             font-weight: 600;
             font-size: 0.95rem;
-            color: #111;
+            color: #fff;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             transition: all 0.15s;
             cursor: pointer;
             margin: 6px 4px;
             min-width: 80px;
             text-align: center;
-            background: #f5f5f5;
             letter-spacing: 0.3px;
-            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .btn:active {
             transform: scale(0.95);
-            background: #ddd;
+            background: rgba(255, 255, 255, 0.25);
         }
 
-        .btn-dark {
-            background: #2a2a2a;
-            color: #eee;
-            border: 1px solid #444;
+        /* HANYA SECTION 1 YANG MERAH */
+        .btn-red {
+            background: #a60e00;
+            color: #ffffff;
+            border: 2px solid #a60e00;
         }
-
-        .btn-dark:active {
-            background: #3a3a3a;
-        }
-
-        .btn-danger {
-            background: #a02b2b;
-            color: white;
-            border: 1px solid #b33;
+        .btn-red:active {
+            background: #7a0a00;
         }
 
         .btn-group {
@@ -149,9 +141,16 @@
             min-width: 45px;
             padding: 8px 10px;
             font-size: 0.8rem;
-            background: rgba(40, 40, 40, 0.8);
+            background: rgba(255, 255, 255, 0.15);
             color: #ccc;
-            border: 1px solid #444;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-lift:active {
+            transform: scale(0.95);
         }
 
         .btn-lift.active-lift {
@@ -257,6 +256,8 @@
             background: rgba(255, 255, 255, 0.15);
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 60px;
+            cursor: pointer;
         }
 
         .btn-next-dialog:hover {
@@ -294,6 +295,19 @@
             font-family: 'Who asks Satan', 'Segoe UI', sans-serif;
             letter-spacing: 1px;
         }
+
+        .footer {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            width: 100%;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -304,10 +318,11 @@
 
         <!-- SECTION 1: HOME -->
         <div id="section1" class="section bg-home active">
-            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%;">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%; position:relative;">
                 <h1 style="font-size:4.3rem; font-weight:400; letter-spacing:4px; margin-bottom:34px; color:#a60e00; text-shadow:0 0 35px rgba(0,0,0,0.20); text-align:center; line-height:0.66;" class="title-font">DIMENSIONS<br><span style="font-size:2.5rem;" class="subtitle-font">The Deadline</span></h1>
                 <input type="text" id="playerNameInput" class="input-name" placeholder="Enter your name..." maxlength="20">
-                <button id="btnNextSection1" class="btn" style="margin-top:20px; background-color:#a60e00; color:#ffffff; border:2px solid #a60e00;">Start</button>
+                <button id="btnNextSection1" class="btn btn-red" style="margin-top:20px;">Start</button>
+                <div class="footer">Designer by The Kachoo, 2026</div>
             </div>
         </div>
 
@@ -329,19 +344,19 @@
             <div class="text-box text-center" style="background:rgba(0,0,0,0.6);">
                 <p style="font-weight:300; letter-spacing:2px; font-size:0.9rem;">Select Floor</p>
                 <div class="lift-grid" id="liftButtons">
-                    <button class="btn btn-lift" data-floor="G">G</button>
-                    <button class="btn btn-lift" data-floor="L1">L1</button>
-                    <button class="btn btn-lift" data-floor="L2">L2</button>
-                    <button class="btn btn-lift" data-floor="L3">L3</button>
-                    <button class="btn btn-lift" data-floor="L4">L4</button>
-                    <button class="btn btn-lift" data-floor="L5">L5</button>
-                    <button class="btn btn-lift" data-floor="L6">L6</button>
-                    <button class="btn btn-lift" data-floor="L7">L7</button>
-                    <button class="btn btn-lift" data-floor="L8">L8</button>
-                    <button class="btn btn-lift" data-floor="L9">L9</button>
-                    <button class="btn btn-lift" data-floor="L10">L10</button>
-                    <button class="btn btn-lift" data-floor="L11">L11</button>
-                    <button class="btn btn-lift" data-floor="L12">L12</button>
+                    <button class="btn-lift" data-floor="G">G</button>
+                    <button class="btn-lift" data-floor="L1">L1</button>
+                    <button class="btn-lift" data-floor="L2">L2</button>
+                    <button class="btn-lift" data-floor="L3">L3</button>
+                    <button class="btn-lift" data-floor="L4">L4</button>
+                    <button class="btn-lift" data-floor="L5">L5</button>
+                    <button class="btn-lift" data-floor="L6">L6</button>
+                    <button class="btn-lift" data-floor="L7">L7</button>
+                    <button class="btn-lift" data-floor="L8">L8</button>
+                    <button class="btn-lift" data-floor="L9">L9</button>
+                    <button class="btn-lift" data-floor="L10">L10</button>
+                    <button class="btn-lift" data-floor="L11">L11</button>
+                    <button class="btn-lift" data-floor="L12">L12</button>
                 </div>
                 <p id="liftMessage" style="font-size:0.75rem; opacity:0.6; margin-top:8px; min-height:20px;"></p>
             </div>
@@ -365,8 +380,8 @@
             
             <div class="text-box hidden" id="buttonContainer4" style="margin-top:0;">
                 <div class="btn-group">
-                    <button id="btnCloseDoor" class="btn btn-dark">Close the elevator door</button>
-                    <button id="btnEmergencyStairs" class="btn btn-danger">Use the emergency stairs</button>
+                    <button id="btnCloseDoor" class="btn">Close the elevator door</button>
+                    <button id="btnEmergencyStairs" class="btn">Use the emergency stairs</button>
                 </div>
             </div>
         </div>
@@ -382,9 +397,9 @@
                     <button id="btnNextDialog5" class="btn btn-next-dialog">Next</button>
                 </div>
                 <div class="btn-group hidden" id="btnGroup5">
-                    <button id="btnOpenDoor" class="btn btn-dark">Open the door</button>
+                    <button id="btnOpenDoor" class="btn">Open the door</button>
                     <button id="btnDownstairs" class="btn">Downstairs</button>
-                    <button id="btnBackToL13" class="btn btn-danger">Back to L13</button>
+                    <button id="btnBackToL13" class="btn">Back to L13</button>
                 </div>
             </div>
         </div>
@@ -394,7 +409,7 @@
             <div class="text-box text-center">
                 <p class="game-over-title">☠️ YOU DIED</p>
                 <p style="margin-top:8px;">You died because you fell from the highest floor. Rest in Peace.</p>
-                <button id="btnReset" class="btn" style="margin-top:16px;">↺ Back</button>
+                <button id="btnReset" class="btn" style="margin-top:16px;">Revive</button>
             </div>
         </div>
 
@@ -442,6 +457,7 @@
             const errorMsg4 = document.getElementById('errorMsg4');
             const btnCloseDoor = document.getElementById('btnCloseDoor');
             const btnEmergencyStairs = document.getElementById('btnEmergencyStairs');
+            const textBox4 = document.getElementById('textBox4');
 
             // section5
             const line5_current = document.getElementById('line5_current');
@@ -586,6 +602,7 @@
                 dialogIndex4 = 0;
                 btnNextDialog4.classList.remove('hidden');
                 dialogControls4.classList.remove('hidden');
+                textBox4.classList.remove('hidden');
                 buttonContainer4.classList.add('hidden');
                 errorMsg4.classList.add('hidden');
                 showDialog4();
@@ -595,6 +612,8 @@
                 if (dialogIndex4 >= dialogData4.length) {
                     btnNextDialog4.classList.add('hidden');
                     dialogControls4.classList.add('hidden');
+                    // SEMBUNYIKAN textBox4
+                    textBox4.classList.add('hidden');
                     buttonContainer4.classList.remove('hidden');
                     return;
                 }
@@ -708,6 +727,7 @@
                 btnNextDialog5.classList.remove('hidden');
                 dialogControls4.classList.remove('hidden');
                 dialogControls5.classList.remove('hidden');
+                textBox4.classList.remove('hidden');
                 buttonContainer4.classList.add('hidden');
                 btnGroup5.classList.add('hidden');
                 line2_current.textContent = '';
