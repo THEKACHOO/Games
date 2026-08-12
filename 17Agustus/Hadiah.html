@@ -22,7 +22,6 @@
 
     .container { max-width:1280px; margin:0 auto; padding:0 20px; width:100%; }
 
-    /* ===== Header (sama seperti halaman game) ===== */
     .page-header {
       background:#ffffff;
       padding:14px 0;
@@ -91,7 +90,6 @@
       letter-spacing:0.3px;
     }
 
-    /* ===== Roda spinner ===== */
     .wheel-outer {
       width:100%;
       max-width:320px;
@@ -226,12 +224,12 @@
       transform:none !important;
     }
 
-    /* ===== Modal hasil ===== */
+    /* ===== MODAL HASIL - LANGSUNG FOTO BESAR ===== */
     .win-modal-backdrop {
       display:none;
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,0.65);
+      background:rgba(0,0,0,0.7);
       z-index:999;
       align-items:center;
       justify-content:center;
@@ -240,51 +238,61 @@
     .win-modal-backdrop.show { display:flex; }
     .win-modal {
       background:#ffffff;
-      border:2px solid #000000;
-      border-radius:18px;
-      padding:30px 24px 24px;
-      max-width:360px;
+      border:3px solid #000000;
+      border-radius:20px;
+      padding:20px 20px 24px;
+      max-width:420px;
       width:100%;
       text-align:center;
-      box-shadow:0 8px 0 #000000;
+      box-shadow:0 10px 0 #000000;
     }
-    .win-modal h2 {
-      font-size:1.6rem;
-      font-weight:900;
-      color:#CC0000;
-      margin-bottom:14px;
-      letter-spacing:0.5px;
-    }
-    .result-img {
-      width:120px;
-      height:120px;
-      object-fit:contain;
+    .win-modal .result-img-wrap {
+      width:100%;
+      background:#f5f5f5;
       border:2px solid #000000;
       border-radius:12px;
-      background:#f8f8f8;
-      margin:0 auto 14px;
+      overflow:hidden;
+      margin-bottom:16px;
+      aspect-ratio:1/1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .win-modal .result-img-wrap img {
+      width:100%;
+      height:100%;
+      object-fit:contain;
       display:block;
     }
-    .win-modal p {
-      font-size:0.9rem;
-      color:#333;
-      margin-bottom:10px;
-      line-height:1.5;
+    .win-modal .modal-buttons {
+      display:flex;
+      gap:12px;
+      justify-content:center;
     }
-    .win-modal-close {
-      display:inline-block;
-      margin-top:10px;
-      background:#000000;
-      color:#ffffff;
-      border:none;
+    .win-modal .modal-buttons .btn-modal {
+      font-family:'Outfit', sans-serif;
       font-weight:700;
-      font-size:0.9rem;
-      padding:11px 28px;
+      font-size:0.95rem;
+      padding:12px 24px;
       border-radius:40px;
       cursor:pointer;
+      border:2px solid #000000;
+      transition:all 0.2s ease;
+      flex:1;
+      max-width:160px;
     }
+    .win-modal .modal-buttons .btn-modal:active { transform:scale(0.95); }
+    .win-modal .modal-buttons .btn-download {
+      background:#000000;
+      color:#ffffff;
+    }
+    .win-modal .modal-buttons .btn-download:hover { background:#222; }
+    .win-modal .modal-buttons .btn-close {
+      background:#ffffff;
+      color:#000000;
+    }
+    .win-modal .modal-buttons .btn-close:hover { background:#f0f0f0; }
 
-    /* ===== Footer (sama seperti halaman game) ===== */
     .page-footer {
       background:#ffffff;
       border-top:2px solid #000000;
@@ -375,10 +383,14 @@
       .footer-section p, .footer-links li, .footer-links a { font-size:12px; }
       .site-logo { height:32px; }
       .page-header { padding:10px 0; }
+      .win-modal { padding:16px; }
+      .win-modal .modal-buttons .btn-modal { font-size:0.8rem; padding:10px 16px; }
     }
     @media (max-width:380px) {
       .game-buttons { flex-direction:column; align-items:center; }
       .btn-game { width:100%; max-width:200px; }
+      .win-modal .modal-buttons { flex-direction:column; align-items:center; }
+      .win-modal .modal-buttons .btn-modal { max-width:100%; width:100%; }
     }
   </style>
 </head>
@@ -398,13 +410,12 @@
   <div class="page-content">
     <div class="game-card">
       <h1 class="game-title"><i class="fas fa-gift" style="margin-right:8px;"></i>Spin Hadiah</h1>
-      <p class="game-subtitle">Putar rodanya, hadiah yang berhenti di panah itu yang kamu dapat!</p>
+      <p class="game-subtitle">Putar spin dan dapatkan hadiahnya!</p>
 
       <div class="wheel-outer">
         <div class="wheel-frame">
           <div class="wheel-pointer"></div>
           <div class="wheel" id="wheel">
-            <!-- slice image wraps diisi lewat JS -->
             <div class="wheel-hub"><i class="fas fa-star"></i></div>
           </div>
         </div>
@@ -458,13 +469,16 @@
   </div>
 </footer>
 
+<!-- ===== MODAL HASIL ===== -->
 <div class="win-modal-backdrop" id="resultBackdrop">
   <div class="win-modal">
-    <h2>SELAMAT!</h2>
-    <img id="resultImg" class="result-img" src="" alt="Hadiah">
-    <p>Kamu mendapatkan <strong id="resultLabel">Hadiah 1</strong>!</p>
-    <p>Screenshot halaman ini dan tunjukkan ke panitia The Kachoo untuk klaim hadiahmu.</p>
-    <button class="win-modal-close" id="resultClose">Tutup</button>
+    <div class="result-img-wrap">
+      <img id="resultImg" src="" alt="Hadiah">
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-modal btn-download" id="downloadBtn"><i class="fas fa-download"></i> Ambil Hadiah</button>
+      <button class="btn-modal btn-close" id="resultClose">Tutup</button>
+    </div>
   </div>
 </div>
 
@@ -476,17 +490,17 @@
   const spinStatusEl = document.getElementById('spinStatus');
   const resultBackdrop = document.getElementById('resultBackdrop');
   const resultImg = document.getElementById('resultImg');
-  const resultLabel = document.getElementById('resultLabel');
   const resultClose = document.getElementById('resultClose');
+  const downloadBtn = document.getElementById('downloadBtn');
 
   const PRIZE_COUNT = 12;
   const SEGMENT_DEG = 360 / PRIZE_COUNT;
 
   let currentRotation = 0;
   let isSpinning = false;
+  let lastPrizeNumber = 1;
   const sliceWraps = [];
 
-  // ===== Bangun 12 slice gambar hadiah =====
   for (let i = 0; i < PRIZE_COUNT; i++) {
     const wrap = document.createElement('div');
     wrap.className = 'slice-img-wrap';
@@ -532,7 +546,7 @@
     spinBtn.disabled = true;
     spinStatusEl.textContent = 'Menggelinding...';
 
-    const extraSpins = 6; // putaran penuh biar terasa kenceng
+    const extraSpins = 6;
     const randomAngle = Math.random() * 360;
     currentRotation += extraSpins * 360 + randomAngle;
     wheelEl.style.transform = 'rotate(' + currentRotation + 'deg)';
@@ -544,23 +558,59 @@
       const effective = ((currentRotation % 360) + 360) % 360;
       const angleAtPointer = (360 - effective) % 360;
       const index = Math.floor(angleAtPointer / SEGMENT_DEG) % PRIZE_COUNT;
-      const prizeNumber = index + 1;
+      lastPrizeNumber = index + 1;
 
-      spinStatusEl.textContent = 'Berhenti di Hadiah ' + prizeNumber + '!';
-      resultImg.src = 'Hadiah' + prizeNumber + '.png';
-      resultLabel.textContent = 'Hadiah ' + prizeNumber;
+      spinStatusEl.textContent = 'Kamu dapat Hadiah ' + lastPrizeNumber + '!';
+      resultImg.src = 'Hadiah' + lastPrizeNumber + '.png';
       resultBackdrop.classList.add('show');
     }, 4500);
   }
 
+  // Download otomatis sebagai PNG
+  function downloadResult() {
+    const imgSrc = resultImg.src;
+    if (!imgSrc || imgSrc === '') return;
+
+    // Ambil nama file dari URL
+    const fileName = imgSrc.substring(imgSrc.lastIndexOf('/') + 1) || 'hadiah.png';
+
+    fetch(imgSrc)
+      .then(res => res.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      })
+      .catch(() => {
+        // Fallback: buka di tab baru
+        window.open(imgSrc, '_blank');
+      });
+  }
+
   spinBtn.addEventListener('click', spin);
+
   resultClose.addEventListener('click', function () {
     resultBackdrop.classList.remove('show');
   });
+
+  downloadBtn.addEventListener('click', downloadResult);
+
   backBtn.addEventListener('click', function () {
     window.history.back();
+  });
+
+  // Tutup modal klik backdrop
+  resultBackdrop.addEventListener('click', function (e) {
+    if (e.target === resultBackdrop) {
+      resultBackdrop.classList.remove('show');
+    }
   });
 </script>
 
 </body>
-</html>
+      </html>
