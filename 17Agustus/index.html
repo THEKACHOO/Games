@@ -45,26 +45,6 @@
       max-width:220px;
       object-fit:contain;
     }
-    .logo-text {
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      color:#000000;
-      font-weight:900;
-      font-size:1.5rem;
-      letter-spacing:2px;
-      text-transform:uppercase;
-    }
-    .logo-text i { font-size:1.15rem; }
-    .logo-text .logo-underline {
-      display:block;
-      width:100%;
-      height:3px;
-      background:#000000;
-      margin-top:2px;
-      border-radius:2px;
-    }
-    .logo-text-wrap { display:flex; flex-direction:column; align-items:center; }
 
     .page-body {
       flex:1;
@@ -535,7 +515,7 @@
     p.side = 'right';
     p.x = playerXFor('right');
     p.targetX = p.x;
-    p.y = canvasH - 90;
+    p.y = canvasH - 60;
 
     GAME.branches = [];
     GAME.score = 0;
@@ -618,7 +598,8 @@
 
     // ===== POSISI PEMAIN TETAP DI BAWAH =====
     const p = GAME.player;
-    p.y += (canvasH - 90 - p.y) * 0.05;
+    const targetY = canvasH - 60;
+    p.y += (targetY - p.y) * 0.05;
 
     // Geser ke sisi
     p.x += (p.targetX - p.x) * 0.18;
@@ -719,24 +700,6 @@
 
     // ===== KARAKTER =====
     drawPlayer();
-
-    // ===== INDIKATOR SKOR (progress bar) =====
-    const progress = Math.min(GAME.score / 500, 1);
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.fillRect(canvasW - 16, 20, 8, canvasH - 60);
-    ctx.fillStyle = '#FF0000';
-    const barHeight = Math.max(8, progress * (canvasH - 70));
-    ctx.fillRect(canvasW - 16, canvasH - 50 - barHeight, 8, barHeight);
-    ctx.fillStyle = '#333';
-    ctx.font = '9px Outfit, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('500', canvasW - 12, 18);
-    ctx.fillText('0', canvasW - 12, canvasH - 40);
-
-    ctx.fillStyle = '#000';
-    ctx.font = 'bold 10px Outfit, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(GAME.score, canvasW - 12, canvasH - 52 - barHeight);
 
     if (GAME.isGameOver) {
       ctx.fillStyle = 'rgba(0,0,0,0.5)';
@@ -883,4 +846,4 @@
 </script>
 
 </body>
-  </html>
+                                             </html>
