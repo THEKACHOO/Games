@@ -767,39 +767,47 @@
     const neckY = headY + headRadius;
     const hipY = py + 8;
 
+    // ===== ANIMASI GERAKAN MANJAT (tangan & kaki bergantian) =====
+    const t = GAME.isRunning ? GAME.frameCount * 0.22 : 0;
+    const armSwing1 = Math.sin(t) * 9;
+    const armSwing2 = Math.sin(t + Math.PI) * 9;
+    const legSwing1 = Math.sin(t + Math.PI) * 8;
+    const legSwing2 = Math.sin(t) * 8;
+    const bodyLean = Math.sin(t) * 2 * -dir;
+
     // Kepala (penuh/solid)
     ctx.beginPath();
-    ctx.arc(px, headY, headRadius, 0, Math.PI * 2);
+    ctx.arc(px + bodyLean, headY, headRadius, 0, Math.PI * 2);
     ctx.fill();
 
     // Badan
     ctx.beginPath();
-    ctx.moveTo(px, neckY);
+    ctx.moveTo(px + bodyLean, neckY);
     ctx.lineTo(px, hipY);
     ctx.stroke();
 
-    // Lengan atas - memeluk tiang
+    // Tangan atas - meraih tiang lebih tinggi
     ctx.beginPath();
-    ctx.moveTo(px, neckY + 4);
-    ctx.lineTo(poleEdgeX, py - 10);
+    ctx.moveTo(px + bodyLean, neckY + 4);
+    ctx.lineTo(poleEdgeX, py - 16 + armSwing1);
     ctx.stroke();
 
-    // Lengan bawah
+    // Tangan bawah - meraih tiang lebih rendah, gerak berlawanan
     ctx.beginPath();
-    ctx.moveTo(px, neckY + 4);
-    ctx.lineTo(px - dir * 10, neckY + 15);
+    ctx.moveTo(px + bodyLean, neckY + 6);
+    ctx.lineTo(poleEdgeX, py - 2 + armSwing2);
     ctx.stroke();
 
-    // Kaki - memeluk tiang
+    // Kaki atas - mendorong ke tiang
     ctx.beginPath();
     ctx.moveTo(px, hipY);
-    ctx.lineTo(poleEdgeX, hipY + 18);
+    ctx.lineTo(poleEdgeX, hipY + 10 + legSwing1);
     ctx.stroke();
 
-    // Kaki bawah
+    // Kaki bawah - mendorong ke tiang, gerak berlawanan
     ctx.beginPath();
     ctx.moveTo(px, hipY);
-    ctx.lineTo(px - dir * 12, hipY + 20);
+    ctx.lineTo(poleEdgeX, hipY + 24 + legSwing2);
     ctx.stroke();
 
     // ===== BENDERA MERAH PUTIH DI KEPALA =====
@@ -807,18 +815,18 @@
     ctx.strokeStyle = '#FFFFFF';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(px, headY - headRadius);
-    ctx.lineTo(px, flagPoleTopY);
+    ctx.moveTo(px + bodyLean, headY - headRadius);
+    ctx.lineTo(px + bodyLean, flagPoleTopY);
     ctx.stroke();
 
     const flagW = 13, flagH = 10;
     ctx.fillStyle = '#FF0000';
-    ctx.fillRect(px, flagPoleTopY, flagW * dir, flagH / 2);
+    ctx.fillRect(px + bodyLean, flagPoleTopY, flagW * dir, flagH / 2);
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(px, flagPoleTopY + flagH / 2, flagW * dir, flagH / 2);
+    ctx.fillRect(px + bodyLean, flagPoleTopY + flagH / 2, flagW * dir, flagH / 2);
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1;
-    ctx.strokeRect(Math.min(px, px + flagW * dir), flagPoleTopY, flagW, flagH);
+    ctx.strokeRect(Math.min(px + bodyLean, px + bodyLean + flagW * dir), flagPoleTopY, flagW, flagH);
   }
 
   leftBtn.addEventListener('click', function () { setSide('left'); });
