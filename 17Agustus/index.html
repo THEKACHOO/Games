@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PANJAT TEROS!</title>
+  <title>The Kachoo 17an</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -22,8 +22,9 @@
 
     .container { max-width:1280px; margin:0 auto; padding:0 20px; width:100%; }
 
+    /* ===== HEADER PUTIH ===== */
     .page-header {
-      background:#ffffff;
+      background: #ffffff;
       padding:14px 0;
       width:100%;
       border-bottom:3px solid #000000;
@@ -37,19 +38,33 @@
     }
     .logo-wrapper {
       display:inline-block;
-      animation: logoPulse 3s ease-in-out infinite;
     }
-    .site-logo {
-      display:block;
-      height:42px;
+    .logo-img {
+      height:55px;
       width:auto;
+      max-width:220px;
+      object-fit:contain;
     }
-
-    @keyframes logoPulse {
-      0% { transform: scale(1); opacity:1; }
-      50% { transform: scale(1.06); opacity:0.95; }
-      100% { transform: scale(1); opacity:1; }
+    .logo-text {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color:#000000;
+      font-weight:900;
+      font-size:1.5rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
     }
+    .logo-text i { font-size:1.15rem; }
+    .logo-text .logo-underline {
+      display:block;
+      width:100%;
+      height:3px;
+      background:#000000;
+      margin-top:2px;
+      border-radius:2px;
+    }
+    .logo-text-wrap { display:flex; flex-direction:column; align-items:center; }
 
     .page-body {
       flex:1;
@@ -111,53 +126,43 @@
       display:block;
       background:#f8f8f8;
       touch-action:none;
-      cursor:pointer;
     }
-    .grip-warning {
-      position:absolute;
-      top:10px;
-      left:0;
-      right:0;
-      text-align:center;
-      font-weight:800;
-      font-size:0.85rem;
-      color:#FF0000;
-      text-shadow:0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
-      opacity:0;
-      transition:opacity 0.15s ease;
-      pointer-events:none;
-      letter-spacing:0.3px;
-    }
-    .grip-warning.show { opacity:1; }
 
-    .tap-control { margin-bottom:16px; }
-    .tap-btn {
-      width:100%;
+    .climb-controls {
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-bottom:16px;
+    }
+    .climb-btn {
+      flex:1;
+      max-width:150px;
       background:#000000;
       color:#ffffff;
       border:none;
       font-family:'Outfit', sans-serif;
       font-weight:800;
-      font-size:1.15rem;
-      letter-spacing:1px;
-      padding:20px 0;
-      border-radius:16px;
+      font-size:1.4rem;
+      padding:16px 0;
+      border-radius:14px;
       cursor:pointer;
-      transition:transform 0.08s ease, background 0.08s ease;
+      transition:all 0.12s ease;
       user-select:none;
       -webkit-user-select:none;
       touch-action:manipulation;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:10px;
+      gap:8px;
     }
-    .tap-btn i { font-size:1.2rem; }
-    .tap-btn:active {
-      transform:scale(0.96);
+    .climb-btn:active {
+      transform:scale(0.92);
       background:#CC0000;
     }
-    .tap-btn:disabled {
+    .climb-btn.active-side {
+      background:#CC0000;
+    }
+    .climb-btn:disabled {
       opacity:0.35;
       cursor:not-allowed;
       transform:none !important;
@@ -253,47 +258,6 @@
       margin-top:12px;
       min-height:32px;
       color:#000000;
-      transition:color 0.15s ease;
-    }
-    .game-status.warning { color:#CC0000; }
-
-    .stamina-wrap {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      margin-bottom:10px;
-    }
-    .stamina-label {
-      font-size:0.65rem;
-      font-weight:700;
-      letter-spacing:0.5px;
-      color:#555;
-      white-space:nowrap;
-    }
-    .stamina-bar {
-      flex:1;
-      height:12px;
-      background:#eee;
-      border:1.5px solid #000000;
-      border-radius:8px;
-      overflow:hidden;
-    }
-    .stamina-fill {
-      height:100%;
-      width:100%;
-      background:linear-gradient(90deg,#2E9E4F,#8FD14F);
-      transition:width 0.1s linear, background 0.2s ease;
-      border-radius:8px 0 0 8px;
-    }
-    .stamina-fill.low {
-      background:linear-gradient(90deg,#CC0000,#FF5A3C);
-    }
-    .stamina-fill.exhausted {
-      animation: staminaPulse 0.6s ease-in-out infinite;
-    }
-    @keyframes staminaPulse {
-      0%, 100% { opacity:1; }
-      50% { opacity:0.4; }
     }
 
     .page-footer {
@@ -386,75 +350,6 @@
       font-size:11px;
     }
 
-    .win-modal-backdrop {
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.65);
-      z-index:999;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-    }
-    .win-modal-backdrop.show { display:flex; }
-    .win-modal {
-      background:#ffffff;
-      border:2px solid #000000;
-      border-radius:18px;
-      padding:30px 24px 24px;
-      max-width:380px;
-      width:100%;
-      text-align:center;
-      box-shadow:0 8px 0 #000000;
-    }
-    .win-modal h2 {
-      font-size:1.7rem;
-      font-weight:900;
-      color:#CC0000;
-      margin-bottom:16px;
-      letter-spacing:0.5px;
-    }
-    .win-modal p {
-      font-size:0.9rem;
-      color:#333;
-      margin-bottom:12px;
-      line-height:1.55;
-    }
-    .win-modal-closing-line {
-      font-weight:600;
-      color:#000000;
-    }
-    .win-modal-btn {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      background:#000000;
-      color:#ffffff;
-      font-weight:800;
-      font-size:0.95rem;
-      padding:13px 30px;
-      border-radius:40px;
-      text-decoration:none;
-      margin-top:8px;
-      margin-bottom:10px;
-      transition:transform 0.15s ease, background 0.15s ease;
-    }
-    .win-modal-btn:hover {
-      transform:scale(1.03);
-      background:#CC0000;
-    }
-    .win-modal-close {
-      display:block;
-      margin:8px auto 0;
-      background:none;
-      border:none;
-      color:#666;
-      font-size:0.8rem;
-      text-decoration:underline;
-      cursor:pointer;
-    }
-
     @media (max-width:768px) {
       .game-title { font-size:1.4rem; }
       .game-card { padding:16px 12px 20px; }
@@ -462,7 +357,7 @@
       .score-box .value { font-size:1.1rem; }
       .btn-game { padding:10px 20px; font-size:0.85rem; min-width:90px; }
       .footer-content { grid-template-columns:1fr 1fr; gap:16px; }
-      .site-logo { height:36px; }
+      .logo-img { height:40px; max-width:160px; }
     }
 
     @media (max-width:480px) {
@@ -472,12 +367,12 @@
       .score-box .value { font-size:0.95rem; }
       .btn-game { padding:8px 14px; font-size:0.75rem; min-width:70px; gap:4px; }
       .btn-game i { font-size:0.7rem; }
-      .tap-btn { padding:16px 0; font-size:1rem; }
+      .climb-btn { padding:13px 0; font-size:1.15rem; }
       .game-status { font-size:0.9rem; min-height:24px; }
       .footer-content { grid-template-columns:1fr 1fr; gap:12px; }
       .footer-section h3 { font-size:14px; }
       .footer-section p, .footer-links li, .footer-links a { font-size:12px; }
-      .site-logo { height:30px; }
+      .logo-img { height:32px; max-width:120px; }
       .page-header { padding:10px 0; }
     }
 
@@ -490,11 +385,12 @@
 </head>
 <body>
 
+<!-- ===== HEADER PUTIH DENGAN LOGO ===== -->
 <header class="page-header">
   <div class="container">
     <div class="navbar">
       <div class="logo-wrapper">
-        <img class="site-logo" src="https://thekachoo.github.io/Home/logo-thekachoo.png" alt="The Kachoo">
+        <img src="https://thekachoo.github.io/Home/logo-thekachoo.png" alt="The Kachoo" class="logo-img">
       </div>
     </div>
   </div>
@@ -503,22 +399,19 @@
 <div class="page-body">
   <div class="page-content">
     <div class="game-card">
-      <h1 class="game-title"><i class="fas fa-flag" style="margin-right:8px;"></i>Panjat Terosss</h1>
-      <p class="game-subtitle">Tap terus untuk memanjat!</p>
+      <h1 class="game-title"><i style="margin-right:8px;"></i>Panjat Terosss</h1>
+      <p class="game-subtitle">Hindari cabang dan raih skor tertinggi!</p>
 
       <div class="game-canvas-wrapper">
         <canvas id="gameCanvas"></canvas>
-        <div class="grip-warning" id="gripWarning">LICIN! TAP CEPAT!</div>
       </div>
 
-      <div class="stamina-wrap">
-        <span class="stamina-label">TENAGA</span>
-        <div class="stamina-bar"><div class="stamina-fill" id="staminaFill"></div></div>
-      </div>
-
-      <div class="tap-control">
-        <button class="tap-btn" id="tapBtn" disabled>
-          <i class="fas fa-hand-paper"></i> TAP UNTUK NAIK
+      <div class="climb-controls">
+        <button class="climb-btn" id="leftBtn" aria-label="Pindah kiri">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="climb-btn" id="rightBtn" aria-label="Pindah kanan">
+          <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
@@ -581,62 +474,21 @@
   </div>
 </footer>
 
-<div class="win-modal-backdrop" id="winModalBackdrop">
-  <div class="win-modal">
-    <h2>MERDEKA!!!</h2>
-    <p>Selamat kamu berhak mendapatkan hadiah spesial dari The Kachoo!</p>
-    <p>Bagi pemenang ambil hadiahmu yuk! Jangan lupa bagiin skor dan hadiahmu dengan quote thread kami ya!</p>
-    <p class="win-modal-closing-line">Semoga kita tetap berjaya, bersemangat, dan merdeka.</p>
-    <a href="Hadiah.html" target="_blank" class="win-modal-btn"><i class="fas fa-gift"></i> Ambil Hadiah</a>
-    <button class="win-modal-close" id="winModalClose">Tutup</button>
-  </div>
-</div>
-
 <script>
-
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
   const currentScoreEl = document.getElementById('currentScore');
   const highScoreEl = document.getElementById('highScore');
   const gameStatusEl = document.getElementById('gameStatus');
-  const gripWarningEl = document.getElementById('gripWarning');
-  const staminaFillEl = document.getElementById('staminaFill');
-  const winModalBackdrop = document.getElementById('winModalBackdrop');
-  const winModalClose = document.getElementById('winModalClose');
 
   const startBtn = document.getElementById('startBtn');
   const resetBtn = document.getElementById('resetBtn');
-  const tapBtn = document.getElementById('tapBtn');
+  const leftBtn = document.getElementById('leftBtn');
+  const rightBtn = document.getElementById('rightBtn');
 
   let canvasW, canvasH;
-  let poleX, poleWidth;
-  const TEAM_SIZE = 5;          // jumlah pemain yang menumpuk di tiang
-  const MAX_SCORE = 500;
-  const GRACE_FRAMES = 18;      // toleransi idle sebelum mulai merosot (~0.3s)
-  const MIN_TAP_INTERVAL = 4;   // debounce supaya spam-klik tak instan menang
-  const STRIPE_SPACING = 34;
-
-  // ===== Sistem tenaga: kebanyakan tap bikin capek, harus istirahat =====
-  const STAMINA_MAX = 100;
-  const STAMINA_COST = 16;          // tenaga terpakai tiap tap efektif
-  const STAMINA_REGEN = 0.1;        // pemulihan pelan tiap frame saat tidak capek
-  const EXHAUST_COOLDOWN_FRAMES = 60; // 1 detik dipaksa istirahat
-  const EXHAUST_RECOVER_STAMINA = STAMINA_MAX; // tenaga full lagi setelah istirahat
-
-  // ===== Oli: bikin respon tap jadi lambat =====
-  const OIL_GAIN_MULT = 0.4;
-  const OIL_MIN_TAP_INTERVAL = 11;
-  const OIL_DURATION_MIN = 170, OIL_DURATION_MAX = 260;
-
-  // ===== Gemetar: harus tap cepat atau langsung merosot parah =====
-  const SHAKE_SLIP_MULT = 2.6;
-  const SHAKE_GRACE_FRAMES = 8;
-  const SHAKE_DURATION_MIN = 150, SHAKE_DURATION_MAX = 230;
-
-  function randInt(min, max) {
-    return Math.floor(min + Math.random() * (max - min + 1));
-  }
+  let poleX, poleWidth, sideOffset;
 
   function resizeCanvas() {
     const wrapper = canvas.parentElement;
@@ -646,79 +498,61 @@
     canvasW = canvas.width;
     canvasH = canvas.height;
 
-    poleWidth = Math.max(34, canvasW * 0.16);
+    poleWidth = Math.max(30, canvasW * 0.11);
     poleX = canvasW / 2 - poleWidth / 2;
+    sideOffset = 13;
   }
   resizeCanvas();
   window.addEventListener('resize', function () {
     resizeCanvas();
-    if (!GAME.isRunning) draw();
+    if (!GAME.isRunning) resetGame();
   });
 
   const GAME = {
+    player: { side: 'right', x: 0, targetX: 0, y: 0, radius: 17 },
+    branches: [],
     score: 0,
     highScore: parseInt(localStorage.getItem('panjatPinangHigh')) || 0,
     isRunning: false,
     isGameOver: false,
-    isWin: false,
-    isCountingDown: false,
+    branchSpeed: 1.0,
+    branchSpawnGap: 90,
+    nextSpawnAt: 90,
     frameCount: 0,
-    lastTapFrame: 0,
-    lastGainFrame: -999,
-    side: 'right',
     wobble: 0,
     animId: null,
-    stamina: STAMINA_MAX,
-    isExhausted: false,
-    prevExhausted: false,
-    exhaustedUntilFrame: 0,
-    oilActive: false,
-    oilUntilFrame: 0,
-    nextOilScore: 0,
-    shakeActive: false,
-    shakeUntilFrame: 0,
-    nextShakeScore: 0,
+    scoreCounter: 0,
   };
 
   highScoreEl.textContent = GAME.highScore;
 
+  function playerXFor(side) {
+    return side === 'left' ? (poleX - sideOffset) : (poleX + poleWidth + sideOffset);
+  }
+
   function resetGame() {
+    const p = GAME.player;
+    p.side = 'right';
+    p.x = playerXFor('right');
+    p.targetX = p.x;
+    p.y = canvasH - 90;
+
+    GAME.branches = [];
     GAME.score = 0;
+    GAME.scoreCounter = 0;
     GAME.isGameOver = false;
-    GAME.isWin = false;
     GAME.isRunning = false;
-    GAME.isCountingDown = false;
     GAME.frameCount = 0;
-    GAME.lastTapFrame = 0;
-    GAME.lastGainFrame = -999;
-    GAME.side = 'right';
+    GAME.branchSpeed = 1.0;
+    GAME.branchSpawnGap = 90;
+    GAME.nextSpawnAt = 90;
     GAME.wobble = 0;
-    GAME.stamina = STAMINA_MAX;
-    GAME.isExhausted = false;
-    GAME.prevExhausted = false;
-    GAME.exhaustedUntilFrame = 0;
-    GAME.oilActive = false;
-    GAME.oilUntilFrame = 0;
-    GAME.nextOilScore = randInt(70, 150);
-    GAME.shakeActive = false;
-    GAME.shakeUntilFrame = 0;
-    GAME.nextShakeScore = randInt(90, 170);
 
     currentScoreEl.textContent = '0';
     gameStatusEl.textContent = 'Klik Mulai untuk bermain';
-    gameStatusEl.classList.remove('warning');
-    gripWarningEl.classList.remove('show');
     startBtn.disabled = false;
     startBtn.innerHTML = '<i class="fas fa-play"></i> Mulai';
-    tapBtn.disabled = true;
-    tapBtn.innerHTML = '<i class="fas fa-hand-paper"></i> TAP UNTUK NAIK';
-    staminaFillEl.style.width = '100%';
-    staminaFillEl.classList.remove('low', 'exhausted');
-    winModalBackdrop.classList.remove('show');
-    if (GAME.countdownTimeout) {
-      clearTimeout(GAME.countdownTimeout);
-      GAME.countdownTimeout = null;
-    }
+    updateSideButtons();
 
     if (GAME.animId) {
       cancelAnimationFrame(GAME.animId);
@@ -728,98 +562,38 @@
   }
 
   function startGame() {
-    if (GAME.isRunning || GAME.isCountingDown) return;
+    if (GAME.isRunning) return;
     resetGame();
-    GAME.isCountingDown = true;
-    startBtn.disabled = true;
-    startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bersiap...';
-    tapBtn.disabled = true;
-    gameStatusEl.textContent = 'Bersiap-siap...';
-    runCountdown(3);
-  }
-
-  function runCountdown(step) {
-    const label = step > 0 ? String(step) : 'PANJAT!';
-    drawCountdownOverlay(label);
-    if (step > 0) {
-      GAME.countdownTimeout = setTimeout(function () { runCountdown(step - 1); }, 800);
-    } else {
-      GAME.countdownTimeout = setTimeout(beginRun, 600);
-    }
-  }
-
-  function drawCountdownOverlay(label) {
-    draw();
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.45)';
-    ctx.fillRect(0, 0, canvasW, canvasH);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'bold 58px Outfit, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, canvasW / 2, canvasH / 2 + 20);
-    ctx.restore();
-  }
-
-  function beginRun() {
-    GAME.countdownTimeout = null;
-    GAME.isCountingDown = false;
     GAME.isRunning = true;
-    GAME.lastTapFrame = GAME.frameCount;
     startBtn.disabled = true;
     startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bermain...';
-    tapBtn.disabled = false;
-    gameStatusEl.textContent = 'Tap terus untuk memanjat!';
+    gameStatusEl.textContent = 'Pindah kiri/kanan, hindari cabang!';
     GAME.animId = requestAnimationFrame(gameLoop);
   }
 
-  function endRun(win, message) {
-    GAME.isWin = win;
-    GAME.isGameOver = !win;
+  function endRun(message) {
+    GAME.isGameOver = true;
     GAME.isRunning = false;
-    gameStatusEl.textContent = message;
-    gameStatusEl.classList.remove('warning');
-    gripWarningEl.classList.remove('show');
+    gameStatusEl.textContent = message + ' Skor: ' + GAME.score;
     startBtn.disabled = false;
     startBtn.innerHTML = '<i class="fas fa-play"></i> Mulai';
-    tapBtn.disabled = true;
-    tapBtn.innerHTML = '<i class="fas fa-hand-paper"></i> TAP UNTUK NAIK';
     if (GAME.score > GAME.highScore) {
-      GAME.highScore = Math.round(GAME.score);
+      GAME.highScore = GAME.score;
       localStorage.setItem('panjatPinangHigh', GAME.highScore);
       highScoreEl.textContent = GAME.highScore;
     }
-    if (win) {
-      winModalBackdrop.classList.add('show');
-    }
   }
 
-  function doClimb(e) {
-    if (e) e.preventDefault();
-    if (!GAME.isRunning || GAME.isGameOver || GAME.isWin) return;
-    if (GAME.isExhausted) return; // kehabisan tenaga, tidak bisa tap dulu
+  function setSide(side) {
+    if (!GAME.isRunning || GAME.isGameOver) return;
+    GAME.player.side = side;
+    GAME.player.targetX = playerXFor(side);
+    updateSideButtons();
+  }
 
-    GAME.lastTapFrame = GAME.frameCount; // tap apapun mereset waktu licin
-
-    const tapInterval = GAME.oilActive ? OIL_MIN_TAP_INTERVAL : MIN_TAP_INTERVAL;
-    if (GAME.frameCount - GAME.lastGainFrame < tapInterval) return;
-    GAME.lastGainFrame = GAME.frameCount;
-
-    // pakai tenaga; kalau habis, dipaksa istirahat sebentar
-    GAME.stamina -= STAMINA_COST;
-    if (GAME.stamina <= 0) {
-      GAME.stamina = 0;
-      GAME.isExhausted = true;
-      GAME.exhaustedUntilFrame = GAME.frameCount + EXHAUST_COOLDOWN_FRAMES;
-    }
-
-    const fatigue = GAME.score / MAX_SCORE;
-    let gain = 8 - fatigue * 4.2; // makin tinggi, makin capek, naiknya makin sedikit
-    if (GAME.oilActive) gain *= OIL_GAIN_MULT; // kena oli, dorongan jadi lemah
-    GAME.score = Math.min(MAX_SCORE, GAME.score + gain);
-    GAME.side = GAME.side === 'left' ? 'right' : 'left';
-    GAME.wobble = -7;
-
-    currentScoreEl.textContent = Math.round(GAME.score);
+  function updateSideButtons() {
+    leftBtn.classList.toggle('active-side', GAME.player.side === 'left');
+    rightBtn.classList.toggle('active-side', GAME.player.side === 'right');
   }
 
   function gameLoop() {
@@ -830,216 +604,124 @@
   }
 
   function update() {
-    if (GAME.isGameOver || GAME.isWin) return;
+    if (GAME.isGameOver) return;
 
     GAME.frameCount++;
-    GAME.wobble += (0 - GAME.wobble) * 0.18;
+    GAME.wobble = Math.sin(GAME.frameCount * 0.12) * 2.5;
 
-    // ===== pemulihan tenaga / status capek =====
-    if (GAME.isExhausted) {
-      if (GAME.frameCount >= GAME.exhaustedUntilFrame) {
-        GAME.isExhausted = false;
-        GAME.stamina = EXHAUST_RECOVER_STAMINA;
+    // SKOR NAIK 1 POIN SETIAP 4 FRAME
+    if (GAME.frameCount % 4 === 0) {
+      GAME.scoreCounter++;
+      GAME.score = GAME.scoreCounter;
+      currentScoreEl.textContent = GAME.score;
+    }
+
+    // ===== POSISI PEMAIN TETAP DI BAWAH =====
+    const p = GAME.player;
+    p.y += (canvasH - 90 - p.y) * 0.05;
+
+    // Geser ke sisi
+    p.x += (p.targetX - p.x) * 0.18;
+
+    // ===== KECEPATAN CABANG (SEMAKIN TINGGI SKOR, SEMAKIN CEPAT) =====
+    const speedBase = 1.0 + (GAME.score / 500) * 3.0;
+    GAME.branchSpeed = Math.min(speedBase, 15.0);
+
+    // ===== SPAWN CABANG (SEMAKIN TINGGI SKOR, SEMAKIN RAPAT) =====
+    let baseGap = 90 - (GAME.score / 500) * 60;
+    baseGap = Math.max(18, baseGap);
+    GAME.branchSpawnGap = baseGap;
+
+    if (GAME.frameCount >= GAME.nextSpawnAt && GAME.branches.length < 15) {
+      const side = Math.random() < 0.5 ? 'left' : 'right';
+      const length = 28 + Math.random() * 30;
+      const height = 14 + Math.random() * 8;
+      GAME.branches.push({ y: -30, side, length, height });
+      GAME.nextSpawnAt = GAME.frameCount + GAME.branchSpawnGap;
+    }
+
+    // ===== GERAKKAN CABANG & CEK TABRAKAN =====
+    for (let i = GAME.branches.length - 1; i >= 0; i--) {
+      const b = GAME.branches[i];
+      b.y += GAME.branchSpeed;
+      if (b.y > canvasH + 30) {
+        GAME.branches.splice(i, 1);
+        continue;
       }
-    } else if (GAME.stamina < STAMINA_MAX) {
-      GAME.stamina = Math.min(STAMINA_MAX, GAME.stamina + STAMINA_REGEN);
-    }
-    if (GAME.isExhausted !== GAME.prevExhausted) {
-      GAME.prevExhausted = GAME.isExhausted;
-      tapBtn.disabled = GAME.isExhausted;
-      tapBtn.innerHTML = GAME.isExhausted
-        ? '<i class="fas fa-battery-empty"></i> CAPEK...'
-        : '<i class="fas fa-hand-paper"></i> TAP UNTUK NAIK';
-    }
-    staminaFillEl.style.width = GAME.stamina + '%';
-    staminaFillEl.classList.toggle('low', GAME.stamina < 30 && !GAME.isExhausted);
-    staminaFillEl.classList.toggle('exhausted', GAME.isExhausted);
 
-    // ===== jadwal bahaya: oli =====
-    if (!GAME.oilActive && GAME.score >= GAME.nextOilScore && GAME.score < MAX_SCORE - 10) {
-      GAME.oilActive = true;
-      GAME.oilUntilFrame = GAME.frameCount + randInt(OIL_DURATION_MIN, OIL_DURATION_MAX);
-    }
-    if (GAME.oilActive && GAME.frameCount >= GAME.oilUntilFrame) {
-      GAME.oilActive = false;
-      GAME.nextOilScore = GAME.score + randInt(90, 170);
-    }
-
-    // ===== jadwal bahaya: gemetar =====
-    if (!GAME.shakeActive && GAME.score >= GAME.nextShakeScore && GAME.score < MAX_SCORE - 10) {
-      GAME.shakeActive = true;
-      GAME.shakeUntilFrame = GAME.frameCount + randInt(SHAKE_DURATION_MIN, SHAKE_DURATION_MAX);
-    }
-    if (GAME.shakeActive && GAME.frameCount >= GAME.shakeUntilFrame) {
-      GAME.shakeActive = false;
-      GAME.nextShakeScore = GAME.score + randInt(110, 190);
-    }
-
-    const graceFrames = GAME.shakeActive ? SHAKE_GRACE_FRAMES : GRACE_FRAMES;
-    const idleFrames = GAME.frameCount - GAME.lastTapFrame;
-    const isSlipping = idleFrames > graceFrames;
-
-    if (isSlipping) {
-      const fatigue = GAME.score / MAX_SCORE;
-      let slipRate = 0.05 + fatigue * 0.22; // makin tinggi, tiang makin licin
-      if (GAME.shakeActive) slipRate *= SHAKE_SLIP_MULT;
-      GAME.score = Math.max(0, GAME.score - slipRate);
-    }
-
-    // ===== teks status, prioritas: capek > gemetar > merosot > oli =====
-    let statusText, isWarning;
-    if (GAME.isExhausted) {
-      statusText = 'Kehabisan tenaga! Tunggu sebentar...';
-      isWarning = true;
-    } else if (GAME.shakeActive) {
-      statusText = 'Tiang gemetar! Tap cepat-cepat!';
-      isWarning = true;
-    } else if (isSlipping) {
-      statusText = 'Licin! Tap terus supaya gak jatuh!';
-      isWarning = true;
-    } else if (GAME.oilActive) {
-      statusText = 'Kena oli, duhhh semua jadi licin! Hati-hati!';
-      isWarning = true;
-    } else {
-      statusText = 'Tap terus untuk memanjat!';
-      isWarning = false;
-    }
-    gameStatusEl.textContent = statusText;
-    gameStatusEl.classList.toggle('warning', isWarning);
-    gripWarningEl.textContent = statusText;
-    gripWarningEl.classList.toggle('show', isWarning);
-
-    currentScoreEl.textContent = Math.round(GAME.score);
-
-    if (GAME.score <= 0 && isSlipping && GAME.frameCount > GRACE_FRAMES) {
-      endRun(false, 'Merosot sampai bawah! Game Over!');
-      return;
-    }
-
-    if (GAME.score >= MAX_SCORE) {
-      GAME.score = MAX_SCORE;
-      currentScoreEl.textContent = MAX_SCORE;
-      endRun(true, 'MERDEKA! Hadiah berhasil diraih!');
-      return;
+      const overlapsVertically = (b.y <= p.y + p.radius) && (b.y + b.height >= p.y - p.radius);
+      if (overlapsVertically && b.side === p.side) {
+        endRun('💥 Kena cabang!');
+        return;
+      }
     }
   }
 
   function draw() {
     ctx.clearRect(0, 0, canvasW, canvasH);
-    ctx.save();
-    if (GAME.shakeActive && GAME.isRunning) {
-      const jx = (Math.random() - 0.5) * 8;
-      const jy = (Math.random() - 0.5) * 6;
-      ctx.translate(jx, jy);
-    }
 
-    const progress = GAME.score / MAX_SCORE;
-
-    // Langit, sedikit lebih cerah makin tinggi skor
-    const grad = ctx.createLinearGradient(0, 0, 0, canvasH);
-    grad.addColorStop(0, mixColor('#e8f0fe', '#fff6d9', progress));
-    grad.addColorStop(1, '#d0dce8');
-    ctx.fillStyle = grad;
+    // ===== LANGIT PUTIH =====
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvasW, canvasH);
 
-    const playerBaseY = canvasH - 90;
-    const leaderY = playerBaseY + GAME.wobble;
-
-    // ===== TIANG (licin, bergulir sesuai skor) =====
+    // ===== TIANG PINANG =====
     const poleGrad = ctx.createLinearGradient(poleX, 0, poleX + poleWidth, 0);
-    poleGrad.addColorStop(0, '#8a5a32');
+    poleGrad.addColorStop(0, '#7A4F2A');
     poleGrad.addColorStop(0.45, '#5D3A1A');
     poleGrad.addColorStop(1, '#4A2E1A');
     ctx.fillStyle = poleGrad;
     ctx.fillRect(poleX, 0, poleWidth, canvasH);
-
-    // ruas-ruas tiang yang bergulir turun sesuai skor (efek memanjat)
-    const scrollPixels = GAME.score * 5.5;
-    const stripeOffset = scrollPixels % STRIPE_SPACING;
-    ctx.fillStyle = 'rgba(0,0,0,0.16)';
-    for (let y = -STRIPE_SPACING + stripeOffset; y < canvasH; y += STRIPE_SPACING) {
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.fillRect(poleX + 2, 0, 4, canvasH);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    for (let y = 24; y < canvasH; y += 34) {
       ctx.fillRect(poleX, y, poleWidth, 3);
     }
 
-    // kilau minyak/licin yang terus bergerak (independen skor)
-    const sheenY = ((GAME.frameCount * 1.6) % (canvasH + 120)) - 100;
-    const sheenGrad = ctx.createLinearGradient(poleX, sheenY, poleX, sheenY + 90);
-    sheenGrad.addColorStop(0, 'rgba(255,255,255,0)');
-    sheenGrad.addColorStop(0.5, 'rgba(255,255,255,0.35)');
-    sheenGrad.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = sheenGrad;
-    ctx.fillRect(poleX, sheenY, poleWidth, 90);
-
-    ctx.fillStyle = 'rgba(255,255,255,0.10)';
-    ctx.fillRect(poleX + 2, 0, 4, canvasH);
-
-    // ===== HADIAH di puncak, mendekat seiring skor naik =====
-    const climbScale = canvasH / 140; // hadiah mulai kelihatan ~140 poin sebelum puncak
+    // ===== UJUNG TIANG =====
     const tipCenterX = poleX + poleWidth / 2;
-    const giftBaseY = 24;
-    const giftY = leaderY - climbScale * (MAX_SCORE - GAME.score) - (playerBaseY - giftBaseY - 90);
+    ctx.fillStyle = '#4A2E1A';
+    ctx.beginPath();
+    ctx.ellipse(tipCenterX, 5, poleWidth / 2 + 2, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
-    if (giftY > -80 && giftY < canvasH + 80) {
-      ctx.fillStyle = '#4A2E1A';
-      ctx.beginPath();
-      ctx.ellipse(tipCenterX, giftY - 40, poleWidth / 2 + 2, 5, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 1;
-      ctx.stroke();
+    // ===== BENDERA MERAH PUTIH DI PUNCAK =====
+    const flagX = tipCenterX - 10;
+    const flagY = 5;
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(tipCenterX + 12, flagY - 2, 2, 22);
+    ctx.fillStyle = '#FF0000';
+    ctx.fillRect(flagX, flagY, 20, 8);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(flagX, flagY + 8, 20, 8);
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 0.8;
+    ctx.strokeRect(flagX, flagY, 20, 16);
 
-      const giftW = 34, giftH = 26;
-      const giftX = tipCenterX - giftW / 2;
-      const giftTopY = giftY - 40 - giftH - 4;
-      ctx.fillStyle = '#FF0000';
-      ctx.fillRect(giftX, giftTopY, giftW, giftH);
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 1.3;
-      ctx.strokeRect(giftX, giftTopY, giftW, giftH);
-      ctx.fillStyle = '#FFD84D';
-      ctx.fillRect(tipCenterX - 3, giftTopY, 6, giftH);
-      ctx.fillRect(giftX, giftTopY + giftH / 2 - 3, giftW, 6);
-      ctx.beginPath();
-      ctx.ellipse(tipCenterX - 6, giftTopY - 4, 6, 5, 0.6, 0, Math.PI * 2);
-      ctx.ellipse(tipCenterX + 6, giftTopY - 4, 6, 5, -0.6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 1;
-      ctx.stroke();
+    // ===== CABANG =====
+    for (const b of GAME.branches) {
+      const bx = b.side === 'left' ? (poleX - b.length) : (poleX + poleWidth);
+      ctx.fillStyle = 'rgba(0,0,0,0.15)';
+      ctx.fillRect(bx + 2, b.y + 3, b.length, b.height);
+      const gradBranch = ctx.createLinearGradient(bx, b.y, bx, b.y + b.height);
+      gradBranch.addColorStop(0, '#6B4226');
+      gradBranch.addColorStop(1, '#4A2E1A');
+      ctx.fillStyle = gradBranch;
+      ctx.fillRect(bx, b.y, b.length, b.height);
+      ctx.fillStyle = '#2D5A1E';
+      const leafX = b.side === 'left' ? bx - 4 : bx + b.length - 2;
+      ctx.fillRect(leafX, b.y - 3, 8, 5);
+      ctx.fillRect(leafX, b.y + b.height - 2, 8, 5);
     }
 
-    // ===== blok oli: satu ruas tiang berubah hitam & jadi ekstra licin =====
-    if (GAME.oilActive) {
-      const oilBlockH = 68;
-      const oilBlockY = leaderY - 50;
-      ctx.fillStyle = '#0d0d0d';
-      ctx.fillRect(poleX, oilBlockY, poleWidth, oilBlockH);
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(poleX, oilBlockY, poleWidth, oilBlockH);
-      ctx.fillStyle = 'rgba(255,255,255,0.22)';
-      ctx.fillRect(poleX + 5, oilBlockY + 12, poleWidth - 10, 5);
-      ctx.fillRect(poleX + 5, oilBlockY + oilBlockH - 20, poleWidth - 10, 5);
-    }
+    // ===== KARAKTER =====
+    drawPlayer();
 
-    // ===== TIM PEMANJAT: berjejer satu baris di tiang, semua di puncak saat menang =====
-    const spacing = Math.max(24, canvasH * 0.065);
-    const side = 'right'; // satu baris lurus, tidak selang-seling
-    for (let i = TEAM_SIZE - 1; i >= 0; i--) {
-      const scale = 1 - i * 0.06;
-      const alpha = 1 - i * 0.05;
-      let y, xOffset;
-      if (GAME.isWin) {
-        y = leaderY - i * 3;                       // semua berkumpul rapat di puncak
-        xOffset = (i - (TEAM_SIZE - 1) / 2) * 10;   // sedikit dibentangkan berjajar
-      } else {
-        y = leaderY + i * spacing;                  // satu baris lurus menyusuri tiang
-        xOffset = 0;
-      }
-      drawPlayer(y, side, scale, alpha, xOffset);
-    }
-
-    // ===== PROGRESS BAR =====
+    // ===== INDIKATOR SKOR (progress bar) =====
+    const progress = Math.min(GAME.score / 500, 1);
     ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.fillRect(canvasW - 16, 20, 8, canvasH - 60);
     ctx.fillStyle = '#FF0000';
@@ -1051,6 +733,11 @@
     ctx.fillText('500', canvasW - 12, 18);
     ctx.fillText('0', canvasW - 12, canvasH - 40);
 
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 10px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(GAME.score, canvasW - 12, canvasH - 52 - barHeight);
+
     if (GAME.isGameOver) {
       ctx.fillStyle = 'rgba(0,0,0,0.5)';
       ctx.fillRect(0, 0, canvasW, canvasH);
@@ -1059,101 +746,57 @@
       ctx.textAlign = 'center';
       ctx.fillText('GAME OVER', canvasW / 2, canvasH / 2 - 10);
       ctx.font = '18px Outfit, sans-serif';
-      ctx.fillText('Skor: ' + Math.round(GAME.score), canvasW / 2, canvasH / 2 + 40);
+      ctx.fillText('Skor: ' + GAME.score, canvasW / 2, canvasH / 2 + 40);
     }
-
-    if (GAME.isWin) {
-      ctx.fillStyle = 'rgba(255,215,0,0.25)';
-      ctx.fillRect(0, 0, canvasW, canvasH);
-      ctx.fillStyle = '#FF0000';
-      ctx.font = 'bold 32px Outfit, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('MERDEKA!', canvasW / 2, canvasH / 2 - 16);
-      ctx.font = '15px Outfit, sans-serif';
-      ctx.fillText('Hadiah berhasil diraih!', canvasW / 2, canvasH / 2 + 14);
-      ctx.fillStyle = '#000000';
-      ctx.font = 'bold 22px Outfit, sans-serif';
-      ctx.fillText('FINISH!', canvasW / 2, canvasH / 2 + 48);
-    }
-
-    ctx.restore();
   }
 
-  function mixColor(hexA, hexB, t) {
-    t = Math.max(0, Math.min(1, t));
-    const a = hexToRgb(hexA), b = hexToRgb(hexB);
-    const r = Math.round(a.r + (b.r - a.r) * t);
-    const g = Math.round(a.g + (b.g - a.g) * t);
-    const bl = Math.round(a.b + (b.b - a.b) * t);
-    return 'rgb(' + r + ',' + g + ',' + bl + ')';
-  }
-  function hexToRgb(hex) {
-    const v = hex.replace('#', '');
-    return {
-      r: parseInt(v.substring(0, 2), 16),
-      g: parseInt(v.substring(2, 4), 16),
-      b: parseInt(v.substring(4, 6), 16)
-    };
-  }
-
-  function playerXFor(side) {
-    const sideOffset = 15;
-    return side === 'left' ? (poleX - sideOffset) : (poleX + poleWidth + sideOffset);
-  }
-
-  function drawPlayer(centerY, side, scale, alpha, xOffset) {
-    const px = playerXFor(side) + (xOffset || 0);
-    const py = centerY;
-    const faceLeft = side === 'right';
+  function drawPlayer() {
+    const p = GAME.player;
+    const px = p.x;
+    const py = p.y + GAME.wobble;
+    const faceLeft = p.side === 'right';
     const dir = faceLeft ? -1 : 1;
-    const poleEdgeX = side === 'right' ? (poleX + poleWidth) : poleX;
+    const poleEdgeX = p.side === 'right' ? (poleX + poleWidth) : poleX;
 
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.translate(px, py);
-    ctx.scale(scale, scale);
-    ctx.translate(-px, -py);
+    let drawY = py;
 
-    // tangan/kaki memegang tiang
     ctx.fillStyle = '#2A4D7A';
     ctx.beginPath();
-    ctx.ellipse(px + dir * 10, py + 16, 6, 9, dir * 0.5, 0, Math.PI * 2);
+    ctx.ellipse(px + dir * 10, drawY + 16, 6, 9, dir * 0.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.ellipse(px - dir * 4, py + 18, 6, 9, -dir * 0.3, 0, Math.PI * 2);
+    ctx.ellipse(px - dir * 4, drawY + 18, 6, 9, -dir * 0.3, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#2C1810';
     ctx.beginPath();
-    ctx.ellipse(poleEdgeX - dir * 2, py + 20, 6, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(poleEdgeX - dir * 2, drawY + 20, 6, 4, 0, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = '#F5B88A';
     ctx.beginPath();
-    ctx.ellipse((px + poleEdgeX) / 2, py - 6, 8, 5, dir * 0.2, 0, Math.PI * 2);
+    ctx.ellipse((px + poleEdgeX) / 2, drawY - 6, 8, 5, dir * 0.2, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1.2;
     ctx.stroke();
     ctx.beginPath();
-    ctx.ellipse(px - dir * 14, py - 2, 5, 8, dir * 0.4, 0, Math.PI * 2);
+    ctx.ellipse(px - dir * 14, drawY - 2, 5, 8, dir * 0.4, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
-    // badan
     ctx.fillStyle = '#F04D5C';
     ctx.beginPath();
-    ctx.ellipse(px, py, 14, 15, 0, 0, Math.PI * 2);
+    ctx.ellipse(px, drawY, 14, 15, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1.5;
     ctx.stroke();
     ctx.fillStyle = '#FFD84D';
     ctx.beginPath();
-    ctx.arc(px, py + 4, 2, 0, Math.PI * 2);
+    ctx.arc(px, drawY + 4, 2, 0, Math.PI * 2);
     ctx.fill();
 
-    // kepala
-    const headY = py - 22;
+    const headY = drawY - 22;
     ctx.fillStyle = '#FFD9B3';
     ctx.beginPath();
     ctx.arc(px, headY, 13, 0, Math.PI * 2);
@@ -1191,7 +834,6 @@
     ctx.arc(px + eyeOffsetX, headY + 4, 4, 0.15 * Math.PI, 0.85 * Math.PI);
     ctx.stroke();
 
-    // ikat kepala merah-putih
     ctx.fillStyle = '#FF0000';
     ctx.beginPath();
     ctx.ellipse(px, headY - 9, 13, 4, 0, 0, Math.PI * 2);
@@ -1205,28 +847,27 @@
     ctx.lineTo(px - dir * 20, headY - 10);
     ctx.closePath();
     ctx.fill();
-
-    ctx.restore();
   }
 
-  tapBtn.addEventListener('pointerdown', doClimb);
+  leftBtn.addEventListener('click', function () { setSide('left'); });
+  rightBtn.addEventListener('click', function () { setSide('right'); });
   startBtn.addEventListener('click', startGame);
   resetBtn.addEventListener('click', function () {
     resetGame();
     draw();
   });
-  canvas.addEventListener('pointerdown', doClimb);
-  winModalClose.addEventListener('click', function () {
-    winModalBackdrop.classList.remove('show');
-  });
 
   document.addEventListener('keydown', function (e) {
-    if (e.code === 'Space') {
+    if (e.code === 'ArrowLeft') {
       e.preventDefault();
-      if (!GAME.isRunning && !GAME.isGameOver && !GAME.isWin) {
+      setSide('left');
+    } else if (e.code === 'ArrowRight') {
+      e.preventDefault();
+      setSide('right');
+    } else if (e.code === 'Space') {
+      e.preventDefault();
+      if (!GAME.isRunning && !GAME.isGameOver) {
         startGame();
-      } else if (GAME.isRunning) {
-        doClimb();
       }
     }
   });
@@ -1242,4 +883,4 @@
 </script>
 
 </body>
-</html>
+  </html>
