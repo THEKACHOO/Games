@@ -91,7 +91,7 @@
       position:relative;
       width:100%;
       padding-top:100%;
-      background:#f8f8f8;
+      background:#000000;
       border:2px solid #000000;
       border-radius:12px;
       overflow:hidden;
@@ -104,7 +104,7 @@
       width:100%;
       height:100%;
       display:block;
-      background:#f8f8f8;
+      background:#000000;
       touch-action:none;
     }
 
@@ -330,6 +330,33 @@
       font-size:11px;
     }
 
+    /* ===== AUDIO CONTROLS (POJOK KANAN ATAS HALAMAN) ===== */
+    .audio-controls {
+      position:fixed;
+      top:16px;
+      right:16px;
+      display:flex;
+      gap:8px;
+      z-index:1000;
+    }
+    .audio-btn {
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:#000000;
+      color:#ffffff;
+      border:2px solid #ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:14px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.4);
+      transition:all 0.15s ease;
+    }
+    .audio-btn:hover { background:#222; }
+    .audio-btn:active { transform:scale(0.9); }
+
     @media (max-width:768px) {
       .game-title { font-size:1.4rem; }
       .game-card { padding:16px 12px 20px; }
@@ -361,9 +388,21 @@
       .btn-game { width:100%; max-width:200px; }
       .score-row { grid-template-columns:1fr 1fr; gap:4px; max-width:250px; }
     }
+
+    @media (max-width:480px) {
+      .audio-controls { top:10px; right:10px; gap:6px; }
+      .audio-btn { width:34px; height:34px; font-size:12px; }
+    }
   </style>
 </head>
 <body>
+
+<!-- ===== KONTROL AUDIO (POJOK KANAN ATAS HALAMAN) ===== -->
+<div class="audio-controls">
+  <button id="audioPlayBtn" class="audio-btn" aria-label="Putar audio"><i class="fas fa-play"></i></button>
+  <button id="audioStopBtn" class="audio-btn" aria-label="Hentikan audio"><i class="fas fa-stop"></i></button>
+</div>
+<audio id="bgAudio" src="Agustus.mp3" loop autoplay></audio>
 
 <!-- ===== HEADER PUTIH DENGAN LOGO ===== -->
 <header class="page-header">
@@ -478,7 +517,7 @@
     canvasW = canvas.width;
     canvasH = canvas.height;
 
-    poleWidth = Math.max(30, canvasW * 0.11);
+    poleWidth = Math.max(14, canvasW * 0.045);
     poleX = canvasW / 2 - poleWidth / 2;
     sideOffset = 13;
   }
@@ -641,27 +680,24 @@
   function draw() {
     ctx.clearRect(0, 0, canvasW, canvasH);
 
-    // ===== LANGIT PUTIH =====
-    ctx.fillStyle = '#ffffff';
+    // ===== LANGIT HITAM =====
+    ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvasW, canvasH);
 
-    // ===== TIANG PINANG =====
-    const poleGrad = ctx.createLinearGradient(poleX, 0, poleX + poleWidth, 0);
-    poleGrad.addColorStop(0, '#7A4F2A');
-    poleGrad.addColorStop(0.45, '#5D3A1A');
-    poleGrad.addColorStop(1, '#4A2E1A');
-    ctx.fillStyle = poleGrad;
+    // ===== TIANG PINANG (PUTIH) =====
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(poleX, 0, poleWidth, canvasH);
-    ctx.fillStyle = 'rgba(255,255,255,0.12)';
-    ctx.fillRect(poleX + 2, 0, 4, canvasH);
-    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(poleX, 0, poleWidth, canvasH);
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
     for (let y = 24; y < canvasH; y += 34) {
-      ctx.fillRect(poleX, y, poleWidth, 3);
+      ctx.fillRect(poleX, y, poleWidth, 2);
     }
 
     // ===== UJUNG TIANG =====
     const tipCenterX = poleX + poleWidth / 2;
-    ctx.fillStyle = '#4A2E1A';
+    ctx.fillStyle = '#FFFFFF';
     ctx.beginPath();
     ctx.ellipse(tipCenterX, 5, poleWidth / 2 + 2, 5, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -672,37 +708,37 @@
     // ===== BENDERA MERAH PUTIH DI PUNCAK =====
     const flagX = tipCenterX - 10;
     const flagY = 5;
-    ctx.fillStyle = '#000000';
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(tipCenterX + 12, flagY - 2, 2, 22);
     ctx.fillStyle = '#FF0000';
     ctx.fillRect(flagX, flagY, 20, 8);
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(flagX, flagY + 8, 20, 8);
-    ctx.strokeStyle = '#000000';
+    ctx.strokeStyle = '#FFFFFF';
     ctx.lineWidth = 0.8;
     ctx.strokeRect(flagX, flagY, 20, 16);
 
-    // ===== CABANG =====
+    // ===== CABANG (PUTIH) =====
     for (const b of GAME.branches) {
       const bx = b.side === 'left' ? (poleX - b.length) : (poleX + poleWidth);
-      ctx.fillStyle = 'rgba(0,0,0,0.15)';
-      ctx.fillRect(bx + 2, b.y + 3, b.length, b.height);
-      const gradBranch = ctx.createLinearGradient(bx, b.y, bx, b.y + b.height);
-      gradBranch.addColorStop(0, '#6B4226');
-      gradBranch.addColorStop(1, '#4A2E1A');
-      ctx.fillStyle = gradBranch;
+      ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(bx, b.y, b.length, b.height);
-      ctx.fillStyle = '#2D5A1E';
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(bx, b.y, b.length, b.height);
       const leafX = b.side === 'left' ? bx - 4 : bx + b.length - 2;
+      ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(leafX, b.y - 3, 8, 5);
+      ctx.strokeRect(leafX, b.y - 3, 8, 5);
       ctx.fillRect(leafX, b.y + b.height - 2, 8, 5);
+      ctx.strokeRect(leafX, b.y + b.height - 2, 8, 5);
     }
 
-    // ===== KARAKTER =====
+    // ===== KARAKTER (STICKMAN PUTIH) =====
     drawPlayer();
 
     if (GAME.isGameOver) {
-      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
       ctx.fillRect(0, 0, canvasW, canvasH);
       ctx.fillStyle = '#FFFFFF';
       ctx.font = 'bold 26px Outfit, sans-serif';
@@ -717,99 +753,72 @@
     const p = GAME.player;
     const px = p.x;
     const py = p.y + GAME.wobble;
-    const faceLeft = p.side === 'right';
-    const dir = faceLeft ? -1 : 1;
+    const dir = p.side === 'right' ? -1 : 1;
     const poleEdgeX = p.side === 'right' ? (poleX + poleWidth) : poleX;
 
-    let drawY = py;
-
-    ctx.fillStyle = '#2A4D7A';
-    ctx.beginPath();
-    ctx.ellipse(px + dir * 10, drawY + 16, 6, 9, dir * 0.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(px - dir * 4, drawY + 18, 6, 9, -dir * 0.3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#2C1810';
-    ctx.beginPath();
-    ctx.ellipse(poleEdgeX - dir * 2, drawY + 20, 6, 4, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = '#F5B88A';
-    ctx.beginPath();
-    ctx.ellipse((px + poleEdgeX) / 2, drawY - 6, 8, 5, dir * 0.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.ellipse(px - dir * 14, drawY - 2, 5, 8, dir * 0.4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = '#F04D5C';
-    ctx.beginPath();
-    ctx.ellipse(px, drawY, 14, 15, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-    ctx.fillStyle = '#FFD84D';
-    ctx.beginPath();
-    ctx.arc(px, drawY + 4, 2, 0, Math.PI * 2);
-    ctx.fill();
-
-    const headY = drawY - 22;
-    ctx.fillStyle = '#FFD9B3';
-    ctx.beginPath();
-    ctx.arc(px, headY, 13, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = '#1A1A1A';
-    ctx.beginPath();
-    ctx.arc(px, headY - 3, 13, Math.PI, 2 * Math.PI);
-    ctx.fill();
-
-    ctx.fillStyle = 'rgba(255,120,130,0.55)';
-    ctx.beginPath();
-    ctx.arc(px - 7, headY + 4, 3, 0, Math.PI * 2);
-    ctx.arc(px + 7, headY + 4, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    const eyeOffsetX = dir * 2;
-    ctx.fillStyle = '#000000';
-    ctx.beginPath();
-    ctx.arc(px - 5 + eyeOffsetX, headY - 1, 2.6, 0, Math.PI * 2);
-    ctx.arc(px + 5 + eyeOffsetX, headY - 1, 2.6, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.strokeStyle = '#FFFFFF';
     ctx.fillStyle = '#FFFFFF';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    const headRadius = 10;
+    const headY = py - 28;
+    const neckY = headY + headRadius;
+    const hipY = py + 8;
+
+    // Kepala (penuh/solid)
     ctx.beginPath();
-    ctx.arc(px - 5.8 + eyeOffsetX, headY - 1.8, 0.9, 0, Math.PI * 2);
-    ctx.arc(px + 4.2 + eyeOffsetX, headY - 1.8, 0.9, 0, Math.PI * 2);
+    ctx.arc(px, headY, headRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1.3;
+    // Badan
     ctx.beginPath();
-    ctx.arc(px + eyeOffsetX, headY + 4, 4, 0.15 * Math.PI, 0.85 * Math.PI);
+    ctx.moveTo(px, neckY);
+    ctx.lineTo(px, hipY);
     ctx.stroke();
 
-    ctx.fillStyle = '#FF0000';
+    // Lengan atas - memeluk tiang
     ctx.beginPath();
-    ctx.ellipse(px, headY - 9, 13, 4, 0, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.moveTo(px, neckY + 4);
+    ctx.lineTo(poleEdgeX, py - 10);
+    ctx.stroke();
+
+    // Lengan bawah
+    ctx.beginPath();
+    ctx.moveTo(px, neckY + 4);
+    ctx.lineTo(px - dir * 10, neckY + 15);
+    ctx.stroke();
+
+    // Kaki - memeluk tiang
+    ctx.beginPath();
+    ctx.moveTo(px, hipY);
+    ctx.lineTo(poleEdgeX, hipY + 18);
+    ctx.stroke();
+
+    // Kaki bawah
+    ctx.beginPath();
+    ctx.moveTo(px, hipY);
+    ctx.lineTo(px - dir * 12, hipY + 20);
+    ctx.stroke();
+
+    // ===== BENDERA MERAH PUTIH DI KEPALA =====
+    const flagPoleTopY = headY - headRadius - 16;
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(px, headY - headRadius);
+    ctx.lineTo(px, flagPoleTopY);
+    ctx.stroke();
+
+    const flagW = 13, flagH = 10;
+    ctx.fillStyle = '#FF0000';
+    ctx.fillRect(px, flagPoleTopY, flagW * dir, flagH / 2);
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(px - 6, headY - 13, 12, 4);
-    ctx.fillStyle = '#FF0000';
-    ctx.beginPath();
-    ctx.moveTo(px - dir * 12, headY - 8);
-    ctx.lineTo(px - dir * 20, headY - 4);
-    ctx.lineTo(px - dir * 20, headY - 10);
-    ctx.closePath();
-    ctx.fill();
+    ctx.fillRect(px, flagPoleTopY + flagH / 2, flagW * dir, flagH / 2);
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(Math.min(px, px + flagW * dir), flagPoleTopY, flagW, flagH);
   }
 
   leftBtn.addEventListener('click', function () { setSide('left'); });
@@ -818,6 +827,35 @@
   resetBtn.addEventListener('click', function () {
     resetGame();
     draw();
+  });
+
+  // ===== AUDIO GAME (AGUSTUS.MP3) =====
+  const bgAudio = document.getElementById('bgAudio');
+  const audioPlayBtn = document.getElementById('audioPlayBtn');
+  const audioStopBtn = document.getElementById('audioStopBtn');
+
+  function tryAutoplay() {
+    const playPromise = bgAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function () {
+        // Autoplay diblokir browser, akan diputar saat user berinteraksi
+      });
+    }
+  }
+  tryAutoplay();
+
+  // Coba lagi begitu ada interaksi pertama dari user (workaround kebijakan autoplay browser)
+  document.addEventListener('click', function onceUnlock() {
+    tryAutoplay();
+    document.removeEventListener('click', onceUnlock);
+  }, { once: true });
+
+  audioPlayBtn.addEventListener('click', function () {
+    bgAudio.play();
+  });
+  audioStopBtn.addEventListener('click', function () {
+    bgAudio.pause();
+    bgAudio.currentTime = 0;
   });
 
   document.addEventListener('keydown', function (e) {
@@ -846,4 +884,4 @@
 </script>
 
 </body>
-                                             </html>
+</html>
