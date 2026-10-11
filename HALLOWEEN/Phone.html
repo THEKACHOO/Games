@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Phone</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fff;--panel:#f3f3f3;--key:#eaeaea;--text:#000;--mute:#777}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:#000;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text)}
+#phone{position:relative;height:100%;max-width:420px;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+.view{display:none;flex:1;flex-direction:column;min-height:0}
+.view.on{display:flex}
+#top{display:flex;align-items:center;padding:6px 8px;min-height:44px}
+#back{display:flex;padding:8px;border:0;background:none;cursor:pointer;color:#000;text-decoration:none}
+#back svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#display{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:16px}
+#num{font-size:34px;letter-spacing:1px;min-height:44px;word-break:break-all;text-align:center}
+#hint{color:var(--mute);font-size:14px;min-height:20px;margin-top:4px}
+#pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 60px}
+.k{height:48px;border:0;border-radius:999px;background:var(--key);color:var(--text);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.k:active{background:#cfcfcf}
+#actions{display:grid;grid-template-columns:repeat(3,1fr);padding:4px 28px 14px;align-items:center;justify-items:center}
+#callbtn{width:56px;height:56px;border-radius:50%;border:0;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;grid-column:2}
+svg.i{width:24px;height:24px;fill:currentColor}
+#del{background:none;border:0;color:var(--mute);font-size:26px;cursor:pointer;grid-column:3;padding:12px}
+#clist{flex:1;overflow-y:auto;padding:8px 0}
+h2{margin:0;padding:6px 20px 8px;font-size:24px}
+.c{display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer}
+.c:active{background:var(--panel)}
+.av{width:42px;height:42px;border-radius:50%;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+.c .n{font-size:17px}.c .p{font-size:13px;color:var(--mute)}
+#tabs{display:flex;border-top:1px solid #ddd;background:var(--panel)}
+#tabs button{flex:1;padding:14px 0;background:none;border:0;color:var(--mute);font-size:14px;cursor:pointer}
+#tabs button.on{color:var(--text);font-weight:600}
+#call{background:#fff}
+#ctop{padding:34px 20px 14px;text-align:center}
+#cname{font-size:26px}#cstat{color:var(--mute);margin-top:6px}
+#log{flex:1;overflow-y:auto;padding:10px 16px;display:flex;flex-direction:column;gap:10px}
+.b{max-width:85%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.4;animation:in .25s}
+.b .w{font-size:11px;color:var(--mute);margin-bottom:3px}
+.b.me .w{color:#bbb}
+.b.them{background:var(--key);align-self:flex-start;border-bottom-left-radius:4px}
+.b.me{background:#000;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+#opts{display:flex;flex-direction:column;gap:8px;padding:8px 16px}
+#opts button{text-align:left;padding:12px 14px;border-radius:12px;border:1px solid #000;background:var(--panel);color:var(--text);font-size:15px;cursor:pointer}
+#opts button:active{background:var(--key)}
+#nameRow{display:none;gap:8px;padding:8px 16px}
+#nameRow.on{display:flex}
+#nameIn{flex:1;padding:12px 14px;border-radius:12px;border:1px solid #000;font-size:16px;outline:none;background:#fff;color:#000}
+#nameGo{padding:0 18px;border-radius:12px;border:0;background:#000;color:#fff;font-size:15px;cursor:pointer}
+#hang{margin:6px auto 18px;width:60px;height:60px;border-radius:50%;border:0;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}#hang svg{transform:rotate(135deg)}
+#ended{position:absolute;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;font-size:22px;color:#fff;z-index:5}
+#ended.on{display:flex}
+#toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);background:#000;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap}
+#toast.on{opacity:1}
+#over,#won{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:20vh 0 12vh;color:#fff}
+#over{background:#000 url(monster1.png) center/cover no-repeat}
+#over.on,#won.on{display:flex}
+#over h1,#won h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
+#revive,#home{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none}
+#revive:active,#home:active{background:#fff;color:#000}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="toast"></div>
+  <div id="ended">Call ended</div>
+
+  <div id="top"><a id="back" href="Home.html" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></a></div>
+
+  <div class="view on" id="v-dial">
+    <div id="display"><div id="num"></div><div id="hint"></div></div>
+    <div id="pad"></div>
+    <div id="actions"><button id="callbtn" aria-label="Call"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><button id="del" aria-label="Delete">⌫</button></div>
+  </div>
+
+  <!-- CONTACTS -->
+  <div class="view" id="v-contacts">
+    <h2>Contacts</h2>
+    <div id="clist"></div>
+  </div>
+
+  <!-- CALL -->
+  <div class="view" id="call">
+    <div id="ctop"><div id="cname"></div><div id="cstat"></div></div>
+    <div id="log"></div>
+    <div id="nameRow"><input id="nameIn" type="text" placeholder="Your full name" autocomplete="off" maxlength="40"><button id="nameGo">Send</button></div>
+    <div id="opts"></div>
+    <button id="hang" aria-label="Hang up"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
+  </div>
+
+  <div id="tabs"><button class="on" data-t="dial">Keypad</button><button data-t="contacts">Contacts</button></div>
+
+  <div id="over"><h1>GAME OVER</h1><button id="revive">Revive</button></div>
+  <div id="won"><h1>YOU WON</h1><a id="home" href="Home.html">Home</a></div>
+</div>
+
+<script>
+const WIN_NUMBER = "6663113666";
+
+const CONTACTS = [
+  {name:"My Dad",    number:"xxxx-xxxx"},
+  {name:"Lovely Mom",     number:"xxxx-xxxx"},
+  {name:"Sissy",  number:"xxxx-xxxx"},
+  {name:"Benny",   number:"xxxx-xxxx"},
+  {name:"Alan",    number:"xxxx-xxxx"},
+  {name:"Ms. Diana", number:"xxxx-xxxx"},
+  {name:"Carla",   number:"xxxx-xxxx"},
+  {name:"Lily",   number:"xxxx-xxxx"}
+];
+
+const DIALOGS = {
+  "911": {
+    start:{ who:"911", text:"911, what's your emergency?", next:"p1" },
+    p1:{ me:true, text:"Help! Please, I don't know what's going on! I woke up in the middle of the woods, and it's pitch-black out here. I've only got my phone, and then someone sent me a creepy message.", next:"d1" },
+    d1:{ who:"911", text:"Okay, okay. I need you to stay calm for me, alright? First, tell me your full name.", input:"d2" },
+    d2:{ who:"911", text:"Alright. Tell me everything you can remember. Every little detail matters.", next:"p2" },
+    p2:{ me:true, text:"No! I don't know! I think I'm lost in the woods or something. I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here! I can't see anything, and my phone's the only thing I've got. And the battery's almost dead! Then someone started sending me these really scary messages...", next:"d3" },
+    d3:{ who:"911", text:"Okay, take a deep breath. Since you're alone, do you have anything on you? Anything you could use to protect yourself?",
+      options:[
+        {t:"...How do you know I'm alone?", go:"o1"},
+        {t:"Yeah, uh... maybe I could use some of the branches lying around here. I could use those to defend myself, I guess.", go:"o2"}
+      ]},
+    o1:{ who:"911", text:"Answer me. This is serious. Our team is already closing in on your location. For now, can you scream as loud as you can? That'll help us find you.",
+      options:[
+        {t:"(End call)", go:null},
+        {t:"(Screams.)", over:true}
+      ]},
+    o2:{ who:"911", text:"Our team is already close to your location. Can you scream so we can find you more easily?",
+      options:[
+        {t:"(Screams.)", over:true}
+      ]}
+  }
+};
+
+const $=id=>document.getElementById(id);
+let dialed="", inCall=false, timers=[], playerName="";
+
+["1","2","3","4","5","6","7","8","9","*","0","#"].forEach(k=>{
+  const b=document.createElement("button");b.className="k";b.textContent=k;
+  b.onclick=()=>{ if(dialed.length<14){dialed+=k;renderNum();} };
+  $("pad").appendChild(b);
+});
+$("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
+$("callbtn").onclick=()=>{
+  if(!dialed) return;
+  if(dialed===WIN_NUMBER){ $("won").classList.add("on"); return; }
+  if(dialed==="911") startCall("911");
+  else toast("Error");
+};
+function renderNum(){
+  $("num").textContent=dialed;
+  $("hint").textContent = dialed==="911" ? "Emergency" : "";
+}
+
+CONTACTS.forEach(c=>{
+  const d=document.createElement("div");d.className="c";
+  d.innerHTML='<div class="av"></div><div><div class="n"></div><div class="p"></div></div>';
+  d.querySelector(".av").textContent=c.name[0];
+  d.querySelector(".n").textContent=c.name;
+  d.querySelector(".p").textContent=c.number;
+  d.onclick=()=>toast("Error");
+  $("clist").appendChild(d);
+});
+
+// tabs
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+  if(inCall) return;
+  show("v-"+b.dataset.t);
+  document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x===b));
+});
+function show(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===id));}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1800);}
+function later(fn,ms){timers.push(setTimeout(fn,ms));}
+
+// call flow
+function startCall(key){
+  inCall=true;$("tabs").style.display="none";$("top").style.display="none";
+  $("cname").textContent="911";
+  $("cstat").textContent="Calling...";
+  $("log").innerHTML="";$("opts").innerHTML="";$("nameRow").classList.remove("on");
+  show("call");
+  later(()=>{$("cstat").textContent="Connected";node(DIALOGS[key],"start");},1600);
+}
+function bubble(cls,who,text){
+  const b=document.createElement("div");b.className="b "+cls;
+  b.innerHTML='<div class="w"></div><div class="t"></div>';
+  b.querySelector(".w").textContent=who;b.querySelector(".t").textContent=text;
+  $("log").appendChild(b);$("log").scrollTop=1e6;
+}
+function node(dlg,id){
+  const n=dlg[id];$("opts").innerHTML="";
+  bubble(n.me?"me":"them", n.me?"You":n.who, n.text);
+  if(n.input){
+    later(()=>{
+      $("nameRow").classList.add("on");$("nameIn").value="";$("nameIn").focus();
+      const send=()=>{
+        const v=$("nameIn").value.trim(); if(!v) return;
+        playerName=v;$("nameRow").classList.remove("on");
+        bubble("me","You",v);
+        later(()=>node(dlg,n.input),1200);
+      };
+      $("nameGo").onclick=send;
+      $("nameIn").onkeydown=e=>{if(e.key==="Enter")send();};
+    },500);
+    return;
+  }
+  if(n.end){ later(endCall,2200); return; }
+  if(n.over){ later(gameOver,1200); return; }
+  if(n.next){ later(()=>node(dlg,n.next),n.me?2000:2200); return; }
+  later(()=>{
+    n.options.forEach(o=>{
+      const b=document.createElement("button");b.textContent=o.t;
+      b.onclick=()=>{
+        $("opts").innerHTML="";bubble("me","You",o.t);
+        if(o.over) later(gameOver,1100);
+        else if(o.go===null) later(endCall,900);
+        else later(()=>node(dlg,o.go),1200);
+      };
+      $("opts").appendChild(b);
+    });
+    $("log").scrollTop=1e6;
+  },500);
+}
+$("hang").onclick=()=>endCall();
+function resetToDialer(){
+  timers.forEach(clearTimeout);timers=[];
+  inCall=false;dialed="";renderNum();
+  $("nameRow").classList.remove("on");
+  $("tabs").style.display="flex";$("top").style.display="flex";
+  show("v-dial");
+  document.querySelectorAll("#tabs button").forEach((x,i)=>x.classList.toggle("on",i===0));
+}
+function endCall(){
+  if(!inCall) return;
+  timers.forEach(clearTimeout);timers=[];
+  $("ended").classList.add("on");
+  later(()=>{$("ended").classList.remove("on");resetToDialer();},1600);
+}
+function gameOver(){
+  timers.forEach(clearTimeout);timers=[];
+  $("over").classList.add("on");
+}
+$("revive").onclick=()=>{$("over").classList.remove("on");resetToDialer();};
+renderNum();
+</script>
+</body>
+</html>
