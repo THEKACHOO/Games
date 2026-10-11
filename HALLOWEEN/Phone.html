@@ -77,7 +77,6 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
     <div id="actions"><button id="callbtn" aria-label="Call"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><button id="del" aria-label="Delete">⌫</button></div>
   </div>
 
-  <!-- CONTACTS -->
   <div class="view" id="v-contacts">
     <h2>Contacts</h2>
     <div id="clist"></div>
@@ -106,33 +105,36 @@ const CONTACTS = [
   {name:"Lovely Mom",     number:"xxxx-xxxx"},
   {name:"Sissy",  number:"xxxx-xxxx"},
   {name:"Benny",   number:"xxxx-xxxx"},
-  {name:"Alan",    number:"xxxx-xxxx"},
+  {name:"Judith",    number:"xxxx-xxxx"},
   {name:"Ms. Diana", number:"xxxx-xxxx"},
-  {name:"Carla",   number:"xxxx-xxxx"},
+  {name:"Sam",   number:"xxxx-xxxx"},
   {name:"Lily",   number:"xxxx-xxxx"}
 ];
 
 const DIALOGS = {
   "911": {
     start:{ who:"911", text:"911, what's your emergency?", next:"p1" },
-    p1:{ me:true, text:"Help! Please, I don't know what's going on! I woke up in the middle of the woods, and it's pitch-black out here. I've only got my phone, and then someone sent me a creepy message.", next:"d1" },
-    d1:{ who:"911", text:"Okay, okay. I need you to stay calm for me, alright? First, tell me your full name.", input:"d2" },
-    d2:{ who:"911", text:"Alright. Tell me everything you can remember. Every little detail matters.", next:"p2" },
-    p2:{ me:true, text:"No! I don't know! I think I'm lost in the woods or something. I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here! I can't see anything, and my phone's the only thing I've got. And the battery's almost dead! Then someone started sending me these really scary messages...", next:"d3" },
-    d3:{ who:"911", text:"Okay, take a deep breath. Since you're alone, do you have anything on you? Anything you could use to protect yourself?",
+    p1:{ me:true, text:"Help me! I don't know what's going on! I'm in the middle of the woods, it's pitch-black out here. And I think someone about to hurt me!", next:"d1" },
+    d1:{ who:"911", text:"Ok. I need you to stay calm for me, alright? First, tell me your full name.", input:"d2" },
+    d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember. Every little detail matters.", next:"p2" },
+    p2:{ me:true, text:"No! I don't know! I think I'm lost in the woods or something. I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here! I can't see anything, and my phone's the only thing I've got. And the battery's almost dead!...", next:"d3" },
+    d3a:{ who:"911", text:"Okay, (User), take a deep breath.", next:"d3b" },
+    d3b:{ who:"911", text:"Since you're alone, do you have anything on you?", next:"d3c" },
+    d3c:{ who:"911", text:"Anything you could use to protect yourself?",
       options:[
         {t:"...How do you know I'm alone?", go:"o1"},
         {t:"Yeah, uh... maybe I could use some of the branches lying around here. I could use those to defend myself, I guess.", go:"o2"}
       ]},
     o1:{ who:"911", text:"Answer me. This is serious. Our team is already closing in on your location. For now, can you scream as loud as you can? That'll help us find you.",
       options:[
-        {t:"(End call)", go:null},
-        {t:"(Screams.)", over:true}
+        {t:"(Screams.)", go:"scream"}
       ]},
     o2:{ who:"911", text:"Our team is already close to your location. Can you scream so we can find you more easily?",
       options:[
-        {t:"(Screams.)", over:true}
-      ]}
+        {t:"(Screams.)", go:"scream"}
+      ]},
+    scream:{ who:"911", text:"...", next:"scream2" },
+    scream2:{ who:"Unknown", text:"Hehe... I got you, (User)", next:null, over:true }
   }
 };
 
@@ -166,7 +168,6 @@ CONTACTS.forEach(c=>{
   $("clist").appendChild(d);
 });
 
-// tabs
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   if(inCall) return;
   show("v-"+b.dataset.t);
@@ -176,7 +177,11 @@ function show(id){document.querySelectorAll(".view").forEach(v=>v.classList.togg
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1800);}
 function later(fn,ms){timers.push(setTimeout(fn,ms));}
 
-// call flow
+function fillName(text){
+  if(!text) return text;
+  return text.replace(/\(User\)/g, playerName || "(User)");
+}
+
 function startCall(key){
   inCall=true;$("tabs").style.display="none";$("top").style.display="none";
   $("cname").textContent="911";
@@ -193,7 +198,9 @@ function bubble(cls,who,text){
 }
 function node(dlg,id){
   const n=dlg[id];$("opts").innerHTML="";
-  bubble(n.me?"me":"them", n.me?"You":n.who, n.text);
+  // ubah header kalau sender Unknown
+  if(n.who==="Unknown") $("cname").textContent="Unknown";
+  bubble(n.me?"me":"them", n.me?"You":n.who, fillName(n.text));
   if(n.input){
     later(()=>{
       $("nameRow").classList.add("on");$("nameIn").value="";$("nameIn").focus();
@@ -209,7 +216,7 @@ function node(dlg,id){
     return;
   }
   if(n.end){ later(endCall,2200); return; }
-  if(n.over){ later(gameOver,1200); return; }
+  if(n.over){ later(gameOver,1600); return; }
   if(n.next){ later(()=>node(dlg,n.next),n.me?2000:2200); return; }
   later(()=>{
     n.options.forEach(o=>{
