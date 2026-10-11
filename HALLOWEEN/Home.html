@@ -95,6 +95,56 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #notif .h{font-size:11px;letter-spacing:1.5px;color:#666;margin-bottom:5px;display:flex;justify-content:space-between}
 #notif .l{font-size:15px;line-height:1.35}
 
+/* ===== MAPS ===== */
+#maps{position:relative;background:#050505;overflow:hidden}
+#maps .mapgrid{
+  position:absolute;inset:0;overflow:hidden;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 38px, #1c1c1c 38px 40px),
+    repeating-linear-gradient(90deg, transparent 0 38px, #1c1c1c 38px 40px),
+    repeating-linear-gradient(0deg, #0a0a0a 0 120px, #0d0d0d 120px 240px),
+    repeating-linear-gradient(90deg, #0a0a0a 0 120px, #0d0d0d 120px 240px);
+}
+#maps .mapgrid::before{
+  content:"";position:absolute;inset:-50%;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 60px, #151515 60px 62px),
+    repeating-linear-gradient(-45deg, transparent 0 90px, #131313 90px 92px);
+  opacity:.7;
+}
+#maps .mapgrid::after{
+  content:"";position:absolute;top:50%;left:50%;
+  width:180px;height:180px;margin:-90px 0 0 -90px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.15);
+  box-shadow:0 0 0 40px rgba(255,255,255,.04),0 0 0 80px rgba(255,255,255,.02);
+  animation:mpulse 3s ease-in-out infinite;
+}
+@keyframes mpulse{50%{transform:scale(1.08);opacity:.6}}
+#maps .nosignal{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;z-index:2;pointer-events:none;
+}
+#maps .nosignal .icon{
+  width:56px;height:56px;margin:0 auto 12px;
+  border-radius:50%;border:2px solid #fff;
+  display:grid;place-items:center;opacity:.85;
+}
+#maps .nosignal .icon svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#maps .nosignal h2{
+  margin:0;font-size:22px;font-weight:700;letter-spacing:4px;
+  text-transform:uppercase;text-shadow:0 2px 14px #000;
+}
+#maps .nosignal p{
+  margin:8px 0 0;font-size:12px;letter-spacing:2px;color:#aaa;
+  text-transform:uppercase;
+}
+#maps .maptitle{
+  position:absolute;top:14px;left:0;right:0;text-align:center;
+  font-size:17px;font-weight:600;z-index:2;
+}
+
+/* ===== GAME OVER ===== */
 #over{position:absolute;inset:0;z-index:50;background:#000 url(Monster1.png) center/cover no-repeat;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:20vh 0 12vh}
 #over.on{display:flex}
 #over h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
@@ -125,6 +175,18 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
     <div id="opts"></div>
   </div>
 
+  <div class="view" id="maps">
+    <div class="mapgrid"></div>
+    <div class="maptitle">Maps</div>
+    <div class="nosignal">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      </div>
+      <h2>No Signal</h2>
+      <p>Location unavailable</p>
+    </div>
+  </div>
+
   <div id="nav">
     <button id="back" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button id="pill" aria-label="Home"></button>
@@ -132,24 +194,26 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   </div>
 
   <div id="over"><h1>GAME OVER</h1><button id="revive">Revive</button></div>
+
+  <audio id="monsterSfx" src="Monster1.mp3" preload="auto"></audio>
 </div>
 
 <script>
 const PHONE_PAGE="Phone.html", GALLERY_PAGE="Gallery.html", NOTES_PAGE="Notes.html";
 const MUSIC_PAGE="Music.html", MAPS_PAGE="Maps.html";
-const UNKNOWN_MSGS=["Hey :)","You can't hide or run from me","Let's die together tonight"];
+const UNKNOWN_MSGS=["Hey :)","Let's play hide and seek!","You can hide as long as you can, but I'm gonna find you"];
 const PLAYER_OPTION="Who are you?"; 
-const UNKNOWN_FOLLOWUP=["I'm you.","Open your camera"]; 
+const UNKNOWN_FOLLOWUP=["It's not important","But, If you wanna know, open your camera"]; 
 
 const OTHERS=[
-  {name:"Lovely Mom", time:"03.31", msgs:["Where are you? Please answer me."]},
-  {name:"My Dad",     time:"03.13", msgs:["It's getting late."]},
-  {name:"Sissy",      time:"02.22", msgs:["WHERE THE FUCK ARE YOU?!"]},
-  {name:"Benny",      time:"01.46", msgs:["Your mom just call me, what happen?"]},
-  {name:"Mrs. Diana",  time:"01.00", msgs:["Don't forget to send me the notes, I need it tmr."]},
-  {name:"Aunt Rose",  time:"00.50", msgs:["Your mom is worried."]},
-  {name:"Sam",        time:"00.18", msgs:["Yo, where are you?"]},
-  {name:"Lily",       time:"00.08", msgs:["Did you leave already? All of sudden?"]},
+  {name:"Lovely Mom", time:"01.31", msgs:["Where are you? Please answer me."]},
+  {name:"My Dad",     time:"01.13", msgs:["It's getting late."]},
+  {name:"Sissy",      time:"00.40", msgs:["WHERE THE FUCK ARE YOU?!"]},
+  {name:"Benny",      time:"00.33", msgs:["Your mom just call me, what happen?"]},
+  {name:"Mrs. Diana",  time:"00.13", msgs:["Don't forget to send me the notes, I need it tmr."]},
+  {name:"Aunt Rose",  time:"00.10", msgs:["Your mom is worried."]},
+  {name:"Sam",        time:"00.06", msgs:["Yo, where are you?"]},
+  {name:"Lily",       time:"00.02", msgs:["Did you leave already? All of sudden?"]},
   {name:"Judith",     time:"Yesterday 11.13 PM", msgs:["Send me the photos taken by you, I want to post it~"]},
   {name:"Maya",       time:"Yesterday 10.10 PM", msgs:["Sorry I can't join the party tonight..."]},
 ];
@@ -157,7 +221,7 @@ const OTHERS=[
 const APPS=[
   ["Phone","phone",1],["Messages","msg",1],["Contacts","user"],
   ["Browser","globe"],["Weather","cloud"],["Calendar","cal"],
-  ["Music","note"],["Notes","note2",1],["Maps","pin"],
+  ["Music","note"],["Notes","note2",1],["Maps","pin",1],
   ["Store","bag"],["Gallery","img",1],["Files","folder"],
   ["X","x"],["Calculator","calc"],["Clock","clock"],
   ["Mail","mail"],["Camera","cam",1],["Settings","gear"],
@@ -215,7 +279,7 @@ function openApp(n){
   else if(n==="Gallery") location.href=GALLERY_PAGE;
   else if(n==="Notes") location.href=NOTES_PAGE;
   else if(n==="Music") location.href=MUSIC_PAGE;
-  else if(n==="Maps") location.href=MAPS_PAGE;
+  else if(n==="Maps") show("maps");
   else if(n==="Messages"){renderList();show("msgs");}
   else if(n==="Camera"){ if(S.fd>=UNKNOWN_FOLLOWUP.length) gameOver(); }
 }
@@ -301,8 +365,14 @@ function deliver(){
 }
 $("notif").onclick=()=>{$("notif").classList.remove("on");openThread("Unknown");};
 
-function gameOver(){$("over").classList.add("on");}
+function gameOver(){
+  $("over").classList.add("on");
+  const sfx=$("monsterSfx");
+  try{ sfx.currentTime=0; sfx.volume=1; sfx.play(); }catch(e){}
+}
 $("revive").onclick=()=>{
+  const sfx=$("monsterSfx");
+  try{ sfx.pause(); sfx.currentTime=0; }catch(e){}
   S.delivered=0;S.unread=0;S.asked=false;S.fd=0;
   running=false;
   save();updateBadge();
@@ -311,7 +381,7 @@ $("revive").onclick=()=>{
 
 $("openapps").onclick=()=>{show("apps");updateBadge();deliver();};
 $("pill").onclick=()=>show("home");
-$("back").onclick=()=>show(cur==="msgs"?"apps":"home");
+$("back").onclick=()=>show(cur==="msgs"||cur==="maps"?"apps":"home");
 $("tback").onclick=()=>{renderList();show("msgs");};
 
 updateBadge();
