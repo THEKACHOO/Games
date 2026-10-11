@@ -94,8 +94,6 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #notif.on{transform:none}
 #notif .h{font-size:11px;letter-spacing:1.5px;color:#666;margin-bottom:5px;display:flex;justify-content:space-between}
 #notif .l{font-size:15px;line-height:1.35}
-
-/* ===== MAPS ===== */
 #maps{position:relative;background:#050505;overflow:hidden}
 #maps .mapgrid{
   position:absolute;inset:0;overflow:hidden;
@@ -144,7 +142,6 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   font-size:17px;font-weight:600;z-index:2;
 }
 
-/* ===== GAME OVER ===== */
 #over{position:absolute;inset:0;z-index:50;background:#000 url(Monster1.png) center/cover no-repeat;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:20vh 0 12vh}
 #over.on{display:flex}
 #over h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
@@ -154,7 +151,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 </head>
 <body>
 <div id="phone">
-  <div id="status"><span id="stime">00:00</span><div style="display:flex;align-items:center;gap:8px"><span>8%</span><div id="bat"></div></div></div>
+  <div id="status"><span id="stime">00:00</span><div style="display:flex;align-items:center;gap:8px"><span>6%</span><div id="bat"></div></div></div>
   <div id="notif"><div class="h"><span>MESSAGES</span><span>now</span></div><div class="l" id="nl"></div></div>
 
   <div class="view on" id="home">
