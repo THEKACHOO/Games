@@ -85,14 +85,14 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
   <div class="view" id="call">
     <div id="ctop"><div id="cname"></div><div id="cstat"></div></div>
     <div id="log"></div>
-    <div id="nameRow"><input id="nameIn" type="text" placeholder="Your full name" autocomplete="off" maxlength="40"><button id="nameGo">Send</button></div>
+    <div id="nameRow"><input id="nameIn" type="text" placeholder="Your name" autocomplete="off" maxlength="40"><button id="nameGo">Send</button></div>
     <div id="opts"></div>
     <button id="hang" aria-label="Hang up"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
   </div>
 
   <div id="tabs"><button class="on" data-t="dial">Keypad</button><button data-t="contacts">Contacts</button></div>
 
-  <div id="over"><h1>GAME OVER</h1><button id="revive">Revive</button></div>
+  <div id="over"><h1>GAME OVER</h1><a id="revive" href="Home.html">Revive</a></div>
   <div id="won"><h1>YOU WON</h1><a id="home" href="Home.html">Home</a></div>
 </div>
 
@@ -115,7 +115,7 @@ const DIALOGS = {
   "911": {
     start:{ who:"911", text:"911, what's your emergency?", next:"p1" },
     p1:{ me:true, text:"Help me! I don't know what's going on! I'm in the middle of the woods, it's pitch-black out here. And I think someone about to hurt me!", next:"d1" },
-    d1:{ who:"911", text:"Ok. I need you to stay calm for me, alright? First, tell me your full name.", input:"d2" },
+    d1:{ who:"911", text:"Ok. I need you to stay calm for me, alright? First, tell me your name.", input:"d2" },
     d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember. Every little detail matters.", next:"p2a" },
     p2a:{ me:true, text:"I don't know! I think I'm lost in the woods... or something?", next:"p2b" },
     p2b:{ me:true, text:"I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here!", next:"p2c" },
@@ -255,7 +255,6 @@ function gameOver(){
   const snd=new Audio("Monster2.mp3");
   snd.play().catch(()=>{});
 }
-$("revive").onclick=()=>{$("over").classList.remove("on");resetToDialer();};
 renderNum();
 </script>
 </body>
