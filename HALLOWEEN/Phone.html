@@ -56,11 +56,16 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
 #ended.on{display:flex}
 #toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);background:#000;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap}
 #toast.on{opacity:1}
-#over,#won{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:20vh 0 12vh;color:#fff}
-#over{background:#000 url(Monster2.png) center/cover no-repeat}
+#over,#won{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column;align-items:center;color:#fff}
+#over{background:#000 url(Monster2.png) center/cover no-repeat;justify-content:space-between;padding:20vh 0 12vh}
+#won{background:#000 url(Win.png) center/cover no-repeat;justify-content:flex-end;padding:0 28px 40px;overflow-y:auto}
 #over.on,#won.on{display:flex}
-#over h1,#won h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
-#revive,#home{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none}
+#over h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
+#won h1{margin:0 0 16px;font-size:clamp(28px,8vw,36px);font-weight:800;letter-spacing:5px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
+#won .credits{font-size:12.5px;line-height:1.7;text-align:center;color:#e5e5e5;text-shadow:0 1px 6px #000,0 0 3px #000;margin-bottom:22px}
+#won .credits p{margin:0 0 12px}
+#won .credits .meta{color:#b5b5b5;font-size:11.5px;line-height:1.6}
+#revive,#home{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none;align-self:center}
 #revive:active,#home:active{background:#fff;color:#000}
 </style>
 </head>
@@ -93,7 +98,16 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
   <div id="tabs"><button class="on" data-t="dial">Keypad</button><button data-t="contacts">Contacts</button></div>
 
   <div id="over"><h1>GAME OVER</h1><a id="revive" href="Home.html">Revive</a></div>
-  <div id="won"><h1>YOU WON</h1><a id="home" href="Home.html">Home</a></div>
+
+  <div id="won">
+    <h1>YOU WON</h1>
+    <div class="credits">
+      <p>You made it out of the game alive. But you’ve forgotten everything that happened, as if none of it ever existed.</p>
+      <p>Thank you for playing.<br>See you when I see you.</p>
+      <p class="meta">This game was created by The Kachoo<br>Visuals, Audio, and Storyline by the Kadio Team<br>For roleplay purposes only, 2026<br>Halloween Edition</p>
+    </div>
+    <a id="home" href="Home.html">Home</a>
+  </div>
 </div>
 
 <script>
