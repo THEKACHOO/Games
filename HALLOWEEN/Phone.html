@@ -82,7 +82,6 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
     <div id="clist"></div>
   </div>
 
-  <!-- CALL -->
   <div class="view" id="call">
     <div id="ctop"><div id="cname"></div><div id="cstat"></div></div>
     <div id="log"></div>
@@ -101,13 +100,14 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
 const WIN_NUMBER = "6663113666";
 
 const CONTACTS = [
+  {name:"911",    number:"911", emergency:true},
   {name:"My Dad",    number:"xxxx-xxxx"},
   {name:"Lovely Mom",     number:"xxxx-xxxx"},
   {name:"Sissy",  number:"xxxx-xxxx"},
   {name:"Benny",   number:"xxxx-xxxx"},
-  {name:"Judith",    number:"xxxx-xxxx"},
+  {name:"Alan",    number:"xxxx-xxxx"},
   {name:"Ms. Diana", number:"xxxx-xxxx"},
-  {name:"Sam",   number:"xxxx-xxxx"},
+  {name:"Carla",   number:"xxxx-xxxx"},
   {name:"Lily",   number:"xxxx-xxxx"}
 ];
 
@@ -117,7 +117,7 @@ const DIALOGS = {
     p1:{ me:true, text:"Help me! I don't know what's going on! I'm in the middle of the woods, it's pitch-black out here. And I think someone about to hurt me!", next:"d1" },
     d1:{ who:"911", text:"Ok. I need you to stay calm for me, alright? First, tell me your full name.", input:"d2" },
     d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember. Every little detail matters.", next:"p2" },
-    p2:{ me:true, text:"No! I don't know! I think I'm lost in the woods or something. I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here! I can't see anything, and my phone's the only thing I've got. And the battery's almost dead!...", next:"d3" },
+    p2:{ me:true, text:"I don't know! I think I'm lost in the woods or something. I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here! I can't see anything, and my phone's the only thing I've got. And the battery's almost dead!...", next:"d3a" },
     d3a:{ who:"911", text:"Okay, (User), take a deep breath.", next:"d3b" },
     d3b:{ who:"911", text:"Since you're alone, do you have anything on you?", next:"d3c" },
     d3c:{ who:"911", text:"Anything you could use to protect yourself?",
@@ -164,7 +164,8 @@ CONTACTS.forEach(c=>{
   d.querySelector(".av").textContent=c.name[0];
   d.querySelector(".n").textContent=c.name;
   d.querySelector(".p").textContent=c.number;
-  d.onclick=()=>toast("Error");
+  if(c.emergency) d.onclick=()=>startCall("911");
+  else d.onclick=()=>toast("Error");
   $("clist").appendChild(d);
 });
 
@@ -198,7 +199,6 @@ function bubble(cls,who,text){
 }
 function node(dlg,id){
   const n=dlg[id];$("opts").innerHTML="";
-  // ubah header kalau sender Unknown
   if(n.who==="Unknown") $("cname").textContent="Unknown";
   bubble(n.me?"me":"them", n.me?"You":n.who, fillName(n.text));
   if(n.input){
