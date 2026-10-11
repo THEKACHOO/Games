@@ -57,7 +57,7 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
 #toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);background:#000;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap}
 #toast.on{opacity:1}
 #over,#won{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:20vh 0 12vh;color:#fff}
-#over{background:#000 url(monster1.png) center/cover no-repeat}
+#over{background:#000 url(Monster2.png) center/cover no-repeat}
 #over.on,#won.on{display:flex}
 #over h1,#won h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
 #revive,#home{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none}
@@ -116,8 +116,10 @@ const DIALOGS = {
     start:{ who:"911", text:"911, what's your emergency?", next:"p1" },
     p1:{ me:true, text:"Help me! I don't know what's going on! I'm in the middle of the woods, it's pitch-black out here. And I think someone about to hurt me!", next:"d1" },
     d1:{ who:"911", text:"Ok. I need you to stay calm for me, alright? First, tell me your full name.", input:"d2" },
-    d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember. Every little detail matters.", next:"p2" },
-    p2:{ me:true, text:"I don't know! I think I'm lost in the woods or something. I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here! I can't see anything, and my phone's the only thing I've got. And the battery's almost dead!...", next:"d3a" },
+    d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember. Every little detail matters.", next:"p2a" },
+    p2a:{ me:true, text:"I don't know! I think I'm lost in the woods... or something?", next:"p2b" },
+    p2b:{ me:true, text:"I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here!", next:"p2c" },
+    p2c:{ me:true, text:"I can't see anything, and my phone's the only thing I've got. And the battery's almost dead!", next:"d3a" },
     d3a:{ who:"911", text:"Okay, (User), take a deep breath.", next:"d3b" },
     d3b:{ who:"911", text:"Since you're alone, do you have anything on you?", next:"d3c" },
     d3c:{ who:"911", text:"Anything you could use to protect yourself?",
@@ -250,6 +252,8 @@ function endCall(){
 function gameOver(){
   timers.forEach(clearTimeout);timers=[];
   $("over").classList.add("on");
+  const snd=new Audio("Monster2.mp3");
+  snd.play().catch(()=>{});
 }
 $("revive").onclick=()=>{$("over").classList.remove("on");resetToDialer();};
 renderNum();
