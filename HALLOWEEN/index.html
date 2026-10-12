@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>DIMENSION : The Mirror</title>
+    <link href="https://fonts.cdnfonts.com/css/who-asks-satan" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/who-asks-satan');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0b0b0b;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .phone-frame {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 9 / 16;
+            background: #1a1a1a;
+            box-shadow: 0 0 0 2px #2a2a2a inset;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-aspect-ratio: 9/16) {
+            .phone-frame {
+                max-width: 100vw;
+                max-height: 100vh;
+                width: auto;
+                height: 100vh;
+                aspect-ratio: 9 / 16;
+            }
+        }
+
+        @media (max-aspect-ratio: 9/16) {
+            .phone-frame {
+                width: 100vw;
+                height: auto;
+                aspect-ratio: 9 / 16;
+                max-height: 100vh;
+            }
+        }
+
+        .section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 18px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            background-size: cover;
+            background-position: center;
+            background-color: #0f0f0f;
+            background-repeat: no-repeat;
+            color: #eee;
+        }
+
+        .section.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .bg-home { background-image: url('Home1.jpg'); background-color: #141414; }
+
+        .title-font {
+            font-family: 'Who asks Satan', 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        #titleWrap {
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #titleWrap h1 {
+            font-size: 3.4rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: #a60e00;
+            text-shadow: 0 0 35px rgba(0,0,0,0.20);
+            line-height: 0.66;
+            margin-bottom: 26px;
+        }
+
+        #titleWrap h1 span {
+            font-size: 2rem;
+        }
+
+        .tap-hint {
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.35);
+            animation: blink 1.6s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        #titleWrap.fade-out {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        /* Info container */
+        .info-box {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -48%);
+            width: calc(100% - 64px);
+            max-width: 300px;
+            max-height: 86%;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 20px 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            color: #f0f0f0;
+            font-size: 0.8rem;
+            line-height: 1.55;
+        }
+
+        .info-box.show {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+            pointer-events: auto;
+        }
+
+        .info-box h2 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ff5e6b;
+            margin-bottom: 6px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .info-box p { margin-bottom: 18px; }
+
+        .info-box ol {
+            padding-left: 18px;
+            margin-bottom: 20px;
+        }
+
+        .info-box li { margin-bottom: 8px; }
+
+        .btn {
+            display: block;
+            margin: 0 auto;
+            background: #a60e00;
+            border: 2px solid #a60e00;
+            border-radius: 60px;
+            padding: 10px 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transition: transform 0.15s, background 0.15s;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            background: #7a0a00;
+        }
+
+        .footer {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            width: 100%;
+            letter-spacing: 0.5px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .section, .info-box, #titleWrap.fade-out { transition: none; }
+            .tap-hint { animation: none; }
+        }
+
+        #bg-audio { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
+
+        .audio-permission-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .audio-permission-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .audio-permission-card {
+            width: calc(100% - 60px);
+            max-width: 280px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 22px 18px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+            text-align: center;
+            color: #f0f0f0;
+        }
+
+        .audio-permission-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ff5e6b;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .audio-permission-card p {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 18px;
+        }
+
+        .audio-permission-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .audio-permission-buttons .btn {
+            padding: 9px 22px;
+            font-size: 0.8rem;
+            margin: 0;
+            flex: 1;
+        }
+
+        .audio-permission-buttons .btn.deny {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .audio-permission-buttons .btn.deny:active {
+            background: rgba(255,255,255,0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame" id="app">
+        <audio id="bg-audio" loop>
+            <source src="Audio1.mp3" type="audio/mpeg">
+        </audio>
+
+        <div id="section1" class="section bg-home active">
+            <div id="titleWrap">
+                <h1 class="title-font">DIMENSION<br><span class="title-font">The Mirror</span></h1>
+                <div class="tap-hint">Tap to continue</div>
+            </div>
+
+            <div class="info-box" id="infoBox">
+                <h2>How to Play</h2>
+                <p>You'll be playing alone on your phone. Find a way to save yourself.</p>
+
+                <h2>Rules</h2>
+                <ol>
+                    <li>Don't let "them" find out where you are.</li>
+                    <li>Find your way out using the hidden clues.</li>
+                    <li>If it's game over, you'll have the option to revive.</li>
+                </ol>
+
+              <h2>Content Warning</h2>
+                <ol>
+                    <li>Headphones or earphones are recommended for the best audio experience.</li>
+                    <li>This game contains jumpscares with visual and audio effects.</li>
+                    <li>Not recommended for children under the age of 13.</li>
+                </ol>
+
+                <button id="btnStart" class="btn">Start</button>
+            </div>
+
+        </div>
+
+        <div class="audio-permission-overlay" id="audioPermissionOverlay">
+            <div class="audio-permission-card">
+                <h3>Audio Permission</h3>
+                <p>This game uses audio for the best experience. Do you want to enable audio?</p>
+                <div class="audio-permission-buttons">
+                    <button class="btn deny" id="btnDenyAudio">No</button>
+                    <button class="btn" id="btnAllowAudio">Allow</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const titleWrap = document.getElementById('titleWrap');
+            const infoBox = document.getElementById('infoBox');
+            const btnStart = document.getElementById('btnStart');
+            const bgAudio = document.getElementById('bg-audio');
+            const audioPermissionOverlay = document.getElementById('audioPermissionOverlay');
+            const btnAllowAudio = document.getElementById('btnAllowAudio');
+            const btnDenyAudio = document.getElementById('btnDenyAudio');
+
+            let advanced = false;
+            let autoTimer = null;
+
+            function showInfo() {
+                if (advanced) return;
+                advanced = true;
+                clearTimeout(autoTimer);
+                titleWrap.classList.add('fade-out');
+                titleWrap.style.pointerEvents = 'none';
+                setTimeout(() => infoBox.classList.add('show'), 500);
+            }
+
+            autoTimer = setTimeout(showInfo, 6000);
+            titleWrap.addEventListener('click', showInfo);
+            bgAudio.volume = 0.6;
+            bgAudio.play().catch(() => {
+                document.addEventListener('pointerdown', function once() {
+                    bgAudio.play().catch(() => {});
+                    document.removeEventListener('pointerdown', once);
+                });
+            });
+
+            btnStart.addEventListener('click', function() {
+                audioPermissionOverlay.classList.add('show');
+            });
+
+            btnAllowAudio.addEventListener('click', function() {
+                bgAudio.play().catch(() => {});
+                audioPermissionOverlay.classList.remove('show');
+                setTimeout(() => {
+                    window.location.href = 'Home.html';
+                }, 300);
+            });
+
+            btnDenyAudio.addEventListener('click', function() {
+                audioPermissionOverlay.classList.remove('show');
+                setTimeout(() => {
+                    window.location.href = 'Home.html';
+                }, 300);
+            });
+        })();
+    </script>
+</body>
+  </html>
