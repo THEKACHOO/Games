@@ -99,7 +99,7 @@ strip.addEventListener("scroll",()=>{
   if(n!==idx){idx=n;setCount();}
 });
 $("vclose").onclick=closeViewer;
-$("back").onclick=()=>{location.href=HOME_PAGE;};
+$("back").onclick=()=>{location.href=HOME_PAGE+"#menu";};
 $("pill").onclick=()=>{location.href=HOME_PAGE;};
 document.addEventListener("keydown",e=>{
   if(!$("viewer").classList.contains("on")) return;
