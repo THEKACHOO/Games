@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notes</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif}
+#phone{position:relative;height:100%;max-width:420px;margin:0 auto;background:#000;border-left:1px solid #1f1f1f;border-right:1px solid #1f1f1f;display:flex;flex-direction:column;overflow:hidden}
+button{font-family:inherit;color:inherit}
+svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#status{display:flex;justify-content:space-between;align-items:center;padding:10px 22px 4px;font-size:13px;font-weight:600;letter-spacing:.5px}
+#bat{width:24px;height:11px;border:1.5px solid #fff;border-radius:3px;position:relative;padding:1px}
+#bat::before{content:"";display:block;width:14%;height:100%;background:#fff;border-radius:1px;animation:lb 1.4s infinite}@keyframes lb{50%{opacity:.25}}
+#bat::after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:4px;background:#fff;border-radius:0 1px 1px 0}
+.title{padding:18px 22px 10px}
+.title h2{margin:0;font-size:32px;font-weight:700;letter-spacing:-.5px}
+.title .sub{color:#8a8a8a;font-size:13px;letter-spacing:2px;margin-top:4px;text-transform:uppercase}
+#grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:10px 18px 18px;align-content:start}
+.note{aspect-ratio:1/1;background:#fff;color:#000;border:0;border-radius:22px;padding:16px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.note:active{transform:scale(.97)}
+.note h3{margin:0;font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note p{margin:0;font-size:14px;line-height:1.4;color:#333;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;line-clamp:5;overflow:hidden;text-overflow:ellipsis}
+#nav{display:flex;justify-content:space-between;align-items:center;padding:8px 26px 12px}
+#nav button{background:none;border:0;padding:8px;cursor:pointer;color:#fff;display:flex}
+#nav svg{width:22px;height:22px}
+#pill{width:120px;height:5px;border-radius:3px;background:#fff;padding:0!important}
+
+#viewer{position:absolute;inset:0;z-index:10;background:#000;display:none;flex-direction:column}
+#viewer.on{display:flex}
+#vtop{display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 8px;border-bottom:1px solid #1c1c1c}
+#vtop button{background:none;border:0;padding:8px;cursor:pointer;display:flex}
+#vtitle{font-size:17px;font-weight:600}
+#vbody{flex:1;min-height:0;overflow-y:auto;padding:20px 22px calc(30px + env(safe-area-inset-bottom,0px))}
+#vbody h1{margin:0 0 16px;font-size:28px;font-weight:700;letter-spacing:-.5px}
+#vbody p{margin:0 0 16px;font-size:16px;line-height:1.6;color:#e6e6e6;white-space:pre-wrap;word-wrap:break-word}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="status"><span>00:00</span><div style="display:flex;align-items:center;gap:8px"><span>6%</span><div id="bat"></div></div></div>
+  <div class="title"><h2>Notes</h2><div class="sub">4 notes</div></div>
+  <div id="grid"></div>
+
+  <div id="nav">
+    <button id="back" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="pill" aria-label="Home"></button>
+    <span style="width:38px"></span>
+  </div>
+
+  <div id="viewer">
+    <div id="vtop">
+      <button id="vclose" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <span id="vtitle"></span>
+    </div>
+    <div id="vbody"></div>
+  </div>
+</div>
+
+<script>
+const HOME_PAGE="Home.html";
+const LOREM=[
+ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+ "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."
+];
+/* Ganti title & paragraphs dengan isi note asli nanti */
+const NOTES=[
+ {title:"Note 1",paragraphs:LOREM},
+ {title:"Note 2",paragraphs:LOREM},
+ {title:"Note 3",paragraphs:LOREM},
+ {title:"Note 4",paragraphs:LOREM}
+];
+const $=id=>document.getElementById(id);
+
+NOTES.forEach((n,i)=>{
+  const b=document.createElement("button");b.className="note";
+  const h=document.createElement("h3");h.textContent=n.title;
+  const p=document.createElement("p");p.textContent=n.paragraphs.join(" ");
+  b.appendChild(h);b.appendChild(p);b.onclick=()=>openNote(i);
+  $("grid").appendChild(b);
+});
+
+function openNote(i){
+  const n=NOTES[i], B=$("vbody");
+  $("vtitle").textContent=n.title;
+  B.innerHTML="";
+  const h=document.createElement("h1");h.textContent=n.title;B.appendChild(h);
+  n.paragraphs.forEach(t=>{const p=document.createElement("p");p.textContent=t;B.appendChild(p);});
+  B.scrollTop=0;
+  $("viewer").classList.add("on");
+}
+function closeNote(){$("viewer").classList.remove("on");}
+$("vclose").onclick=closeNote;
+$("back").onclick=()=>{location.href=HOME_PAGE;};
+$("pill").onclick=()=>{location.href=HOME_PAGE;};
+</script>
+</body>
+</html>
