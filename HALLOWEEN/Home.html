@@ -144,7 +144,9 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .modes{display:flex;justify-content:center;gap:26px;font-size:12px;letter-spacing:2px;color:#bbb;margin-bottom:18px;text-shadow:0 1px 6px #000}
 .modes .on{color:#fff;font-weight:700}
 .shut{display:flex;justify-content:space-between;align-items:center}
-.thumb{width:46px;height:46px;border-radius:12px;border:2px solid #fff;background:rgba(0,0,0,.5)}
+.thumb{width:46px;height:46px;padding:0;border-radius:12px;border:2px solid #fff;background:#000;cursor:default}
+.thumb.has{background:#000 url(Foto1.jpg) center/cover no-repeat;cursor:pointer}
+.thumb.has:active{transform:scale(.92)}
 #shutter{width:72px;height:72px;border-radius:50%;border:4px solid #fff;background:#fff;box-shadow:inset 0 0 0 4px #000;cursor:pointer}
 #shutter:active{transform:scale(.92)}
 #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:5;transition:opacity .35s}
@@ -213,7 +215,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
     </div>
     <div class="camfoot">
       <div class="modes"><span>VIDEO</span><span class="on">PHOTO</span><span>PORTRAIT</span></div>
-      <div class="shut"><div class="thumb"></div><button id="shutter" aria-label="Shutter"></button><svg viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></div>
+      <div class="shut"><button class="thumb" id="thumb" aria-label="Last photo"></button><button id="shutter" aria-label="Shutter"></button><svg viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></div>
     </div>
   </div>
 
@@ -249,7 +251,6 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 const PHONE_PAGE="Phone.html", GALLERY_PAGE="Gallery.html", NOTES_PAGE="Notes.html";
 const MUSIC_PAGE="Music.html", MAPS_PAGE="Maps.html";
 
-/* ===== Alur chat Unknown ===== */
 const T=(t,d)=>({f:"them",t,d});
 const M=(t,d)=>({f:"me",t,d});
 const INTRO=[T("Hey :)",900),T("Let's play with me.")];
@@ -310,7 +311,7 @@ const ICONS={
 
 const $=id=>document.getElementById(id);
 const KEY="game_phone_state_v4";
-const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0});
+const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0,gal:0});
 let S=fresh();
 try{Object.assign(S,JSON.parse(sessionStorage.getItem(KEY)||"{}"));}catch(e){}
 const save=()=>{try{sessionStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
@@ -323,7 +324,7 @@ function show(id){
   cur=id;
   const w=$("woods");
   try{
-    if(id==="cam"){w.currentTime=0;w.play().catch(()=>{});}
+    if(id==="cam"){w.currentTime=0;w.play().catch(()=>{});updateThumb();}
     else w.pause();
   }catch(e){}
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===id));
@@ -346,7 +347,7 @@ APPS.forEach(([name,ic,live])=>{
 function updateBadge(){const b=$("badge");b.style.display=S.unread>0?"flex":"none";b.textContent=S.unread;}
 function openApp(n){
   if(n==="Phone") location.href=PHONE_PAGE;
-  else if(n==="Gallery") location.href=GALLERY_PAGE;
+  else if(n==="Gallery"){ if(S.gal) location.href=GALLERY_PAGE; }
   else if(n==="Notes") location.href=NOTES_PAGE;
   else if(n==="Music") location.href=MUSIC_PAGE;
   else if(n==="Maps") show("maps");
@@ -487,16 +488,22 @@ $("back").onclick=()=>show(["msgs","maps","cam","cal","browser"].includes(cur)?"
   for(let i=0;i<35;i++){const e=document.createElement("div");e.className="d";e.textContent="31";g.appendChild(e);}
 })();
 
+function updateThumb(){$("thumb").classList.toggle("has",!!S.gal);}
 $("shutter").onclick=()=>{
   const f=$("flash");f.classList.add("on");
   setTimeout(()=>f.classList.remove("on"),60);
+  S.gal=1;save();updateThumb();
 };
+$("thumb").onclick=()=>{ if(S.gal) location.href=GALLERY_PAGE; };
 $("retry").onclick=()=>{};
 $("tback").onclick=()=>{renderList();show("msgs");};
 
-if(S.stage==="x") S.stage=S.log.length>1?"c1":"none"; /* reload di tengah antrean */
+if(S.stage==="x") S.stage=S.log.length>1?"c1":"none"; 
 updateBadge();
-show("home");
+if(location.hash==="#menu"){
+  show("apps");
+  try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
+}else show("home");
 </script>
 </body>
 </html>
