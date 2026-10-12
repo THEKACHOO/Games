@@ -128,24 +128,24 @@ const CONTACTS = [
 const DIALOGS = {
   "911": {
     start:{ who:"911", text:"911, what's your emergency?", next:"p1" },
-    p1:{ me:true, text:"Help me! I don't know what's going on! I'm in the middle of the woods, it's pitch-black out here. And I think someone about to hurt me!", next:"d1" },
-    d1:{ who:"911", text:"Ok. I need you to stay calm for me, alright? First, tell me your name.", input:"d2" },
-    d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember. Every little detail matters.", next:"p2a" },
-    p2a:{ me:true, text:"I don't know! I think I'm lost in the woods... or something?", next:"p2b" },
-    p2b:{ me:true, text:"I went to my friend's house for a Halloween party, and then everything just went black. The next thing I knew, I was out here!", next:"p2c" },
-    p2c:{ me:true, text:"I can't see anything, and my phone's the only thing I've got. And the battery's almost dead!", next:"d3a" },
+    p1:{ me:true, text:"Help me! I don't know what's going on! I'm in the middle of the woods and I think someone about to hurt me!", next:"d1" },
+    d1:{ who:"911", text:"Ok. I need you to calm down, alright? First, tell me your name.", input:"d2" },
+    d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember.", next:"p2a" },
+    p2a:{ me:true, text:"I don't know! But, I think I'm lost in the woods... or something?", next:"p2b" },
+    p2b:{ me:true, text:"I went to a haunted house for a Halloween party, but when I came out, it was pitch-black outside!", next:"p2c" },
+    p2c:{ me:true, text:"I can't see anything, and my phone's the only thing I've got. And the battery's almost dead! Help me!", next:"d3a" },
     d3a:{ who:"911", text:"Okay, (User), take a deep breath.", next:"d3b" },
     d3b:{ who:"911", text:"Since you're alone, do you have anything on you?", next:"d3c" },
     d3c:{ who:"911", text:"Anything you could use to protect yourself?",
       options:[
-        {t:"...How do you know I'm alone?", go:"o1"},
-        {t:"Yeah, uh... maybe I could use some of the branches lying around here. I could use those to defend myself, I guess.", go:"o2"}
+        {t:"... How do you know I'm alone?", go:"o1"},
+        {t:"Yeah, uh... maybe I could use some of the branches lying around here.", go:"o2"}
       ]},
-    o1:{ who:"911", text:"Answer me. This is serious. Our team is already closing in on your location. For now, can you scream as loud as you can? That'll help us find you.",
+    o1:{ who:"911", text:"Answer me. The police are on their way to your location. For now, can you scream as loud as you can? That'll help us find you.",
       options:[
         {t:"(Screams.)", go:"scream"}
       ]},
-    o2:{ who:"911", text:"Our team is already close to your location. Can you scream so we can find you more easily?",
+    o2:{ who:"911", text:"Good. The police are on their way to your location now. Can you scream so we can find you more easily?",
       options:[
         {t:"(Screams.)", go:"scream"}
       ]},
@@ -157,9 +157,55 @@ const DIALOGS = {
 const $=id=>document.getElementById(id);
 let dialed="", inCall=false, timers=[], playerName="";
 
+let actx=null, ringTimer=null, ringNodes=[], voice=null;
+function ac(){
+  if(!actx){const C=window.AudioContext||window.webkitAudioContext; if(C) actx=new C();}
+  if(actx && actx.state==="suspended") actx.resume();
+  return actx;
+}
+function tone(freqs,dur,vol,when){
+  const c=ac(); if(!c) return [];
+  const t=c.currentTime+(when||0), g=c.createGain(), out=[];
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol,t+.01);
+  g.gain.setValueAtTime(vol,t+Math.max(.01,dur-.02));
+  g.gain.linearRampToValueAtTime(0,t+dur);
+  g.connect(c.destination);
+  freqs.forEach(f=>{
+    const o=c.createOscillator(); o.frequency.value=f; o.connect(g);
+    o.start(t); o.stop(t+dur+.02); out.push(o);
+  });
+  return out;
+}
+const DTMF={"1":[697,1209],"2":[697,1336],"3":[697,1477],"4":[770,1209],"5":[770,1336],"6":[770,1477],
+            "7":[852,1209],"8":[852,1336],"9":[852,1477],"*":[941,1209],"0":[941,1336],"#":[941,1477]};
+function keySound(k){ if(DTMF[k]) tone(DTMF[k],.14,.12); }
+
+function ringOnce(){
+  ringNodes=ringNodes.concat(tone([440,480],.4,.12,0), tone([440,480],.4,.12,.6));
+}
+function startRing(){ stopRing(); ringOnce(); ringTimer=setInterval(ringOnce,3000); }
+function stopRing(){
+  clearInterval(ringTimer); ringTimer=null;
+  ringNodes.forEach(o=>{try{o.stop();}catch(e){}});
+  ringNodes=[];
+}
+function hangupSound(){
+  tone([480,620],.18,.12,0); tone([480,620],.18,.12,.28); tone([480,620],.18,.12,.56);
+}
+function playVoice(src){
+  stopVoice();
+  voice=new Audio(src);   
+  voice.loop=false;
+  voice.play().catch(()=>{});
+}
+function stopVoice(){
+  if(voice){voice.pause();voice.currentTime=0;voice=null;}
+}
+
 ["1","2","3","4","5","6","7","8","9","*","0","#"].forEach(k=>{
   const b=document.createElement("button");b.className="k";b.textContent=k;
-  b.onclick=()=>{ if(dialed.length<14){dialed+=k;renderNum();} };
+  b.onclick=()=>{ keySound(k); if(dialed.length<14){dialed+=k;renderNum();} };
   $("pad").appendChild(b);
 });
 $("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
@@ -205,7 +251,13 @@ function startCall(key){
   $("cstat").textContent="Calling...";
   $("log").innerHTML="";$("opts").innerHTML="";$("nameRow").classList.remove("on");
   show("call");
-  later(()=>{$("cstat").textContent="Connected";node(DIALOGS[key],"start");},1600);
+  startRing();
+  later(()=>{
+    stopRing();
+    $("cstat").textContent="Connected";
+    if(key==="911") playVoice("911.mp3");   
+    node(DIALOGS[key],"start");
+  },4200);
 }
 function bubble(cls,who,text){
   const b=document.createElement("div");b.className="b "+cls;
@@ -251,6 +303,7 @@ function node(dlg,id){
 $("hang").onclick=()=>endCall();
 function resetToDialer(){
   timers.forEach(clearTimeout);timers=[];
+  stopRing();stopVoice();
   inCall=false;dialed="";renderNum();
   $("nameRow").classList.remove("on");
   $("tabs").style.display="flex";$("top").style.display="flex";
@@ -260,11 +313,14 @@ function resetToDialer(){
 function endCall(){
   if(!inCall) return;
   timers.forEach(clearTimeout);timers=[];
+  stopRing();stopVoice();
+  hangupSound();
   $("ended").classList.add("on");
   later(()=>{$("ended").classList.remove("on");resetToDialer();},1600);
 }
 function gameOver(){
   timers.forEach(clearTimeout);timers=[];
+  stopRing();stopVoice();
   $("over").classList.add("on");
   const snd=new Audio("Monster2.mp3");
   snd.play().catch(()=>{});
