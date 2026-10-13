@@ -114,7 +114,7 @@ window.onYouTubeIframeAPIReady=()=>{
         const st=e.data;
         if(st===1||st===3){setPlaying(true);}
         else if(st===2){setPlaying(false);}
-        else if(st===0){next();}
+        else if(st===0){repeat();}
       },
       onError:()=>{ msg("Lagu tidak bisa diputar di sini"); setPlaying(false); }
     }
@@ -160,7 +160,16 @@ function prev(){
   const pos=getPos();
   if(pos>3) seekTo(0); else play((cur-1+TRACKS.length)%TRACKS.length);
 }
-aud.addEventListener("ended",next);
+/* Lagu selesai: ulang lagu yang sama (tidak lanjut otomatis) */
+function repeat(){
+  if(cur<0) return;
+  try{
+    if(TRACKS[cur].src){aud.currentTime=0;aud.play();}
+    else if(ytReady){yt.seekTo(0,true);yt.playVideo();}
+    setPlaying(true);
+  }catch(e){}
+}
+aud.addEventListener("ended",repeat);
 aud.addEventListener("error",()=>{ if(TRACKS[cur]&&TRACKS[cur].src){msg("File "+TRACKS[cur].src+" tidak ditemukan");setPlaying(false);} });
 
 /* progress */
