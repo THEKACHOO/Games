@@ -251,6 +251,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 const PHONE_PAGE="Phone.html", GALLERY_PAGE="Gallery.html", NOTES_PAGE="Notes.html";
 const MUSIC_PAGE="Music.html", MAPS_PAGE="Maps.html";
 
+/* ===== Alur chat Unknown ===== */
 const T=(t,d)=>({f:"them",t,d});
 const M=(t,d)=>({f:"me",t,d});
 const INTRO=[T("Hey :)",900),T("Let's play with me.")];
@@ -283,7 +284,7 @@ const OTHERS=[
 const APPS=[
   ["Phone","phone",1],["Messages","msg",1],["Contacts","user"],
   ["Browser","globe",1],["Weather","cloud"],["Calendar","cal",1],
-  ["Music","note",1],["Notes","note2",1],["Maps","pin",1],
+  ["Music","note"],["Notes","note2",1],["Maps","pin",1],
   ["Store","bag"],["Gallery","img",1],["Files","folder"],
   ["X","x"],["Calculator","calc"],["Clock","clock"],
   ["Mail","mail"],["Camera","cam",1],["Settings","gear"],
@@ -348,8 +349,8 @@ function updateBadge(){const b=$("badge");b.style.display=S.unread>0?"flex":"non
 function openApp(n){
   if(n==="Phone") location.href=PHONE_PAGE;
   else if(n==="Gallery"){ if(S.gal) location.href=GALLERY_PAGE; }
-  else if(n==="Notes") location.href=NOTES_PAGE;
-  else if(n==="Music") location.href=MUSIC_PAGE;
+  else if(n==="Notes"){ if(S.thr) location.href=NOTES_PAGE; }
+  else if(n==="Music"){ if(S.thr) location.href=MUSIC_PAGE; }
   else if(n==="Maps") show("maps");
   else if(n==="Messages"){renderList();show("msgs");}
   else if(n==="Browser") show("browser");
@@ -482,23 +483,27 @@ $("openapps").onclick=()=>{show("apps");updateBadge();deliver();};
 $("pill").onclick=()=>show("home");
 $("back").onclick=()=>show(["msgs","maps","cam","cal","browser"].includes(cur)?"apps":"home");
 
+/* Kalender: semua tanggal 31, bulan tetap October */
 (function(){
   const g=$("cgrid");
   ["S","M","T","W","T","F","S"].forEach(d=>{const e=document.createElement("div");e.className="wd";e.textContent=d;g.appendChild(e);});
   for(let i=0;i<35;i++){const e=document.createElement("div");e.className="d";e.textContent="31";g.appendChild(e);}
 })();
 
+/* Kamera: efek flash saat shutter */
 function updateThumb(){$("thumb").classList.toggle("has",!!S.gal);}
 $("shutter").onclick=()=>{
   const f=$("flash");f.classList.add("on");
   setTimeout(()=>f.classList.remove("on"),60);
   S.gal=1;save();updateThumb();
 };
+/* Thumbnail hasil foto: baru bisa diklik setelah memotret */
 $("thumb").onclick=()=>{ if(S.gal) location.href=GALLERY_PAGE; };
+/* Browser: tetap No connection */
 $("retry").onclick=()=>{};
 $("tback").onclick=()=>{renderList();show("msgs");};
 
-if(S.stage==="x") S.stage=S.log.length>1?"c1":"none"; 
+if(S.stage==="x") S.stage=S.log.length>1?"c1":"none"; /* reload di tengah antrean */
 updateBadge();
 if(location.hash==="#menu"){
   show("apps");
