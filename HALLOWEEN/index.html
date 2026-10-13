@@ -94,7 +94,6 @@
 
         .title-font {
             font-family: 'Who asks Satan', 'Segoe UI', sans-serif;
-            letter-spacing: 1px;
         }
 
         #titleWrap {
@@ -103,16 +102,25 @@
             text-align: center;
             user-select: none;
             -webkit-user-select: none;
+            margin-top: -10px;
         }
 
         #titleWrap h1 {
-            font-size: 3.4rem;
+            font-family: 'Who asks Satan', 'Segoe UI', sans-serif;
+            font-size: 3.6rem;
             font-weight: 400;
-            letter-spacing: 4px;
-            color: #a60e00;
+            letter-spacing: 2px;
+            color: #ffffff;
             text-shadow: 0 0 35px rgba(0,0,0,0.20);
             line-height: 0.66;
             margin-bottom: 26px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        #titleWrap h1:hover,
+        #titleWrap h1:active {
+            color: #a60e00;
         }
 
         #titleWrap h1 span {
@@ -124,6 +132,7 @@
             letter-spacing: 1px;
             color: rgba(255,255,255,0.35);
             animation: blink 1.6s ease-in-out infinite;
+            margin-top: -10px;
         }
 
         @keyframes blink {
@@ -136,7 +145,6 @@
             transition: opacity 0.8s ease;
         }
 
-        /* Info container */
         .info-box {
             position: absolute;
             left: 50%;
@@ -170,10 +178,17 @@
         .info-box h2 {
             font-size: 0.9rem;
             font-weight: 700;
-            color: #ff5e6b;
+            color: #ffffff;
             margin-bottom: 6px;
             text-align: center;
             letter-spacing: 0.5px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .info-box h2:hover,
+        .info-box h2:active {
+            color: #a60e00;
         }
 
         .info-box p { margin-bottom: 18px; }
@@ -355,19 +370,17 @@
             const btnDenyAudio = document.getElementById('btnDenyAudio');
 
             let advanced = false;
-            let autoTimer = null;
 
             function showInfo() {
                 if (advanced) return;
                 advanced = true;
-                clearTimeout(autoTimer);
                 titleWrap.classList.add('fade-out');
                 titleWrap.style.pointerEvents = 'none';
                 setTimeout(() => infoBox.classList.add('show'), 500);
             }
 
-            autoTimer = setTimeout(showInfo, 6000);
             titleWrap.addEventListener('click', showInfo);
+
             bgAudio.volume = 0.6;
             bgAudio.play().catch(() => {
                 document.addEventListener('pointerdown', function once() {
@@ -397,4 +410,4 @@
         })();
     </script>
 </body>
-  </html>
+</html>
