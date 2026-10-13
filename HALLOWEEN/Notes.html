@@ -35,6 +35,10 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #vtitle{font-size:17px;font-weight:600}
 #vbody{flex:1;min-height:0;overflow-y:auto;padding:20px 22px calc(30px + env(safe-area-inset-bottom,0px))}
 #vbody h1{margin:0 0 16px;font-size:28px;font-weight:700;letter-spacing:-.5px}
+#vbody ul{margin:0 0 16px;padding-left:22px}
+#vbody li{font-size:16px;line-height:1.6;color:#e6e6e6;margin-bottom:6px}
+#vbody b{color:#fff}
+#vtitle{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #vbody p{margin:0 0 16px;font-size:16px;line-height:1.6;color:#e6e6e6;white-space:pre-wrap;word-wrap:break-word}
 </style>
 </head>
@@ -61,34 +65,65 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 
 <script>
 const HOME_PAGE="Home.html";
-const LOREM=[
- "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
- "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
- "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."
-];
-/* Ganti title & paragraphs dengan isi note asli nanti */
 const NOTES=[
- {title:"Note 1",paragraphs:LOREM},
- {title:"Note 2",paragraphs:LOREM},
- {title:"Note 3",paragraphs:LOREM},
- {title:"Note 4",paragraphs:LOREM}
+ {title:"Project Notes",blocks:[
+  {t:"ul",items:[
+   "**Kadio & Chroma Web:** Set deadlines for the Kadio project and the Chroma website, which is being developed for film production and studio use. The project is tentatively scheduled for late 2026 or sometime in 2027.",
+   "**Phochio:** To be developed for photography studios, twibbon creation, event-specific photobooths, and other related activities."]},
+  {t:"p",text:"Make sure to review the timeline and prepare the necessary materials before production begins."}]},
+ {title:"Monthly Shopping List",blocks:[
+  {t:"ul",items:["Rice","Eggs","Milk","Bread","Coffee","Sugar","Cooking oil","Instant noodles","Fresh vegetables","Fruit","Chicken","Bottled water","Laundry detergent","Dish soap","Tissues","Toiletries"]},
+  {t:"p",text:"*Check the pantry and fridge before buying anything. Don't buy more than necessary.*"}]},
+ {title:"The Mirror",blocks:[
+  {t:"p",text:"Everything here is a mirror."},
+  {t:"p",text:"On your left, there are triple six. On your right, there are triple six. But what about the middle?"},
+  {t:"p",text:"I took a picture of it, but I wonder if you'll be able to find it."},
+  {t:"p",text:"None of this is actually real, though."},
+  {t:"p",text:"You'll wake up soon, and you'll forget this mirror ever existed."}]},
+ {title:"Assignment",blocks:[
+  {t:"p",text:"Prepare materials for the upcoming meeting and discussion."},
+  {t:"p",text:"**To do:**"},
+  {t:"ul",items:["Gather the relevant materials.","Prepare the main points for the meeting.","Review the discussion topics beforehand.","Bring all the necessary notes and documents to class."]},
+  {t:"p",text:"**Reminder:** Make sure everything is ready before the meeting with Mrs. Diana."}]}
 ];
 const $=id=>document.getElementById(id);
+const strip=t=>t.replace(/\*+/g,"");
+function inline(el,text){
+  text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/).forEach(p=>{
+    if(!p) return;
+    let e;
+    if(p.startsWith("**")){e=document.createElement("b");e.textContent=p.slice(2,-2);}
+    else if(p.startsWith("*")){e=document.createElement("i");e.textContent=p.slice(1,-1);}
+    else e=document.createTextNode(p);
+    el.appendChild(e);
+  });
+}
+function preview(n){
+  return n.blocks.map(b=>b.t==="ul"?b.items.map(strip).join(" · "):strip(b.text)).join(" ");
+}
 
 NOTES.forEach((n,i)=>{
   const b=document.createElement("button");b.className="note";
   const h=document.createElement("h3");h.textContent=n.title;
-  const p=document.createElement("p");p.textContent=n.paragraphs.join(" ");
+  const p=document.createElement("p");p.textContent=preview(n);
   b.appendChild(h);b.appendChild(p);b.onclick=()=>openNote(i);
   $("grid").appendChild(b);
 });
 
 function openNote(i){
   const n=NOTES[i], B=$("vbody");
-  $("vtitle").textContent=n.title;
+  $("vtitle").textContent="Note "+(i+1);
   B.innerHTML="";
   const h=document.createElement("h1");h.textContent=n.title;B.appendChild(h);
-  n.paragraphs.forEach(t=>{const p=document.createElement("p");p.textContent=t;B.appendChild(p);});
+  n.blocks.forEach(bl=>{
+    if(bl.t==="ul"){
+      const ul=document.createElement("ul");
+      bl.items.forEach(it=>{const li=document.createElement("li");inline(li,it);ul.appendChild(li);});
+      B.appendChild(ul);
+    }else{
+      const p=document.createElement("p");inline(p,bl.text);B.appendChild(p);
+    }
+  });
   B.scrollTop=0;
   $("viewer").classList.add("on");
 }
