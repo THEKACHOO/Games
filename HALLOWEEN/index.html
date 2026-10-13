@@ -178,17 +178,10 @@
         .info-box h2 {
             font-size: 0.9rem;
             font-weight: 700;
-            color: #ffffff;
+            color: #ff5e6b;
             margin-bottom: 6px;
             text-align: center;
             letter-spacing: 0.5px;
-            transition: color 0.2s ease;
-            cursor: pointer;
-        }
-
-        .info-box h2:hover,
-        .info-box h2:active {
-            color: #a60e00;
         }
 
         .info-box p { margin-bottom: 18px; }
@@ -379,6 +372,7 @@
                 setTimeout(() => infoBox.classList.add('show'), 500);
             }
 
+            // NO auto timer — wajib tap dulu
             titleWrap.addEventListener('click', showInfo);
 
             bgAudio.volume = 0.6;
