@@ -169,6 +169,18 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #over h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
 #revive{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer}
 #revive:active{background:#fff;color:#000}
+#call{position:absolute;inset:0;z-index:60;background:#000 url(Monster3.png) center/cover no-repeat;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:14vh 0 10vh;animation:shake .5s infinite}
+#call.on{display:flex}
+@keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-2px,-4px)}}
+#call .who{text-align:center}
+#call .who .label{font-size:12px;letter-spacing:4px;color:#bbb;text-transform:uppercase}
+#call .who .name{font-size:34px;font-weight:700;letter-spacing:2px;margin-top:8px;text-shadow:0 0 14px #000,2px 2px 0 #000}
+#call .who .sub{font-size:13px;letter-spacing:3px;color:#aaa;margin-top:10px;text-transform:uppercase}
+#call .actions{display:flex;gap:60px}
+#call .actions button{width:74px;height:74px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer}
+#call .actions button svg{width:32px;height:32px;stroke:#fff;stroke-width:2}
+#call .decline{background:#e53935}
+#call .accept{background:#43a047}
 </style>
 </head>
 <body>
@@ -241,10 +253,23 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 
   <div id="over"><h1>GAME OVER</h1><button id="revive">Revive</button></div>
 
+  <div id="call">
+    <div class="who">
+      <div class="label">Incoming call</div>
+      <div class="name">Unknown</div>
+      <div class="sub">tap to answer</div>
+    </div>
+    <div class="actions">
+      <button class="decline" id="decline" aria-label="Decline"><svg viewBox="0 0 24 24"><path d="M21 15l-5-2-2 3a13 13 0 01-6-6l3-2-2-5H6a2 2 0 00-2 2c0 9 7 16 16 16a2 2 0 002-2z" transform="rotate(135 12 12)"/></svg></button>
+      <button class="accept" id="accept" aria-label="Accept"><svg viewBox="0 0 24 24"><path d="M21 15l-5-2-2 3a13 13 0 01-6-6l3-2-2-5H6a2 2 0 00-2 2c0 9 7 16 16 16a2 2 0 002-2z"/></svg></button>
+    </div>
+  </div>
+
   <audio id="monsterSfx" src="Monster1.mp3" preload="auto"></audio>
   <audio id="sfxNotif" src="Notification.mp3" preload="auto"></audio>
   <audio id="sfxSend" src="Send.mp3" preload="auto"></audio>
   <audio id="woods" src="Woods.mp3" preload="auto" loop></audio>
+  <audio id="callSfx" src="Monster3.mp3" preload="auto"></audio>
 </div>
 
 <script>
@@ -260,7 +285,7 @@ const OPTS={
   c2:[{id:"trick",t:"Trick"},{id:"threat",t:"Threat"}]
 };
 const FLOW={
-  who:{seq:[M("Who are you?",400),T("Try to guess, maybe?"),T("You can find me with your camera")],next:"end",cam:1},
+  who:{seq:[M("Who are you?",400),T("Me? Hahaha... *I'm you.*",1800),T("Answer it.")],next:"end",call:1},
   wait:{seq:[M("Wait. What?",400),T("Hahaha, you look so cute when you're so clueless"),T("Ok. What day is it today?"),
         M("Today?",1100),M("Halloween?",900),T("Yup. Halloween."),T("So, *Trick or Threat?*"),
         M("Is not Threat, but Treat.",1300),T("No."),T("*Trick or Threat?*")],next:"c2"},
@@ -311,7 +336,7 @@ const ICONS={
 };
 
 const $=id=>document.getElementById(id);
-const KEY="game_phone_state_v4";
+const KEY="game_phone_state_v5";
 const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0,gal:0});
 let S=fresh();
 try{Object.assign(S,JSON.parse(sessionStorage.getItem(KEY)||"{}"));}catch(e){}
@@ -438,7 +463,7 @@ function add(m){
   }
   save();updateBadge();refresh();
 }
-async function run(seq,next,cam,thr){
+async function run(seq,next,cam,thr,call){
   if(busy) return;
   busy=true;renderOpts();
   for(const m of seq){
@@ -449,11 +474,12 @@ async function run(seq,next,cam,thr){
   if(cam) S.cam=1;
   if(thr) S.thr=1;
   S.stage=next;busy=false;save();refresh();
+  if(call) setTimeout(startCall,1500);
 }
 function choose(id){
   const f=FLOW[id];
   S.stage="x";renderOpts();
-  run(f.seq,f.next,f.cam,f.thr);
+  run(f.seq,f.next,f.cam,f.thr,f.call);
 }
 function deliver(){
   if(busy||S.stage!=="none") return;
@@ -479,6 +505,23 @@ $("revive").onclick=()=>{
   $("over").classList.remove("on");show("home");
 };
 
+function startCall(){
+  const c=$("call");
+  c.classList.add("on");
+  if(navigator.vibrate) navigator.vibrate([1000,500,1000,500,1000]);
+  const a=$("callSfx");
+  try{ a.currentTime=0; a.play().catch(()=>{}); }catch(e){}
+}
+function endCall(){
+  const c=$("call");
+  c.classList.remove("on");
+  if(navigator.vibrate) navigator.vibrate(0);
+  const a=$("callSfx");
+  try{ a.pause(); a.currentTime=0; }catch(e){}
+}
+$("accept").onclick=()=>{endCall();gameOver();};
+$("decline").onclick=()=>{endCall();};
+
 $("openapps").onclick=()=>{show("apps");updateBadge();deliver();};
 $("pill").onclick=()=>show("home");
 $("back").onclick=()=>show(["msgs","maps","cam","cal","browser"].includes(cur)?"apps":"home");
@@ -497,13 +540,11 @@ $("shutter").onclick=()=>{
   setTimeout(()=>f.classList.remove("on"),60);
   S.gal=1;save();updateThumb();
 };
-/* Thumbnail hasil foto: baru bisa diklik setelah memotret */
 $("thumb").onclick=()=>{ if(S.gal) location.href=GALLERY_PAGE; };
-/* Browser: tetap No connection */
 $("retry").onclick=()=>{};
 $("tback").onclick=()=>{renderList();show("msgs");};
 
-if(S.stage==="x") S.stage=S.log.length>1?"c1":"none"; /* reload di tengah antrean */
+if(S.stage==="x") S.stage=S.log.length>1?"c1":"none";
 updateBadge();
 if(location.hash==="#menu"){
   show("apps");
