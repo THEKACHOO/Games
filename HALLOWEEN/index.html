@@ -118,7 +118,12 @@
             cursor: pointer;
         }
 
-        #titleWrap h1:hover,
+        @media (hover: hover) and (pointer: fine) {
+            #titleWrap h1:hover {
+                color: #a60e00;
+            }
+        }
+
         #titleWrap h1:active {
             color: #a60e00;
         }
@@ -231,7 +236,7 @@
 
         #bg-audio { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
 
-        .audio-permission-overlay {
+        .warning-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -249,12 +254,12 @@
             transition: opacity 0.4s ease;
         }
 
-        .audio-permission-overlay.show {
+        .warning-overlay.show {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .audio-permission-card {
+        .warning-card {
             width: calc(100% - 60px);
             max-width: 280px;
             background: rgba(20, 20, 20, 0.95);
@@ -266,48 +271,31 @@
             color: #f0f0f0;
         }
 
-        .audio-permission-card h3 {
+        .warning-card h3 {
             font-size: 0.95rem;
             font-weight: 700;
             color: #ff5e6b;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             letter-spacing: 0.5px;
         }
 
-        .audio-permission-card p {
-            font-size: 0.75rem;
-            line-height: 1.5;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 18px;
+        .warning-card p {
+            font-size: 0.78rem;
+            line-height: 1.55;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 20px;
         }
 
-        .audio-permission-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .audio-permission-buttons .btn {
-            padding: 9px 22px;
-            font-size: 0.8rem;
-            margin: 0;
-            flex: 1;
-        }
-
-        .audio-permission-buttons .btn.deny {
-            background: transparent;
-            border: 2px solid rgba(255,255,255,0.25);
-            color: rgba(255,255,255,0.7);
-        }
-
-        .audio-permission-buttons .btn.deny:active {
-            background: rgba(255,255,255,0.08);
+        .warning-card .btn {
+            padding: 10px 40px;
+            font-size: 0.85rem;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
     <div class="phone-frame" id="app">
-        <audio id="bg-audio" loop>
+        <audio id="bg-audio" loop preload="auto">
             <source src="Audio1.mp3" type="audio/mpeg">
         </audio>
 
@@ -340,14 +328,11 @@
 
         </div>
 
-        <div class="audio-permission-overlay" id="audioPermissionOverlay">
-            <div class="audio-permission-card">
-                <h3>Audio Permission</h3>
-                <p>This game uses audio for the best experience. Do you want to enable audio?</p>
-                <div class="audio-permission-buttons">
-                    <button class="btn deny" id="btnDenyAudio">No</button>
-                    <button class="btn" id="btnAllowAudio">Allow</button>
-                </div>
+        <div class="warning-overlay" id="warningOverlay">
+            <div class="warning-card">
+                <h3>Content Warning</h3>
+                <p>This game contains audio, visuals, and jumpscares.<br>Headphones recommended.</p>
+                <button class="btn" id="btnPlay">Play</button>
             </div>
         </div>
     </div>
@@ -358,11 +343,26 @@
             const infoBox = document.getElementById('infoBox');
             const btnStart = document.getElementById('btnStart');
             const bgAudio = document.getElementById('bg-audio');
-            const audioPermissionOverlay = document.getElementById('audioPermissionOverlay');
-            const btnAllowAudio = document.getElementById('btnAllowAudio');
-            const btnDenyAudio = document.getElementById('btnDenyAudio');
+            const warningOverlay = document.getElementById('warningOverlay');
+            const btnPlay = document.getElementById('btnPlay');
 
             let advanced = false;
+
+            bgAudio.volume = 0.6;
+
+            bgAudio.play().catch(() => {
+                const tryPlay = () => {
+                    bgAudio.play().catch(() => {});
+                    document.removeEventListener('pointerdown', tryPlay);
+                    document.removeEventListener('touchstart', tryPlay);
+                    document.removeEventListener('keydown', tryPlay);
+                    document.removeEventListener('click', tryPlay);
+                };
+                document.addEventListener('pointerdown', tryPlay);
+                document.addEventListener('touchstart', tryPlay);
+                document.addEventListener('keydown', tryPlay);
+                document.addEventListener('click', tryPlay);
+            });
 
             function showInfo() {
                 if (advanced) return;
@@ -372,31 +372,16 @@
                 setTimeout(() => infoBox.classList.add('show'), 500);
             }
 
-            // NO auto timer — wajib tap dulu
             titleWrap.addEventListener('click', showInfo);
 
-            bgAudio.volume = 0.6;
-            bgAudio.play().catch(() => {
-                document.addEventListener('pointerdown', function once() {
-                    bgAudio.play().catch(() => {});
-                    document.removeEventListener('pointerdown', once);
-                });
-            });
-
             btnStart.addEventListener('click', function() {
-                audioPermissionOverlay.classList.add('show');
-            });
-
-            btnAllowAudio.addEventListener('click', function() {
                 bgAudio.play().catch(() => {});
-                audioPermissionOverlay.classList.remove('show');
-                setTimeout(() => {
-                    window.location.href = 'Home.html';
-                }, 300);
+                warningOverlay.classList.add('show');
             });
 
-            btnDenyAudio.addEventListener('click', function() {
-                audioPermissionOverlay.classList.remove('show');
+            btnPlay.addEventListener('click', function() {
+                bgAudio.play().catch(() => {});
+                warningOverlay.classList.remove('show');
                 setTimeout(() => {
                     window.location.href = 'Home.html';
                 }, 300);
@@ -404,4 +389,4 @@
         })();
     </script>
 </body>
-</html>
+    </html>
