@@ -352,6 +352,33 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const inThread=()=>cur==="thread"&&openName==="Unknown";
 function sfx(id){const a=$(id);try{a.currentTime=0;a.play().catch(()=>{});}catch(e){}}
 
+/* ===== FUNGSI GETAR ===== */
+let vibrateInterval = null;
+function startVibrate(){
+  stopVibrate();
+  // pola getar: panjang-pendek-pendek, diulang
+  const pattern = [500, 300, 200, 300, 500, 300, 200, 300];
+  // Jika browser mendukung vibrate
+  if (navigator.vibrate) {
+    navigator.vibrate(pattern);
+    // Untuk getar berulang, kita panggil lagi secara berkala
+    vibrateInterval = setInterval(() => {
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    }, 2000);
+  } else {
+    // Fallback: getar dengan CSS animasi? Tidak ada fallback native.
+    // Kita bisa tambahkan sedikit "getar visual" pada elemen #call
+    const callEl = $("call");
+    callEl.style.animation = "vibrate 0.5s infinite";
+  }
+}
+function stopVibrate(){
+  if (vibrateInterval) { clearInterval(vibrateInterval); vibrateInterval = null; }
+  if (navigator.vibrate) navigator.vibrate(0);
+  const callEl = $("call");
+  callEl.style.animation = "";
+}
+
 function show(id){
   cur=id;
   const w=$("woods");
@@ -536,12 +563,16 @@ function startCall(){
   c.classList.add("on");
   const a=$("callSfx");
   try{ a.currentTime=0; a.loop=true; a.play().catch(()=>{}); }catch(e){}
+  // MULAI GETAR
+  startVibrate();
 }
 function endCall(){
   const c=$("call");
   c.classList.remove("on");
   const a=$("callSfx");
   try{ a.pause(); a.currentTime=0; }catch(e){}
+  // HENTIKAN GETAR
+  stopVibrate();
 }
 $("accept").onclick=()=>{endCall();gameOver();};
 $("decline").onclick=()=>{
@@ -585,4 +616,4 @@ if(location.hash==="#menu"){
 }else show("home");
 </script>
 </body>
-  </html>
+</html>
