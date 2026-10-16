@@ -169,9 +169,13 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #over h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
 #revive{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer}
 #revive:active{background:#fff;color:#000}
-#call{position:absolute;inset:0;z-index:60;background:#000 url(Monster3.png) center/cover no-repeat;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:14vh 0 10vh;animation:shake .5s infinite}
+#over2{position:absolute;inset:0;z-index:55;background:#000 url(Monster3.png) center/cover no-repeat;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:20vh 0 12vh}
+#over2.on{display:flex}
+#over2 h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
+#revive2{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer}
+#revive2:active{background:#fff;color:#000}
+#call{position:absolute;inset:0;z-index:60;background:#000 url(Monster3.png) center/cover no-repeat;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:14vh 0 10vh}
 #call.on{display:flex}
-@keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-2px,-4px)}}
 #call .who{text-align:center}
 #call .who .label{font-size:12px;letter-spacing:4px;color:#bbb;text-transform:uppercase}
 #call .who .name{font-size:34px;font-weight:700;letter-spacing:2px;margin-top:8px;text-shadow:0 0 14px #000,2px 2px 0 #000}
@@ -252,6 +256,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   </div>
 
   <div id="over"><h1>GAME OVER</h1><button id="revive">Revive</button></div>
+  <div id="over2"><h1>GAME OVER</h1><button id="revive2">Revive</button></div>
 
   <div id="call">
     <div class="who">
@@ -269,7 +274,8 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   <audio id="sfxNotif" src="Notification.mp3" preload="auto"></audio>
   <audio id="sfxSend" src="Send.mp3" preload="auto"></audio>
   <audio id="woods" src="Woods.mp3" preload="auto" loop></audio>
-  <audio id="callSfx" src="Monster3.mp3" preload="auto"></audio>
+  <audio id="callSfx" src="Monster3.mp3" preload="auto" loop></audio>
+  <audio id="overSfx2" src="Audio3.mp3" preload="auto"></audio>
 </div>
 
 <script>
@@ -286,8 +292,8 @@ const OPTS={
 };
 const FLOW={
   who:{seq:[M("Who are you?",400),T("Me? Hahaha... *I'm you.*",1800),T("Answer it.")],next:"end",call:1},
-  wait:{seq:[M("Wait. What?",400),T("Hahaha, you look so cute when you're so clueless"),T("Ok. What day is it today?"),
-        M("Today?",1100),M("Halloween?",900),T("Yup. Halloween."),T("So, *Trick or Threat?*"),
+  wait:{seq:[M("Wait. What?",400),T("Hahaha, you look so cute when you're clueless"),T("Ok. What day is it today?"),
+        M("Today? Oct 31?",1100),M("Halloween?",900),T("Yup. Halloween."),T("So, Trick or Threat?"),
         M("Is not Threat, but Treat.",1300),T("No."),T("*Trick or Threat?*")],next:"c2"},
   trick:{seq:[M("Trick",400),{f:"sys",t:"Your camera is on",d:1200}],next:"end",cam:1},
   threat:{seq:[M("Threat",400),T("Hide or run before I find you.")],next:"end",thr:1}
@@ -336,8 +342,8 @@ const ICONS={
 };
 
 const $=id=>document.getElementById(id);
-const KEY="game_phone_state_v5";
-const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0,gal:0});
+const KEY="game_phone_state_v6";
+const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0,gal:0,declines:0});
 let S=fresh();
 try{Object.assign(S,JSON.parse(sessionStorage.getItem(KEY)||"{}"));}catch(e){}
 const save=()=>{try{sessionStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
@@ -421,6 +427,11 @@ function openThread(name){
   $("tname").textContent=name;$("tav").textContent=name==="Unknown"?"?":name[0];
   renderThread();show("thread");
 }
+function scrollBottom(){
+  const B=$("tbody");
+  B.scrollTop=B.scrollHeight;
+  requestAnimationFrame(()=>{B.scrollTop=B.scrollHeight;});
+}
 function renderThread(){
   const B=$("tbody");B.innerHTML="";
   S.log.forEach(m=>{
@@ -429,7 +440,7 @@ function renderThread(){
     if(m.f==="me"){const s=document.createElement("div");s.className="st";s.textContent="Sent";B.appendChild(s);}
   });
   if(typing){const d=document.createElement("div");d.className="typing";d.textContent="typing…";B.appendChild(d);}
-  B.scrollTop=B.scrollHeight;renderOpts();
+  scrollBottom();renderOpts();
 }
 function renderOpts(){
   const o=$("opts");o.innerHTML="";
@@ -437,6 +448,7 @@ function renderOpts(){
   OPTS[S.stage].forEach(op=>{
     const b=document.createElement("button");b.textContent=op.t;b.onclick=()=>choose(op.id);o.appendChild(b);
   });
+  scrollBottom();
 }
 function refresh(){
   if(cur==="msgs")renderList();
@@ -505,22 +517,43 @@ $("revive").onclick=()=>{
   $("over").classList.remove("on");show("home");
 };
 
+function gameOver2(){
+  endCall();
+  $("over2").classList.add("on");
+  const a=$("overSfx2");
+  try{ a.currentTime=0; a.volume=1; a.play().catch(()=>{}); }catch(e){}
+}
+$("revive2").onclick=()=>{
+  const a=$("overSfx2");
+  try{ a.pause(); a.currentTime=0; }catch(e){}
+  S=fresh();busy=false;typing=false;
+  save();updateBadge();
+  $("over2").classList.remove("on");show("home");
+};
+
 function startCall(){
   const c=$("call");
   c.classList.add("on");
-  if(navigator.vibrate) navigator.vibrate([1000,500,1000,500,1000]);
   const a=$("callSfx");
-  try{ a.currentTime=0; a.play().catch(()=>{}); }catch(e){}
+  try{ a.currentTime=0; a.loop=true; a.play().catch(()=>{}); }catch(e){}
 }
 function endCall(){
   const c=$("call");
   c.classList.remove("on");
-  if(navigator.vibrate) navigator.vibrate(0);
   const a=$("callSfx");
   try{ a.pause(); a.currentTime=0; }catch(e){}
 }
 $("accept").onclick=()=>{endCall();gameOver();};
-$("decline").onclick=()=>{endCall();};
+$("decline").onclick=()=>{
+  endCall();
+  S.declines=(S.declines||0)+1;
+  save();
+  if(S.declines>=3){
+    gameOver2();
+  }else{
+    setTimeout(startCall,1200);
+  }
+};
 
 $("openapps").onclick=()=>{show("apps");updateBadge();deliver();};
 $("pill").onclick=()=>show("home");
@@ -552,4 +585,4 @@ if(location.hash==="#menu"){
 }else show("home");
 </script>
 </body>
-</html>
+  </html>
