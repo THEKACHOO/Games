@@ -103,7 +103,7 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
     <h1>YOU WON</h1>
     <div class="credits">
       <p>You made it out of the game alive. But you’ve forgotten everything that happened, as if none of it ever existed.</p>
-      <p>Thank you for playing.<br>See you when I see you.</p>
+      <p>Thank you for playing.<br>See you in the next season of Dimension.</p>
       <p class="meta">This game was created by The Kachoo<br>Visuals, Audio, and Storyline by the Kadio Team<br>For roleplay purposes only, 2026<br>Halloween Edition</p>
     </div>
     <a id="home" href="Home.html">Home</a>
@@ -211,7 +211,7 @@ function stopVoice(){
 $("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
 $("callbtn").onclick=()=>{
   if(!dialed) return;
-  if(dialed===WIN_NUMBER){ $("won").classList.add("on"); return; }
+  if(dialed===WIN_NUMBER){ $("won").classList.add("on"); playVoice("Win.mp3"); return; }
   if(dialed==="911") startCall("911");
   else toast("Error");
 };
