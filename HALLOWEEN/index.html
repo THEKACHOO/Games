@@ -347,26 +347,40 @@
             const btnPlay = document.getElementById('btnPlay');
 
             let advanced = false;
+            let audioStarted = false;
 
             bgAudio.volume = 0.6;
 
-            bgAudio.play().catch(() => {
-                const tryPlay = () => {
-                    bgAudio.play().catch(() => {});
-                    document.removeEventListener('pointerdown', tryPlay);
-                    document.removeEventListener('touchstart', tryPlay);
-                    document.removeEventListener('keydown', tryPlay);
-                    document.removeEventListener('click', tryPlay);
-                };
-                document.addEventListener('pointerdown', tryPlay);
-                document.addEventListener('touchstart', tryPlay);
-                document.addEventListener('keydown', tryPlay);
-                document.addEventListener('click', tryPlay);
-            });
+            function startAudio() {
+                if (audioStarted) return;
+                bgAudio.play().then(() => {
+                    audioStarted = true;
+                }).catch(() => {});
+            }
+
+            bgAudio.play().then(() => {
+                audioStarted = true;
+            }).catch(() => {});
+
+            function unlockAudio() {
+                startAudio();
+                document.removeEventListener('pointerdown', unlockAudio);
+                document.removeEventListener('touchstart', unlockAudio);
+                document.removeEventListener('keydown', unlockAudio);
+                document.removeEventListener('click', unlockAudio);
+                document.removeEventListener('scroll', unlockAudio);
+            }
+
+            document.addEventListener('pointerdown', unlockAudio);
+            document.addEventListener('touchstart', unlockAudio);
+            document.addEventListener('keydown', unlockAudio);
+            document.addEventListener('click', unlockAudio);
+            document.addEventListener('scroll', unlockAudio);
 
             function showInfo() {
                 if (advanced) return;
                 advanced = true;
+                startAudio();
                 titleWrap.classList.add('fade-out');
                 titleWrap.style.pointerEvents = 'none';
                 setTimeout(() => infoBox.classList.add('show'), 500);
@@ -375,12 +389,12 @@
             titleWrap.addEventListener('click', showInfo);
 
             btnStart.addEventListener('click', function() {
-                bgAudio.play().catch(() => {});
+                startAudio();
                 warningOverlay.classList.add('show');
             });
 
             btnPlay.addEventListener('click', function() {
-                bgAudio.play().catch(() => {});
+                startAudio();
                 warningOverlay.classList.remove('show');
                 setTimeout(() => {
                     window.location.href = 'Home.html';
@@ -389,4 +403,4 @@
         })();
     </script>
 </body>
-    </html>
+</html>
