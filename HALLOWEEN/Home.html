@@ -185,6 +185,40 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #call .actions button svg{width:32px;height:32px;stroke:#fff;stroke-width:2}
 #call .decline{background:#e53935}
 #call .accept{background:#43a047}
+
+#xapp{background:#000}
+#xlist{flex:1;overflow-y:auto;padding:16px 22px 30px}
+.xitem{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #1a1a1a;font-size:15px;line-height:1.5;color:#eaeaea}
+.xitem .num{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+
+#cluepop{
+  position:absolute;inset:0;z-index:70;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  padding:24px;
+}
+#cluepop.on{display:flex}
+#cluepop .card{
+  width:100%;max-width:320px;
+  background:#fff;color:#000;
+  border-radius:22px;
+  padding:22px 20px 18px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  animation:pop .35s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+#cluepop .card .hd{font-size:11px;letter-spacing:3px;color:#666;text-transform:uppercase;margin-bottom:10px}
+#cluepop .card .ttl{font-size:20px;font-weight:800;letter-spacing:1px;margin-bottom:8px}
+#cluepop .card .bd{font-size:14px;line-height:1.5;color:#333;margin-bottom:18px}
+#cluepop .card button{
+  width:100%;padding:12px 0;border-radius:999px;border:0;
+  background:#000;color:#fff;font-size:15px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;
+}
+#cluepop .card button:active{background:#333}
 </style>
 </head>
 <body>
@@ -249,6 +283,11 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
     </div>
   </div>
 
+  <div class="view" id="xapp">
+    <div class="title"><h2>X</h2></div>
+    <div id="xlist"></div>
+  </div>
+
   <div id="nav">
     <button id="back" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button id="pill" aria-label="Home"></button>
@@ -270,6 +309,15 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
     </div>
   </div>
 
+  <div id="cluepop">
+    <div class="card">
+      <div class="hd">Hint</div>
+      <div class="ttl">CLUE</div>
+      <div class="bd">Find clues in other menus inside the phone.</div>
+      <button id="clueok">OK</button>
+    </div>
+  </div>
+
   <audio id="monsterSfx" src="Monster1.mp3" preload="auto"></audio>
   <audio id="sfxNotif" src="Notification.mp3" preload="auto"></audio>
   <audio id="sfxSend" src="Send.mp3" preload="auto"></audio>
@@ -282,7 +330,17 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 const PHONE_PAGE="Phone.html", GALLERY_PAGE="Gallery.html", NOTES_PAGE="Notes.html";
 const MUSIC_PAGE="Music.html", MAPS_PAGE="Maps.html";
 
-/* ===== Alur chat Unknown ===== */
+const X_TIPS = [
+  "This game is not hard.",
+  "Don't trust anyone.",
+  "You can press the camera button, but you will not meet them.",
+  "There are many ways to save yourself, you're just the one who gives up easily.",
+  "Are you alone?",
+  "Are you sure you're alone?",
+  "Maybe, you will find me.",
+  "Stop reading these tips, there's nothing here."
+];
+
 const T=(t,d)=>({f:"them",t,d});
 const M=(t,d)=>({f:"me",t,d});
 const INTRO=[T("Hey :)",900),T("Let's play with me.")];
@@ -296,7 +354,7 @@ const FLOW={
         M("Today? Oct 31?",1100),M("Halloween?",900),T("Yup. Halloween."),T("So, Trick or Threat?"),
         M("Is not Threat, but Treat.",1300),T("No."),T("*Trick or Threat?*")],next:"c2"},
   trick:{seq:[M("Trick",400),{f:"sys",t:"Your camera is on",d:1200}],next:"end",cam:1},
-  threat:{seq:[M("Threat",400),T("Hide or run before I find you.")],next:"end",thr:1}
+  threat:{seq:[M("Threat",400),T("Hide or run before I find you.")],next:"end",thr:1,clue:1}
 };
 
 const OTHERS=[
@@ -317,7 +375,7 @@ const APPS=[
   ["Browser","globe",1],["Weather","cloud"],["Calendar","cal",1],
   ["Music","note",1],["Notes","note2",1],["Maps","pin",1],
   ["Store","bag"],["Gallery","img",1],["Files","folder"],
-  ["X","x"],["Calculator","calc"],["Clock","clock"],
+  ["X","x",1],["Calculator","calc"],["Clock","clock"],
   ["Mail","mail"],["Camera","cam",1],["Settings","gear"],
 ];
 const ICONS={
@@ -343,7 +401,7 @@ const ICONS={
 
 const $=id=>document.getElementById(id);
 const KEY="game_phone_state_v6";
-const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0,gal:0,declines:0});
+const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0,gal:0,declines:0,clueShown:0});
 let S=fresh();
 try{Object.assign(S,JSON.parse(sessionStorage.getItem(KEY)||"{}"));}catch(e){}
 const save=()=>{try{sessionStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
@@ -352,32 +410,29 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const inThread=()=>cur==="thread"&&openName==="Unknown";
 function sfx(id){const a=$(id);try{a.currentTime=0;a.play().catch(()=>{});}catch(e){}}
 
-/* ===== FUNGSI GETAR ===== */
 let vibrateInterval = null;
 function startVibrate(){
   stopVibrate();
-  // pola getar: panjang-pendek-pendek, diulang
   const pattern = [500, 300, 200, 300, 500, 300, 200, 300];
-  // Jika browser mendukung vibrate
   if (navigator.vibrate) {
     navigator.vibrate(pattern);
-    // Untuk getar berulang, kita panggil lagi secara berkala
     vibrateInterval = setInterval(() => {
       if (navigator.vibrate) navigator.vibrate(pattern);
     }, 2000);
-  } else {
-    // Fallback: getar dengan CSS animasi? Tidak ada fallback native.
-    // Kita bisa tambahkan sedikit "getar visual" pada elemen #call
-    const callEl = $("call");
-    callEl.style.animation = "vibrate 0.5s infinite";
   }
 }
 function stopVibrate(){
   if (vibrateInterval) { clearInterval(vibrateInterval); vibrateInterval = null; }
   if (navigator.vibrate) navigator.vibrate(0);
-  const callEl = $("call");
-  callEl.style.animation = "";
 }
+
+function showClue(){
+  $("cluepop").classList.add("on");
+}
+function hideClue(){
+  $("cluepop").classList.remove("on");
+}
+$("clueok").onclick=hideClue;
 
 function show(id){
   cur=id;
@@ -404,6 +459,19 @@ APPS.forEach(([name,ic,live])=>{
   $("grid").appendChild(b);
 });
 function updateBadge(){const b=$("badge");b.style.display=S.unread>0?"flex":"none";b.textContent=S.unread;}
+
+function renderX(){
+  const list=$("xlist");
+  if(list.dataset.filled) return;
+  list.dataset.filled="1";
+  X_TIPS.forEach((tip,i)=>{
+    const d=document.createElement("div");d.className="xitem";
+    d.innerHTML='<div class="num">'+(i+1)+'</div><div class="tx"></div>';
+    d.querySelector(".tx").textContent=tip;
+    list.appendChild(d);
+  });
+}
+
 function openApp(n){
   if(n==="Phone") location.href=PHONE_PAGE;
   else if(n==="Gallery"){ if(S.gal) location.href=GALLERY_PAGE; }
@@ -413,6 +481,7 @@ function openApp(n){
   else if(n==="Messages"){renderList();show("msgs");}
   else if(n==="Browser") show("browser");
   else if(n==="Calendar") show("cal");
+  else if(n==="X"){renderX();show("xapp");}
   else if(n==="Camera"){
     if(S.cam&&!busy) gameOver();
     else if(S.thr) show("cam");
@@ -421,7 +490,6 @@ function openApp(n){
 
 function allThreads(){
   const L=[];
-  const real=S.log.filter(m=>m.f!=="sys");
   if(S.log.length) L.push({name:"Unknown",time:"now",unknown:true,msgs:S.log});
   OTHERS.forEach(o=>L.push({name:o.name,time:o.time,msgs:o.msgs.map(t=>({f:"them",t}))}));
   return L;
@@ -502,7 +570,7 @@ function add(m){
   }
   save();updateBadge();refresh();
 }
-async function run(seq,next,cam,thr,call){
+async function run(seq,next,cam,thr,call,clue){
   if(busy) return;
   busy=true;renderOpts();
   for(const m of seq){
@@ -514,11 +582,12 @@ async function run(seq,next,cam,thr,call){
   if(thr) S.thr=1;
   S.stage=next;busy=false;save();refresh();
   if(call) setTimeout(startCall,1500);
+  if(clue && !S.clueShown){ S.clueShown=1; save(); setTimeout(showClue,600); }
 }
 function choose(id){
   const f=FLOW[id];
   S.stage="x";renderOpts();
-  run(f.seq,f.next,f.cam,f.thr,f.call);
+  run(f.seq,f.next,f.cam,f.thr,f.call,f.clue);
 }
 function deliver(){
   if(busy||S.stage!=="none") return;
@@ -563,7 +632,6 @@ function startCall(){
   c.classList.add("on");
   const a=$("callSfx");
   try{ a.currentTime=0; a.loop=true; a.play().catch(()=>{}); }catch(e){}
-  // MULAI GETAR
   startVibrate();
 }
 function endCall(){
@@ -571,7 +639,6 @@ function endCall(){
   c.classList.remove("on");
   const a=$("callSfx");
   try{ a.pause(); a.currentTime=0; }catch(e){}
-  // HENTIKAN GETAR
   stopVibrate();
 }
 $("accept").onclick=()=>{endCall();gameOver();};
@@ -588,16 +655,14 @@ $("decline").onclick=()=>{
 
 $("openapps").onclick=()=>{show("apps");updateBadge();deliver();};
 $("pill").onclick=()=>show("home");
-$("back").onclick=()=>show(["msgs","maps","cam","cal","browser"].includes(cur)?"apps":"home");
+$("back").onclick=()=>show(["msgs","maps","cam","cal","browser","xapp"].includes(cur)?"apps":"home");
 
-/* Kalender: semua tanggal 31, bulan tetap October */
 (function(){
   const g=$("cgrid");
   ["S","M","T","W","T","F","S"].forEach(d=>{const e=document.createElement("div");e.className="wd";e.textContent=d;g.appendChild(e);});
   for(let i=0;i<35;i++){const e=document.createElement("div");e.className="d";e.textContent="31";g.appendChild(e);}
 })();
 
-/* Kamera: efek flash saat shutter */
 function updateThumb(){$("thumb").classList.toggle("has",!!S.gal);}
 $("shutter").onclick=()=>{
   const f=$("flash");f.classList.add("on");
@@ -616,4 +681,4 @@ if(location.hash==="#menu"){
 }else show("home");
 </script>
 </body>
-</html>
+  </html>
