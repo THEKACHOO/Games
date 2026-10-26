@@ -48,7 +48,7 @@ svg.f{fill:currentColor;stroke:currentColor;stroke-width:1.2}
 <body>
 <div id="phone">
   <div id="status"><span>00:00</span><div style="display:flex;align-items:center;gap:8px"><span>6%</span><div id="bat"></div></div></div>
-  <div class="title"><h2>Music</h2><div class="sub">Playlist · 5 songs</div></div>
+  <div class="title"><h2>Music</h2><div class="sub">Playlist · 3 songs</div></div>
   <div id="list"></div>
 
   <div id="player">
@@ -75,19 +75,16 @@ svg.f{fill:currentColor;stroke:currentColor;stroke-width:1.2}
 
 <script>
 const HOME_PAGE="Home.html";
-/* yt = ID video YouTube (diputar lewat player tersembunyi di halaman ini), src = file mp3 lokal */
 const TRACKS=[
-  {title:"Dracula",   yt:"6KjVYeQ9SRw"},
-  {title:"Zombie",    yt:"lSDfCdycdvk"},
-  {title:"Ghost",     yt:"bKPfBqhGjRs"},
-  {title:"Devil",     src:"Recording.mp3"},
-  {title:"Sleepwalker",yt:"Vq_Mh84z_2c"}
+  {title:"01Rec", src:"Rec1.mp3"},
+  {title:"02Rec", src:"Rec2.mp3"},
+  {title:"03Rec", src:"Recording.mp3"}
 ];
 const $=id=>document.getElementById(id);
 const aud=$("aud");
 const ICON_PLAY='<svg class="f" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
 const ICON_PAUSE='<svg class="f" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-let yt=null, ytReady=false, pending=null, cur=-1, playing=false, dragging=false;
+let cur=-1, playing=false, dragging=false;
 
 /* daftar lagu */
 TRACKS.forEach((t,i)=>{
@@ -98,29 +95,6 @@ TRACKS.forEach((t,i)=>{
   $("list").appendChild(b);
 });
 
-/* YouTube IFrame API */
-if(TRACKS.some(t=>t.yt)){
-  const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);
-}
-window.onYouTubeIframeAPIReady=()=>{
-  const d=document.createElement("div");d.id="ytp";$("ytbox").appendChild(d);
-  yt=new YT.Player("ytp",{
-    width:200,height:200,
-    playerVars:{playsinline:1,controls:0,rel:0,disablekb:1,fs:0},
-    events:{
-      onReady:()=>{ytReady=true;if(pending!==null){const p=pending;pending=null;play(p);}},
-      onStateChange:e=>{
-        if(!TRACKS[cur]||!TRACKS[cur].yt) return;
-        const st=e.data;
-        if(st===1||st===3){setPlaying(true);}
-        else if(st===2){setPlaying(false);}
-        else if(st===0){repeat();}
-      },
-      onError:()=>{ msg("Lagu tidak bisa diputar di sini"); setPlaying(false); }
-    }
-  });
-};
-
 function msg(t){$("pmsg").textContent=t||"";}
 function setPlaying(p){
   playing=p;
@@ -130,62 +104,38 @@ function setPlaying(p){
     r.querySelector(".st").innerHTML=(i===cur)?(p?ICON_PAUSE:ICON_PLAY):"";
   });
 }
-function stopAll(){
-  try{aud.pause();}catch(e){}
-  try{if(ytReady)yt.pauseVideo();}catch(e){}
-}
+function stopAll(){ try{aud.pause();}catch(e){} }
 function play(i){
   const t=TRACKS[i];
   stopAll();
   cur=i;msg("");
   $("pname").textContent=t.title;
   $("seek").value=0;$("tcur").textContent="0:00";$("tdur").textContent="0:00";
-  if(t.src){
-    aud.src=t.src;
-    aud.play().then(()=>setPlaying(true)).catch(()=>{msg("File "+t.src+" tidak ditemukan");setPlaying(false);});
-  }else{
-    if(!ytReady){pending=i;msg("Memuat…");setPlaying(true);return;}
-    try{yt.loadVideoById(t.yt);}catch(e){msg("Gagal memuat");}
-    setPlaying(true);
-  }
+  aud.src=t.src;
+  aud.play().then(()=>setPlaying(true)).catch(()=>{msg("File "+t.src+" tidak ditemukan");setPlaying(false);});
 }
 function toggle(){
   if(cur<0){play(0);return;}
-  const t=TRACKS[cur];
-  if(t.src){ if(aud.paused){aud.play();setPlaying(true);}else{aud.pause();setPlaying(false);} }
-  else if(ytReady){ if(playing){yt.pauseVideo();}else{yt.playVideo();} setPlaying(!playing); }
+  if(aud.paused){aud.play();setPlaying(true);}else{aud.pause();setPlaying(false);}
 }
 function next(){play((cur+1)%TRACKS.length);}
 function prev(){
   const pos=getPos();
   if(pos>3) seekTo(0); else play((cur-1+TRACKS.length)%TRACKS.length);
 }
-/* Lagu selesai: ulang lagu yang sama (tidak lanjut otomatis) */
+/* Lagu selesai: ulang lagu yang sama */
 function repeat(){
   if(cur<0) return;
-  try{
-    if(TRACKS[cur].src){aud.currentTime=0;aud.play();}
-    else if(ytReady){yt.seekTo(0,true);yt.playVideo();}
-    setPlaying(true);
-  }catch(e){}
+  try{aud.currentTime=0;aud.play();setPlaying(true);}catch(e){}
 }
 aud.addEventListener("ended",repeat);
 aud.addEventListener("error",()=>{ if(TRACKS[cur]&&TRACKS[cur].src){msg("File "+TRACKS[cur].src+" tidak ditemukan");setPlaying(false);} });
 
 /* progress */
 const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
-function getPos(){
-  if(cur<0) return 0;
-  try{return TRACKS[cur].src?aud.currentTime:(ytReady?yt.getCurrentTime():0);}catch(e){return 0;}
-}
-function getDur(){
-  if(cur<0) return 0;
-  try{return TRACKS[cur].src?(aud.duration||0):(ytReady?yt.getDuration():0);}catch(e){return 0;}
-}
-function seekTo(sec){
-  if(cur<0) return;
-  try{ if(TRACKS[cur].src) aud.currentTime=sec; else if(ytReady) yt.seekTo(sec,true); }catch(e){}
-}
+function getPos(){ return cur<0?0:(aud.currentTime||0); }
+function getDur(){ return cur<0?0:(aud.duration||0); }
+function seekTo(sec){ try{aud.currentTime=sec;}catch(e){} }
 setInterval(()=>{
   if(dragging) return;
   const d=getDur(), p=getPos();
