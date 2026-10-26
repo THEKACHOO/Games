@@ -17,36 +17,17 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #bat{width:24px;height:11px;border:1.5px solid #fff;border-radius:3px;position:relative;padding:1px}
 #bat::before{content:"";display:block;width:14%;height:100%;background:#fff;border-radius:1px;animation:lb 1.4s infinite}@keyframes lb{50%{opacity:.25}}
 #bat::after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:4px;background:#fff;border-radius:0 1px 1px 0}
-
-#home{
-  justify-content:space-between;align-items:center;padding:60px 0 34px;
-  background:url(Wallpaper.png) center/cover no-repeat;
-  position:relative;
-}
-#home::before{
-  content:"";position:absolute;inset:0;background:rgba(0,0,0,.25);pointer-events:none;
-}
+#home{justify-content:space-between;align-items:center;padding:60px 0 34px;background:url(Wallpaper.png) center/cover no-repeat;position:relative}
+#home::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.25);pointer-events:none}
 #home > *{position:relative;z-index:1}
-
 #clock{font-size:92px;font-weight:100;letter-spacing:-2px;line-height:1;text-align:center;text-shadow:0 2px 18px rgba(0,0,0,.6)}
 #date{margin-top:14px;text-align:center;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d0d0d0;text-shadow:0 1px 8px rgba(0,0,0,.7)}
 #openapps{width:66px;height:66px;border-radius:50%;border:0;background:#fff;color:#000;display:grid;place-items:center;cursor:pointer}
 #openapps svg{width:28px;height:28px;stroke-width:2}
 #hint{margin-top:12px;font-size:11px;letter-spacing:3px;color:#ddd;text-align:center;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,.8)}
-
-#apps{
-  position:relative;
-  background:url(Wallpaper.png) center/cover no-repeat;
-}
-#apps::before{
-  content:"";position:absolute;inset:0;
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  z-index:0;
-}
+#apps{position:relative;background:url(Wallpaper.png) center/cover no-repeat}
+#apps::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:0}
 #apps > *{position:relative;z-index:1}
-
 #search{margin:14px 20px 6px;padding:12px 18px;border-radius:999px;background:rgba(20,20,20,.75);border:1px solid rgba(255,255,255,.12);color:#bbb;font-size:14px}
 #grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px 10px;padding:22px 24px 30px;align-content:start}
 .app{display:flex;flex-direction:column;align-items:center;gap:9px;background:none;border:0;padding:0;font-size:12px;position:relative;letter-spacing:.3px}
@@ -55,7 +36,6 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .app{cursor:pointer}
 .app:active .ic{transform:scale(.93)}
 .badge{position:absolute;top:-6px;left:calc(50% + 12px);min-width:22px;height:22px;border-radius:11px;background:#000;color:#fff;border:2px solid #fff;font-size:12px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 5px}
-
 #msgs{background:#000}
 .title{display:flex;justify-content:space-between;align-items:center;padding:18px 22px 10px}
 .title h2{margin:0;font-size:32px;font-weight:700;letter-spacing:-.5px}
@@ -80,7 +60,9 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .sys{align-self:center;font-size:12px;letter-spacing:1px;color:#8a8a8a;margin:6px 0}
 .st{align-self:flex-end;font-size:11px;color:#8a8a8a;margin:0 6px 6px}
 .typing{align-self:flex-start;color:#8a8a8a;font-size:12px;margin-left:6px}
-#opts{display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:10px 16px 18px;min-height:20px}#opts button{padding:11px 20px;border-radius:20px;border-bottom-right-radius:6px;border:1.5px solid #fff;background:#000;color:#fff;font-size:15px;cursor:pointer}#opts button:active{background:#fff;color:#000}
+#opts{display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:10px 16px 18px;min-height:20px}
+#opts button{padding:11px 20px;border-radius:20px;border-bottom-right-radius:6px;border:1.5px solid #fff;background:#000;color:#fff;font-size:15px;cursor:pointer}
+#opts button:active{background:#fff;color:#000}
 #nav{display:flex;justify-content:space-between;align-items:center;padding:8px 26px 12px}
 #nav button{background:none;border:0;padding:8px;cursor:pointer;color:#fff;display:flex}
 #nav svg{width:22px;height:22px}
@@ -90,53 +72,16 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #notif .h{font-size:11px;letter-spacing:1.5px;color:#666;margin-bottom:5px;display:flex;justify-content:space-between}
 #notif .l{font-size:15px;line-height:1.35}
 #maps{position:relative;background:#050505;overflow:hidden}
-#maps .mapgrid{
-  position:absolute;inset:0;overflow:hidden;
-  background:
-    repeating-linear-gradient(0deg, transparent 0 38px, #1c1c1c 38px 40px),
-    repeating-linear-gradient(90deg, transparent 0 38px, #1c1c1c 38px 40px),
-    repeating-linear-gradient(0deg, #0a0a0a 0 120px, #0d0d0d 120px 240px),
-    repeating-linear-gradient(90deg, #0a0a0a 0 120px, #0d0d0d 120px 240px);
-}
-#maps .mapgrid::before{
-  content:"";position:absolute;inset:-50%;
-  background:
-    repeating-linear-gradient(45deg, transparent 0 60px, #151515 60px 62px),
-    repeating-linear-gradient(-45deg, transparent 0 90px, #131313 90px 92px);
-  opacity:.7;
-}
-#maps .mapgrid::after{
-  content:"";position:absolute;top:50%;left:50%;
-  width:180px;height:180px;margin:-90px 0 0 -90px;
-  border-radius:50%;
-  border:2px solid rgba(255,255,255,.15);
-  box-shadow:0 0 0 40px rgba(255,255,255,.04),0 0 0 80px rgba(255,255,255,.02);
-  animation:mpulse 3s ease-in-out infinite;
-}
+#maps .mapgrid{position:absolute;inset:0;overflow:hidden;background:repeating-linear-gradient(0deg,transparent 0 38px,#1c1c1c 38px 40px),repeating-linear-gradient(90deg,transparent 0 38px,#1c1c1c 38px 40px),repeating-linear-gradient(0deg,#0a0a0a 0 120px,#0d0d0d 120px 240px),repeating-linear-gradient(90deg,#0a0a0a 0 120px,#0d0d0d 120px 240px)}
+#maps .mapgrid::before{content:"";position:absolute;inset:-50%;background:repeating-linear-gradient(45deg,transparent 0 60px,#151515 60px 62px),repeating-linear-gradient(-45deg,transparent 0 90px,#131313 90px 92px);opacity:.7}
+#maps .mapgrid::after{content:"";position:absolute;top:50%;left:50%;width:180px;height:180px;margin:-90px 0 0 -90px;border-radius:50%;border:2px solid rgba(255,255,255,.15);box-shadow:0 0 0 40px rgba(255,255,255,.04),0 0 0 80px rgba(255,255,255,.02);animation:mpulse 3s ease-in-out infinite}
 @keyframes mpulse{50%{transform:scale(1.08);opacity:.6}}
-#maps .nosignal{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  text-align:center;z-index:2;pointer-events:none;
-}
-#maps .nosignal .icon{
-  width:56px;height:56px;margin:0 auto 12px;
-  border-radius:50%;border:2px solid #fff;
-  display:grid;place-items:center;opacity:.85;
-}
+#maps .nosignal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2;pointer-events:none}
+#maps .nosignal .icon{width:56px;height:56px;margin:0 auto 12px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;opacity:.85}
 #maps .nosignal .icon svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-#maps .nosignal h2{
-  margin:0;font-size:22px;font-weight:700;letter-spacing:4px;
-  text-transform:uppercase;text-shadow:0 2px 14px #000;
-}
-#maps .nosignal p{
-  margin:8px 0 0;font-size:12px;letter-spacing:2px;color:#aaa;
-  text-transform:uppercase;
-}
-#maps .maptitle{
-  position:absolute;top:14px;left:0;right:0;text-align:center;
-  font-size:17px;font-weight:600;z-index:2;
-}
-
+#maps .nosignal h2{margin:0;font-size:22px;font-weight:700;letter-spacing:4px;text-transform:uppercase;text-shadow:0 2px 14px #000}
+#maps .nosignal p{margin:8px 0 0;font-size:12px;letter-spacing:2px;color:#aaa;text-transform:uppercase}
+#maps .maptitle{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:17px;font-weight:600;z-index:2}
 #cam{position:relative;background:#000 url(Broken.png) center/cover no-repeat;overflow:hidden}
 #cam svg{width:26px;height:26px;stroke-width:1.8;filter:drop-shadow(0 1px 4px #000)}
 .camtop{display:flex;justify-content:space-between;align-items:center;padding:14px 22px}
@@ -174,8 +119,6 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #over2 h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
 #revive2{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer}
 #revive2:active{background:#fff;color:#000}
-
-/* ===== CALL ===== */
 #call{position:absolute;inset:0;z-index:60;background:#000;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:14vh 0 10vh}
 #call.on{display:flex}
 #call .who{text-align:center}
@@ -187,40 +130,17 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #call .actions button svg{width:32px;height:32px;stroke:#fff;stroke-width:2}
 #call .decline{background:#e53935}
 #call .accept{background:#43a047}
-
-/* ===== X APP ===== */
 #xapp{background:#000}
 #xlist{flex:1;overflow-y:auto;padding:16px 22px 30px}
 .xitem{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #1a1a1a;font-size:15px;line-height:1.5;color:#eaeaea}
 .xitem .num{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #fff;display:grid;place-items:center;font-size:13px;font-weight:700}
-
-/* ===== HINT POPUP ===== */
-#cluepop{
-  position:absolute;inset:0;z-index:70;
-  display:none;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-  padding:24px;
-}
+#cluepop{position:absolute;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:24px}
 #cluepop.on{display:flex}
-#cluepop .card{
-  width:100%;max-width:320px;
-  background:#fff;color:#000;
-  border-radius:22px;
-  padding:22px 20px 18px;
-  text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,.6);
-  animation:pop .35s cubic-bezier(.2,.9,.3,1);
-}
+#cluepop .card{width:100%;max-width:320px;background:#fff;color:#000;border-radius:22px;padding:22px 20px 18px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:pop .35s cubic-bezier(.2,.9,.3,1)}
 @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 #cluepop .card .ttl{font-size:22px;font-weight:800;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
 #cluepop .card .bd{font-size:14px;line-height:1.5;color:#333;margin-bottom:18px}
-#cluepop .card button{
-  width:100%;padding:12px 0;border-radius:999px;border:0;
-  background:#000;color:#fff;font-size:15px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;
-}
+#cluepop .card button{width:100%;padding:12px 0;border-radius:999px;border:0;background:#000;color:#fff;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
 #cluepop .card button:active{background:#333}
 </style>
 </head>
@@ -251,9 +171,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
     <div class="mapgrid"></div>
     <div class="maptitle">Maps</div>
     <div class="nosignal">
-      <div class="icon">
-        <svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-      </div>
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
       <h2>No Signal</h2>
       <p>Location unavailable</p>
     </div>
@@ -315,7 +233,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   <div id="cluepop">
     <div class="card">
       <div class="ttl">HINT</div>
-      <div class="bd">Every room in this house has a story. You just have to look closer.</div>
+      <div class="bd">Find clues in the menu inside the phone.</div>
       <button id="clueok">OK</button>
     </div>
   </div>
@@ -324,6 +242,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   <audio id="sfxNotif" src="Notification.mp3" preload="auto"></audio>
   <audio id="sfxSend" src="Send.mp3" preload="auto"></audio>
   <audio id="woods" src="Woods.mp3" preload="auto" loop></audio>
+  <audio id="ringSfx" src="Ring.mp3" preload="auto" loop></audio>
   <audio id="callSfx" src="Monster3.mp3" preload="auto" loop></audio>
   <audio id="overSfx2" src="Audio3.mp3" preload="auto"></audio>
 </div>
@@ -412,28 +331,20 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const inThread=()=>cur==="thread"&&openName==="Unknown";
 function sfx(id){const a=$(id);try{a.currentTime=0;a.play().catch(()=>{});}catch(e){}}
 
-/* ===== VIBRATE ===== */
 let vibTimer=null;
-function vibUnlock(){
-  // HARUS dipanggil langsung dari handler klik user (bukan setTimeout)
-  if(navigator.vibrate){ try{ navigator.vibrate(1); }catch(e){} }
-}
+function vibUnlock(){ if(navigator.vibrate){ try{ navigator.vibrate(1); }catch(e){} } }
 function vibStart(pattern, interval){
   vibStop();
   if(!navigator.vibrate) return;
   try{ navigator.vibrate(pattern); }catch(e){}
-  if(interval){
-    vibTimer=setInterval(()=>{ if(navigator.vibrate){ try{ navigator.vibrate(pattern); }catch(e){} } }, interval);
-  }
+  if(interval){ vibTimer=setInterval(()=>{ if(navigator.vibrate){ try{ navigator.vibrate(pattern); }catch(e){} } }, interval); }
 }
 function vibStop(){
   if(vibTimer){ clearInterval(vibTimer); vibTimer=null; }
   if(navigator.vibrate){ try{ navigator.vibrate(0); }catch(e){} }
 }
-
-/* pola getar */
-const VIB_RING    = [600,400,600,400];                     // getar dering masuk
-const VIB_MONSTER = [500,300,200,300,500,300,200,300];      // getar monster
+const VIB_RING    = [600,400,600,400];
+const VIB_MONSTER = [500,300,200,300,500,300,200,300];
 
 function showClue(){ $("cluepop").classList.add("on"); }
 function hideClue(){ $("cluepop").classList.remove("on"); }
@@ -442,10 +353,7 @@ $("clueok").onclick=hideClue;
 function show(id){
   cur=id;
   const w=$("woods");
-  try{
-    if(id==="cam"){w.currentTime=0;w.play().catch(()=>{});updateThumb();}
-    else w.pause();
-  }catch(e){}
+  try{ if(id==="cam"){w.currentTime=0;w.play().catch(()=>{});updateThumb();} else w.pause(); }catch(e){}
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===id));
   $("nav").style.display=(id==="home"||id==="thread")?"none":"flex";
 }
@@ -487,10 +395,7 @@ function openApp(n){
   else if(n==="Browser") show("browser");
   else if(n==="Calendar") show("cal");
   else if(n==="X"){renderX();show("xapp");}
-  else if(n==="Camera"){
-    if(S.cam&&!busy) gameOver();
-    else if(S.thr) show("cam");
-  }
+  else if(n==="Camera"){ if(S.cam&&!busy) gameOver(); else if(S.thr) show("cam"); }
 }
 
 function allThreads(){
@@ -547,7 +452,7 @@ function renderOpts(){
   if(busy||!OPTS[S.stage]) return;
   OPTS[S.stage].forEach(op=>{
     const b=document.createElement("button");b.textContent=op.t;
-    b.onclick=()=>{ vibUnlock(); choose(op.id); };   // ← unlock vibrate di klik user
+    b.onclick=()=>{ vibUnlock(); choose(op.id); };
     o.appendChild(b);
   });
   scrollBottom();
@@ -610,13 +515,13 @@ $("notif").onclick=()=>{
 function gameOver(){
   $("over").classList.add("on");
   vibStart(VIB_MONSTER, 2000);
-  const sfx=$("monsterSfx");
-  try{ sfx.currentTime=0; sfx.volume=1; sfx.play(); }catch(e){}
+  const s=$("monsterSfx");
+  try{ s.currentTime=0; s.volume=1; s.play(); }catch(e){}
 }
 $("revive").onclick=()=>{
   vibStop();
-  const sfx=$("monsterSfx");
-  try{ sfx.pause(); sfx.currentTime=0; }catch(e){}
+  const s=$("monsterSfx");
+  try{ s.pause(); s.currentTime=0; }catch(e){}
   S=fresh();busy=false;typing=false;
   save();updateBadge();
   $("over").classList.remove("on");show("home");
@@ -638,49 +543,21 @@ $("revive2").onclick=()=>{
   $("over2").classList.remove("on");show("home");
 };
 
-/* ===== RINGTONE MODERN (bukan analog 440/480Hz) ===== */
-let actx=null, ringTimer=null, ringNodes=[];
-function ac(){
-  if(!actx){const C=window.AudioContext||window.webkitAudioContext; if(C) actx=new C();}
-  if(actx && actx.state==="suspended") actx.resume();
-  return actx;
+function startRing(){
+  stopRing();
+  const r = $("ringSfx");
+  try{ r.currentTime = 0; r.loop = true; r.play().catch(()=>{}); }catch(e){}
 }
-function tone(freqs,dur,vol,when,type){
-  const c=ac(); if(!c) return [];
-  const t=c.currentTime+(when||0), g=c.createGain(), out=[];
-  g.gain.setValueAtTime(0,t);
-  g.gain.linearRampToValueAtTime(vol,t+.01);
-  g.gain.setValueAtTime(vol,t+Math.max(.01,dur-.02));
-  g.gain.linearRampToValueAtTime(0,t+dur);
-  g.connect(c.destination);
-  freqs.forEach(f=>{
-    const o=c.createOscillator(); o.type=type||"sine"; o.frequency.value=f; o.connect(g);
-    o.start(t); o.stop(t+dur+.02); out.push(o);
-  });
-  return out;
-}
-/* Modern ringtone: E5 - B4 - G#4 - C#5 (marimba-like) */
-function ringOnce(){
-  const A=659.25, B=493.88, C=415.30, D=554.37;
-  ringNodes=ringNodes.concat(
-    tone([A],.15,.10,0,   "triangle"),
-    tone([B],.15,.10,.18, "triangle"),
-    tone([C],.15,.10,.36, "triangle"),
-    tone([D],.28,.10,.54, "triangle")
-  );
-}
-function startRing(){ stopRing(); ringOnce(); ringTimer=setInterval(ringOnce,1700); }
 function stopRing(){
-  clearInterval(ringTimer); ringTimer=null;
-  ringNodes.forEach(o=>{try{o.stop();}catch(e){}});
-  ringNodes=[];
+  const r = $("ringSfx");
+  try{ r.pause(); r.currentTime = 0; }catch(e){}
 }
 
 function startCall(){
   const c=$("call");
   c.classList.add("on");
   startRing();
-  vibStart(VIB_RING, 1700);     // getar dering masuk
+  vibStart(VIB_RING, 1700);
 }
 
 function acceptCall(){
@@ -709,11 +586,8 @@ $("decline").onclick=()=>{
   endCall();
   S.declines=(S.declines||0)+1;
   save();
-  if(S.declines>=3){
-    gameOver2();
-  }else{
-    setTimeout(startCall,1200);
-  }
+  if(S.declines>=3){ gameOver2(); }
+  else{ setTimeout(startCall, 1200); }
 };
 
 $("openapps").onclick=()=>{ vibUnlock(); show("apps");updateBadge();deliver(); };
@@ -744,4 +618,4 @@ if(location.hash==="#menu"){
 }else show("home");
 </script>
 </body>
-    </html>
+      </html>
