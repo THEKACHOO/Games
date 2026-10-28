@@ -3,58 +3,75 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Phone</title>
+<title>Call</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#fff;--panel:#f3f3f3;--key:#eaeaea;--text:#000;--mute:#777}
+--bg:#000;--panel:#141414;--key:#1f1f1f;--text:#fff;--mute:#8a8a8a;--line:#262626}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;background:#000;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text)}
-#phone{position:relative;height:100%;max-width:420px;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+#phone{position:relative;height:100%;max-width:420px;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;border-left:1px solid #1f1f1f;border-right:1px solid #1f1f1f}
 .view{display:none;flex:1;flex-direction:column;min-height:0}
 .view.on{display:flex}
 #top{display:flex;align-items:center;padding:6px 8px;min-height:44px}
-#back{display:flex;padding:8px;border:0;background:none;cursor:pointer;color:#000;text-decoration:none}
+#back{display:flex;padding:8px;border:0;background:none;cursor:pointer;color:#fff;text-decoration:none}
 #back svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 #display{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:16px}
-#num{font-size:34px;letter-spacing:1px;min-height:44px;word-break:break-all;text-align:center}
-#hint{color:var(--mute);font-size:14px;min-height:20px;margin-top:4px}
+#num{font-size:34px;letter-spacing:1px;min-height:44px;word-break:break-all;text-align:center;color:#fff}
+#hint{color:var(--mute);font-size:14px;min-height:20px;margin-top:4px;letter-spacing:2px;text-transform:uppercase}
 #pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 60px}
 .k{height:48px;border:0;border-radius:999px;background:var(--key);color:var(--text);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.k:active{background:#cfcfcf}
+.k:active{background:#333}
 #actions{display:grid;grid-template-columns:repeat(3,1fr);padding:4px 28px 14px;align-items:center;justify-items:center}
-#callbtn{width:56px;height:56px;border-radius:50%;border:0;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;grid-column:2}
+#callbtn{width:56px;height:56px;border-radius:50%;border:0;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;cursor:pointer;grid-column:2}
 svg.i{width:24px;height:24px;fill:currentColor}
 #del{background:none;border:0;color:var(--mute);font-size:26px;cursor:pointer;grid-column:3;padding:12px}
 #clist{flex:1;overflow-y:auto;padding:8px 0}
-h2{margin:0;padding:6px 20px 8px;font-size:24px}
+h2{margin:0;padding:6px 20px 8px;font-size:24px;color:#fff}
 .c{display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer}
 .c:active{background:var(--panel)}
-.av{width:42px;height:42px;border-radius:50%;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
-.c .n{font-size:17px}.c .p{font-size:13px;color:var(--mute)}
-#tabs{display:flex;border-top:1px solid #ddd;background:var(--panel)}
+.av{width:42px;height:42px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-weight:600}
+.c .n{font-size:17px;color:#fff}.c .p{font-size:13px;color:var(--mute)}
+#tabs{display:flex;border-top:1px solid var(--line);background:var(--panel)}
 #tabs button{flex:1;padding:14px 0;background:none;border:0;color:var(--mute);font-size:14px;cursor:pointer}
-#tabs button.on{color:var(--text);font-weight:600}
-#call{background:#fff}
-#ctop{padding:34px 20px 14px;text-align:center}
-#cname{font-size:26px}#cstat{color:var(--mute);margin-top:6px}
-#log{flex:1;overflow-y:auto;padding:10px 16px;display:flex;flex-direction:column;gap:10px}
-.b{max-width:85%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.4;animation:in .25s}
-.b .w{font-size:11px;color:var(--mute);margin-bottom:3px}
-.b.me .w{color:#bbb}
-.b.them{background:var(--key);align-self:flex-start;border-bottom-left-radius:4px}
-.b.me{background:#000;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+#tabs button.on{color:#fff;font-weight:600}
+
+/* ==== OUTGOING CALL SCREEN ==== */
+#call{background:#000;position:relative;align-items:center;flex:1;justify-content:space-between;padding:12vh 0 8vh;transition:padding .4s ease}
+#call.chatting{padding:8vh 0 8vh}
+
+#ctop{padding:0 20px;text-align:center;width:100%;transition:all .45s ease;transform-origin:center top}
+#cname{font-size:32px;font-weight:700;letter-spacing:.5px;color:#fff;transition:all .45s ease}
+#cstat{color:var(--mute);margin-top:8px;font-size:13px;letter-spacing:3px;text-transform:uppercase;transition:all .45s ease}
+
+/* Saat chat berjalan: header "Connected" ditenggelamkan ke belakang (blur + fade) */
+#call.chatting #ctop{
+  filter:blur(6px);
+  opacity:.18;
+  transform:scale(.82);
+  pointer-events:none;
+}
+
+#log{flex:1;width:100%;overflow-y:auto;padding:20px 16px 8px;display:flex;flex-direction:column;gap:6px;min-height:0}
+/* bubble disamakan dengan thread chat Home.html (tema hitam-putih) */
+.b{max-width:78%;padding:10px 15px;border-radius:20px;font-size:15px;line-height:1.4;word-wrap:break-word;animation:in .25s}
+.b.them{background:#fff;color:#000;align-self:flex-start;border-bottom-left-radius:6px}
+.b.me{background:#000;color:#fff;border:1.5px solid #fff;align-self:flex-end;border-bottom-right-radius:6px}
+.b .w{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:.55;margin-bottom:3px}
 @keyframes in{from{opacity:0;transform:translateY(6px)}}
-#opts{display:flex;flex-direction:column;gap:8px;padding:8px 16px}
-#opts button{text-align:left;padding:12px 14px;border-radius:12px;border:1px solid #000;background:var(--panel);color:var(--text);font-size:15px;cursor:pointer}
-#opts button:active{background:var(--key)}
-#nameRow{display:none;gap:8px;padding:8px 16px}
+#opts{display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:10px 16px;width:100%;min-height:20px}
+#opts button{padding:11px 20px;border-radius:20px;border-bottom-right-radius:6px;border:1.5px solid #fff;background:#000;color:#fff;font-size:15px;cursor:pointer;max-width:80%;text-align:left}
+#opts button:active{background:#fff;color:#000}
+#nameRow{display:none;gap:8px;padding:8px 16px;width:100%}
 #nameRow.on{display:flex}
-#nameIn{flex:1;padding:12px 14px;border-radius:12px;border:1px solid #000;font-size:16px;outline:none;background:#fff;color:#000}
-#nameGo{padding:0 18px;border-radius:12px;border:0;background:#000;color:#fff;font-size:15px;cursor:pointer}
-#hang{margin:6px auto 18px;width:60px;height:60px;border-radius:50%;border:0;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}#hang svg{transform:rotate(135deg)}
-#ended{position:absolute;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;font-size:22px;color:#fff;z-index:5}
+#nameIn{flex:1;padding:12px 14px;border-radius:12px;border:1px solid #fff;font-size:16px;outline:none;background:#000;color:#fff}
+#nameGo{padding:0 18px;border-radius:12px;border:0;background:#fff;color:#000;font-size:15px;cursor:pointer;font-weight:600}
+/* tombol hang up merah ala iOS outgoing */
+#hang{margin:0 auto 6px;width:74px;height:74px;border-radius:50%;border:0;background:#e53935;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;box-shadow:0 0 24px rgba(229,57,53,.45);z-index:2}
+#hang:active{transform:scale(.94)}
+#hang svg{transform:rotate(135deg);width:32px;height:32px}
+#ended{position:absolute;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;font-size:22px;color:#fff;z-index:5;letter-spacing:2px}
 #ended.on{display:flex}
-#toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);background:#000;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap}
+#toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);background:#fff;color:#000;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap;font-weight:600}
 #toast.on{opacity:1}
 #over,#won{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column;align-items:center;color:#fff}
 #over{background:#000 url(Monster2.png) center/cover no-repeat;justify-content:space-between;padding:20vh 0 12vh}
@@ -88,7 +105,10 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px}
   </div>
 
   <div class="view" id="call">
-    <div id="ctop"><div id="cname"></div><div id="cstat"></div></div>
+    <div id="ctop">
+      <div id="cname">911</div>
+      <div id="cstat">Calling…</div>
+    </div>
     <div id="log"></div>
     <div id="nameRow"><input id="nameIn" type="text" placeholder="Your name" autocomplete="off" maxlength="40"><button id="nameGo">Send</button></div>
     <div id="opts"></div>
@@ -195,7 +215,7 @@ function hangupSound(){
 }
 function playVoice(src){
   stopVoice();
-  voice=new Audio(src);   
+  voice=new Audio(src);
   voice.loop=false;
   voice.play().catch(()=>{});
 }
@@ -247,15 +267,16 @@ function fillName(text){
 
 function startCall(key){
   inCall=true;$("tabs").style.display="none";$("top").style.display="none";
-  $("cname").textContent="911";
-  $("cstat").textContent="Calling...";
+  $("cname").textContent = key==="911" ? "911" : "Unknown";
+  $("cstat").textContent="Calling…";
+  $("call").classList.remove("chatting");
   $("log").innerHTML="";$("opts").innerHTML="";$("nameRow").classList.remove("on");
   show("call");
   startRing();
   later(()=>{
     stopRing();
     $("cstat").textContent="Connected";
-    if(key==="911") playVoice("911.mp3");   
+    if(key==="911") playVoice("911.mp3");
     node(DIALOGS[key],"start");
   },4200);
 }
@@ -267,7 +288,9 @@ function bubble(cls,who,text){
 }
 function node(dlg,id){
   const n=dlg[id];$("opts").innerHTML="";
-  if(n.who==="Unknown") $("cname").textContent="Unknown";
+  // Begitu chat mulai → header "Connected" tenggelam ke belakang (blur + fade)
+  $("call").classList.add("chatting");
+  if(n.who==="Unknown"){ $("cname").textContent="Unknown"; }
   bubble(n.me?"me":"them", n.me?"You":n.who, fillName(n.text));
   if(n.input){
     later(()=>{
@@ -306,6 +329,7 @@ function resetToDialer(){
   stopRing();stopVoice();
   inCall=false;dialed="";renderNum();
   $("nameRow").classList.remove("on");
+  $("call").classList.remove("chatting");
   $("tabs").style.display="flex";$("top").style.display="flex";
   show("v-dial");
   document.querySelectorAll("#tabs button").forEach((x,i)=>x.classList.toggle("on",i===0));
@@ -328,4 +352,4 @@ function gameOver(){
 renderNum();
 </script>
 </body>
-</html>
+  </html>
