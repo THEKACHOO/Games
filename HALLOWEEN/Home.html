@@ -23,10 +23,21 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #lock .ltop{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:18vh}
 #lock .lclock{font-size:84px;font-weight:100;letter-spacing:-2px;line-height:1;text-shadow:0 2px 18px rgba(0,0,0,.6)}
 #lock .ldate{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#c9c9c9}
-#lock #finger{width:88px;height:88px;border-radius:50%;border:2px solid rgba(255,255,255,.85);background:rgba(255,255,255,.05);color:#fff;display:grid;place-items:center;cursor:pointer;animation:fp 2.2s ease-in-out infinite}
-#lock #finger svg{width:40px;height:40px;stroke-width:1.5}
-#lock #finger:active{transform:scale(.94);background:#fff;color:#000}
-@keyframes fp{50%{box-shadow:0 0 0 12px rgba(255,255,255,.05)}}
+#lock #finger{
+  position:relative;width:96px;height:96px;border-radius:50%;overflow:hidden;
+  border:1.5px solid rgba(255,255,255,.35);
+  background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.14),rgba(255,255,255,.03) 70%);
+  color:#e8e8e8;display:grid;place-items:center;cursor:pointer;padding:0;
+  animation:fp 2.4s ease-in-out infinite
+}
+#lock #finger svg{width:60px;height:60px;stroke-width:1.9;opacity:.8;filter:drop-shadow(0 0 3px rgba(255,255,255,.5))}
+#lock #finger::after{content:"";position:absolute;left:0;right:0;height:3px;top:-6px;
+  background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 12px 3px rgba(255,255,255,.7);opacity:0}
+#lock #finger.scan{animation:none;border-color:#fff;background:rgba(255,255,255,.18);transform:scale(.96)}
+#lock #finger.scan svg{opacity:1}
+#lock #finger.scan::after{opacity:1;animation:sweep .8s linear forwards}
+@keyframes sweep{to{top:100%}}
+@keyframes fp{50%{transform:scale(1.02)}}
 
 #home{justify-content:space-between;align-items:center;padding:60px 0 34px;background:url(Wallpaper.png) center/cover no-repeat;position:relative;touch-action:none}
 #home::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.25);pointer-events:none}
@@ -80,10 +91,17 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #opts{display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:10px 16px 18px;min-height:20px}
 #opts button{padding:11px 20px;border-radius:20px;border-bottom-right-radius:6px;border:1.5px solid #fff;background:#000;color:#fff;font-size:15px;cursor:pointer}
 #opts button:active{background:#fff;color:#000}
-#nav{display:flex;justify-content:space-between;align-items:center;padding:8px 26px 12px}
-#nav button{background:none;border:0;padding:8px;cursor:pointer;color:#fff;display:flex}
-#nav svg{width:22px;height:22px}
-#pill{width:120px;height:5px;border-radius:3px;background:#fff;padding:0!important}
+#nav{display:flex;justify-content:center;align-items:center;padding:10px 0 16px}
+#nav button{background:none;border:0;cursor:pointer;color:#fff;display:flex}
+#pill{
+  position:relative;width:56px;height:56px;border-radius:50%;
+  border:3px solid #fff;background:radial-gradient(circle at 35% 30%,#1c1c1c,#000 70%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),inset 0 0 8px rgba(255,255,255,.08);
+  padding:0!important;transition:transform .1s,background .1s
+}
+#pill::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;
+  margin:-9px 0 0 -9px;border-radius:5px;border:1.5px solid rgba(255,255,255,.6)}
+#pill:active{transform:scale(.92);background:#2a2a2a}
 #notif{position:absolute;left:12px;right:12px;top:calc(8px + env(safe-area-inset-top,0px));background:#fff;color:#000;border-radius:20px;padding:12px 16px;z-index:20;transform:translateY(-180%);transition:transform .4s cubic-bezier(.2,.9,.3,1);cursor:pointer}
 #notif.on{transform:none}
 #notif .h{font-size:11px;letter-spacing:1.5px;color:#666;margin-bottom:5px;display:flex;justify-content:space-between}
@@ -183,7 +201,14 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
       <div class="ldate">October 31</div>
     </div>
     <button id="finger" aria-label="Unlock with fingerprint">
-      <svg viewBox="0 0 24 24"><path d="M12 4a8 8 0 018 8v2"/><path d="M4 12a8 8 0 016-7.75"/><path d="M7 12a5 5 0 015-5 5 5 0 015 5v3"/><path d="M10 12a2 2 0 014 0v5"/><path d="M7 16v-4"/><path d="M12 21v-2"/></svg>
+      <svg viewBox="0 0 64 64">
+        <path d="M12 30c0-11 9-19 20-19s20 8 20 19v4"/>
+        <path d="M17 48c-2-4-3-9-3-14 0-10 8-17 18-17s18 7 18 17c0 3 0 6-1 9"/>
+        <path d="M21 54c-2-5-3-10-3-17 0-8 6-14 14-14s14 6 14 14c0 5-1 9-2 13"/>
+        <path d="M26 57c-1-6-2-11-2-18 0-4 3-8 8-8s8 4 8 8c0 6-1 11-3 16"/>
+        <path d="M32 39c0 7 0 12-1 17"/>
+        <path d="M38 56c1-3 2-6 2-10"/>
+      </svg>
     </button>
   </div>
 
@@ -248,9 +273,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   </div>
 
   <div id="nav">
-    <button id="back" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <button id="pill" aria-label="Home"></button>
-    <span style="width:38px"></span>
+    <button id="pill" aria-label="Main menu"></button>
   </div>
 
   <div id="over"><h1>GAME OVER</h1><button id="revive">Revive</button></div>
@@ -639,8 +662,7 @@ $("decline").onclick=()=>{
   else{ setTimeout(startCall, 1200); }
 };
 
-$("pill").onclick=()=>show("home");
-$("back").onclick=()=>show(["msgs","maps","cam","cal","browser","xapp"].includes(cur)?"apps":"home");
+$("pill").onclick=()=>{ show("home"); };
 
 (function(){
   const g=$("cgrid");
@@ -754,9 +776,18 @@ if(isDesktop){
   $("swipehint").addEventListener("click",openAnimated);
 }
 
+let scanning=false;
 $("finger").onclick=()=>{
+  if(scanning) return;
+  scanning=true;
   vibUnlock();
-  show("home");
+  const f=$("finger");
+  f.classList.add("scan");
+  setTimeout(()=>{
+    f.classList.remove("scan");
+    scanning=false;
+    show("home");
+  },850);
 };
 
 if(S.stage==="x") S.stage=S.log.length>1?"c1":"none";
