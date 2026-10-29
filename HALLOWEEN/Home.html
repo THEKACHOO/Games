@@ -656,7 +656,11 @@ $("decline").onclick=()=>{
   else{ setTimeout(startCall, 1200); }
 };
 
-$("pill").onclick=()=>{ show("home"); };
+$("pill").onclick=()=>{
+  vibUnlock();
+  if(cur==="apps") show("home");
+  else show("apps");
+};
 
 (function(){
   const g=$("cgrid");
