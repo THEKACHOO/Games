@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panggilan</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#000;--panel:#141414;--key:#1f1f1f;--text:#fff;--mute:#8a8a8a;--line:#262626}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:#000;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text)}
+#phone{position:relative;height:100%;max-width:420px;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;border-left:1px solid #1f1f1f;border-right:1px solid #1f1f1f}
+.view{display:none;flex:1;flex-direction:column;min-height:0}
+.view.on{display:flex}
+#top{display:flex;align-items:center;padding:6px 8px;min-height:44px}
+#back{display:flex;padding:8px;border:0;background:none;cursor:pointer;color:#fff;text-decoration:none}
+#back svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#display{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:16px}
+#num{font-size:34px;letter-spacing:1px;min-height:44px;word-break:break-all;text-align:center;color:#fff}
+#hint{color:var(--mute);font-size:14px;min-height:20px;margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+#pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 60px}
+.k{height:48px;border:0;border-radius:999px;background:var(--key);color:var(--text);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.k:active{background:#333}
+#actions{display:grid;grid-template-columns:repeat(3,1fr);padding:4px 28px 14px;align-items:center;justify-items:center}
+#callbtn{width:56px;height:56px;border-radius:50%;border:0;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;cursor:pointer;grid-column:2}
+svg.i{width:24px;height:24px;fill:currentColor}
+#del{background:none;border:0;color:var(--mute);font-size:26px;cursor:pointer;grid-column:3;padding:12px}
+#clist{flex:1;overflow-y:auto;padding:8px 0}
+h2{margin:0;padding:6px 20px 8px;font-size:24px;color:#fff}
+.c{display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer}
+.c:active{background:var(--panel)}
+.av{width:42px;height:42px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-weight:600}
+.c .n{font-size:17px;color:#fff}.c .p{font-size:13px;color:var(--mute)}
+#tabs{display:flex;border-top:1px solid var(--line);background:var(--panel)}
+#tabs button{flex:1;padding:14px 0;background:none;border:0;color:var(--mute);font-size:14px;cursor:pointer}
+#tabs button.on{color:#fff;font-weight:600}
+
+#call{background:#000;position:relative;align-items:center;flex:1;justify-content:space-between;padding:12vh 0 8vh;transition:padding .4s ease}
+#call.chatting{padding:8vh 0 8vh}
+
+#ctop{padding:0 20px;text-align:center;width:100%;transition:all .45s ease;transform-origin:center top}
+#cname{font-size:32px;font-weight:700;letter-spacing:.5px;color:#fff;transition:all .45s ease}
+#cstat{color:var(--mute);margin-top:8px;font-size:13px;letter-spacing:3px;text-transform:uppercase;transition:all .45s ease}
+
+#call.chatting #ctop{
+  filter:blur(6px);
+  opacity:.18;
+  transform:scale(.82);
+  pointer-events:none;
+}
+
+#log{flex:1;width:100%;overflow-y:auto;padding:20px 16px 8px;display:flex;flex-direction:column;gap:6px;min-height:0}
+.b{max-width:78%;padding:10px 15px;border-radius:20px;font-size:15px;line-height:1.4;word-wrap:break-word;animation:in .25s}
+.b.them{background:#fff;color:#000;align-self:flex-start;border-bottom-left-radius:6px}
+.b.me{background:#000;color:#fff;border:1.5px solid #fff;align-self:flex-end;border-bottom-right-radius:6px}
+.b .w{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:.55;margin-bottom:3px}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+#opts{display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:10px 16px;width:100%;min-height:20px}
+#opts button{padding:11px 20px;border-radius:20px;border-bottom-right-radius:6px;border:1.5px solid #fff;background:#000;color:#fff;font-size:15px;cursor:pointer;max-width:80%;text-align:left}
+#opts button:active{background:#fff;color:#000}
+#nameRow{display:none;gap:8px;padding:8px 16px;width:100%}
+#nameRow.on{display:flex}
+#nameIn{flex:1;padding:12px 14px;border-radius:12px;border:1px solid #fff;font-size:16px;outline:none;background:#000;color:#fff}
+#nameGo{padding:0 18px;border-radius:12px;border:0;background:#fff;color:#000;font-size:15px;cursor:pointer;font-weight:600}
+#hang{margin:0 auto 6px;width:74px;height:74px;border-radius:50%;border:0;background:#e53935;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;box-shadow:0 0 24px rgba(229,57,53,.45);z-index:2}
+#hang:active{transform:scale(.94)}
+#hang svg{transform:rotate(135deg);width:32px;height:32px}
+#ended{position:absolute;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;font-size:22px;color:#fff;z-index:5;letter-spacing:2px}
+#ended.on{display:flex}
+#toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);background:#fff;color:#000;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap;font-weight:600}
+#toast.on{opacity:1}
+#over,#won{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column;align-items:center;color:#fff}
+#over{background:#000 url(Monster2.png) center/cover no-repeat;justify-content:space-between;padding:20vh 0 12vh}
+#won{background:#000 url(Win.png) center/cover no-repeat;justify-content:center;padding:0 28px;overflow-y:auto}
+#over.on,#won.on{display:flex}
+#over h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
+#won h1{margin:0 0 16px;font-size:clamp(28px,8vw,36px);font-weight:800;letter-spacing:5px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center;flex:none}
+#won .credits{font-size:12.5px;line-height:1.7;text-align:center;color:#e5e5e5;text-shadow:0 1px 6px #000,0 0 3px #000;margin-bottom:22px}
+#won .credits p{margin:0 0 12px}
+#won .credits .meta{color:#b5b5b5;font-size:11.5px;line-height:1.6}
+#revive,#home{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none;align-self:center}
+#revive:active,#home:active{background:#fff;color:#000}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="toast"></div>
+  <div id="ended">Panggilan berakhir</div>
+
+  <div id="top"><a id="back" href="Beranda.html" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></a></div>
+
+  <div class="view on" id="v-dial">
+    <div id="display"><div id="num"></div><div id="hint"></div></div>
+    <div id="pad"></div>
+    <div id="actions"><button id="callbtn" aria-label="Panggil"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><button id="del" aria-label="Hapus">⌫</button></div>
+  </div>
+
+  <div class="view" id="v-contacts">
+    <h2>Kontak</h2>
+    <div id="clist"></div>
+  </div>
+
+  <div class="view" id="call">
+    <div id="ctop">
+      <div id="cname">112</div>
+      <div id="cstat">Memanggil…</div>
+    </div>
+    <div id="log"></div>
+    <div id="nameRow"><input id="nameIn" type="text" placeholder="Namamu" autocomplete="off" maxlength="40"><button id="nameGo">Kirim</button></div>
+    <div id="opts"></div>
+    <button id="hang" aria-label="Tutup"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
+  </div>
+
+  <div id="tabs"><button class="on" data-t="dial">Keypad</button><button data-t="contacts">Kontak</button></div>
+
+  <div id="over"><h1>GAME OVER</h1><a id="revive" href="Beranda.html">Revive</a></div>
+
+  <div id="won">
+    <h1>KAMU MENANG</h1>
+    <div class="credits">
+      <p>Kamu berhasil keluar dari permainan hidup-hidup. Tapi kamu telah melupakan semua yang terjadi, seolah semuanya tidak pernah ada.</p>
+      <p>Terima kasih telah bermain.<br>Sampai jumpa di season berikutnya Dimension.</p>
+      <p class="meta">Game ini dibuat oleh The Kachoo<br>Visual, Audio, dan Alur Cerita oleh Tim Kadio<br>Hanya untuk keperluan roleplay, 2026<br>Halloween Edition</p>
+    </div>
+    <a id="home" href="Beranda.html">Beranda</a>
+  </div>
+</div>
+
+<script>
+const WIN_NUMBER = "6663113666";
+
+const CONTACTS = [
+  {name:"Panggilan Darurat",    number:"112", emergency:true},
+  {name:"Ayah",    number:"xxxx-xxxx"},
+  {name:"Bunda",     number:"xxxx-xxxx"},
+  {name:"Kakak Berisik",  number:"xxxx-xxxx"},
+  {name:"Benny anak band",   number:"xxxx-xxxx"},
+  {name:"Alan seminar",    number:"xxxx-xxxx"},
+  {name:"Ici Bos", number:"xxxx-xxxx"},
+  {name:"Carla (Lupa jir siapa wkwk)",   number:"xxxx-xxxx"},
+  {name:"Lily Nomor Baru",   number:"xxxx-xxxx"}
+];
+
+const DIALOGS = {
+  "112": {
+    start:{ who:"112", text:"Anda terhubung dengan panggilan darurat. Bisa dijelaskan kondisi anda?", next:"p1" },
+    p1:{ me:true, text:"Tolong! Duh! Gimana ya bilangnya.... Ini saya gatau gimana ceritanya saya bisa bangun di tengah hutan. Terus barusan ada orang gajelas ngechat saya!", next:"d1" },
+    d1:{ who:"112", text:"Baik. Anda bisa tenang dulu, oke? Pertama, beri tahu saya nama anda.", input:"d2" },
+    d2:{ who:"112", text:"Baik, (User). Ceritakan semua yang terakhir kali anda ingat sampai anda terbangun.", next:"p2a" },
+    p2a:{ me:true, text:"Gatau mbak sampai bisa gini. Tapi, ini beneran di hutan yang gelap banget, ga kelihatan apa-apa....", next:"p2b" },
+    p2b:{ me:true, text:"Seinget saya sih saya pergi ke rumah hantu barengan sama temen saya, ada pesta Halloween. Terus pas keluar, saya ga inget lagi!", next:"p2c" },
+    p2c:{ me:true, text:"Ini beneran gabisa lihat apa-apa mbak, ini ponsel saya juga lowbat. Gabisa shareloc juga. Gimana ya, Mbak? Bisa kirim bantuan buat jemput saya mungkin kalau bisa lacak posisi saya dari panggilan saya ini.", next:"d3a" },
+    d3a:{ who:"112", text:"Oke, (User), tarik napas yang dalam.", next:"d3b" },
+    d3b:{ who:"112", text:"Karena anda lagi sendirian, apakah ada sesuatu yang anda bawa?", next:"d3c" },
+    d3c:{ who:"112", text:"Ada sesuatu yang bisa digunakan untuk melindungi diri?",
+      options:[
+        {t:"... Eh? Kok tau saya sendirian?", go:"o1"},
+        {t:"Ya, uh... ada kayu sih. Bisa buat mukul.", go:"o2"}
+      ]},
+    o1:{ who:"112", text:"Jawab saya. Polisi sedang dalam perjalanan ke lokasi untuk bantuan. Sekarang, bisakah tidak anda berteriak sekeras mungkin? Itu akan membantu kami menemukanmu.",
+      options:[
+        {t:"(Berteriak.)", go:"scream"}
+      ]},
+    o2:{ who:"112", text:"Bagus. Polisi sedang dalam perjalanan ke lokasi anda sekarang. Bisakah berteriak agar kami lebih mudah menemukan anda?",
+      options:[
+        {t:"(Berteriak.)", go:"scream"}
+      ]},
+    scream:{ who:"112", text:"...", next:"scream2" },
+    scream2:{ who:"Tidak Dikenal", text:"Wkkwkwkwk... Kena kau. (User)", next:null, over:true }
+  }
+};
+
+const $=id=>document.getElementById(id);
+let dialed="", inCall=false, timers=[], playerName="";
+
+let actx=null, ringTimer=null, ringNodes=[], voice=null;
+function ac(){
+  if(!actx){const C=window.AudioContext||window.webkitAudioContext; if(C) actx=new C();}
+  if(actx && actx.state==="suspended") actx.resume();
+  return actx;
+}
+function tone(freqs,dur,vol,when){
+  const c=ac(); if(!c) return [];
+  const t=c.currentTime+(when||0), g=c.createGain(), out=[];
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol,t+.01);
+  g.gain.setValueAtTime(vol,t+Math.max(.01,dur-.02));
+  g.gain.linearRampToValueAtTime(0,t+dur);
+  g.connect(c.destination);
+  freqs.forEach(f=>{
+    const o=c.createOscillator(); o.frequency.value=f; o.connect(g);
+    o.start(t); o.stop(t+dur+.02); out.push(o);
+  });
+  return out;
+}
+const DTMF={"1":[697,1209],"2":[697,1336],"3":[697,1477],"4":[770,1209],"5":[770,1336],"6":[770,1477],
+            "7":[852,1209],"8":[852,1336],"9":[852,1477],"*":[941,1209],"0":[941,1336],"#":[941,1477]};
+function keySound(k){ if(DTMF[k]) tone(DTMF[k],.14,.12); }
+
+function ringOnce(){
+  ringNodes=ringNodes.concat(tone([440,480],.4,.12,0), tone([440,480],.4,.12,.6));
+}
+function startRing(){ stopRing(); ringOnce(); ringTimer=setInterval(ringOnce,3000); }
+function stopRing(){
+  clearInterval(ringTimer); ringTimer=null;
+  ringNodes.forEach(o=>{try{o.stop();}catch(e){}});
+  ringNodes=[];
+}
+function hangupSound(){
+  tone([480,620],.18,.12,0); tone([480,620],.18,.12,.28); tone([480,620],.18,.12,.56);
+}
+
+["1","2","3","4","5","6","7","8","9","*","0","#"].forEach(k=>{
+  const b=document.createElement("button");b.className="k";b.textContent=k;
+  b.onclick=()=>{ keySound(k); if(dialed.length<14){dialed+=k;renderNum();} };
+  $("pad").appendChild(b);
+});
+$("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
+$("callbtn").onclick=()=>{
+  if(!dialed) return;
+  if(dialed===WIN_NUMBER){ $("won").classList.add("on"); return; }
+  if(dialed==="112") startCall("112");
+  else toast("Error");
+};
+function renderNum(){
+  $("num").textContent=dialed;
+  $("hint").textContent = dialed==="112" ? "Darurat" : "";
+}
+
+CONTACTS.forEach(c=>{
+  const d=document.createElement("div");d.className="c";
+  d.innerHTML='<div class="av"></div><div><div class="n"></div><div class="p"></div></div>';
+  d.querySelector(".av").textContent=c.name[0];
+  d.querySelector(".n").textContent=c.name;
+  d.querySelector(".p").textContent=c.number;
+  if(c.emergency) d.onclick=()=>startCall("112");
+  else d.onclick=()=>toast("Error");
+  $("clist").appendChild(d);
+});
+
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+  if(inCall) return;
+  show("v-"+b.dataset.t);
+  document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x===b));
+});
+function show(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===id));}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1800);}
+function later(fn,ms){timers.push(setTimeout(fn,ms));}
+
+function fillName(text){
+  if(!text) return text;
+  return text.replace(/\(User\)/g, playerName || "(User)");
+}
+
+function startCall(key){
+  inCall=true;$("tabs").style.display="none";$("top").style.display="none";
+  $("cname").textContent = key==="112" ? "112" : "Tidak Dikenal";
+  $("cstat").textContent="Memanggil…";
+  $("call").classList.remove("chatting");
+  $("log").innerHTML="";$("opts").innerHTML="";$("nameRow").classList.remove("on");
+  show("call");
+  startRing();
+  later(()=>{
+    stopRing();
+    $("cstat").textContent="Terhubung";
+    node(DIALOGS[key],"start");
+  },4200);
+}
+function bubble(cls,who,text){
+  const b=document.createElement("div");b.className="b "+cls;
+  b.innerHTML='<div class="w"></div><div class="t"></div>';
+  b.querySelector(".w").textContent=who;b.querySelector(".t").textContent=text;
+  $("log").appendChild(b);$("log").scrollTop=1e6;
+}
+function node(dlg,id){
+  const n=dlg[id];$("opts").innerHTML="";
+  $("call").classList.add("chatting");
+  if(n.who==="Tidak Dikenal"){ $("cname").textContent="Tidak Dikenal"; }
+  bubble(n.me?"me":"them", n.me?"Kamu":n.who, fillName(n.text));
+  if(n.input){
+    later(()=>{
+      $("nameRow").classList.add("on");$("nameIn").value="";$("nameIn").focus();
+      const send=()=>{
+        const v=$("nameIn").value.trim(); if(!v) return;
+        playerName=v;$("nameRow").classList.remove("on");
+        bubble("me","Kamu",v);
+        later(()=>node(dlg,n.input),1200);
+      };
+      $("nameGo").onclick=send;
+      $("nameIn").onkeydown=e=>{if(e.key==="Enter")send();};
+    },500);
+    return;
+  }
+  if(n.end){ later(endCall,2200); return; }
+  if(n.over){ later(gameOver,1600); return; }
+  if(n.next){ later(()=>node(dlg,n.next),n.me?2000:2200); return; }
+  later(()=>{
+    n.options.forEach(o=>{
+      const b=document.createElement("button");b.textContent=o.t;
+      b.onclick=()=>{
+        $("opts").innerHTML="";bubble("me","Kamu",o.t);
+        if(o.over) later(gameOver,1100);
+        else if(o.go===null) later(endCall,900);
+        else later(()=>node(dlg,o.go),1200);
+      };
+      $("opts").appendChild(b);
+    });
+    $("log").scrollTop=1e6;
+  },500);
+}
+$("hang").onclick=()=>endCall();
+function resetToDialer(){
+  timers.forEach(clearTimeout);timers=[];
+  stopRing();
+  inCall=false;dialed="";renderNum();
+  $("nameRow").classList.remove("on");
+  $("call").classList.remove("chatting");
+  $("tabs").style.display="flex";$("top").style.display="flex";
+  show("v-dial");
+  document.querySelectorAll("#tabs button").forEach((x,i)=>x.classList.toggle("on",i===0));
+}
+function endCall(){
+  if(!inCall) return;
+  timers.forEach(clearTimeout);timers=[];
+  stopRing();
+  hangupSound();
+  $("ended").classList.add("on");
+  later(()=>{$("ended").classList.remove("on");resetToDialer();},1600);
+}
+function gameOver(){
+  timers.forEach(clearTimeout);timers=[];
+  stopRing();
+  $("over").classList.add("on");
+  const snd=new Audio("Monster2.mp3");
+  snd.play().catch(()=>{});
+}
+renderNum();
+</script>
+</body>
+</html>
