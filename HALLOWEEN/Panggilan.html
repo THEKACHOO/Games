@@ -218,7 +218,7 @@ function hangupSound(){
 $("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
 $("callbtn").onclick=()=>{
   if(!dialed) return;
-  if(dialed===WIN_NUMBER){ $("won").classList.add("on"); return; }
+  if(dialed===WIN_NUMBER){ gameWin(); return; }   // ← DIUBAH: panggil gameWin()
   if(dialed==="112") startCall("112");
   else toast("Error");
 };
@@ -334,6 +334,20 @@ function gameOver(){
   const snd=new Audio("Monster2.mp3");
   snd.play().catch(()=>{});
 }
+
+let winAudio=null;
+function gameWin(){
+  timers.forEach(clearTimeout);timers=[];
+  stopRing();
+  $("won").classList.add("on");
+  winAudio=new Audio("Win.mp3");
+  winAudio.play().catch(()=>{});
+}
+
+$("home").addEventListener("click",()=>{
+  if(winAudio){ winAudio.pause(); winAudio.currentTime=0; }
+});
+
 renderNum();
 </script>
 </body>
