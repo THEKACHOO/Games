@@ -17,19 +17,31 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #bat{width:24px;height:11px;border:1.5px solid #fff;border-radius:3px;position:relative;padding:1px}
 #bat::before{content:"";display:block;width:14%;height:100%;background:#fff;border-radius:1px;animation:lb 1.4s infinite}@keyframes lb{50%{opacity:.25}}
 #bat::after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:4px;background:#fff;border-radius:0 1px 1px 0}
+
+#lock{position:absolute;inset:0;z-index:80;background:#000;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0px)) 0 calc(40px + env(safe-area-inset-bottom,0px))}
+#lock.on{display:flex}
+#lock .ltop{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:18vh}
+#lock .lclock{font-size:84px;font-weight:100;letter-spacing:-2px;line-height:1;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+#lock .ldate{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#c9c9c9}
+#lock #finger{width:88px;height:88px;border-radius:50%;border:2px solid rgba(255,255,255,.85);background:rgba(255,255,255,.05);color:#fff;display:grid;place-items:center;cursor:pointer;animation:fp 2.2s ease-in-out infinite}
+#lock #finger svg{width:40px;height:40px;stroke-width:1.5}
+#lock #finger:active{transform:scale(.94);background:#fff;color:#000}
+@keyframes fp{50%{box-shadow:0 0 0 12px rgba(255,255,255,.05)}}
+
 #home{justify-content:space-between;align-items:center;padding:60px 0 34px;background:url(Wallpaper.png) center/cover no-repeat;position:relative}
 #home::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.25);pointer-events:none}
 #home > *{position:relative;z-index:1}
 #clock{font-size:92px;font-weight:100;letter-spacing:-2px;line-height:1;text-align:center;text-shadow:0 2px 18px rgba(0,0,0,.6)}
 #date{margin-top:14px;text-align:center;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d0d0d0;text-shadow:0 1px 8px rgba(0,0,0,.7)}
-#openapps{width:66px;height:66px;border-radius:50%;border:0;background:#fff;color:#000;display:grid;place-items:center;cursor:pointer}
-#openapps svg{width:28px;height:28px;stroke-width:2}
-#hint{margin-top:12px;font-size:11px;letter-spacing:3px;color:#ddd;text-align:center;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+#swipehint{width:100%;display:flex;flex-direction:column;align-items:center;padding-bottom:22px;cursor:pointer;user-select:none}
+#swipebar{width:120px;height:5px;border-radius:3px;background:#fff;opacity:.85}
+#swipetxt{margin-top:12px;font-size:11px;letter-spacing:3px;color:#ddd;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,.8)}
 #apps{position:relative;background:url(Wallpaper.png) center/cover no-repeat}
 #apps::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:0}
 #apps > *{position:relative;z-index:1}
 #search{margin:14px 20px 6px;padding:12px 18px;border-radius:999px;background:rgba(20,20,20,.75);border:1px solid rgba(255,255,255,.12);color:#bbb;font-size:14px}
-#grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px 10px;padding:22px 24px 30px;align-content:start}
+#grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px 10px;padding:22px 24px 30px;align-content:start;scrollbar-width:none;-ms-overflow-style:none}
+#grid::-webkit-scrollbar{display:none;width:0;height:0}
 .app{display:flex;flex-direction:column;align-items:center;gap:9px;background:none;border:0;padding:0;font-size:12px;position:relative;letter-spacing:.3px}
 .ic{width:68px;height:68px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:#fff;color:#000}
 .app span{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
@@ -39,7 +51,8 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #msgs{background:#000}
 .title{display:flex;justify-content:space-between;align-items:center;padding:18px 22px 10px}
 .title h2{margin:0;font-size:32px;font-weight:700;letter-spacing:-.5px}
-#tlist{flex:1;overflow-y:auto;padding-bottom:10px}
+#tlist{flex:1;overflow-y:auto;padding-bottom:10px;scrollbar-width:none;-ms-overflow-style:none}
+#tlist::-webkit-scrollbar{display:none;width:0;height:0}
 .t{display:flex;gap:14px;padding:13px 22px;cursor:pointer;align-items:center}
 .t:active{background:#111}
 .av{flex:none;width:48px;height:48px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
@@ -53,7 +66,8 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #thead{display:flex;align-items:center;gap:12px;padding:8px 14px 12px;border-bottom:1px solid #1c1c1c;font-size:17px;font-weight:600}
 #thead button{background:none;border:0;padding:6px;cursor:pointer;display:flex}
 #thead .av{width:36px;height:36px;font-size:15px}
-#tbody{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:6px}
+#tbody{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none;-ms-overflow-style:none}
+#tbody::-webkit-scrollbar{display:none;width:0;height:0}
 .b{max-width:78%;padding:10px 15px;border-radius:20px;font-size:15px;line-height:1.4;word-wrap:break-word}
 .b.them{background:#fff;color:#000;align-self:flex-start;border-bottom-left-radius:6px}
 .b.me{background:#000;color:#fff;border:1.5px solid #fff;align-self:flex-end;border-bottom-right-radius:6px}
@@ -102,6 +116,8 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:8px 16px;text-align:center}
 .cg div{padding:12px 0;border-radius:12px;font-size:16px;border:1px solid #1f1f1f}
 .cg .wd{color:#777;font-size:12px;letter-spacing:1px;border:0;padding:8px 0}
+.cg .d31{cursor:pointer;border-color:#fff}
+.cg .d31:active{background:#fff;color:#000}
 #browser{background:#000}
 .bbar{margin:14px 20px;padding:12px 18px;border-radius:999px;background:#141414;border:1px solid #2a2a2a;color:#777;font-size:14px}
 .nc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
@@ -131,7 +147,8 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #call .decline{background:#e53935}
 #call .accept{background:#43a047}
 #xapp{background:#000}
-#xlist{flex:1;overflow-y:auto;padding:16px 22px 30px}
+#xlist{flex:1;overflow-y:auto;padding:16px 22px 30px;scrollbar-width:none;-ms-overflow-style:none}
+#xlist::-webkit-scrollbar{display:none;width:0;height:0}
 .xitem{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #1a1a1a;font-size:15px;line-height:1.5;color:#eaeaea}
 .xitem .num{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #fff;display:grid;place-items:center;font-size:13px;font-weight:700}
 #cluepop{position:absolute;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:24px}
@@ -142,6 +159,14 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #cluepop .card .bd{font-size:14px;line-height:1.5;color:#333;margin-bottom:18px}
 #cluepop .card button{width:100%;padding:12px 0;border-radius:999px;border:0;background:#000;color:#fff;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
 #cluepop .card button:active{background:#333}
+
+#note31{position:absolute;inset:0;z-index:72;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:24px}
+#note31.on{display:flex}
+#note31 .paper{width:100%;max-width:320px;background:#fff;color:#000;border-radius:18px;padding:22px 22px 18px;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:pop .35s cubic-bezier(.2,.9,.3,1)}
+#note31 .paper h3{margin:0 0 12px;font-size:16px;letter-spacing:3px;text-transform:uppercase;text-align:center;color:#111}
+#note31 .paper p{margin:0;font-size:15px;line-height:1.6;font-weight:600;letter-spacing:.5px;text-align:center;color:#111}
+#note31 .paper button{margin-top:16px;width:100%;padding:11px 0;border-radius:999px;border:0;background:#000;color:#fff;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+#note31 .paper button:active{background:#333}
 </style>
 </head>
 <body>
@@ -149,11 +174,21 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   <div id="status"><span id="stime">00:00</span><div style="display:flex;align-items:center;gap:8px"><span>6%</span><div id="bat"></div></div></div>
   <div id="notif"><div class="h"><span id="nh">MESSAGES</span><span>now</span></div><div class="l" id="nl"></div></div>
 
-  <div class="view on" id="home">
+  <div id="lock" class="on">
+    <div class="ltop">
+      <div class="lclock">00:00</div>
+      <div class="ldate">October 31</div>
+    </div>
+    <button id="finger" aria-label="Unlock with fingerprint">
+      <svg viewBox="0 0 24 24"><path d="M12 4a8 8 0 018 8v2"/><path d="M4 12a8 8 0 016-7.75"/><path d="M7 12a5 5 0 015-5 5 5 0 015 5v3"/><path d="M10 12a2 2 0 014 0v5"/><path d="M7 16v-4"/><path d="M12 21v-2"/></svg>
+    </button>
+  </div>
+
+  <div class="view" id="home">
     <div><div id="clock">00:00</div><div id="date"></div></div>
-    <div style="display:flex;flex-direction:column;align-items:center">
-      <button id="openapps" aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M6 6h.01M12 6h.01M18 6h.01M6 12h.01M12 12h.01M18 12h.01M6 18h.01M12 18h.01M18 18h.01"/></svg></button>
-      <div id="hint">Menu</div>
+    <div id="swipehint">
+      <div id="swipebar"></div>
+      <div id="swipetxt">Swipe up</div>
     </div>
   </div>
 
@@ -235,6 +270,14 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
       <div class="ttl">HINT</div>
       <div class="bd">Find clues in the menu inside the phone.</div>
       <button id="clueok">OK</button>
+    </div>
+  </div>
+
+  <div id="note31">
+    <div class="paper">
+      <h3>Happy Halloween</h3>
+      <p>Choose Threat. Play Music. Write a note. And take a selfie with Camera.</p>
+      <button id="note31ok">OK</button>
     </div>
   </div>
 
@@ -326,7 +369,7 @@ const fresh=()=>({log:[],unread:0,stage:"none",cam:0,thr:0,gal:0,declines:0,clue
 let S=fresh();
 try{Object.assign(S,JSON.parse(sessionStorage.getItem(KEY)||"{}"));}catch(e){}
 const save=()=>{try{sessionStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
-let cur="home", openName=null, busy=false, typing=false, bannerT=null;
+let cur="lock", openName=null, busy=false, typing=false, bannerT=null;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const inThread=()=>cur==="thread"&&openName==="Unknown";
 function sfx(id){const a=$(id);try{a.currentTime=0;a.play().catch(()=>{});}catch(e){}}
@@ -352,10 +395,11 @@ $("clueok").onclick=hideClue;
 
 function show(id){
   cur=id;
+  $("lock").classList.toggle("on", id==="lock");
   const w=$("woods");
   try{ if(id==="cam"){w.currentTime=0;w.play().catch(()=>{});updateThumb();} else w.pause(); }catch(e){}
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===id));
-  $("nav").style.display=(id==="home"||id==="thread")?"none":"flex";
+  $("nav").style.display=(id==="home"||id==="thread"||id==="lock")?"none":"flex";
 }
 
 function tick(){
@@ -417,7 +461,7 @@ function renderList(){
   allThreads().forEach(t=>{
     const un=t.unknown&&S.unread>0, last=t.msgs[t.msgs.length-1];
     const d=document.createElement("div");d.className="t"+(un?" unread":"");
-    d.innerHTML='<div class="av"></div><div class="m"><div class="n"><span></span><small></small></div><div class="p"></div></div>'+(un?'<div class="dot"></div>':'');
+    d.innerHTML='<div class="av"></div><div class="m"><div class="n"><span></span><small></small></div><div class="p"></div></div>'+(un?'<div class="dot"></div>':"");
     d.querySelector(".av").textContent=t.unknown?"?":t.name[0];
     d.querySelector(".n span").textContent=t.name;
     d.querySelector("small").textContent=t.time;
@@ -524,7 +568,8 @@ $("revive").onclick=()=>{
   try{ s.pause(); s.currentTime=0; }catch(e){}
   S=fresh();busy=false;typing=false;
   save();updateBadge();
-  $("over").classList.remove("on");show("home");
+  $("over").classList.remove("on");
+  show("lock");
 };
 
 function gameOver2(){
@@ -540,7 +585,8 @@ $("revive2").onclick=()=>{
   try{ a.pause(); a.currentTime=0; }catch(e){}
   S=fresh();busy=false;typing=false;
   save();updateBadge();
-  $("over2").classList.remove("on");show("home");
+  $("over2").classList.remove("on");
+  show("lock");
 };
 
 function startRing(){
@@ -590,15 +636,18 @@ $("decline").onclick=()=>{
   else{ setTimeout(startCall, 1200); }
 };
 
-$("openapps").onclick=()=>{ vibUnlock(); show("apps");updateBadge();deliver(); };
 $("pill").onclick=()=>show("home");
 $("back").onclick=()=>show(["msgs","maps","cam","cal","browser","xapp"].includes(cur)?"apps":"home");
 
 (function(){
   const g=$("cgrid");
   ["S","M","T","W","T","F","S"].forEach(d=>{const e=document.createElement("div");e.className="wd";e.textContent=d;g.appendChild(e);});
-  for(let i=0;i<35;i++){const e=document.createElement("div");e.className="d";e.textContent="31";g.appendChild(e);}
+  for(let i=0;i<34;i++){const e=document.createElement("div");e.className="d";e.textContent="31";g.appendChild(e);}
+  const last=document.createElement("div");last.className="d d31";last.textContent="31";
+  last.onclick=()=>{ vibUnlock(); $("note31").classList.add("on"); };
+  g.appendChild(last);
 })();
+$("note31ok").onclick=()=>$("note31").classList.remove("on");
 
 function updateThumb(){$("thumb").classList.toggle("has",!!S.gal);}
 $("shutter").onclick=()=>{
@@ -610,12 +659,39 @@ $("thumb").onclick=()=>{ if(S.gal) location.href=GALLERY_PAGE; };
 $("retry").onclick=()=>{};
 $("tback").onclick=()=>{renderList();show("msgs");};
 
+function goMenu(){
+  if(cur!=="home") return;
+  vibUnlock();
+  show("apps");
+  updateBadge();
+  deliver();
+}
+
+let touchY=null, touchX=null;
+$("home").addEventListener("touchstart",e=>{
+  const t=e.touches[0]; touchY=t.clientY; touchX=t.clientX;
+},{passive:true});
+$("home").addEventListener("touchend",e=>{
+  if(touchY===null) return;
+  const t=e.changedTouches[0];
+  const dy=touchY-t.clientY;
+  const dx=Math.abs(t.clientX-touchX);
+  touchY=null;
+  if(dy>60 && dx<60) goMenu();
+},{passive:true});
+$("swipehint").addEventListener("click",goMenu);
+
+$("finger").onclick=()=>{
+  vibUnlock();
+  show("home");
+};
+
 if(S.stage==="x") S.stage=S.log.length>1?"c1":"none";
 updateBadge();
 if(location.hash==="#menu"){
   show("apps");
   try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
-}else show("home");
+}else show("lock");
 </script>
 </body>
-                                                                </html>
+</html>
