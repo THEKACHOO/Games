@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Musik</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:#000;color:#fff;font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif}
+#phone{position:relative;height:100%;max-width:420px;margin:0 auto;background:#000;border-left:1px solid #1f1f1f;border-right:1px solid #1f1f1f;display:flex;flex-direction:column;overflow:hidden}
+button{font-family:inherit;color:inherit}
+svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+svg.f{fill:currentColor;stroke:currentColor;stroke-width:1.2}
+#status{display:flex;justify-content:space-between;align-items:center;padding:10px 22px 4px;font-size:13px;font-weight:600;letter-spacing:.5px}
+#bat{width:24px;height:11px;border:1.5px solid #fff;border-radius:3px;position:relative;padding:1px}
+#bat::before{content:"";display:block;width:14%;height:100%;background:#fff;border-radius:1px;animation:lb 1.4s infinite}@keyframes lb{50%{opacity:.25}}
+#bat::after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:4px;background:#fff;border-radius:0 1px 1px 0}
+.title{padding:18px 22px 10px}
+.title h2{margin:0;font-size:32px;font-weight:700;letter-spacing:-.5px}
+.title .sub{color:#8a8a8a;font-size:13px;letter-spacing:2px;margin-top:4px;text-transform:uppercase}
+#list{flex:1;min-height:0;overflow-y:auto;padding:6px 14px}
+.tr{display:flex;align-items:center;gap:14px;width:100%;padding:14px 12px;border:0;background:none;border-radius:16px;cursor:pointer;text-align:left;font-size:17px}
+.tr:active{background:#111}
+.tr .no{flex:none;width:28px;color:#777;font-size:14px;text-align:center}
+.tr .nm{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr .st{flex:none;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.tr .st svg{width:18px;height:18px}
+.tr.on{background:#fff;color:#000}
+.tr.on .no{color:#444}
+#player{padding:14px 22px 6px;border-top:1px solid #1c1c1c;background:#000}
+#pname{font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:20px}
+#pmsg{font-size:12px;color:#8a8a8a;letter-spacing:1px;margin-top:2px;min-height:15px}
+#seek{width:100%;margin:12px 0 2px;accent-color:#fff;height:18px}
+.times{display:flex;justify-content:space-between;font-size:11px;color:#8a8a8a}
+.ctl{display:flex;justify-content:center;align-items:center;gap:30px;padding:8px 0 4px}
+.ctl button{background:none;border:0;padding:8px;cursor:pointer;display:flex}
+.ctl button:active{opacity:.6}
+#pp{width:60px;height:60px;border-radius:50%;background:#fff;color:#000;align-items:center;justify-content:center}
+#pp svg{width:26px;height:26px}
+#nav{display:flex;justify-content:space-between;align-items:center;padding:8px 26px 12px}
+#nav button{background:none;border:0;padding:8px;cursor:pointer;color:#fff;display:flex}
+#nav svg{width:22px;height:22px}
+#pill{width:120px;height:5px;border-radius:3px;background:#fff;padding:0!important}
+#ytbox{position:fixed;left:-9999px;top:0;width:200px;height:200px;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="status"><span>00:00</span><div style="display:flex;align-items:center;gap:8px"><span>6%</span><div id="bat"></div></div></div>
+  <div class="title"><h2>Music</h2><div class="sub">Playlist · 3 songs</div></div>
+  <div id="list"></div>
+
+  <div id="player">
+    <div id="pname">Pilih lagu</div>
+    <div id="pmsg"></div>
+    <input type="range" id="seek" min="0" max="1000" value="0">
+    <div class="times"><span id="tcur">0:00</span><span id="tdur">0:00</span></div>
+    <div class="ctl">
+      <button id="prev" aria-label="Previous"><svg class="f" viewBox="0 0 24 24"><path d="M19 5L9 12l10 7z"/><path d="M6 5v14" fill="none"/></svg></button>
+      <button id="pp" aria-label="Play"></button>
+      <button id="next" aria-label="Next"><svg class="f" viewBox="0 0 24 24"><path d="M5 5l10 7-10 7z"/><path d="M18 5v14" fill="none"/></svg></button>
+    </div>
+  </div>
+
+  <div id="nav">
+    <button id="back" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="pill" aria-label="Home"></button>
+    <span style="width:38px"></span>
+  </div>
+
+  <div id="ytbox"></div>
+  <audio id="aud" preload="auto"></audio>
+</div>
+
+<script>
+const HOME_PAGE="Beranda.html";
+const TRACKS=[
+  {title:"01Rec", src:"Rec1.mp3"},
+  {title:"02Rec", src:"Rec2.mp3"},
+  {title:"03Rec", src:"Recording.mp3"}
+];
+const $=id=>document.getElementById(id);
+const aud=$("aud");
+const ICON_PLAY='<svg class="f" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
+const ICON_PAUSE='<svg class="f" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+let cur=-1, playing=false, dragging=false;
+
+/* daftar lagu */
+TRACKS.forEach((t,i)=>{
+  const b=document.createElement("button");b.className="tr";b.id="tr"+i;
+  b.innerHTML='<span class="no">'+(i+1)+'</span><span class="nm"></span><span class="st"></span>';
+  b.querySelector(".nm").textContent=t.title;
+  b.onclick=()=>{ if(i===cur) toggle(); else play(i); };
+  $("list").appendChild(b);
+});
+
+function msg(t){$("pmsg").textContent=t||"";}
+function setPlaying(p){
+  playing=p;
+  $("pp").innerHTML=p?ICON_PAUSE:ICON_PLAY;
+  document.querySelectorAll(".tr").forEach((r,i)=>{
+    r.classList.toggle("on",i===cur);
+    r.querySelector(".st").innerHTML=(i===cur)?(p?ICON_PAUSE:ICON_PLAY):"";
+  });
+}
+function stopAll(){ try{aud.pause();}catch(e){} }
+function play(i){
+  const t=TRACKS[i];
+  stopAll();
+  cur=i;msg("");
+  $("pname").textContent=t.title;
+  $("seek").value=0;$("tcur").textContent="0:00";$("tdur").textContent="0:00";
+  aud.src=t.src;
+  aud.play().then(()=>setPlaying(true)).catch(()=>{msg("File "+t.src+" tidak ditemukan");setPlaying(false);});
+}
+function toggle(){
+  if(cur<0){play(0);return;}
+  if(aud.paused){aud.play();setPlaying(true);}else{aud.pause();setPlaying(false);}
+}
+function next(){play((cur+1)%TRACKS.length);}
+function prev(){
+  const pos=getPos();
+  if(pos>3) seekTo(0); else play((cur-1+TRACKS.length)%TRACKS.length);
+}
+/* Lagu selesai: ulang lagu yang sama */
+function repeat(){
+  if(cur<0) return;
+  try{aud.currentTime=0;aud.play();setPlaying(true);}catch(e){}
+}
+aud.addEventListener("ended",repeat);
+aud.addEventListener("error",()=>{ if(TRACKS[cur]&&TRACKS[cur].src){msg("File "+TRACKS[cur].src+" tidak ditemukan");setPlaying(false);} });
+
+/* progress */
+const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
+function getPos(){ return cur<0?0:(aud.currentTime||0); }
+function getDur(){ return cur<0?0:(aud.duration||0); }
+function seekTo(sec){ try{aud.currentTime=sec;}catch(e){} }
+setInterval(()=>{
+  if(dragging) return;
+  const d=getDur(), p=getPos();
+  $("tcur").textContent=fmt(p);$("tdur").textContent=fmt(d);
+  $("seek").value=d?Math.round(p/d*1000):0;
+},400);
+$("seek").addEventListener("input",()=>{
+  dragging=true;
+  $("tcur").textContent=fmt(getDur()*$("seek").value/1000);
+});
+$("seek").addEventListener("change",()=>{
+  seekTo(getDur()*$("seek").value/1000);
+  dragging=false;
+});
+
+$("pp").innerHTML=ICON_PLAY;
+$("pp").onclick=toggle;
+$("next").onclick=next;
+$("prev").onclick=prev;
+$("back").onclick=()=>{location.href=HOME_PAGE+"#menu";};
+$("pill").onclick=()=>{location.href=HOME_PAGE;};
+</script>
+</body>
+</html>
