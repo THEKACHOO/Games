@@ -31,12 +31,6 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   animation:fp 2.4s ease-in-out infinite
 }
 #lock #finger svg{width:60px;height:60px;stroke-width:1.9;opacity:.8;filter:drop-shadow(0 0 3px rgba(255,255,255,.5))}
-#lock #finger::after{content:"";position:absolute;left:0;right:0;height:3px;top:-6px;
-  background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 12px 3px rgba(255,255,255,.7);opacity:0}
-#lock #finger.scan{animation:none;border-color:#fff;background:rgba(255,255,255,.18);transform:scale(.96)}
-#lock #finger.scan svg{opacity:1}
-#lock #finger.scan::after{opacity:1;animation:sweep .8s linear forwards}
-@keyframes sweep{to{top:100%}}
 @keyframes fp{50%{transform:scale(1.02)}}
 
 #home{justify-content:space-between;align-items:center;padding:60px 0 34px;background:url(Wallpaper.png) center/cover no-repeat;position:relative;touch-action:none}
@@ -776,18 +770,9 @@ if(isDesktop){
   $("swipehint").addEventListener("click",openAnimated);
 }
 
-let scanning=false;
 $("finger").onclick=()=>{
-  if(scanning) return;
-  scanning=true;
   vibUnlock();
-  const f=$("finger");
-  f.classList.add("scan");
-  setTimeout(()=>{
-    f.classList.remove("scan");
-    scanning=false;
-    show("home");
-  },850);
+  show("home");
 };
 
 if(S.stage==="x") S.stage=S.log.length>1?"c1":"none";
