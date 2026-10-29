@@ -118,9 +118,9 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px;color:#fff}
   <div id="won">
     <h1>KAMU MENANG</h1>
     <div class="credits">
-      <p>Kamu berhasil keluar dari permainan hidup-hidup. Tapi kamu telah melupakan semua yang terjadi, seolah semuanya tidak pernah ada.</p>
-      <p>Terima kasih telah bermain.<br>Sampai jumpa di season berikutnya Dimension.</p>
-      <p class="meta">Game ini dibuat oleh The Kachoo<br>Visual, Audio, dan Alur Cerita oleh Tim Kadio<br>Hanya untuk keperluan roleplay, 2026<br>Halloween Edition</p>
+      <p>Kamu berhasil keluar dari dimensi ini. Kamu telah melupakan semua yang terjadi seolah semuanya tidak pernah ada.</p>
+      <p>Terima kasih telah bermain.<br>Sampai jumpa di season Dimension yang selanjutnya.</p>
+      <p class="meta">Game ini dibuat oleh The Kachoo<br>Visual, Audio, dan Alur Cerita oleh Tim Kadio<br>Hanya untuk keperluan roleplay, 2026<br>Edisi Halloween</p>
     </div>
     <a id="home" href="Beranda.html">Beranda</a>
   </div>
@@ -137,36 +137,36 @@ const CONTACTS = [
   {name:"Benny anak band",   number:"xxxx-xxxx"},
   {name:"Alan seminar",    number:"xxxx-xxxx"},
   {name:"Ici Bos", number:"xxxx-xxxx"},
-  {name:"Carla (Lupa jir siapa wkwk)",   number:"xxxx-xxxx"},
+  {name:"Carla (Lupa jir siapa)",   number:"xxxx-xxxx"},
   {name:"Lily Nomor Baru",   number:"xxxx-xxxx"}
 ];
 
 const DIALOGS = {
   "112": {
     start:{ who:"112", text:"Anda terhubung dengan panggilan darurat. Bisa dijelaskan kondisi anda?", next:"p1" },
-    p1:{ me:true, text:"Tolong! Duh! Gimana ya bilangnya.... Ini saya gatau gimana ceritanya saya bisa bangun di tengah hutan. Terus barusan ada orang gajelas ngechat saya!", next:"d1" },
+    p1:{ me:true, text:"Tolong! Ini saya ga tau gimana ceritanya saya bisa bangun di tengah hutan. Terus barusan ada orang ga jelas ngechat saya!", next:"d1" },
     d1:{ who:"112", text:"Baik. Anda bisa tenang dulu, oke? Pertama, beri tahu saya nama anda.", input:"d2" },
     d2:{ who:"112", text:"Baik, (User). Ceritakan semua yang terakhir kali anda ingat sampai anda terbangun.", next:"p2a" },
     p2a:{ me:true, text:"Gatau mbak sampai bisa gini. Tapi, ini beneran di hutan yang gelap banget, ga kelihatan apa-apa....", next:"p2b" },
-    p2b:{ me:true, text:"Seinget saya sih saya pergi ke rumah hantu barengan sama temen saya, ada pesta Halloween. Terus pas keluar, saya ga inget lagi!", next:"p2c" },
-    p2c:{ me:true, text:"Ini beneran gabisa lihat apa-apa mbak, ini ponsel saya juga lowbat. Gabisa shareloc juga. Gimana ya, Mbak? Bisa kirim bantuan buat jemput saya mungkin kalau bisa lacak posisi saya dari panggilan saya ini.", next:"d3a" },
+    p2b:{ me:true, text:"Seinget saya sih saya pergi ke rumah hantu barengan sama temen saya, kami lagi datang ke pesta Halloween. Terus pas keluar, saya ga inget lagi!", next:"p2c" },
+    p2c:{ me:true, text:"Ini beneran ga bisa lihat apa-apa mbak, ini ponsel saya juga lowbat. Gabisa shareloc juga. Gimana ya, Mbak? Bisa kirim bantuan buat jemput saya?", next:"d3a" },
     d3a:{ who:"112", text:"Oke, (User), tarik napas yang dalam.", next:"d3b" },
     d3b:{ who:"112", text:"Karena anda lagi sendirian, apakah ada sesuatu yang anda bawa?", next:"d3c" },
     d3c:{ who:"112", text:"Ada sesuatu yang bisa digunakan untuk melindungi diri?",
       options:[
-        {t:"... Eh? Kok tau saya sendirian?", go:"o1"},
-        {t:"Ya, uh... ada kayu sih. Bisa buat mukul.", go:"o2"}
+        {t:"Eh? Kok tau saya sendirian?", go:"o1"},
+        {t:"Hmm... ada kayu sih. Bisa buat mukul.", go:"o2"}
       ]},
     o1:{ who:"112", text:"Jawab saya. Polisi sedang dalam perjalanan ke lokasi untuk bantuan. Sekarang, bisakah tidak anda berteriak sekeras mungkin? Itu akan membantu kami menemukanmu.",
       options:[
         {t:"(Berteriak.)", go:"scream"}
       ]},
-    o2:{ who:"112", text:"Bagus. Polisi sedang dalam perjalanan ke lokasi anda sekarang. Bisakah berteriak agar kami lebih mudah menemukan anda?",
+    o2:{ who:"112", text:"Bagus. Polisi sedang dalam perjalanan ke lokasi anda sekarang. Bisakah anda berteriak agar kami lebih mudah menemukan anda?",
       options:[
         {t:"(Berteriak.)", go:"scream"}
       ]},
     scream:{ who:"112", text:"...", next:"scream2" },
-    scream2:{ who:"Tidak Dikenal", text:"Wkkwkwkwk... Kena kau. (User)", next:null, over:true }
+    scream2:{ who:"Tidak Dikenal", text:"Wkkwkwkwk... Kena kau, (User).", next:null, over:true }
   }
 };
 
