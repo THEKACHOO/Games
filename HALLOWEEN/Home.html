@@ -670,29 +670,88 @@ function goMenu(){
   deliver();
 }
 
-const homeEl=$("home");
-let swipeStartY=null, swipeStartX=null, swiping=false;
-function swipeBegin(y,x){ swipeStartY=y; swipeStartX=x; swiping=true; }
-function swipeEnd(y,x){
-  if(!swiping || swipeStartY===null) return;
-  const dy=swipeStartY-y, dx=Math.abs(x-swipeStartX);
-  swiping=false; swipeStartY=null; swipeStartX=null;
-  if(dy>60 && dx<60) goMenu();
+const homeEl=$("home"), appsEl=$("apps");
+let swipeStartY=null, swiping=false, dragH=0, lastY=0, lastT=0, vel=0, prepared=false, animating=false;
+
+function prepApps(){
+  if(prepared) return;
+  prepared=true;
+  dragH=$("phone").clientHeight;
+  appsEl.style.cssText="display:flex;position:absolute;left:0;right:0;bottom:0;top:"+$("status").offsetHeight+"px;z-index:1;will-change:transform;transform:translateY("+dragH+"px)";
+  homeEl.style.willChange="transform,filter";
 }
+function applyDrag(dy){
+  const p=Math.min(dy/dragH,1);
+  appsEl.style.transform="translateY("+(dragH-dy)+"px)";
+  homeEl.style.transform="translateY("+(-dy*0.12)+"px) scale("+(1-0.07*p)+")";
+  homeEl.style.filter="brightness("+(1-0.55*p)+")";
+}
+function cleanSwipe(){
+  appsEl.style.cssText="";
+  homeEl.style.transform="";
+  homeEl.style.filter="";
+  homeEl.style.transition="";
+  homeEl.style.willChange="";
+  prepared=false; animating=false;
+}
+function settle(open){
+  animating=true;
+  const ease=open?"cubic-bezier(.22,.9,.28,1)":"cubic-bezier(.3,1.25,.5,1)";
+  const dur=open?0.38:0.45;
+  appsEl.style.transition="transform "+dur+"s "+ease;
+  homeEl.style.transition="transform "+dur+"s "+ease+", filter "+dur+"s ease";
+  requestAnimationFrame(()=>{
+    if(open){
+      appsEl.style.transform="translateY(0)";
+      homeEl.style.transform="translateY("+(-dragH*0.12)+"px) scale(.93)";
+      homeEl.style.filter="brightness(.45)";
+    }else{
+      appsEl.style.transform="translateY("+dragH+"px)";
+      homeEl.style.transform="";
+      homeEl.style.filter="";
+    }
+  });
+  setTimeout(()=>{ cleanSwipe(); if(open) goMenu(); }, dur*1000+30);
+}
+function openAnimated(){
+  if(cur!=="home"||animating) return;
+  prepApps();
+  void appsEl.offsetHeight;
+  settle(true);
+}
+
 homeEl.addEventListener("touchstart",e=>{
-  const t=e.touches[0]; swipeBegin(t.clientY,t.clientX);
+  if(animating) return;
+  swipeStartY=e.touches[0].clientY; lastY=swipeStartY; lastT=performance.now(); vel=0;
+  swiping=true;
 },{passive:true});
 homeEl.addEventListener("touchmove",e=>{
   if(e.cancelable) e.preventDefault();
+  if(!swiping||animating) return;
+  const y=e.touches[0].clientY, now=performance.now();
+  let dy=swipeStartY-y;
+  if(dy<=0){ if(prepared) applyDrag(0); return; }
+  prepApps();
+  const dt=now-lastT;
+  if(dt>0) vel=0.8*vel+0.2*((lastY-y)/dt);
+  lastY=y; lastT=now;
+  applyDrag(Math.min(dy,dragH));
 },{passive:false});
-homeEl.addEventListener("touchend",e=>{
-  const t=e.changedTouches[0]; swipeEnd(t.clientY,t.clientX);
-},{passive:true});
-homeEl.addEventListener("touchcancel",()=>{ swiping=false; swipeStartY=null; swipeStartX=null; },{passive:true});
+function endSwipe(cancel){
+  if(!swiping) return;
+  swiping=false;
+  if(!prepared||animating){ swipeStartY=null; return; }
+  const dy=swipeStartY-lastY;
+  swipeStartY=null;
+  const open=!cancel && (dy>dragH*0.22 || vel>0.5) && vel>-0.3;
+  settle(open);
+}
+homeEl.addEventListener("touchend",()=>endSwipe(false),{passive:true});
+homeEl.addEventListener("touchcancel",()=>endSwipe(true),{passive:true});
 
 const isDesktop = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
 if(isDesktop){
-  $("swipehint").addEventListener("click",goMenu);
+  $("swipehint").addEventListener("click",openAnimated);
 }
 
 $("finger").onclick=()=>{
