@@ -86,7 +86,6 @@ const ICON_PLAY='<svg class="f" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/><
 const ICON_PAUSE='<svg class="f" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 let cur=-1, playing=false, dragging=false;
 
-/* daftar lagu */
 TRACKS.forEach((t,i)=>{
   const b=document.createElement("button");b.className="tr";b.id="tr"+i;
   b.innerHTML='<span class="no">'+(i+1)+'</span><span class="nm"></span><span class="st"></span>';
