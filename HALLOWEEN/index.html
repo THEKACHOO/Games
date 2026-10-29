@@ -21,14 +21,18 @@
             height: 100%;
             overflow: hidden;
             background: #0b0b0b;
+            overscroll-behavior: none;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            min-height: 100dvh;
+            height: 100%;
+            min-height: 0;
         }
 
         .phone-frame {
@@ -83,6 +87,7 @@
             background-color: #0f0f0f;
             background-repeat: no-repeat;
             color: #eee;
+            overflow: hidden;
         }
 
         .section.active {
@@ -155,23 +160,23 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -48%);
-            width: calc(100% - 64px);
+            width: calc(100% - 48px);
             max-width: 300px;
-            max-height: 86%;
-            overflow-y: auto;
+            max-height: none;
+            overflow: hidden;
             background: rgba(0, 0, 0, 0.78);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
-            padding: 20px 18px;
+            padding: 18px 16px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.7);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.8s ease, transform 0.8s ease;
             color: #f0f0f0;
-            font-size: 0.8rem;
-            line-height: 1.55;
+            font-size: 0.76rem;
+            line-height: 1.45;
         }
 
         .info-box.show {
@@ -181,22 +186,22 @@
         }
 
         .info-box h2 {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: #a60e00;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             text-align: center;
             letter-spacing: 0.5px;
         }
 
-        .info-box p { margin-bottom: 18px; }
+        .info-box p { margin-bottom: 14px; }
 
         .info-box ol {
-            padding-left: 18px;
-            margin-bottom: 20px;
+            padding-left: 16px;
+            margin-bottom: 14px;
         }
 
-        .info-box li { margin-bottom: 8px; }
+        .info-box li { margin-bottom: 6px; }
 
         .btn {
             display: block;
@@ -210,7 +215,7 @@
             color: #fff;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            transition: transform 0.15s, background 0.15s;
+            transition: transform 0.15s, background 0.15s, color 0.15s;
         }
 
         .btn:active {
@@ -223,7 +228,7 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -48%);
-            width: calc(100% - 64px);
+            width: calc(100% - 48px);
             max-width: 300px;
             background: rgba(0, 0, 0, 0.78);
             backdrop-filter: blur(4px);
@@ -256,14 +261,20 @@
         .lang-box .btn {
             width: 100%;
             margin-bottom: 12px;
+            background: transparent;
+            border-color: #a60e00;
+            color: #ff6b5e;
+            box-shadow: none;
         }
 
         .lang-box .btn:last-child { margin-bottom: 0; }
 
-        .lang-box .btn.alt {
-            background: transparent;
-            border-color: #a60e00;
-            color: #ff6b5e;
+        .lang-box .btn:hover,
+        .lang-box .btn:active,
+        .lang-box .btn.selected {
+            background: #a60e00;
+            color: #fff;
+            transform: scale(0.97);
         }
 
         .footer {
@@ -300,6 +311,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.4s ease;
+            overflow: hidden;
         }
 
         .warning-overlay.show {
@@ -356,7 +368,7 @@
             <div class="lang-box" id="langBox">
                 <h2>Select Language</h2>
                 <button class="btn" id="btnEnglish">English</button>
-                <button class="btn alt" id="btnIndonesia">Indonesia</button>
+                <button class="btn" id="btnIndonesia">Indonesia</button>
             </div>
 
             <div class="info-box" id="infoBox">
@@ -370,10 +382,10 @@
                     <li>If it's game over, you'll have the option to revive.</li>
                 </ol>
 
-                <h2 id="txtWarnTitle">Content Warning</h2>
+                <h2 id="txtWarnTitle">Note</h2>
                 <ol id="txtWarnList">
-                    <li>Headphones or earphones are recommended for the best audio experience.</li>
                     <li>This game contains jumpscares with visual and audio effects.</li>
+                    <li>Not recommended for those who are afraid of the dark.</li>
                     <li>Not recommended for children under the age of 13.</li>
                 </ol>
 
@@ -528,20 +540,28 @@
 
             titleWrap.addEventListener('click', showLangPicker);
 
-            function hideLangPickerAndShowInfo(lang) {
+            function hideLangPickerAndShowInfo(lang, btn) {
+                document.querySelectorAll('.lang-box .btn').forEach(function(b) {
+                    b.classList.remove('selected');
+                });
+                if (btn) btn.classList.add('selected');
+
                 applyLanguage(lang);
-                langBox.classList.remove('show');
-                setTimeout(() => infoBox.classList.add('show'), 400);
+
+                setTimeout(function() {
+                    langBox.classList.remove('show');
+                    setTimeout(() => infoBox.classList.add('show'), 400);
+                }, 250);
             }
 
             btnEnglish.addEventListener('click', function() {
                 startAudio();
-                hideLangPickerAndShowInfo('en');
+                hideLangPickerAndShowInfo('en', btnEnglish);
             });
 
             btnIndonesia.addEventListener('click', function() {
                 startAudio();
-                hideLangPickerAndShowInfo('id');
+                hideLangPickerAndShowInfo('id', btnIndonesia);
             });
 
             btnStart.addEventListener('click', function() {
