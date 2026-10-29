@@ -218,6 +218,54 @@
             background: #7a0a00;
         }
 
+        .lang-box {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -48%);
+            width: calc(100% - 64px);
+            max-width: 300px;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            color: #f0f0f0;
+            text-align: center;
+        }
+
+        .lang-box.show {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+            pointer-events: auto;
+        }
+
+        .lang-box h2 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #a60e00;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-box .btn {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .lang-box .btn:last-child { margin-bottom: 0; }
+
+        .lang-box .btn.alt {
+            background: transparent;
+            border-color: #a60e00;
+            color: #ff6b5e;
+        }
+
         .footer {
             font-size: 0.6rem;
             color: rgba(255, 255, 255, 0.3);
@@ -230,7 +278,7 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .section, .info-box, #titleWrap.fade-out { transition: none; }
+            .section, .info-box, .lang-box, #titleWrap.fade-out { transition: none; }
             .tap-hint { animation: none; }
         }
 
@@ -305,19 +353,25 @@
                 <div class="tap-hint">Tap to continue</div>
             </div>
 
-            <div class="info-box" id="infoBox">
-                <h2>How to Play</h2>
-                <p>You'll be playing alone on your phone. Find a way to save yourself.</p>
+            <div class="lang-box" id="langBox">
+                <h2>Select Language</h2>
+                <button class="btn" id="btnEnglish">English</button>
+                <button class="btn alt" id="btnIndonesia">Indonesia</button>
+            </div>
 
-                <h2>Rules</h2>
-                <ol>
+            <div class="info-box" id="infoBox">
+                <h2 id="txtHowTitle">How to Play</h2>
+                <p id="txtHowDesc">You'll be playing alone on your phone. Find a way to save yourself.</p>
+
+                <h2 id="txtRulesTitle">Rules</h2>
+                <ol id="txtRulesList">
                     <li>Don't let "them" find out where you are.</li>
                     <li>Find your way out using the hidden clues.</li>
                     <li>If it's game over, you'll have the option to revive.</li>
                 </ol>
 
-              <h2>Content Warning</h2>
-                <ol>
+                <h2 id="txtWarnTitle">Content Warning</h2>
+                <ol id="txtWarnList">
                     <li>Headphones or earphones are recommended for the best audio experience.</li>
                     <li>This game contains jumpscares with visual and audio effects.</li>
                     <li>Not recommended for children under the age of 13.</li>
@@ -330,8 +384,8 @@
 
         <div class="warning-overlay" id="warningOverlay">
             <div class="warning-card">
-                <h3>Content Warning</h3>
-                <p>This game contains jumpscares and dark visuals.<br>Headphones recommended.</p>
+                <h3 id="txtWarnCardTitle">Content Warning</h3>
+                <p id="txtWarnCardDesc">This game contains jumpscares and dark visuals. Headphones recommended.</p>
                 <button class="btn" id="btnPlay">Play</button>
             </div>
         </div>
@@ -340,14 +394,100 @@
     <script>
         (function() {
             const titleWrap = document.getElementById('titleWrap');
+            const langBox = document.getElementById('langBox');
             const infoBox = document.getElementById('infoBox');
+            const btnEnglish = document.getElementById('btnEnglish');
+            const btnIndonesia = document.getElementById('btnIndonesia');
             const btnStart = document.getElementById('btnStart');
             const bgAudio = document.getElementById('bg-audio');
             const warningOverlay = document.getElementById('warningOverlay');
             const btnPlay = document.getElementById('btnPlay');
+            const txtHowTitle = document.getElementById('txtHowTitle');
+            const txtHowDesc = document.getElementById('txtHowDesc');
+            const txtRulesTitle = document.getElementById('txtRulesTitle');
+            const txtRulesList = document.getElementById('txtRulesList');
+            const txtWarnTitle = document.getElementById('txtWarnTitle');
+            const txtWarnList = document.getElementById('txtWarnList');
+            const txtWarnCardTitle = document.getElementById('txtWarnCardTitle');
+            const txtWarnCardDesc = document.getElementById('txtWarnCardDesc');
 
             let advanced = false;
             let audioStarted = false;
+            let currentLang = 'en';
+            let startTarget = 'Home.html';
+
+            const translations = {
+                en: {
+                    howTitle: 'How to Play',
+                    howDesc: "You'll be playing alone on your phone. Find a way to save yourself.",
+                    rulesTitle: 'Rules',
+                    rules: [
+                        "Don't let \"them\" find out where you are.",
+                        "Find your way out using the hidden clues.",
+                        "If it's game over, you'll have the option to revive."
+                    ],
+                    warnTitle: 'Note',
+                    warn: [
+                        "This game contains jumpscares with visual and audio effects.",
+                        "Not recommended for those who are afraid of the dark.",
+                        "Not recommended for children under the age of 13."
+                    ],
+                    startBtn: 'Start',
+                    warnCardTitle: 'Content Warning',
+                    warnCardDesc: 'This game contains jumpscares and dark visuals. Headphones recommended.',
+                    playBtn: 'Play'
+                },
+                id: {
+                    howTitle: 'Cara Bermain',
+                    howDesc: 'Kamu akan bermain sendirian di ponselmu. Temukan cara untuk menyelamatkan diri.',
+                    rulesTitle: 'Peraturan',
+                    rules: [
+                        'Jangan biarkan "mereka" mengetahui keberadaanmu.',
+                        'Temukan jalan keluar menggunakan petunjuk tersembunyi.',
+                        'Jika game over, kamu punya opsi untuk revive.'
+                    ],
+                    warnTitle: 'Peringatan',
+                    warn: [
+                        'Game ini mengandung jumpscare dengan efek visual dan audio.',
+                        'Tidak disarankan apabila memiliki ketakutan akan kegelapan.',
+                        'Tidak disarankan untuk anak di bawah usia 13 tahun.'
+                    ],
+                    startBtn: 'Mulai',
+                    warnCardTitle: 'Peringatan Konten',
+                    warnCardDesc: 'Game ini mengandung jumpscare dan tampilan yang gelap. Disarankan untuk menggunakan headphone untuk pengalaman bermain dengan audio terbaik.',
+                    playBtn: 'Main'
+                }
+            };
+
+            function applyLanguage(lang) {
+                const t = translations[lang];
+                currentLang = lang;
+                startTarget = (lang === 'id') ? 'Beranda.html' : 'Home.html';
+
+                txtHowTitle.textContent = t.howTitle;
+                txtHowDesc.textContent = t.howDesc;
+                txtRulesTitle.textContent = t.rulesTitle;
+                txtWarnTitle.textContent = t.warnTitle;
+                txtWarnCardTitle.textContent = t.warnCardTitle;
+                txtWarnCardDesc.textContent = t.warnCardDesc;
+
+                txtRulesList.innerHTML = '';
+                t.rules.forEach(function(item) {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    txtRulesList.appendChild(li);
+                });
+
+                txtWarnList.innerHTML = '';
+                t.warn.forEach(function(item) {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    txtWarnList.appendChild(li);
+                });
+
+                btnStart.textContent = t.startBtn;
+                btnPlay.textContent = t.playBtn;
+            }
 
             bgAudio.volume = 0.6;
 
@@ -377,16 +517,32 @@
             document.addEventListener('click', unlockAudio);
             document.addEventListener('scroll', unlockAudio);
 
-            function showInfo() {
+            function showLangPicker() {
                 if (advanced) return;
                 advanced = true;
                 startAudio();
                 titleWrap.classList.add('fade-out');
                 titleWrap.style.pointerEvents = 'none';
-                setTimeout(() => infoBox.classList.add('show'), 500);
+                setTimeout(() => langBox.classList.add('show'), 500);
             }
 
-            titleWrap.addEventListener('click', showInfo);
+            titleWrap.addEventListener('click', showLangPicker);
+
+            function hideLangPickerAndShowInfo(lang) {
+                applyLanguage(lang);
+                langBox.classList.remove('show');
+                setTimeout(() => infoBox.classList.add('show'), 400);
+            }
+
+            btnEnglish.addEventListener('click', function() {
+                startAudio();
+                hideLangPickerAndShowInfo('en');
+            });
+
+            btnIndonesia.addEventListener('click', function() {
+                startAudio();
+                hideLangPickerAndShowInfo('id');
+            });
 
             btnStart.addEventListener('click', function() {
                 startAudio();
@@ -397,7 +553,7 @@
                 startAudio();
                 warningOverlay.classList.remove('show');
                 setTimeout(() => {
-                    window.location.href = 'Home.html';
+                    window.location.href = startTarget;
                 }, 300);
             });
         })();
