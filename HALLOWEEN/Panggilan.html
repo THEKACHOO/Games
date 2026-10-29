@@ -148,8 +148,8 @@ const DIALOGS = {
     d1:{ who:"112", text:"Baik. Anda bisa tenang dulu, oke? Pertama, beri tahu saya nama anda.", input:"d2" },
     d2:{ who:"112", text:"Baik, (User). Ceritakan semua yang terakhir kali anda ingat sampai anda terbangun.", next:"p2a" },
     p2a:{ me:true, text:"Gatau mbak sampai bisa gini. Tapi, ini beneran di hutan yang gelap banget, ga kelihatan apa-apa....", next:"p2b" },
-    p2b:{ me:true, text:"Seinget saya sih saya pergi ke rumah hantu barengan sama temen saya, kami lagi datang ke pesta Halloween. Terus pas keluar, saya ga inget lagi!", next:"p2c" },
-    p2c:{ me:true, text:"Ini beneran ga bisa lihat apa-apa mbak, ini ponsel saya juga lowbat. Gabisa shareloc juga. Gimana ya, Mbak? Bisa kirim bantuan buat jemput saya?", next:"d3a" },
+    p2b:{ me:true, text:"Seinget saya sih saya pergi ke rumah hantu barengan sama temen saya. Terus pas di dalam, saya ga inget lagi!", next:"p2c" },
+    p2c:{ me:true, text:"Ini beneran ga bisa lihat apa-apa mbak, ponsel saya juga lowbat. Gabisa shareloc juga. Bisa kirim bantuan buat jemput saya?", next:"d3a" },
     d3a:{ who:"112", text:"Oke, (User), tarik napas yang dalam.", next:"d3b" },
     d3b:{ who:"112", text:"Karena anda lagi sendirian, apakah ada sesuatu yang anda bawa?", next:"d3c" },
     d3c:{ who:"112", text:"Ada sesuatu yang bisa digunakan untuk melindungi diri?",
@@ -157,7 +157,7 @@ const DIALOGS = {
         {t:"Eh? Kok tau saya sendirian?", go:"o1"},
         {t:"Hmm... ada kayu sih. Bisa buat mukul.", go:"o2"}
       ]},
-    o1:{ who:"112", text:"Jawab saya. Polisi sedang dalam perjalanan ke lokasi untuk bantuan. Sekarang, bisakah tidak anda berteriak sekeras mungkin? Itu akan membantu kami menemukanmu.",
+    o1:{ who:"112", text:"Jawab saya. Polisi sedang dalam perjalanan ke lokasi untuk bantuan. Sekarang, bisakah anda berteriak sekeras mungkin? Itu akan membantu kami.",
       options:[
         {t:"(Berteriak.)", go:"scream"}
       ]},
