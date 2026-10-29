@@ -33,9 +33,12 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #home > *{position:relative;z-index:1}
 #clock{font-size:92px;font-weight:100;letter-spacing:-2px;line-height:1;text-align:center;text-shadow:0 2px 18px rgba(0,0,0,.6)}
 #date{margin-top:14px;text-align:center;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d0d0d0;text-shadow:0 1px 8px rgba(0,0,0,.7)}
-#swipehint{width:100%;display:flex;flex-direction:column;align-items:center;padding-bottom:22px;cursor:pointer;user-select:none}
+#swipehint{width:100%;display:flex;flex-direction:column;align-items:center;padding-bottom:22px;user-select:none}
 #swipebar{width:120px;height:5px;border-radius:3px;background:#fff;opacity:.85}
 #swipetxt{margin-top:12px;font-size:11px;letter-spacing:3px;color:#ddd;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+@media (hover:hover) and (pointer:fine){
+  #swipehint{cursor:pointer}
+}
 #apps{position:relative;background:url(Wallpaper.png) center/cover no-repeat}
 #apps::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:0}
 #apps > *{position:relative;z-index:1}
@@ -667,6 +670,7 @@ function goMenu(){
   deliver();
 }
 
+const homeEl=$("home");
 let swipeStartY=null, swipeStartX=null, swiping=false;
 function swipeBegin(y,x){ swipeStartY=y; swipeStartX=x; swiping=true; }
 function swipeEnd(y,x){
@@ -675,7 +679,6 @@ function swipeEnd(y,x){
   swiping=false; swipeStartY=null; swipeStartX=null;
   if(dy>60 && dx<60) goMenu();
 }
-const homeEl=$("home");
 homeEl.addEventListener("touchstart",e=>{
   const t=e.touches[0]; swipeBegin(t.clientY,t.clientX);
 },{passive:true});
@@ -686,9 +689,11 @@ homeEl.addEventListener("touchend",e=>{
   const t=e.changedTouches[0]; swipeEnd(t.clientY,t.clientX);
 },{passive:true});
 homeEl.addEventListener("touchcancel",()=>{ swiping=false; swipeStartY=null; swipeStartX=null; },{passive:true});
-homeEl.addEventListener("mousedown",e=>{ swipeBegin(e.clientY,e.clientX); });
-window.addEventListener("mouseup",e=>{ swipeEnd(e.clientY,e.clientX); });
-$("swipehint").addEventListener("click",goMenu);
+
+const isDesktop = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+if(isDesktop){
+  $("swipehint").addEventListener("click",goMenu);
+}
 
 $("finger").onclick=()=>{
   vibUnlock();
