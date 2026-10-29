@@ -28,7 +28,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 #lock #finger:active{transform:scale(.94);background:#fff;color:#000}
 @keyframes fp{50%{box-shadow:0 0 0 12px rgba(255,255,255,.05)}}
 
-#home{justify-content:space-between;align-items:center;padding:60px 0 34px;background:url(Wallpaper.png) center/cover no-repeat;position:relative}
+#home{justify-content:space-between;align-items:center;padding:60px 0 34px;background:url(Wallpaper.png) center/cover no-repeat;position:relative;touch-action:none}
 #home::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.25);pointer-events:none}
 #home > *{position:relative;z-index:1}
 #clock{font-size:92px;font-weight:100;letter-spacing:-2px;line-height:1;text-align:center;text-shadow:0 2px 18px rgba(0,0,0,.6)}
@@ -667,18 +667,27 @@ function goMenu(){
   deliver();
 }
 
-let touchY=null, touchX=null;
-$("home").addEventListener("touchstart",e=>{
-  const t=e.touches[0]; touchY=t.clientY; touchX=t.clientX;
-},{passive:true});
-$("home").addEventListener("touchend",e=>{
-  if(touchY===null) return;
-  const t=e.changedTouches[0];
-  const dy=touchY-t.clientY;
-  const dx=Math.abs(t.clientX-touchX);
-  touchY=null;
+let swipeStartY=null, swipeStartX=null, swiping=false;
+function swipeBegin(y,x){ swipeStartY=y; swipeStartX=x; swiping=true; }
+function swipeEnd(y,x){
+  if(!swiping || swipeStartY===null) return;
+  const dy=swipeStartY-y, dx=Math.abs(x-swipeStartX);
+  swiping=false; swipeStartY=null; swipeStartX=null;
   if(dy>60 && dx<60) goMenu();
+}
+const homeEl=$("home");
+homeEl.addEventListener("touchstart",e=>{
+  const t=e.touches[0]; swipeBegin(t.clientY,t.clientX);
 },{passive:true});
+homeEl.addEventListener("touchmove",e=>{
+  if(e.cancelable) e.preventDefault();
+},{passive:false});
+homeEl.addEventListener("touchend",e=>{
+  const t=e.changedTouches[0]; swipeEnd(t.clientY,t.clientX);
+},{passive:true});
+homeEl.addEventListener("touchcancel",()=>{ swiping=false; swipeStartY=null; swipeStartX=null; },{passive:true});
+homeEl.addEventListener("mousedown",e=>{ swipeBegin(e.clientY,e.clientX); });
+window.addEventListener("mouseup",e=>{ swipeEnd(e.clientY,e.clientX); });
 $("swipehint").addEventListener("click",goMenu);
 
 $("finger").onclick=()=>{
