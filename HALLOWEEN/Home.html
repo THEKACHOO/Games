@@ -296,7 +296,7 @@ svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
   <div id="note31">
     <div class="paper">
       <h3>Happy Halloween</h3>
-      <p>Choose Threat. Play Music. Write a note. And take a selfie with Camera.</p>
+      <p>Play Music. Check the note. And take a selfie with Camera.</p>
       <button id="note31ok">OK</button>
     </div>
   </div>
@@ -329,13 +329,13 @@ const T=(t,d)=>({f:"them",t,d});
 const M=(t,d)=>({f:"me",t,d});
 const INTRO=[T("Hey :)",900),T("Let's play with me.")];
 const OPTS={
-  c1:[{id:"who",t:"Who are you?"},{id:"wait",t:"Wait. What?"}],
+  c1:[{id:"who",t:"Who are you?"},{id:"wait",t:"Huh?"}],
   c2:[{id:"trick",t:"Trick"},{id:"threat",t:"Threat"}]
 };
 const FLOW={
   who:{seq:[M("Who are you?",400),T("Me? Hahaha... *I'm you.*",1800),T("Answer it.")],next:"end",call:1},
-  wait:{seq:[M("Wait. What?",400),T("Hahaha, you look so cute when you're clueless"),T("Ok. What day is it today?"),
-        M("Today? Oct 31?",1100),M("Halloween?",900),T("Yup. Halloween."),T("So, Trick or Threat?"),
+  wait:{seq:[M("Huh?",400),T("Hahaha, you look so cute when you're clueless"),T("Ok. What day is it today?"),
+        M("Today?",1100),M("Halloween?",900),T("Yup. Halloween."),T("So, Trick or Threat?"),
         M("Is not Threat, but Treat.",1300),T("No."),T("*Trick or Threat?*")],next:"c2"},
   trick:{seq:[M("Trick",400),{f:"sys",t:"Your camera is on",d:1200}],next:"end",cam:1},
   threat:{seq:[M("Threat",400),T("Hide or run before I find you.")],next:"end",thr:1,clue:1}
@@ -346,12 +346,12 @@ const OTHERS=[
   {name:"My Dad",     time:"01.13", msgs:["It's getting late."]},
   {name:"Sissy",      time:"00.40", msgs:["WHERE THE FUCK ARE YOU?!"]},
   {name:"Benny",      time:"00.33", msgs:["Your mom just call me, what happen?"]},
-  {name:"Mrs. Diana",  time:"00.13", msgs:["Don't forget to send me the notes, I need it tmr."]},
-  {name:"Aunt Rose",  time:"00.10", msgs:["Your mom is worried."]},
-  {name:"Sam",        time:"00.06", msgs:["Yo, where are you?"]},
-  {name:"Lily",       time:"00.02", msgs:["Did you leave already? All of sudden?"]},
+  {name:"Mr. Kafka",  time:"00.13", msgs:["Don't forget to send me the notes, I need it tmr."]},
+  {name:"Aunt Rose",  time:"00.10", msgs:["I'm so sorry, I need money rn. Can you give me some?"]},
+  {name:"Samuel",        time:"00.06", msgs:["Yo, where are you? Everyone waiting you in the outside!"]},
+  {name:"Lily",       time:"00.02", msgs:["You still in that haunted house?"]},
   {name:"Judith",     time:"Yesterday 11.13 PM", msgs:["Send me the photos taken by you, I want to post it~"]},
-  {name:"Maya",       time:"Yesterday 10.10 PM", msgs:["Sorry I can't join the party tonight..."]},
+  {name:"Carla",       time:"Yesterday 10.10 PM", msgs:["Sorry I can't join the party tonight, I'm not in mood to meet people..."]},
 ];
 
 const APPS=[
