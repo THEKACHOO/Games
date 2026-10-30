@@ -14,7 +14,7 @@
   .scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;background-size:cover;background-position:center;background-repeat:no-repeat;background-color:#050505;opacity:0;pointer-events:none;transition:opacity .9s ease}
   .scene.active{opacity:1;pointer-events:auto}
   .scene::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:rgba(0,0,0,0.35)}
-  .text-panel{position:relative;z-index:2;width:100%;max-width:400px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px 20px;min-height:100px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+  .text-panel{position:relative;z-index:2;width:100%;max-width:400px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px 20px;min-height:100px;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
   .text-panel p{font-size:clamp(.94rem,3.7vw,1.05rem);line-height:1.7;letter-spacing:.2px;color:#f4f4f4;text-shadow:0 2px 10px rgba(0,0,0,.95);margin:0}
   .text-panel p.para-hidden{display:none}
   .text-panel p.para-show{display:block;animation:paraIn .7s ease forwards}
@@ -32,20 +32,21 @@
   }
   .btn.primary.picked{background:#fff;border-color:#fff;color:#000;box-shadow:0 0 22px rgba(255,255,255,.3)}
   .btn.secondary.picked{background:#fff;border-color:#fff;color:#000;box-shadow:0 0 22px rgba(255,255,255,.3)}
-  .reason-area{display:none;width:100%;max-width:400px;margin:16px auto 0;text-align:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 14px}
+  .reason-area{display:none;width:100%;max-width:400px;margin:16px auto 0;text-align:center;padding:0}
   .reason-area.show{display:block;animation:paraIn .7s ease forwards}
-  .reason-counter{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:10px;text-shadow:0 1px 6px #000}
-  .reason-box{width:100%;height:90px;resize:none;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(0,0,0,.65);color:#fff;font-size:.9rem;font-family:inherit;outline:none;text-align:left;line-height:1.5;margin-bottom:10px}
-  .reason-box::placeholder{color:rgba(255,255,255,.35)}
+  .reason-counter{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:10px;text-shadow:0 1px 6px #000,0 0 10px rgba(0,0,0,.9)}
+  .reason-box{width:100%;height:90px;resize:none;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.35);background:rgba(0,0,0,.55);color:#fff;font-size:.9rem;font-family:inherit;outline:none;text-align:left;line-height:1.5;margin-bottom:10px}
+  .reason-box::placeholder{color:rgba(255,255,255,.4)}
   .reason-box:focus{border-color:#fff}
   .reason-box.error{border-color:#fff}
-  .reason-error{display:none;font-size:.78rem;color:#fff;margin-bottom:10px;text-shadow:0 1px 6px #000}
+  .reason-error{display:none;font-size:.78rem;color:#fff;margin-bottom:10px;text-shadow:0 1px 6px #000,0 0 8px rgba(0,0,0,.9)}
   .reason-error.show{display:block;animation:paraIn .4s ease forwards}
   .reason-submit{display:block;width:100%;padding:15px 22px;border-radius:999px;cursor:pointer;background:#fff;border:1.5px solid #fff;color:#000;font-weight:700;font-size:.95rem;letter-spacing:1.5px;text-transform:uppercase;transition:transform .15s ease,background .2s ease,color .2s ease}
   .reason-submit:active{transform:scale(.97);background:#fff;border-color:#fff;color:#000}
   .reason-submit:disabled{opacity:.4;pointer-events:none}
-  #countdown{position:absolute;top:calc(env(safe-area-inset-top,0px) + 24px);left:50%;transform:translateX(-50%);z-index:10;display:none;font-size:clamp(1.8rem,8vw,2.6rem);font-weight:800;letter-spacing:4px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.85)}
-  #countdown.show{display:block;animation:paraIn .5s ease forwards}
+  #countdown{position:absolute;top:calc(env(safe-area-inset-top,0px) + 24px);left:50%;transform:translateX(-50%);z-index:10;display:none;font-size:clamp(1.8rem,8vw,2.6rem);font-weight:800;letter-spacing:4px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.85);pointer-events:none}
+  #countdown.show{display:block;animation:countdownIn .5s ease forwards}
+  @keyframes countdownIn{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
   #reasonsOverlay{position:absolute;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:30px 24px;background:#000;opacity:0;pointer-events:none;transition:opacity .8s ease}
   #reasonsOverlay.show{opacity:1;pointer-events:auto}
   #reasonsOverlay .reasons-card{width:100%;max-width:400px;max-height:80vh;overflow-y:auto;background:#0a0a0a;border:1.5px solid rgba(255,255,255,.15);border-radius:20px;padding:26px 22px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.8)}
@@ -348,7 +349,7 @@
     hideCountdown();
     reasonsOverlay.classList.remove('show');
     stopAudio();
-    winnerScreen.style.backgroundImage = "url('Win.jpg')";
+    winnerScreen.style.backgroundImage = "url('Win.png')";
     winnerScreen.querySelector('h1').textContent = 'YOU WON';
     winnerScreen.querySelector('.credits p').textContent =
       "You made it out of the game alive. But you've forgotten everything that happened, as if none of it ever existed.";
