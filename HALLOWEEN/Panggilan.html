@@ -80,6 +80,36 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px;color:#fff}
 #won .credits .meta{color:#b5b5b5;font-size:11.5px;line-height:1.6}
 #revive,#home{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none;align-self:center}
 #revive:active,#home:active{background:#fff;color:#000}
+
+/* ==== GLITCH EFFECT ==== */
+#glitch{position:fixed;inset:0;z-index:200;pointer-events:none;display:none;background:#000}
+#glitch.on{display:block;animation:glitchFlicker .12s steps(1) infinite}
+#glitch::before,#glitch::after{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0px,rgba(255,255,255,.08) 1px,transparent 1px,transparent 3px);
+  mix-blend-mode:screen;
+}
+#glitch::after{
+  background:repeating-linear-gradient(90deg,rgba(255,0,60,.35) 0px,rgba(0,255,255,.35) 4px,transparent 4px,transparent 9px);
+  animation:glitchShift .18s steps(1) infinite;
+}
+@keyframes glitchFlicker{
+  0%{opacity:1;background:#000}
+  20%{opacity:.85;background:#0a0010}
+  40%{opacity:1;background:#000}
+  60%{opacity:.7;background:#100000}
+  80%{opacity:1;background:#000}
+  100%{opacity:.9;background:#000}
+}
+@keyframes glitchShift{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(4px)}
+  75%{transform:translateX(-3px)}
+  100%{transform:translateX(0)}
+}
+#blackout{position:fixed;inset:0;background:#000;z-index:300;opacity:0;pointer-events:none;transition:opacity .6s ease}
+#blackout.on{opacity:1;pointer-events:all}
 </style>
 </head>
 <body>
@@ -125,6 +155,9 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px;color:#fff}
     <a id="home" href="Beranda.html">Beranda</a>
   </div>
 </div>
+
+<div id="glitch"></div>
+<div id="blackout"></div>
 
 <script>
 const WIN_NUMBER = "6663113666";
@@ -209,6 +242,15 @@ function stopRing(){
 function hangupSound(){
   tone([480,620],.18,.12,0); tone([480,620],.18,.12,.28); tone([480,620],.18,.12,.56);
 }
+function playVoice(src){
+  stopVoice();
+  voice=new Audio(src);
+  voice.loop=false;
+  voice.play().catch(()=>{});
+}
+function stopVoice(){
+  if(voice){voice.pause();voice.currentTime=0;voice=null;}
+}
 
 ["1","2","3","4","5","6","7","8","9","*","0","#"].forEach(k=>{
   const b=document.createElement("button");b.className="k";b.textContent=k;
@@ -216,12 +258,35 @@ function hangupSound(){
   $("pad").appendChild(b);
 });
 $("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
+
 $("callbtn").onclick=()=>{
   if(!dialed) return;
-  if(dialed===WIN_NUMBER){ gameWin(); return; }   // ← DIUBAH: panggil gameWin()
+  if(dialed===WIN_NUMBER){ triggerGlitchSequence(); return; }   // ← efek glitch lalu ke Akhir.html
   if(dialed==="112") startCall("112");
   else toast("Error");
 };
+
+function triggerGlitchSequence(){
+  document.querySelectorAll(".k, #callbtn, #del").forEach(el=>el.disabled=true);
+
+  const g=$("glitch");
+  g.classList.add("on");
+  tone([880,1240],.08,.12,0);
+  tone([60,40],.3,.2,.1);
+  tone([1500,200],.06,.1,.25);
+  tone([320,180],.2,.15,.4);
+  $("phone").style.animation="glitchShift .1s steps(1) infinite";
+
+  later(()=>{
+    g.classList.remove("on");
+    $("phone").style.animation="";
+    $("blackout").classList.add("on");
+  },1200);
+  later(()=>{
+    window.location.href = "Akhir.html";
+  },2000);
+}
+
 function renderNum(){
   $("num").textContent=dialed;
   $("hint").textContent = dialed==="112" ? "Darurat" : "";
@@ -311,7 +376,7 @@ function node(dlg,id){
 $("hang").onclick=()=>endCall();
 function resetToDialer(){
   timers.forEach(clearTimeout);timers=[];
-  stopRing();
+  stopRing();stopVoice();
   inCall=false;dialed="";renderNum();
   $("nameRow").classList.remove("on");
   $("call").classList.remove("chatting");
@@ -322,14 +387,14 @@ function resetToDialer(){
 function endCall(){
   if(!inCall) return;
   timers.forEach(clearTimeout);timers=[];
-  stopRing();
+  stopRing();stopVoice();
   hangupSound();
   $("ended").classList.add("on");
   later(()=>{$("ended").classList.remove("on");resetToDialer();},1600);
 }
 function gameOver(){
   timers.forEach(clearTimeout);timers=[];
-  stopRing();
+  stopRing();stopVoice();
   $("over").classList.add("on");
   const snd=new Audio("Monster2.mp3");
   snd.play().catch(()=>{});
@@ -351,4 +416,4 @@ $("home").addEventListener("click",()=>{
 renderNum();
 </script>
 </body>
-</html>
+  </html>
