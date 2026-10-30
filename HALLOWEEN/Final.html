@@ -11,19 +11,18 @@
   body{display:flex;align-items:center;justify-content:center}
   .phone-frame{position:relative;width:100%;height:100%;max-width:480px;aspect-ratio:9/16;max-height:100vh;background:#000;overflow:hidden}
   @media (min-aspect-ratio:9/16){.phone-frame{width:auto;height:100vh}}
-  .scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0;background-size:cover;background-position:top center;background-repeat:no-repeat;background-color:#050505;opacity:0;pointer-events:none;transition:opacity .9s ease}
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;background-size:cover;background-position:center;background-repeat:no-repeat;background-color:#050505;opacity:0;pointer-events:none;transition:opacity .9s ease}
   .scene.active{opacity:1;pointer-events:auto}
   .scene::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:rgba(0,0,0,0.35)}
-  .bottom-fade{position:relative;z-index:2;width:100%;min-height:50%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:calc(env(safe-area-inset-bottom,0px) + 24px) 24px 28px;background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.55) 25%,rgba(0,0,0,0.88) 55%,rgba(0,0,0,0.95) 100%)}
-  .text-panel{width:100%;max-width:400px;text-align:center;height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
-  .text-panel p{font-size:clamp(.94rem,3.7vw,1.05rem);line-height:1.7;letter-spacing:.2px;color:#f4f4f4;text-shadow:0 2px 10px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.85);margin:0}
+  .text-panel{position:relative;z-index:2;width:100%;max-width:400px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px 20px;min-height:100px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+  .text-panel p{font-size:clamp(.94rem,3.7vw,1.05rem);line-height:1.7;letter-spacing:.2px;color:#f4f4f4;text-shadow:0 2px 10px rgba(0,0,0,.95);margin:0}
   .text-panel p.para-hidden{display:none}
   .text-panel p.para-show{display:block;animation:paraIn .7s ease forwards}
   .text-panel p.para-out{display:block;animation:paraOut .6s ease forwards}
   .text-panel p.para-stay{display:block;opacity:1;transform:none}
   @keyframes paraIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   @keyframes paraOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-10px)}}
-  .choices{display:none;gap:14px;width:100%;max-width:400px;margin:8px auto 0;justify-content:center;flex-wrap:wrap}
+  .choices{display:none;gap:14px;width:100%;max-width:400px;margin:16px auto 0;justify-content:center;flex-wrap:wrap}
   .choices.show{display:flex;animation:paraIn .7s ease forwards}
   .btn{flex:1 1 130px;min-width:120px;padding:15px 22px;font-size:.95rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.7);border:1.5px solid #fff;border-radius:999px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:transform .15s ease,background .2s ease,color .2s ease,box-shadow .2s ease,border-color .2s ease}
   @media (hover:hover) and (pointer:fine){
@@ -33,7 +32,7 @@
   }
   .btn.primary.picked{background:#fff;border-color:#fff;color:#000;box-shadow:0 0 22px rgba(255,255,255,.3)}
   .btn.secondary.picked{background:#fff;border-color:#fff;color:#000;box-shadow:0 0 22px rgba(255,255,255,.3)}
-  .reason-area{display:none;width:100%;max-width:400px;margin:12px auto 0;text-align:center}
+  .reason-area{display:none;width:100%;max-width:400px;margin:16px auto 0;text-align:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 14px}
   .reason-area.show{display:block;animation:paraIn .7s ease forwards}
   .reason-counter{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:10px;text-shadow:0 1px 6px #000}
   .reason-box{width:100%;height:90px;resize:none;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(0,0,0,.65);color:#fff;font-size:.9rem;font-family:inherit;outline:none;text-align:left;line-height:1.5;margin-bottom:10px}
@@ -73,105 +72,87 @@
 </head>
 <body>
 <div class="phone-frame" id="app">
-  <audio id="bg-audio" loop preload="auto"><source src="Audio1.mp3" type="audio/mpeg"></audio>
+  <audio id="bg-audio" loop preload="auto"><source id="bg-source" src="Audio2.mp3" type="audio/mpeg"></audio>
 
   <div id="countdown"></div>
 
-  <div id="sceneH1" class="scene active" style="background-image:url('H1.jpeg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>Your phone suddenly rings very loudly, you try to turn it off but your phone is completely dead. Yet the sound keeps blaring.</p>
-        <p>Realizing your surroundings, the loud noise wakes the threats around you.</p>
-        <p>You run as fast as you can in the dark. You trip and fall, but you get back up.</p>
-        <p>After a while, silence greets you.</p>
-      </div>
+  <div id="sceneH1" class="scene active" style="background-image:url('Final/H1.jpeg')">
+    <div class="text-panel">
+      <p>Your phone suddenly rings so loudly, you try to turn it off but your phone is completely dead. Yet the sound keeps blaring.</p>
+      <p>Realizing your surroundings, the loud noise wakes the threats around you.</p>
+      <p>You run as fast as you can in the dark. You trip and fall, but you get back up.</p>
+      <p>Then, silence greets you.</p>
     </div>
   </div>
 
-  <div id="sceneH2" class="scene" style="background-image:url('H2.jpg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>The silent darkness makes you too afraid to move.</p>
-      </div>
+  <div id="sceneH2" class="scene" style="background-image:url('Final/H2.jpg')">
+    <div class="text-panel">
+      <p>The silent darkness makes you too afraid to move.</p>
     </div>
   </div>
 
-  <div id="sceneH3" class="scene" style="background-image:url('H3.jpeg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>Then a light appears.</p>
-        <p>You look behind you, someone is staring at you.</p>
-        <p>It's you.</p>
-        <p>Yes, you are sure the person in front of you right now is yourself.</p>
-        <p>Looking pale and standing like a corpse freezing in the cold.</p>
-      </div>
+  <div id="sceneH3" class="scene" style="background-image:url('Final/H3.jpeg')">
+    <div class="text-panel">
+      <p>Then a light appears.</p>
+      <p data-audio="Audio1.mp3">You look behind you, someone is staring at you.</p>
+      <p>It's you.</p>
+      <p>Yes, you are sure the person in front of you right now is yourself.</p>
+      <p>Looking pale and standing like a corpse freezing in the cold.</p>
     </div>
   </div>
 
-  <div id="sceneH4" class="scene" style="background-image:url('H4.jpg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>You just realize there's a wrecked car at the edge of the cliff.</p>
-        <p>Ah... right.</p>
-        <p>You never actually made it to the Halloween party tonight.</p>
-        <p>You had an accident and no one came to save you.</p>
-      </div>
+  <div id="sceneH4" class="scene" style="background-image:url('Final/H4.jpg')">
+    <div class="text-panel">
+      <p>You just realize there's a wrecked car at the edge of the cliff.</p>
+      <p>Ah... right.</p>
+      <p>You never actually made it to the Halloween party tonight.</p>
+      <p>You had an accident and no one came to save you.</p>
     </div>
   </div>
 
-  <div id="sceneChoice" class="scene" style="background-image:url('H3.jpeg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>You look again at the figure of yourself facing the light.</p>
-        <p>The light of death.</p>
-        <p id="stayQuestion">Do you want to try to save yourself?</p>
-      </div>
-      <div class="choices" id="choiceButtons">
-        <button class="btn primary" id="btnYes">Yes</button>
-        <button class="btn secondary" id="btnNo">No</button>
-      </div>
+  <div id="sceneChoice" class="scene" style="background-image:url('Final/H3.jpeg')">
+    <div class="text-panel">
+      <p>You look again at the figure of yourself facing the light.</p>
+      <p>The light of death.</p>
+      <p id="stayQuestion">Do you want to try to save yourself?</p>
+    </div>
+    <div class="choices" id="choiceButtons">
+      <button class="btn primary" id="btnYes">Yes</button>
+      <button class="btn secondary" id="btnNo">No</button>
     </div>
   </div>
 
-  <div id="sceneH5" class="scene" style="background-image:url('H5.jpg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>You let yourself pass through the light.</p>
-        <p>Then someone hugs you from behind.</p>
-      </div>
+  <div id="sceneH5" class="scene" style="background-image:url('Final/H5.jpg')">
+    <div class="text-panel">
+      <p>You let yourself pass through the light.</p>
+      <p>Then someone hugs you from behind.</p>
     </div>
   </div>
 
   <div id="sceneBlack" class="scene" style="background:#000">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>Someone with a horrifying face smiles widely at you.</p>
-        <p>That someone turns out to be yourself too. It's your own dark side.</p>
-      </div>
+    <div class="text-panel">
+      <p>Someone with a horrifying face smiles widely at you.</p>
+      <p>That someone turns out to be yourself too. It's your own dark side.</p>
     </div>
   </div>
 
-  <div id="sceneH6" class="scene" style="background-image:url('H6.jpg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>It whispers to you.</p>
-        <p>"Let's play again. This time, you are Unknown."</p>
-      </div>
+  <div id="sceneH6" class="scene" style="background-image:url('Final/H6.jpg')">
+    <div class="text-panel">
+      <p>It whispers to you.</p>
+      <p>"Let's play again. This time, you are Unknown."</p>
     </div>
   </div>
 
-  <div id="sceneH7" class="scene" style="background-image:url('H7.jpg')">
-    <div class="bottom-fade">
-      <div class="text-panel">
-        <p>You run and try to reach your other self.</p>
-        <p>Shout 6 reasons to yourself why you must stay alive!</p>
-      </div>
-      <div class="reason-area" id="reasonArea">
-        <div class="reason-counter" id="reasonCounter">Reason 1 of 6</div>
-        <textarea id="reasonInput" class="reason-box" placeholder="Type your reason..."></textarea>
-        <div class="reason-error" id="reasonError">Please write at least 3 words.</div>
-        <button class="reason-submit" id="reasonSubmit">Send</button>
-      </div>
+  <div id="sceneH7" class="scene" style="background-image:url('Final/H7.jpg')">
+    <div class="text-panel">
+      <p>You run and try to reach your other self.</p>
+      <p>Shout 6 reasons to yourself why you must stay alive!</p>
+    </div>
+    <div class="reason-area" id="reasonArea">
+      <div class="reason-counter" id="reasonCounter">Reason 1 of 6</div>
+      <textarea id="reasonInput" class="reason-box" placeholder="Type your reason..."></textarea>
+      <div class="reason-error" id="reasonError">Please write at least 3 words.</div>
+      <button class="reason-submit" id="reasonSubmit">Send</button>
     </div>
   </div>
 
@@ -197,17 +178,38 @@
 (function(){
   const $ = id => document.getElementById(id);
   const bgAudio = $('bg-audio');
+  const bgSource = $('bg-source');
   const winnerScreen = $('winnerScreen');
   const countdownEl = $('countdown');
   const reasonsOverlay = $('reasonsOverlay');
   const reasonsFullList = $('reasonsFullList');
 
   let audioStarted = false;
+  let currentTrack = 'Audio2.mp3';
+
   bgAudio.volume = 0.6;
+
   function startAudio(){
     if(audioStarted) return;
     bgAudio.play().then(()=>{audioStarted=true}).catch(()=>{});
   }
+
+  function switchTrack(src){
+    if(currentTrack === src) return;
+    currentTrack = src;
+    const wasPlaying = !bgAudio.paused;
+    bgSource.src = src;
+    bgAudio.load();
+    if(wasPlaying || audioStarted){
+      bgAudio.play().then(()=>{audioStarted=true}).catch(()=>{});
+    }
+  }
+
+  function stopAudio(){
+    bgAudio.pause();
+    bgAudio.currentTime = 0;
+  }
+
   bgAudio.play().then(()=>{audioStarted=true}).catch(()=>{});
   ['pointerdown','touchstart','keydown','click','scroll'].forEach(ev=>{
     document.addEventListener(ev, startAudio, {once:true});
@@ -263,6 +265,12 @@
       const p = paras[i];
       const isLast = i === paras.length - 1;
       p.classList.remove('para-hidden','para-out');
+
+      const audioTrigger = p.getAttribute('data-audio');
+      if(audioTrigger){
+        switchTrack(audioTrigger);
+      }
+
       if(keepLast && isLast){
         p.classList.add('para-stay');
         pushTimer(()=>{
@@ -305,10 +313,9 @@
         if(nextSceneId === 'DEATH_WINNER'){
           showDeathWinner();
         } else if(sceneId === 'sceneH1'){
-          bgAudio.currentTime = 0;
-          if(!audioStarted) startAudio();
           playScene(nextSceneId, autoChain[nextSceneId] || null);
         } else if(nextSceneId === 'sceneChoice'){
+          stopAudio();
           show('sceneChoice');
           playParagraphs('sceneChoice', ()=>{
             const choiceButtons = $('choiceButtons');
@@ -324,7 +331,7 @@
   function showDeathWinner(){
     hideCountdown();
     reasonsOverlay.classList.remove('show');
-    winnerScreen.style.backgroundImage = "url('H6.jpg')";
+    winnerScreen.style.backgroundImage = "url('Final/H6.jpg')";
     winnerScreen.querySelector('h1').textContent = 'YOU WON';
     winnerScreen.querySelector('.credits p').textContent =
       'But your ending is death. Your dark side has claimed you.';
@@ -334,12 +341,12 @@
   function showLifeWinner(){
     hideCountdown();
     reasonsOverlay.classList.remove('show');
+    stopAudio();
     winnerScreen.style.backgroundImage = "url('Win.jpg')";
     winnerScreen.querySelector('h1').textContent = 'YOU WON';
     winnerScreen.querySelector('.credits p').textContent =
       "You made it out of the game alive. But you've forgotten everything that happened, as if none of it ever existed.";
     winnerScreen.classList.add('show');
-    bgAudio.pause();
     const winAudio = new Audio('Win.mp3');
     winAudio.play().catch(()=>{});
   }
@@ -412,6 +419,7 @@
     $('btnYes').classList.add('picked');
     $('btnNo').classList.remove('picked');
     clearFlow();
+    switchTrack('Audio3.mp3');
     pushTimer(()=>{
       reasons = [];
       reasonInput.value = '';
@@ -499,4 +507,4 @@
 })();
 </script>
 </body>
-    </html>
+</html>
