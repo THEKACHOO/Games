@@ -167,21 +167,7 @@ h2{margin:0;padding:6px 20px 8px;font-size:24px;color:#fff}
 
   <div id="over"><h1>GAME OVER</h1><a id="revive" href="Home.html">Revive</a></div>
 
-  <div id="won">
-    <h1>YOU WON</h1>
-    <div class="credits">
-      <p>You made it out of the game alive. But you’ve forgotten everything that happened, as if none of it ever existed.</p>
-      <p>Thank you for playing.<br>See you in the next season of Dimension.</p>
-      <p class="meta">This game was created by The Kachoo<br>Visuals, Audio, and Storyline by the Kadio Team<br>For roleplay purposes only, 2026<br>Halloween Edition</p>
-    </div>
-    <a id="home" href="Home.html">Home</a>
-  </div>
-</div>
-
-<!-- Glitch overlay -->
 <div id="glitch"></div>
-
-<!-- Blackout overlay -->
 <div id="blackout"></div>
 
 <script>
@@ -284,7 +270,6 @@ function stopVoice(){
 });
 $("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
 
-/* ==== CORE: WIN NUMBER TRIGGER ==== */
 $("callbtn").onclick=()=>{
   if(!dialed) return;
   if(dialed===WIN_NUMBER){ triggerGlitchSequence(); return; }
@@ -293,30 +278,23 @@ $("callbtn").onclick=()=>{
 };
 
 function triggerGlitchSequence(){
-  // Nonaktifkan input lebih lanjut
   document.querySelectorAll(".k, #callbtn, #del").forEach(el=>el.disabled=true);
 
-  // Langsung glitch
   const g=$("glitch");
   g.classList.add("on");
-  // Suara glitch
   tone([880,1240],.08,.12,0);
   tone([60,40],.3,.2,.1);
   tone([1500,200],.06,.1,.25);
   tone([320,180],.2,.15,.4);
-  // Getarkan layar ponsel
   $("phone").style.animation="glitchShift .1s steps(1) infinite";
 
-  // Setelah glitch berjalan ~1.2 detik → layar gelap
   later(()=>{
     $("glitch").classList.remove("on");
     $("phone").style.animation="";
     $("blackout").classList.add("on");
   },1200);
-
-  // Setelah fade-out selesai → pindah halaman
   later(()=>{
-    window.location.href = "../Final/index.html";
+    window.location.href = "Final.html";
   },2000);
 }
 
