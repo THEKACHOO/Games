@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Call</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#000;--panel:#141414;--key:#1f1f1f;--text:#fff;--mute:#8a8a8a;--line:#262626}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:#000;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text)}
+#phone{position:relative;height:100%;max-width:420px;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;border-left:1px solid #1f1f1f;border-right:1px solid #1f1f1f}
+.view{display:none;flex:1;flex-direction:column;min-height:0}
+.view.on{display:flex}
+#top{display:flex;align-items:center;padding:6px 8px;min-height:44px}
+#back{display:flex;padding:8px;border:0;background:none;cursor:pointer;color:#fff;text-decoration:none}
+#back svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#display{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:16px}
+#num{font-size:34px;letter-spacing:1px;min-height:44px;word-break:break-all;text-align:center;color:#fff}
+#hint{color:var(--mute);font-size:14px;min-height:20px;margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+#pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 60px}
+.k{height:48px;border:0;border-radius:999px;background:var(--key);color:var(--text);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.k:active{background:#333}
+#actions{display:grid;grid-template-columns:repeat(3,1fr);padding:4px 28px 14px;align-items:center;justify-items:center}
+#callbtn{width:56px;height:56px;border-radius:50%;border:0;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;cursor:pointer;grid-column:2}
+svg.i{width:24px;height:24px;fill:currentColor}
+#del{background:none;border:0;color:var(--mute);font-size:26px;cursor:pointer;grid-column:3;padding:12px}
+#clist{flex:1;overflow-y:auto;padding:8px 0}
+h2{margin:0;padding:6px 20px 8px;font-size:24px;color:#fff}
+.c{display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer}
+.c:active{background:var(--panel)}
+.av{width:42px;height:42px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-weight:600}
+.c .n{font-size:17px;color:#fff}.c .p{font-size:13px;color:var(--mute)}
+#tabs{display:flex;border-top:1px solid var(--line);background:var(--panel)}
+#tabs button{flex:1;padding:14px 0;background:none;border:0;color:var(--mute);font-size:14px;cursor:pointer}
+#tabs button.on{color:#fff;font-weight:600}
+
+/* ==== OUTGOING CALL SCREEN ==== */
+#call{background:#000;position:relative;align-items:center;flex:1;justify-content:space-between;padding:12vh 0 8vh;transition:padding .4s ease}
+#call.chatting{padding:8vh 0 8vh}
+
+#ctop{padding:0 20px;text-align:center;width:100%;transition:all .45s ease;transform-origin:center top}
+#cname{font-size:32px;font-weight:700;letter-spacing:.5px;color:#fff;transition:all .45s ease}
+#cstat{color:var(--mute);margin-top:8px;font-size:13px;letter-spacing:3px;text-transform:uppercase;transition:all .45s ease}
+
+/* Saat chat berjalan: header "Connected" ditenggelamkan ke belakang (blur + fade) */
+#call.chatting #ctop{
+  filter:blur(6px);
+  opacity:.18;
+  transform:scale(.82);
+  pointer-events:none;
+}
+
+#log{flex:1;width:100%;overflow-y:auto;padding:20px 16px 8px;display:flex;flex-direction:column;gap:6px;min-height:0}
+/* bubble disamakan dengan thread chat Home.html (tema hitam-putih) */
+.b{max-width:78%;padding:10px 15px;border-radius:20px;font-size:15px;line-height:1.4;word-wrap:break-word;animation:in .25s}
+.b.them{background:#fff;color:#000;align-self:flex-start;border-bottom-left-radius:6px}
+.b.me{background:#000;color:#fff;border:1.5px solid #fff;align-self:flex-end;border-bottom-right-radius:6px}
+.b .w{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:.55;margin-bottom:3px}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+#opts{display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:10px 16px;width:100%;min-height:20px}
+#opts button{padding:11px 20px;border-radius:20px;border-bottom-right-radius:6px;border:1.5px solid #fff;background:#000;color:#fff;font-size:15px;cursor:pointer;max-width:80%;text-align:left}
+#opts button:active{background:#fff;color:#000}
+#nameRow{display:none;gap:8px;padding:8px 16px;width:100%}
+#nameRow.on{display:flex}
+#nameIn{flex:1;padding:12px 14px;border-radius:12px;border:1px solid #fff;font-size:16px;outline:none;background:#000;color:#fff}
+#nameGo{padding:0 18px;border-radius:12px;border:0;background:#fff;color:#000;font-size:15px;cursor:pointer;font-weight:600}
+/* tombol hang up merah ala iOS outgoing */
+#hang{margin:0 auto 6px;width:74px;height:74px;border-radius:50%;border:0;background:#e53935;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;box-shadow:0 0 24px rgba(229,57,53,.45);z-index:2}
+#hang:active{transform:scale(.94)}
+#hang svg{transform:rotate(135deg);width:32px;height:32px}
+#ended{position:absolute;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;font-size:22px;color:#fff;z-index:5;letter-spacing:2px}
+#ended.on{display:flex}
+#toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);background:#fff;color:#000;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap;font-weight:600}
+#toast.on{opacity:1}
+#over,#won{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column;align-items:center;color:#fff}
+#over{background:#000 url(Monster2.png) center/cover no-repeat;justify-content:space-between;padding:20vh 0 12vh}
+#won{background:#000 url(Win.png) center/cover no-repeat;justify-content:center;padding:0 28px;overflow-y:auto}
+#over.on,#won.on{display:flex}
+#over h1{margin:0;font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:4px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center}
+#won h1{margin:0 0 16px;font-size:clamp(28px,8vw,36px);font-weight:800;letter-spacing:5px;text-shadow:0 0 14px #000,0 0 4px #000,2px 2px 0 #000;text-align:center;flex:none}
+#won .credits{font-size:12.5px;line-height:1.7;text-align:center;color:#e5e5e5;text-shadow:0 1px 6px #000,0 0 3px #000;margin-bottom:22px}
+#won .credits p{margin:0 0 12px}
+#won .credits .meta{color:#b5b5b5;font-size:11.5px;line-height:1.6}
+#revive,#home{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:17px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none;align-self:center}
+#revive:active,#home:active{background:#fff;color:#000}
+
+/* ==== GLITCH EFFECT ==== */
+#glitch{
+  position:fixed;inset:0;z-index:200;pointer-events:none;
+  display:none;background:#000;
+}
+#glitch.on{display:block;animation:glitchFlicker .12s steps(1) infinite}
+#glitch::before,#glitch::after{
+  content:"";position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,.08) 0px,
+      rgba(255,255,255,.08) 1px,
+      transparent 1px,
+      transparent 3px);
+  mix-blend-mode:screen;
+}
+#glitch::after{
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,0,60,.35) 0px,
+      rgba(0,255,255,.35) 4px,
+      transparent 4px,
+      transparent 9px);
+  animation:glitchShift .18s steps(1) infinite;
+}
+@keyframes glitchFlicker{
+  0%{opacity:1;background:#000}
+  20%{opacity:.85;background:#0a0010}
+  40%{opacity:1;background:#000}
+  60%{opacity:.7;background:#100000}
+  80%{opacity:1;background:#000}
+  100%{opacity:.9;background:#000}
+}
+@keyframes glitchShift{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(4px)}
+  75%{transform:translateX(-3px)}
+  100%{transform:translateX(0)}
+}
+
+/* Layar gelap total sebelum pindah */
+#blackout{
+  position:fixed;inset:0;background:#000;z-index:300;
+  opacity:0;pointer-events:none;transition:opacity .6s ease;
+}
+#blackout.on{opacity:1;pointer-events:all}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="toast"></div>
+  <div id="ended">Call ended</div>
+
+  <div id="top"><a id="back" href="Home.html" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></a></div>
+
+  <div class="view on" id="v-dial">
+    <div id="display"><div id="num"></div><div id="hint"></div></div>
+    <div id="pad"></div>
+    <div id="actions"><button id="callbtn" aria-label="Call"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><button id="del" aria-label="Delete">⌫</button></div>
+  </div>
+
+  <div class="view" id="v-contacts">
+    <h2>Contacts</h2>
+    <div id="clist"></div>
+  </div>
+
+  <div class="view" id="call">
+    <div id="ctop">
+      <div id="cname">911</div>
+      <div id="cstat">Calling…</div>
+    </div>
+    <div id="log"></div>
+    <div id="nameRow"><input id="nameIn" type="text" placeholder="Your name" autocomplete="off" maxlength="40"><button id="nameGo">Send</button></div>
+    <div id="opts"></div>
+    <button id="hang" aria-label="Hang up"><svg class="i" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
+  </div>
+
+  <div id="tabs"><button class="on" data-t="dial">Keypad</button><button data-t="contacts">Contacts</button></div>
+
+  <div id="over"><h1>GAME OVER</h1><a id="revive" href="Home.html">Revive</a></div>
+
+  <div id="won">
+    <h1>YOU WON</h1>
+    <div class="credits">
+      <p>You made it out of the game alive. But you’ve forgotten everything that happened, as if none of it ever existed.</p>
+      <p>Thank you for playing.<br>See you in the next season of Dimension.</p>
+      <p class="meta">This game was created by The Kachoo<br>Visuals, Audio, and Storyline by the Kadio Team<br>For roleplay purposes only, 2026<br>Halloween Edition</p>
+    </div>
+    <a id="home" href="Home.html">Home</a>
+  </div>
+</div>
+
+<!-- Glitch overlay -->
+<div id="glitch"></div>
+
+<!-- Blackout overlay -->
+<div id="blackout"></div>
+
+<script>
+const WIN_NUMBER = "6663113666";
+
+const CONTACTS = [
+  {name:"911",    number:"911", emergency:true},
+  {name:"My Dad",    number:"xxxx-xxxx"},
+  {name:"Lovely Mom",     number:"xxxx-xxxx"},
+  {name:"Sissy",  number:"xxxx-xxxx"},
+  {name:"Benny",   number:"xxxx-xxxx"},
+  {name:"Alan",    number:"xxxx-xxxx"},
+  {name:"Ms. Diana", number:"xxxx-xxxx"},
+  {name:"Carla",   number:"xxxx-xxxx"},
+  {name:"Lily",   number:"xxxx-xxxx"}
+];
+
+const DIALOGS = {
+  "911": {
+    start:{ who:"911", text:"911, what's your emergency?", next:"p1" },
+    p1:{ me:true, text:"Help me! I don't know what's going on! I'm in the middle of the woods and I think someone about to hurt me!", next:"d1" },
+    d1:{ who:"911", text:"Ok. I need you to calm down, alright? First, tell me your name.", input:"d2" },
+    d2:{ who:"911", text:"Alright, (User). Tell me everything you can remember.", next:"p2a" },
+    p2a:{ me:true, text:"I don't know! But, I think I'm lost in the woods... or something?", next:"p2b" },
+    p2b:{ me:true, text:"I went to a haunted house for a Halloween party, but when I came out, it was pitch-black outside!", next:"p2c" },
+    p2c:{ me:true, text:"I can't see anything, and my phone's the only thing I've got. And the battery's at 1%! Help me!", next:"d3a" },
+    d3a:{ who:"911", text:"Okay, (User), take a deep breath.", next:"d3b" },
+    d3b:{ who:"911", text:"Since you're alone, do you have anything on you?", next:"d3c" },
+    d3c:{ who:"911", text:"Anything you could use to protect yourself?",
+      options:[
+        {t:"... How do you know I'm alone?", go:"o1"},
+        {t:"Yeah, uh... maybe I could use some of the branches lying around here.", go:"o2"}
+      ]},
+    o1:{ who:"911", text:"Answer me. The police are on their way to your location. For now, can you scream as loud as you can? That'll help us find you.",
+      options:[
+        {t:"(Screams.)", go:"scream"}
+      ]},
+    o2:{ who:"911", text:"Good. The police are on their way to your location now. Can you scream so we can find you more easily?",
+      options:[
+        {t:"(Screams.)", go:"scream"}
+      ]},
+    scream:{ who:"911", text:"...", next:"scream2" },
+    scream2:{ who:"Unknown", text:"Hehe... I got you, (User)", next:null, over:true }
+  }
+};
+
+const $=id=>document.getElementById(id);
+let dialed="", inCall=false, timers=[], playerName="";
+
+let actx=null, ringTimer=null, ringNodes=[], voice=null;
+function ac(){
+  if(!actx){const C=window.AudioContext||window.webkitAudioContext; if(C) actx=new C();}
+  if(actx && actx.state==="suspended") actx.resume();
+  return actx;
+}
+function tone(freqs,dur,vol,when){
+  const c=ac(); if(!c) return [];
+  const t=c.currentTime+(when||0), g=c.createGain(), out=[];
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol,t+.01);
+  g.gain.setValueAtTime(vol,t+Math.max(.01,dur-.02));
+  g.gain.linearRampToValueAtTime(0,t+dur);
+  g.connect(c.destination);
+  freqs.forEach(f=>{
+    const o=c.createOscillator(); o.frequency.value=f; o.connect(g);
+    o.start(t); o.stop(t+dur+.02); out.push(o);
+  });
+  return out;
+}
+const DTMF={"1":[697,1209],"2":[697,1336],"3":[697,1477],"4":[770,1209],"5":[770,1336],"6":[770,1477],
+            "7":[852,1209],"8":[852,1336],"9":[852,1477],"*":[941,1209],"0":[941,1336],"#":[941,1477]};
+function keySound(k){ if(DTMF[k]) tone(DTMF[k],.14,.12); }
+
+function ringOnce(){
+  ringNodes=ringNodes.concat(tone([440,480],.4,.12,0), tone([440,480],.4,.12,.6));
+}
+function startRing(){ stopRing(); ringOnce(); ringTimer=setInterval(ringOnce,3000); }
+function stopRing(){
+  clearInterval(ringTimer); ringTimer=null;
+  ringNodes.forEach(o=>{try{o.stop();}catch(e){}});
+  ringNodes=[];
+}
+function hangupSound(){
+  tone([480,620],.18,.12,0); tone([480,620],.18,.12,.28); tone([480,620],.18,.12,.56);
+}
+function playVoice(src){
+  stopVoice();
+  voice=new Audio(src);
+  voice.loop=false;
+  voice.play().catch(()=>{});
+}
+function stopVoice(){
+  if(voice){voice.pause();voice.currentTime=0;voice=null;}
+}
+
+["1","2","3","4","5","6","7","8","9","*","0","#"].forEach(k=>{
+  const b=document.createElement("button");b.className="k";b.textContent=k;
+  b.onclick=()=>{ keySound(k); if(dialed.length<14){dialed+=k;renderNum();} };
+  $("pad").appendChild(b);
+});
+$("del").onclick=()=>{dialed=dialed.slice(0,-1);renderNum();};
+
+/* ==== CORE: WIN NUMBER TRIGGER ==== */
+$("callbtn").onclick=()=>{
+  if(!dialed) return;
+  if(dialed===WIN_NUMBER){ triggerGlitchSequence(); return; }
+  if(dialed==="911") startCall("911");
+  else toast("Error");
+};
+
+function triggerGlitchSequence(){
+  // Nonaktifkan input lebih lanjut
+  document.querySelectorAll(".k, #callbtn, #del").forEach(el=>el.disabled=true);
+
+  // Langsung glitch
+  const g=$("glitch");
+  g.classList.add("on");
+  // Suara glitch
+  tone([880,1240],.08,.12,0);
+  tone([60,40],.3,.2,.1);
+  tone([1500,200],.06,.1,.25);
+  tone([320,180],.2,.15,.4);
+  // Getarkan layar ponsel
+  $("phone").style.animation="glitchShift .1s steps(1) infinite";
+
+  // Setelah glitch berjalan ~1.2 detik → layar gelap
+  later(()=>{
+    $("glitch").classList.remove("on");
+    $("phone").style.animation="";
+    $("blackout").classList.add("on");
+  },1200);
+
+  // Setelah fade-out selesai → pindah halaman
+  later(()=>{
+    window.location.href = "../Final/index.html";
+  },2000);
+}
+
+function renderNum(){
+  $("num").textContent=dialed;
+  $("hint").textContent = dialed==="911" ? "Emergency" : "";
+}
+
+CONTACTS.forEach(c=>{
+  const d=document.createElement("div");d.className="c";
+  d.innerHTML='<div class="av"></div><div><div class="n"></div><div class="p"></div></div>';
+  d.querySelector(".av").textContent=c.name[0];
+  d.querySelector(".n").textContent=c.name;
+  d.querySelector(".p").textContent=c.number;
+  if(c.emergency) d.onclick=()=>startCall("911");
+  else d.onclick=()=>toast("Error");
+  $("clist").appendChild(d);
+});
+
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+  if(inCall) return;
+  show("v-"+b.dataset.t);
+  document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x===b));
+});
+function show(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===id));}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1800);}
+function later(fn,ms){timers.push(setTimeout(fn,ms));}
+
+function fillName(text){
+  if(!text) return text;
+  return text.replace(/\(User\)/g, playerName || "(User)");
+}
+
+function startCall(key){
+  inCall=true;$("tabs").style.display="none";$("top").style.display="none";
+  $("cname").textContent = key==="911" ? "911" : "Unknown";
+  $("cstat").textContent="Calling…";
+  $("call").classList.remove("chatting");
+  $("log").innerHTML="";$("opts").innerHTML="";$("nameRow").classList.remove("on");
+  show("call");
+  startRing();
+  later(()=>{
+    stopRing();
+    $("cstat").textContent="Connected";
+    if(key==="911") playVoice("911.mp3");
+    node(DIALOGS[key],"start");
+  },4200);
+}
+function bubble(cls,who,text){
+  const b=document.createElement("div");b.className="b "+cls;
+  b.innerHTML='<div class="w"></div><div class="t"></div>';
+  b.querySelector(".w").textContent=who;b.querySelector(".t").textContent=text;
+  $("log").appendChild(b);$("log").scrollTop=1e6;
+}
+function node(dlg,id){
+  const n=dlg[id];$("opts").innerHTML="";
+  $("call").classList.add("chatting");
+  if(n.who==="Unknown"){ $("cname").textContent="Unknown"; }
+  bubble(n.me?"me":"them", n.me?"You":n.who, fillName(n.text));
+  if(n.input){
+    later(()=>{
+      $("nameRow").classList.add("on");$("nameIn").value="";$("nameIn").focus();
+      const send=()=>{
+        const v=$("nameIn").value.trim(); if(!v) return;
+        playerName=v;$("nameRow").classList.remove("on");
+        bubble("me","You",v);
+        later(()=>node(dlg,n.input),1200);
+      };
+      $("nameGo").onclick=send;
+      $("nameIn").onkeydown=e=>{if(e.key==="Enter")send();};
+    },500);
+    return;
+  }
+  if(n.end){ later(endCall,2200); return; }
+  if(n.over){ later(gameOver,1600); return; }
+  if(n.next){ later(()=>node(dlg,n.next),n.me?2000:2200); return; }
+  later(()=>{
+    n.options.forEach(o=>{
+      const b=document.createElement("button");b.textContent=o.t;
+      b.onclick=()=>{
+        $("opts").innerHTML="";bubble("me","You",o.t);
+        if(o.over) later(gameOver,1100);
+        else if(o.go===null) later(endCall,900);
+        else later(()=>node(dlg,o.go),1200);
+      };
+      $("opts").appendChild(b);
+    });
+    $("log").scrollTop=1e6;
+  },500);
+}
+$("hang").onclick=()=>endCall();
+function resetToDialer(){
+  timers.forEach(clearTimeout);timers=[];
+  stopRing();stopVoice();
+  inCall=false;dialed="";renderNum();
+  $("nameRow").classList.remove("on");
+  $("call").classList.remove("chatting");
+  $("tabs").style.display="flex";$("top").style.display="flex";
+  show("v-dial");
+  document.querySelectorAll("#tabs button").forEach((x,i)=>x.classList.toggle("on",i===0));
+}
+function endCall(){
+  if(!inCall) return;
+  timers.forEach(clearTimeout);timers=[];
+  stopRing();stopVoice();
+  hangupSound();
+  $("ended").classList.add("on");
+  later(()=>{$("ended").classList.remove("on");resetToDialer();},1600);
+}
+function gameOver(){
+  timers.forEach(clearTimeout);timers=[];
+  stopRing();stopVoice();
+  $("over").classList.add("on");
+  const snd=new Audio("Monster2.mp3");
+  snd.play().catch(()=>{});
+}
+renderNum();
+</script>
+</body>
+  </html>
