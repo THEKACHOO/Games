@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>FINAL NEGATIVE</title>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;inset:0;overscroll-behavior:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Roboto,"Noto Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{display:flex;align-items:center;justify-content:center}
+  .phone-frame{position:relative;width:100%;height:100%;max-width:480px;aspect-ratio:9/16;max-height:100vh;background:#000;overflow:hidden}
+  @media (min-aspect-ratio:9/16){.phone-frame{width:auto;height:100vh}}
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0;background-size:cover;background-position:top center;background-repeat:no-repeat;background-color:#050505;opacity:0;pointer-events:none;transition:opacity .9s ease}
+  .scene.active{opacity:1;pointer-events:auto}
+  .scene::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:rgba(0,0,0,0.35)}
+  .bottom-fade{position:relative;z-index:2;width:100%;min-height:50%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:calc(env(safe-area-inset-bottom,0px) + 24px) 24px 28px;background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.55) 25%,rgba(0,0,0,0.88) 55%,rgba(0,0,0,0.95) 100%)}
+  .text-panel{width:100%;max-width:400px;text-align:center;height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+  .text-panel p{font-size:clamp(.94rem,3.7vw,1.05rem);line-height:1.7;letter-spacing:.2px;color:#f4f4f4;text-shadow:0 2px 10px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.85);margin:0}
+  .text-panel p.para-hidden{display:none}
+  .text-panel p.para-show{display:block;animation:paraIn .7s ease forwards}
+  .text-panel p.para-out{display:block;animation:paraOut .6s ease forwards}
+  .text-panel p.para-stay{display:block;opacity:1;transform:none}
+  @keyframes paraIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes paraOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-10px)}}
+  .choices{display:none;gap:14px;width:100%;max-width:400px;margin:8px auto 0;justify-content:center;flex-wrap:wrap}
+  .choices.show{display:flex;animation:paraIn .7s ease forwards}
+  .btn{flex:1 1 130px;min-width:120px;padding:15px 22px;font-size:.95rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.7);border:1.5px solid #fff;border-radius:999px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:transform .15s ease,background .2s ease,color .2s ease,box-shadow .2s ease,border-color .2s ease}
+  @media (hover:hover) and (pointer:fine){
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary:hover{background:#fff;border-color:#fff;color:#000}
+    .btn.secondary:hover{background:#fff;border-color:#fff;color:#000}
+  }
+  .btn.primary.picked{background:#fff;border-color:#fff;color:#000;box-shadow:0 0 22px rgba(255,255,255,.3)}
+  .btn.secondary.picked{background:#fff;border-color:#fff;color:#000;box-shadow:0 0 22px rgba(255,255,255,.3)}
+  .reason-area{display:none;width:100%;max-width:400px;margin:12px auto 0;text-align:center}
+  .reason-area.show{display:block;animation:paraIn .7s ease forwards}
+  .reason-counter{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:10px;text-shadow:0 1px 6px #000}
+  .reason-box{width:100%;height:90px;resize:none;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(0,0,0,.65);color:#fff;font-size:.9rem;font-family:inherit;outline:none;text-align:left;line-height:1.5;margin-bottom:10px}
+  .reason-box::placeholder{color:rgba(255,255,255,.35)}
+  .reason-box:focus{border-color:#fff}
+  .reason-box.error{border-color:#fff}
+  .reason-error{display:none;font-size:.78rem;color:#fff;margin-bottom:10px;text-shadow:0 1px 6px #000}
+  .reason-error.show{display:block;animation:paraIn .4s ease forwards}
+  .reason-submit{display:block;width:100%;padding:15px 22px;border-radius:999px;cursor:pointer;background:#fff;border:1.5px solid #fff;color:#000;font-weight:700;font-size:.95rem;letter-spacing:1.5px;text-transform:uppercase;transition:transform .15s ease,background .2s ease,color .2s ease}
+  .reason-submit:active{transform:scale(.97);background:#fff;border-color:#fff;color:#000}
+  .reason-submit:disabled{opacity:.4;pointer-events:none}
+  #countdown{position:absolute;top:calc(env(safe-area-inset-top,0px) + 24px);left:50%;transform:translateX(-50%);z-index:10;display:none;font-size:clamp(1.8rem,8vw,2.6rem);font-weight:800;letter-spacing:4px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.85)}
+  #countdown.show{display:block;animation:paraIn .5s ease forwards}
+  #reasonsOverlay{position:absolute;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:30px 24px;background:#000;opacity:0;pointer-events:none;transition:opacity .8s ease}
+  #reasonsOverlay.show{opacity:1;pointer-events:auto}
+  #reasonsOverlay .reasons-card{width:100%;max-width:400px;max-height:80vh;overflow-y:auto;background:#0a0a0a;border:1.5px solid rgba(255,255,255,.15);border-radius:20px;padding:26px 22px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.8)}
+  #reasonsOverlay .reasons-card h2{font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+  #reasonsOverlay .reasons-card ol{list-style:none;padding:0;margin:0;text-align:left}
+  #reasonsOverlay .reasons-card li{font-size:.92rem;line-height:1.55;color:#f2f2f2;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:10px;align-items:flex-start}
+  #reasonsOverlay .reasons-card li:last-child{border-bottom:none}
+  #reasonsOverlay .reasons-card li .num{color:#fff;font-weight:700;flex-shrink:0;min-width:22px}
+  #winnerScreen{position:absolute;inset:0;z-index:60;background:#000 url('Win.jpg') center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:0 24px;opacity:0;pointer-events:none;transition:opacity 1s ease;overflow-y:auto}
+  #winnerScreen.show{opacity:1;pointer-events:auto}
+  #winnerScreen::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,0.55);pointer-events:none}
+  #winnerScreen > *{position:relative;z-index:1}
+  #winnerScreen h1{margin:0 0 16px;font-size:clamp(28px,8vw,38px);font-weight:800;letter-spacing:6px;text-shadow:0 0 18px #000,0 0 6px #000,2px 2px 0 #000;text-align:center}
+  #winnerScreen .credits{font-size:12.5px;line-height:1.7;text-align:center;color:#e5e5e5;text-shadow:0 1px 6px #000,0 0 3px #000;margin-bottom:22px;background:rgba(0,0,0,0.55);padding:16px 18px;border-radius:16px;max-width:360px}
+  #winnerScreen .credits p{margin:0 0 12px}
+  #winnerScreen .credits .meta{color:#b5b5b5;font-size:11.5px;line-height:1.6}
+  #winnerScreen #homeBtn{padding:14px 44px;border-radius:999px;border:2px solid #fff;background:#000;color:#fff;font-size:16px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+  #winnerScreen #homeBtn:active{background:#fff;color:#000}
+  @media (prefers-reduced-motion:reduce){
+    .scene{transition:none}
+    .text-panel p.para-show,.text-panel p.para-out,.choices.show,.reason-area.show,.reason-error.show,#countdown.show,#reasonsOverlay{transition:none;animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="phone-frame" id="app">
+  <audio id="bg-audio" loop preload="auto"><source src="Audio1.mp3" type="audio/mpeg"></audio>
+
+  <div id="countdown"></div>
+
+  <div id="sceneH1" class="scene active" style="background-image:url('H1.jpeg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>Your phone suddenly rings very loudly, you try to turn it off but your phone is completely dead. Yet the sound keeps blaring.</p>
+        <p>Realizing your surroundings, the loud noise wakes the threats around you.</p>
+        <p>You run as fast as you can in the dark. You trip and fall, but you get back up.</p>
+        <p>After a while, silence greets you.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneH2" class="scene" style="background-image:url('H2.jpg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>The silent darkness makes you too afraid to move.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneH3" class="scene" style="background-image:url('H3.jpeg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>Then a light appears.</p>
+        <p>You look behind you, someone is staring at you.</p>
+        <p>It's you.</p>
+        <p>Yes, you are sure the person in front of you right now is yourself.</p>
+        <p>Looking pale and standing like a corpse freezing in the cold.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneH4" class="scene" style="background-image:url('H4.jpg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>You just realize there's a wrecked car at the edge of the cliff.</p>
+        <p>Ah... right.</p>
+        <p>You never actually made it to the Halloween party tonight.</p>
+        <p>You had an accident and no one came to save you.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneChoice" class="scene" style="background-image:url('H3.jpeg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>You look again at the figure of yourself facing the light.</p>
+        <p>The light of death.</p>
+        <p id="stayQuestion">Do you want to try to save yourself?</p>
+      </div>
+      <div class="choices" id="choiceButtons">
+        <button class="btn primary" id="btnYes">Yes</button>
+        <button class="btn secondary" id="btnNo">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneH5" class="scene" style="background-image:url('H5.jpg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>You let yourself pass through the light.</p>
+        <p>Then someone hugs you from behind.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneBlack" class="scene" style="background:#000">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>Someone with a horrifying face smiles widely at you.</p>
+        <p>That someone turns out to be yourself too. It's your own dark side.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneH6" class="scene" style="background-image:url('H6.jpg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>It whispers to you.</p>
+        <p>"Let's play again. This time, you are Unknown."</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sceneH7" class="scene" style="background-image:url('H7.jpg')">
+    <div class="bottom-fade">
+      <div class="text-panel">
+        <p>You run and try to reach your other self.</p>
+        <p>Shout 6 reasons to yourself why you must stay alive!</p>
+      </div>
+      <div class="reason-area" id="reasonArea">
+        <div class="reason-counter" id="reasonCounter">Reason 1 of 6</div>
+        <textarea id="reasonInput" class="reason-box" placeholder="Type your reason..."></textarea>
+        <div class="reason-error" id="reasonError">Please write at least 3 words.</div>
+        <button class="reason-submit" id="reasonSubmit">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="reasonsOverlay">
+    <div class="reasons-card">
+      <h2>Your Reasons</h2>
+      <ol id="reasonsFullList"></ol>
+    </div>
+  </div>
+
+  <div id="winnerScreen">
+    <h1>YOU WON</h1>
+    <div class="credits">
+      <p>You made it out of the game alive. But you've forgotten everything that happened, as if none of it ever existed.</p>
+      <p>Thank you for playing.<br>See you in the next season of Dimension.</p>
+      <p class="meta">This game was created by The Kachoo<br>Visuals, Audio, and Storyline by the Kadio Team<br>For roleplay purposes only, 2026<br>Halloween Edition</p>
+    </div>
+    <a id="homeBtn" href="index.html">Home</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const bgAudio = $('bg-audio');
+  const winnerScreen = $('winnerScreen');
+  const countdownEl = $('countdown');
+  const reasonsOverlay = $('reasonsOverlay');
+  const reasonsFullList = $('reasonsFullList');
+
+  let audioStarted = false;
+  bgAudio.volume = 0.6;
+  function startAudio(){
+    if(audioStarted) return;
+    bgAudio.play().then(()=>{audioStarted=true}).catch(()=>{});
+  }
+  bgAudio.play().then(()=>{audioStarted=true}).catch(()=>{});
+  ['pointerdown','touchstart','keydown','click','scroll'].forEach(ev=>{
+    document.addEventListener(ev, startAudio, {once:true});
+  });
+
+  const PARA_DURATION = 5000;
+  const PARA_GAP = 800;
+  const SCENE_PAUSE = 1000;
+  const REASONS_SHOW_MS = 10000;
+  const REASONS_FADE_MS = 800;
+  const COUNTDOWN_TOTAL = 180;
+
+  let flowTimers = [];
+  function clearFlow(){
+    flowTimers.forEach(t=>clearTimeout(t));
+    flowTimers = [];
+  }
+  function pushTimer(fn, ms){
+    flowTimers.push(setTimeout(fn, ms));
+  }
+
+  function show(id){
+    document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+    const el = $(id);
+    if(el) el.classList.add('active');
+    if(el) el.scrollTop = 0;
+    return el;
+  }
+
+  function resetPanel(panel){
+    panel.querySelectorAll('p').forEach(p=>{
+      p.classList.remove('para-show','para-out','para-stay');
+      p.classList.add('para-hidden');
+    });
+  }
+
+  function playParagraphs(sceneId, onDone, keepLast){
+    const scene = $(sceneId);
+    const panel = scene.querySelector('.text-panel');
+    if(!panel){
+      if(onDone) onDone();
+      return;
+    }
+    const paras = Array.from(panel.querySelectorAll('p'));
+    resetPanel(panel);
+    let i = 0;
+
+    function next(){
+      if(i >= paras.length){
+        if(onDone) onDone();
+        return;
+      }
+      const p = paras[i];
+      const isLast = i === paras.length - 1;
+      p.classList.remove('para-hidden','para-out');
+      if(keepLast && isLast){
+        p.classList.add('para-stay');
+        pushTimer(()=>{
+          i++;
+          next();
+        }, 400);
+        return;
+      }
+      p.classList.add('para-show');
+      pushTimer(()=>{
+        p.classList.remove('para-show');
+        p.classList.add('para-out');
+        pushTimer(()=>{
+          p.classList.remove('para-out');
+          p.classList.add('para-hidden');
+          i++;
+          next();
+        }, PARA_GAP);
+      }, PARA_DURATION);
+    }
+    next();
+  }
+
+  const autoChain = {
+    'sceneH1':'sceneH2',
+    'sceneH2':'sceneH3',
+    'sceneH3':'sceneH4',
+    'sceneH4':'sceneChoice',
+    'sceneH5':'sceneBlack',
+    'sceneBlack':'sceneH6',
+    'sceneH6':'DEATH_WINNER'
+  };
+
+  function playScene(sceneId, nextSceneId){
+    show(sceneId);
+    clearFlow();
+    playParagraphs(sceneId, ()=>{
+      if(!nextSceneId) return;
+      pushTimer(()=>{
+        if(nextSceneId === 'DEATH_WINNER'){
+          showDeathWinner();
+        } else if(sceneId === 'sceneH1'){
+          bgAudio.currentTime = 0;
+          if(!audioStarted) startAudio();
+          playScene(nextSceneId, autoChain[nextSceneId] || null);
+        } else if(nextSceneId === 'sceneChoice'){
+          show('sceneChoice');
+          playParagraphs('sceneChoice', ()=>{
+            const choiceButtons = $('choiceButtons');
+            if(choiceButtons) choiceButtons.classList.add('show');
+          }, true);
+        } else {
+          playScene(nextSceneId, autoChain[nextSceneId] || null);
+        }
+      }, SCENE_PAUSE);
+    });
+  }
+
+  function showDeathWinner(){
+    hideCountdown();
+    reasonsOverlay.classList.remove('show');
+    winnerScreen.style.backgroundImage = "url('H6.jpg')";
+    winnerScreen.querySelector('h1').textContent = 'YOU WON';
+    winnerScreen.querySelector('.credits p').textContent =
+      'But your ending is death. Your dark side has claimed you.';
+    winnerScreen.classList.add('show');
+  }
+
+  function showLifeWinner(){
+    hideCountdown();
+    reasonsOverlay.classList.remove('show');
+    winnerScreen.style.backgroundImage = "url('Win.jpg')";
+    winnerScreen.querySelector('h1').textContent = 'YOU WON';
+    winnerScreen.querySelector('.credits p').textContent =
+      "You made it out of the game alive. But you've forgotten everything that happened, as if none of it ever existed.";
+    winnerScreen.classList.add('show');
+    bgAudio.pause();
+    const winAudio = new Audio('Win.mp3');
+    winAudio.play().catch(()=>{});
+  }
+
+  playScene('sceneH1', autoChain['sceneH1']);
+
+  $('btnNo').addEventListener('click', ()=>{
+    $('btnNo').classList.add('picked');
+    $('btnYes').classList.remove('picked');
+    clearFlow();
+    pushTimer(()=>{
+      playScene('sceneH5', autoChain['sceneH5']);
+    }, 500);
+  });
+
+  let reasons = [];
+  const reasonInput   = $('reasonInput');
+  const reasonSubmit  = $('reasonSubmit');
+  const reasonCounter = $('reasonCounter');
+  const reasonError   = $('reasonError');
+
+  let countdownInterval = null;
+  let countdownLeft = COUNTDOWN_TOTAL;
+  let gameOverOnTimeout = false;
+  let reasonsFinished = false;
+
+  function fmtTime(sec){
+    const m = String(Math.floor(sec/60)).padStart(2,'0');
+    const s = String(sec%60).padStart(2,'0');
+    return m + ':' + s;
+  }
+
+  function startCountdown(){
+    stopCountdown();
+    countdownLeft = COUNTDOWN_TOTAL;
+    gameOverOnTimeout = false;
+    reasonsFinished = false;
+    countdownEl.classList.add('show');
+    countdownEl.textContent = fmtTime(countdownLeft);
+    countdownInterval = setInterval(()=>{
+      countdownLeft--;
+      if(countdownLeft <= 0){
+        stopCountdown();
+        countdownEl.textContent = '00:00';
+        if(!reasonsFinished && !gameOverOnTimeout){
+          gameOverOnTimeout = true;
+          setTimeout(()=>{
+            showDeathWinner();
+          }, 800);
+        }
+        return;
+      }
+      countdownEl.textContent = fmtTime(countdownLeft);
+    }, 1000);
+  }
+
+  function stopCountdown(){
+    if(countdownInterval){
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+  }
+
+  function hideCountdown(){
+    stopCountdown();
+    countdownEl.classList.remove('show');
+  }
+
+  $('btnYes').addEventListener('click', ()=>{
+    $('btnYes').classList.add('picked');
+    $('btnNo').classList.remove('picked');
+    clearFlow();
+    pushTimer(()=>{
+      reasons = [];
+      reasonInput.value = '';
+      reasonInput.classList.remove('error');
+      reasonError.classList.remove('show');
+      reasonSubmit.textContent = 'Send';
+      reasonSubmit.disabled = false;
+      updateReasonUI();
+      show('sceneH7');
+      playParagraphs('sceneH7', ()=>{
+        const reasonArea = $('reasonArea');
+        if(reasonArea) reasonArea.classList.add('show');
+        startCountdown();
+        setTimeout(()=>reasonInput.focus({preventScroll:true}), 500);
+      });
+    }, 500);
+  });
+
+  function updateReasonUI(){
+    const n = reasons.length;
+    reasonCounter.textContent = n < 6 ? `Reason ${n+1} of 6` : 'All reasons given';
+    if(n >= 6){
+      reasonInput.disabled = true;
+      reasonSubmit.disabled = true;
+      reasonSubmit.textContent = 'Done';
+    }
+  }
+
+  function countWords(str){
+    return str.trim().split(/\s+/).filter(w => w.length > 0).length;
+  }
+
+  function submitReason(){
+    if(reasons.length >= 6 || reasonsFinished) return;
+    const val = reasonInput.value.trim();
+    if(countWords(val) < 3){
+      reasonInput.classList.add('error');
+      reasonError.classList.add('show');
+      return;
+    }
+    reasonInput.classList.remove('error');
+    reasonError.classList.remove('show');
+    reasons.push(val);
+    reasonInput.value = '';
+    updateReasonUI();
+    if(reasons.length === 6){
+      finishReasons();
+    }
+  }
+
+  function finishReasons(){
+    if(reasonsFinished) return;
+    reasonsFinished = true;
+    stopCountdown();
+    hideCountdown();
+    $('reasonArea').classList.remove('show');
+
+    reasonsFullList.innerHTML = '';
+    reasons.forEach((r, idx)=>{
+      const li = document.createElement('li');
+      const num = document.createElement('span');
+      num.className = 'num';
+      num.textContent = (idx+1) + '.';
+      const txt = document.createElement('span');
+      txt.textContent = r;
+      li.appendChild(num);
+      li.appendChild(txt);
+      reasonsFullList.appendChild(li);
+    });
+
+    reasonsOverlay.classList.add('show');
+
+    pushTimer(()=>{
+      reasonsOverlay.classList.remove('show');
+      pushTimer(()=>{
+        showLifeWinner();
+      }, REASONS_FADE_MS);
+    }, REASONS_SHOW_MS);
+  }
+
+  reasonSubmit.addEventListener('click', submitReason);
+  reasonInput.addEventListener('keydown', e=>{
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitReason(); }
+  });
+})();
+</script>
+</body>
+    </html>
