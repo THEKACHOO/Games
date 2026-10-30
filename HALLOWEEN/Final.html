@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
-<title>FINAL NEGATIVE</title>
+<title>Negative</title>
 <style>
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;inset:0;overscroll-behavior:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Roboto,"Noto Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
@@ -81,7 +81,7 @@
       <p>Your phone suddenly rings so loudly, you try to turn it off but your phone is completely dead. Yet the sound keeps blaring.</p>
       <p>Realizing your surroundings, the loud noise wakes the threats around you.</p>
       <p>You run as fast as you can in the dark. You trip and fall, but you get back up.</p>
-      <p>Then, silence greets you.</p>
+      <p data-bg="Final/H2.jpg">Then, silence greets you.</p>
     </div>
   </div>
 
@@ -91,7 +91,7 @@
     </div>
   </div>
 
-  <div id="sceneH3" class="scene" style="background-image:url('Final/H3.jpeg')">
+  <div id="sceneH3" class="scene" style="background-image:url('Final/H3.jpg')">
     <div class="text-panel">
       <p>Then a light appears.</p>
       <p data-audio="Audio1.mp3">You look behind you, someone is staring at you.</p>
@@ -101,7 +101,7 @@
     </div>
   </div>
 
-  <div id="sceneH4" class="scene" style="background-image:url('Final/H4.jpg')">
+  <div id="sceneH4" class="scene" style="background-image:url('Final/H4.jpeg')">
     <div class="text-panel">
       <p>You just realize there's a wrecked car at the edge of the cliff.</p>
       <p>Ah... right.</p>
@@ -110,7 +110,7 @@
     </div>
   </div>
 
-  <div id="sceneChoice" class="scene" style="background-image:url('Final/H3.jpeg')">
+  <div id="sceneChoice" class="scene" style="background-image:url('Final/H3.jpg')">
     <div class="text-panel">
       <p>You look again at the figure of yourself facing the light.</p>
       <p>The light of death.</p>
@@ -265,6 +265,12 @@
       const p = paras[i];
       const isLast = i === paras.length - 1;
       p.classList.remove('para-hidden','para-out');
+
+      const bgTrigger = p.getAttribute('data-bg');
+      if(bgTrigger){
+        scene.style.backgroundImage = "url('" + bgTrigger + "')";
+        stopAudio();
+      }
 
       const audioTrigger = p.getAttribute('data-audio');
       if(audioTrigger){
@@ -507,4 +513,4 @@
 })();
 </script>
 </body>
-</html>
+ </html>
